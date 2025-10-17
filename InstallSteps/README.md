@@ -44,3 +44,6 @@
   - Follow SEA-ME piracer github README
   - Create a gamepad.py file with the Github example
   - SEA-ME PiRacer github: https://github.com/SEA-ME/piracer_py
+
+# Microcontroller:
+  - Useful Links: https://wiki.seeedstudio.com/2-Channel-CAN-BUS-FD-Shield-for-Raspberry-Pi/ 
