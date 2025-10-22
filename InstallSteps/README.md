@@ -5,7 +5,7 @@
   sudo apt update
   sudo apt full-upgrade
 ```
- - Then enable I2C interface with raspi-config
+ - Then enable I2C and SPI interface with raspi-config
 ```bash
   sudo raspi-config
   // After config
@@ -46,4 +46,13 @@
   - SEA-ME PiRacer github: https://github.com/SEA-ME/piracer_py
 
 # Microcontroller:
+  - Install the can-utils to test the CANBUS communication
+ ```bash
+  sudo apt install can-utils
+```
+  - Edit the /boot/firmware/config.txt with
+```bash
+  dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25
+  dtoverlay=spi-bcm2835
+```
   - Useful Links: https://wiki.seeedstudio.com/2-Channel-CAN-BUS-FD-Shield-for-Raspberry-Pi/ 
