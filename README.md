@@ -72,8 +72,8 @@ Pull Request Process:
 🧭 Roadmap:https://github.com/orgs/SEAME-pt/projects/82/views/6
 
 ## 🤝 Working Agreements
-1. Daily Stand-up at 11 AM (or alternatively at 3 PM).
+1. Daily Stand-up at 11 AM (or alternatively at 2.30 PM).
 2. Two code reviews required before merging.
-3. Definition of Done (DoD) includes testing, documentation, and code review.
+3. Definition of Done (DoD) includes testing, documentation, and code review by 2 peers.
 4. Retrospective held at the end of each sprint.
 
