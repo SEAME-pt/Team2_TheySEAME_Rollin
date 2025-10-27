@@ -13,7 +13,7 @@ assignees: ""
 
 
 ## Steps / Tasks
-- [ ] [Step 1: What needs to be done]- [ ] Feature verified in staging environment
+- [ ] [Step 1: What needs to be done]
 
 
 
