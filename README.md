@@ -30,7 +30,7 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 ## 🧩 Project Structure
 
 ```
-├── docs/ # Documentation (architecture, meeting notes, etc.)
+├── docs/ # Documentation
 ├── src/ # Source code
 ├── tests/ # Unit and integration tests
 ├── scripts/ # Utility scripts (build, deploy, etc.)
