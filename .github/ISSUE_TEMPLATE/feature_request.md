@@ -1,20 +1,31 @@
 ---
-name: Feature request
-about: Suggest an idea for this project
-title: ''
-labels: ''
-assignees: ''
-
+name: "Feature Request"
+about: "Template for proposing a new feature or improvement"
+title: "[Feature] "
+labels: "enhancement"
+assignees: ""
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+# Issue Title: [Short, descriptive title]
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+**Description:**  
+[Provide a detailed description of the issue. Include context, problem statement, and any relevant background information.]
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+## Steps / Tasks
+- [ ] [Step 1: What needs to be done]
+- [ ] 
+
+
+## Acceptance Criteria / Definition of Done
+The issue can be considered **done** when all of the following criteria are met:
+
+- [ ] Functionality or change is implemented as described
+- [ ] Unit/integration tests written and passing
+- [ ] Code reviewed and approved by two peers
+- [ ] Documentation updated
+
+## Additional Notes / References
+- [Links to related issues or PRs]
+- [Screenshots, diagrams, or mockups]
+- [Other relevant context]
