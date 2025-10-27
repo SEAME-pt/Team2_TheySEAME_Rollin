@@ -31,10 +31,11 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 ```
 ├── docs/ # Documentation
-├── src/ # Source code
-├── tests/ # Unit and integration tests
+├── Cluster/ # Car Cluster (QT App)
+├── Microcontroller/ # Car Control and sensors software
+├── RaspberryPi5/ # Communication between devices and machine learning
+├── tests/ # E2E tests
 ├── scripts/ # Utility scripts (build, deploy, etc.)
-├── .env.example # Example environment config
 └── README.md # This file
 ```
 
