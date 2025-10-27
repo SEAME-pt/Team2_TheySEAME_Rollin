@@ -1,0 +1,32 @@
+---
+name: "Feature/Enhancement"
+about: "Template for proposing a software feature or enhancement"
+title: ""
+labels: "enhancement, documentation"
+assignees: ""
+---
+
+# Feature Title:
+
+**Description:**  
+- A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+- A clear and concise description of what you want to happen.
+
+
+## Steps / Tasks
+- [ ] Tasks to implement this feature/enhancement
+
+
+## Acceptance Criteria / Definition of Done
+The issue can be considered **done** when all of the following criteria are met:
+
+- [ ] Functionality or change is implemented as described
+- [ ] Created and validated Unit Tests created for any functions implemented
+- [ ] Documentation updated
+- [ ] Peer-Reviewed by at least two people
+
+
+## Additional Notes / References
+- [Links to related issues or PRs]
+- [Screenshots, diagrams, or mockups]
+- [Other relevant context]
