@@ -26,7 +26,6 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 | **Scrum Master** | Marco | Facilitates Scrum process, removes blockers |
 | **Developers** | Rui, Hugo, Bruno | Build, test, and deliver product increments |
 
----
 
 ## 🧩 Project Structure
 
