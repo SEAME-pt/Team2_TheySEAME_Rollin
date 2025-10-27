@@ -2,7 +2,6 @@
 
 SEA:ME 2025 Cohort - Team 02
 
----
 
 ## 📘 Overview
 
@@ -18,7 +17,6 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 | **Sprint Duration** | Oct 27 – Nov 7, 2025 |
 | **Focus Areas** | Car display UI/UX, hardware integration, requirements definition|
 
----
 
 ## 📅 Scrum Team
 
@@ -32,7 +30,6 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 ## 🧩 Project Structure
 
----
 
 ├── docs/ # Documentation (architecture, meeting notes, etc.)
 ├── src/ # Source code
@@ -41,10 +38,6 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 ├── .env.example # Example environment config
 └── README.md # This file
 
----
-
-
----
 
 ## 🏗️ Setup & Installation
 
