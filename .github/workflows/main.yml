@@ -1,0 +1,17 @@
+name: RaspSSH
+
+on:
+  push:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+
+  ssh:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run Echo
+        run: echo Hello
