@@ -4,10 +4,10 @@
 
 - [PiRacer Kit](#PiRacer)
 - [Raspberry Pi 5](#Raspberry-Pi-5)
-- [Raspberry Pi AI HAT+](#Raspberry-Pi-AI-HAT+)
-- [7.9 inch Waveshare Display](#Cluster-Display)
-- [CANBUS](#Can-Controller-and-Transceiver)
+- [Raspberry Pi AI HAT+](#Raspberry-Pi-AI-HAT)
 - [Microncontroller](#Microcontroller)
+- [CANBUS](#Can-Controller-and-Transceiver)
+- [Cluster Display](#Cluster-Display)
 - [Sensors](#Sensors)
 
 ## PiRacer
@@ -27,10 +27,10 @@ This is the base of our Car and allows the communication with the servo and moto
 
 This project uses the Raspberry Pi 5 as the central unit between devices
 
-It has to pass the measures to show in the display, pass car controls to the microcontroller 
+It has to pass the measures to show in the display, pass Car controls to the microcontroller 
 and process the autonomous driving with the help of the AI HAT
 
-## Raspberry Pi AI HAT+
+## Raspberry Pi AI HAT
 
 This project uses the Raspberry Pi AI HAT+ as the heavy AI processor
 It has a Hailo-8 AI acceleration chip with 26 TOPS
