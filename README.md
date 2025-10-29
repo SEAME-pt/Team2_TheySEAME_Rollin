@@ -31,9 +31,8 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 ```
 ├── docs/ # Documentation
-├── Cluster/ # Car Cluster (QT App)
-├── Microcontroller/ # Car Control and sensors software
-├── RaspberryPi5/ # Communication between devices and machine learning
+├── libs/ # Shared Libraries between apps
+├── apps/ # All developed apps
 ├── tests/ # E2E tests
 ├── scripts/ # Utility scripts (build, deploy, etc.)
 └── README.md # This file
