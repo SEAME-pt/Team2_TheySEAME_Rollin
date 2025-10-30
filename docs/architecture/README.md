@@ -5,6 +5,7 @@
 - [PiRacer Kit](#PiRacer)
 - [Raspberry Pi 5](#Raspberry-Pi-5)
 - [Raspberry Pi AI HAT+](#Raspberry-Pi-AI-HAT)
+- [Raspberry Pi Camera](#Raspberry-Pi-Camera)
 - [Microncontroller](#Microcontroller)
 - [CANBUS](#Can-Controller-and-Transceiver)
 - [Cluster Display](#Cluster-Display)
@@ -12,9 +13,9 @@
 
 ## PiRacer
 
-This project uses the Waveshare PiRacer Kit as a base to build our Car
+The Waveshare PiRacer Kit is the base to build our Car
 
-This is the base of our Car and allows the communication with the servo and motors through the expansion board via I2C
+It allows the communication with the servo and motors through the expansion board via I2C
 
 - Expansion Board
 - 2 Gearmotors
@@ -25,30 +26,39 @@ This is the base of our Car and allows the communication with the servo and moto
 
 ## Raspberry Pi 5
 
-This project uses the Raspberry Pi 5 as the central unit between devices
+The Raspberry Pi 5 is the central unit between devices
 
-It has to pass the measures to show in the display, pass Car controls to the microcontroller 
-and process the autonomous driving with the help of the AI HAT
+It passes the measures to the [Cluster Displaye](#Cluster-Display), process the [Raspberry Pi Camera](#Raspberry-Pi-Camera) images
+and pass Car controls to the [Microncontroller](#Microcontroller)
+and process the autonomous driving with the help of the [Raspberry Pi AI HAT+](#Raspberry-Pi-AI-HAT)
 
 ## Raspberry Pi AI HAT
 
-This project uses the Raspberry Pi AI HAT+ as the heavy AI processor
-It has a Hailo-8 AI acceleration chip with 26 TOPS
+The Raspberry Pi AI HAT+ is the heavy AI processor.
+It has a Hailo-8 AI acceleration chip with 26 TOPS of performance
 
-It indentifies the road signals and other road objects
+It indentifies the road signals and other road objects.
+It passes that information to the [Raspberry Pi 5](#Raspberry-Pi-5)
+
+## Raspberry Pi Camera
+
+The Raspberry Pi Camera Module 3 is responsible for streaming the road.
+This stream will have AI processing in real-time by the [Raspberry Pi AI HAT](#Raspberry-Pi-AI-HAT).
+Then this information is passed to the [Raspberry Pi 5](#Raspberry-Pi-5)
+
+It is connected to the [Raspberry Pi 5](#Raspberry-Pi-5) via 22-way FPC connector
 
 ## Microcontroller
 
-This project uses the STM32 board B-U585I-IOT02A
-
-This device is responsible for controlling the Car movement and gathering sensor data.
-This tasks are done under a RTOS (Real Time Operating System)
+The Microcontroller is a STM32 B-U585I-IOT02A.
+This Micro runs a RTOS (Real Time Operating System) and is responsible for controlling the Car movement and gathering sensor data.
 
 This device has 2 MB FLASH, 786 KB RAM, Wi-Fi, Bluetooth and a lot of built-in sensors
 
 ## Can Controller and Transceiver
 
-This project uses the MCP2515 board to create CANBUS communication
+The MCP2515 board creates the CANBUS.
+This enables communication via CAN between the [Microcontroller](#Microcontroller) and the [Raspberry Pi 5](#Raspberry-Pi-5)
 
 It implments CAN V2.0B at 1 Mb/s:
 - 0 to 8-byte length in data field
@@ -62,7 +72,8 @@ This connects the [STM32 MCU](#Microcontroller) and the [Raspberry Pi 5](#Raspbe
 
 ## Cluster Display
 
-This project uses a 7.9 DSI LCD Waveshare Display to show a QT app with information about the Car
+The display is a 7.9 DSI LCD Waveshare Display.
+It is responsible to show a QT app with information about the Car
 
 It has a resolution of 400x1480 pixels, a touch-screen and 60Hz refresh rate
 It is connected via a DSI cable to the [Raspberry Pi 5](#Raspberry-Pi-5)
