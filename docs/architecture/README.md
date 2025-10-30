@@ -57,14 +57,13 @@ This device has 2 MB FLASH, 786 KB RAM, Wi-Fi, Bluetooth and a lot of built-in s
 
 ## Can Controller and Transceiver
 
-The MCP2515 board creates the CANBUS.
+The HW-184 board creates the CANBUS.
 This enables communication via CAN between the [Microcontroller](#Microcontroller) and the [Raspberry Pi 5](#Raspberry-Pi-5)
 
 It implments CAN V2.0B at 1 Mb/s:
 - 0 to 8-byte length in data field
 - Standard and extended data and remote
 frames 
-
 - MCP2515: CAN Controller
 - TJA1050: CAN Transceiver
 
