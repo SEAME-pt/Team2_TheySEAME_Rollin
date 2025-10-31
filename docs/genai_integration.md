@@ -36,9 +36,3 @@ The following principles are applied when using GenAI:
 
 ---
 
-## 4. Integration Process
-
-1. Developer creates a dedicated documentation branch:
-   ```bash
-   git checkout -b docs/genai-integration
-
