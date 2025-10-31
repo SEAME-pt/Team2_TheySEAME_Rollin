@@ -1,7 +1,8 @@
 # Hardware 
 
 This is the list of hardware components and their respective responsabilities in this project.
-There's also a [diagram](#https://github.com/SEAME-pt/Team2_TheySEAME_Rollin/blob/develop/docs/architecture/Hardware%20Architecture.pdf)
+
+There's also a ![diagram](https://github.com/SEAME-pt/Team2_TheySEAME_Rollin/blob/develop/docs/architecture/Hardware%20Architecture.pdf)
 which shows how we organized and connected each component.
 
 ## What we used
