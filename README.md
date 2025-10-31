@@ -48,20 +48,7 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 ## 🔄 Branching & Workflow
 
-Branch Naming Convention:
-
-Example:
-feature/<feature-name>
-bugfix/<issue-id>
-hotfix/<urgent-fix>
-release/<version-number>
-
-Pull Request Process:
-* Create a feature branch from develop.
-* Commit changes following the team’s commit message guidelines.
-* Open a pull request.
-* Request code review.
-* Merge after approval.
+This project branching strategy is explained in this [doc](https://github.com/SEAME-pt/Team2_TheySEAME_Rollin/blob/develop/docs/GitFlow.md)
 
 ## 📈 Product Backlog & Tracking
 
