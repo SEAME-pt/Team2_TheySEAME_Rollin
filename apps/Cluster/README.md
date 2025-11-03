@@ -17,7 +17,7 @@ The workflow consists of:
 |------------|--------------|
 | **Host Machine** | Ubuntu 22.04 (x86_64) |
 | **Target Device** | Raspberry Pi 5 with Raspberry Pi OS |
-| **Toolchain** | arm-linux-gnueabihf-g++ or aarch64-linux-gnu-g++ |
+| **Toolchain** | arm-linux-gnueabihf-g++ |
 
 ---
 
