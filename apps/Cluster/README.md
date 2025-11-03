@@ -32,7 +32,15 @@ sudo apt update
 sudo apt install build-essential qt5-default qtbase5-dev qtchooser qt5-qmake g++-arm-linux-gnueabihf rsync ssh
 ```
 
-### 3.2 Configure Qt Creator for Raspberry Pi
+### 3.2 Prepare the Raspberry Pi
+
+On the Raspberry Pi, install the required Qt runtime libraries:
+
+```bash
+sudo apt update
+sudo apt install qt5-default qtbase5-dev openssh-server
+```
+### 3.3 Configure Qt Creator for Raspberry Pi
 
 1. Open **Qt Creator → Tools → Options → Devices → Devices**
    - Add a **Boot to Qt Device**
