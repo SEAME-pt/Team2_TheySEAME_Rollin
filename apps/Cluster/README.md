@@ -71,7 +71,6 @@ ls /opt/<ProjectName>
 
 To automatically launch the app when the Raspberry Pi boots:
 
-### 6.1 GUI Mode (LXDE)
 Create autostart dir and command file if not exists:
 ```bash
 mkdir -p ~/.config/autostartnano
