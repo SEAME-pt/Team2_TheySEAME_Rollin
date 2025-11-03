@@ -89,3 +89,25 @@ And then:
 ```bash
 sudo reboot
 ```
+
+## 6. Fullscreen Configuration (Hide Taskbar)
+
+To remove the panel (taskbar) and make the Qt application fullscreen on Raspberry Pi OS (Wayfire environment):
+
+1. Edit the panel configuration file:
+   ```bash
+   nano ~/.config/wf-panel-pi.ini
+   ```
+
+2. Add (or modify) the following lines:
+   ```
+   autohide=true
+   autohide_duration=500
+   ```
+
+3. Save and reboot:
+   ```bash
+   sudo reboot
+   ```
+
+After reboot, the taskbar will automatically hide, and your Qt application will appear fullscreen.
