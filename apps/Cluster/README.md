@@ -127,4 +127,4 @@ To remove the panel (taskbar) and make the Qt application fullscreen on Raspberr
    sudo reboot
    ```
 
-After reboot, the taskbar will automatically hide, and your Qt application will appear fullscreen.
+After reboot, the taskbar will automatically hide, and the Qt application will appear fullscreen.
