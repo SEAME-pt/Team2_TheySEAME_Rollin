@@ -35,16 +35,16 @@ sudo apt install build-essential qt5-default qtbase5-dev qtchooser qt5-qmake g++
 ### 3.2 Configure Qt Creator for Raspberry Pi
 
 1. Open **Qt Creator → Tools → Options → Devices → Devices**
-   - Add a **Generic Linux Device**
+   - Add a **Boot to Qt Device**
    - Hostname: `<raspberry_ip>`
-   - User: `pi`
+   - User: `username`
    - Test Connection ✅
 
 2. Open **Qt Creator → Tools → Options → Kits**
    - Add a new **Kit** for the Raspberry Pi
    - Compiler: `arm-linux-gnueabihf-g++`
    - Qt Version: Qt 5.13 for Embedded Linux (ARM)
-   - Device type: **Generic Linux Device**
+   - Device type: **Boot to Qt Device**
    - Device: your Raspberry Pi
 
 3. In your project, select this **Kit** (Raspberry Pi Kit).
@@ -58,8 +58,7 @@ Now you can build and deploy directly from Qt Creator using the **Run** button.
 Qt Creator will:
 - Build your app on the host.
 - Transfer the binary via SSH to `/opt/<ProjectName>` (or another path you define).
-- Execute the app on the Pi.
-
+  
 You can verify with:
 ```bash
 ssh pi@<raspberry_ip>
