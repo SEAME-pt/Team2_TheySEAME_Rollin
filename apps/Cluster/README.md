@@ -40,6 +40,16 @@ On the Raspberry Pi, install the required Qt runtime libraries:
 sudo apt update
 sudo apt install qt5-default qtbase5-dev openssh-server
 ```
+Copy sysroot from Raspberry Pi to Host
+
+From the host machine, copy the system root (libraries and includes) from the Pi:
+```bash
+mkdir -p ~/rpi/sysroot
+rsync -avz --rsync-path="sudo rsync" pi@<raspberry_ip>:/lib ~/rpi/sysroot
+rsync -avz --rsync-path="sudo rsync" pi@<raspberry_ip>:/usr/include ~/rpi/sysroot/usr
+rsync -avz --rsync-path="sudo rsync" pi@<raspberry_ip>:/usr/lib ~/rpi/sysroot/usr
+```
+
 ### 3.3 Configure Qt Creator for Raspberry Pi
 
 1. Open **Qt Creator → Tools → Options → Devices → Devices**
