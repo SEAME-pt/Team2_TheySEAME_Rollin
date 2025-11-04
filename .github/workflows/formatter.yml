@@ -1,0 +1,41 @@
+name: Code Formatter
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches-ignore:
+      - main
+    path:
+      - '**.c'
+      - '**.cpp'
+      - '**.h'
+      - '**.hpp'
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Formatter
+        run: sudo apt install clang-format 
+
+      - name: Get Files
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 2
+
+      - name: Get changed files
+        id: changed_files
+        run: echo "Files=$(git diff --name-only HEAD^1 HEAD -- "*.c" "*.cpp" "*.h" "*.hpp" | xargs)" >> $GITHUB_OUTPUT
+
+      - name: Use formatter in all changed files
+        id: file_changes
+        run: echo "Changes=$(clang-format --style=file --dry-run ${{ steps.changed_files.outputs.files }} 2>&1 | wc -l)" >> $GITHUB_OUTPUT
+
+      - name: Check changes
+        if: steps.file_changes.outputs.Changes > 0
+        run: |
+          clang-format --style=file --dry-run ${{ steps.changed_files.outputs.files }}
+          echo "Nbr of Changes: ${{ steps.file_changes.outputs.Changes }}"
+          echo "Code is badly formatted" && exit 1
