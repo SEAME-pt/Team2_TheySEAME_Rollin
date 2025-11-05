@@ -3,8 +3,8 @@ name: Code Formatter
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches-ignore:
-      - main
+#    branches-ignore:
+#      - main
     path:
       - '**.c'
       - '**.cpp'
@@ -29,11 +29,11 @@ jobs:
         id: changed_files
         run: echo "Files=$(git diff --name-only HEAD^1 HEAD -- "*.c" "*.cpp" "*.h" "*.hpp" | xargs)" >> $GITHUB_OUTPUT
 
-      - name: Use formatter in all changed files
+      - name: Check files format
         id: file_changes
         run: echo "Changes=$(clang-format --style=file --dry-run ${{ steps.changed_files.outputs.files }} 2>&1 | wc -l)" >> $GITHUB_OUTPUT
 
-      - name: Check changes
+      - name: Bad Format
         if: steps.file_changes.outputs.Changes > 0
         run: |
           clang-format --style=file --dry-run ${{ steps.changed_files.outputs.files }}
