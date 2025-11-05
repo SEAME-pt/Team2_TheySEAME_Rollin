@@ -111,7 +111,7 @@ version: 1.0
 
 `requirements/system/REQ-SYS-001.yaml`
 
-``ỳaml
+```ỳaml
 id: REQ-SYS-001
 type: system
 title: Anti-lock braking functionality
@@ -123,11 +123,11 @@ software_reqs:
 version: 1.0
 ```
 
-Example: Software Requirement
+#### Example: Software Requirement
 
 `requirements/software/REQ-SW-001.yaml`
 
-``ỳaml
+```yaml
 id: REQ-SW-001
 type: software
 title: ABS slip-based pressure modulation
@@ -193,10 +193,11 @@ status: implemented
 
 ### Traceability
 Traceability must cover:
+```
 Client → System → Software → Test Case
               ↓
             Module
-            
+```
 The YAML structure provides mechanical traceability:
 - Client → System
 - System → Software
@@ -211,50 +212,14 @@ Traceability can be validated automatically in CI:
 ---
 
 ### Workflow
-1. Define Requirements
-- Start with client-level requirements.
-- Break them down into system and software requirements.
-- Store them as YAML files under /requirements.
-
-2. Allocate to Modules
-
-- Assign software requirements to software modules in:
-  /modules/.../module.yaml
-
-3. Implement
-
-- Write code in that module directory.
-- Ensure commit messages reference requirement IDs.
-
-Example commit:
-
-```feat(abs): REQ-SW-001 pressure modulation```
-
-4. Test
-
-- Unit tests reference:
-- Requirement ID
-- Test case ID
-
-5. Review
-- Pull requests must:
-- Reference requirement IDs
-- Document impacted modules
-- Describe tests performed
-
-6. CI Checks
-- GitHub Actions may:
-- Validate YAML consistency
-- Ensure mappings are correct
-- Run tests linked to REQ IDs
-- Generate a traceability report
-
-7. Verification
-
-- Each requirement tracked as:
-- draft → approved → implemented → verified
-
-#### Example Pull Request Format
-- Implements: REQ-SW-001
-- Module: abs_controller
-- Tests: TC-ABS-001
+```
+Developer → Git Push → GitHub Action
+                ↓
+        Run traceability check
+                ↓
+        Run unit + module tests
+                ↓
+        Upload report
+                ↓
+       Block/Approve PR
+```
