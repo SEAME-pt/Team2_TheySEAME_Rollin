@@ -4,13 +4,14 @@ This section describes the software used in the PiRacer Instrument Cluster syste
 It focuses on the main components, their purposes, and how they interact.
 
 ## WHAT WE USED
-- [Overview](#Overview)
+- [Overview](#OVERVIEW)
 - [ThreadX RTOS](#THREADX-RTOS)
 - [Qt Framework](#QT-FRAMEWORK)
 - [COVESA AND UPROTOCOL](#COVESA-AND-UPROTOCOL)
 
-## Overview
+## OVERVIEW
 This project primarily uses C/C++ and Python programming languages.
+
 It also heavily relies in Open Source software to build our Applications
 
 ## THREADX RTOS
