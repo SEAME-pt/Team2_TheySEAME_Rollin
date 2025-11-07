@@ -7,6 +7,7 @@ This project uses GitFlow as it's branching strategy. This doc serves as a guide
 - ```main```: Stable, releasable code only. Protected; PRs required.
 - ```develop```: Sprint integration branch. Protected; all features merge here first.
 - ```feature```: Short-lived branches for tasks or TSF requirements.
+- ```docs```: Branches for writing documentation only.
 - ```fix```: Bugfix branches targeting develop (or main if urgent).
 - ```release```: Stabilization branch before tagging and shipping.
 

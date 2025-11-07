@@ -1,0 +1,19 @@
+<RCC>
+    <qresource>
+        <file>Dashboard.qmlproject</file>
+        <file>Dashboard/Constants.qml</file>
+        <file>Dashboard/EventListModel.qml</file>
+        <file>Dashboard/EventListSimulator.qml</file>
+        <file>Dashboard/qmldir</file>
+        <file>DashboardContent/App.qml</file>
+        <file>DashboardContent/Screen01.ui.qml</file>
+        <file>DashboardContent/images/20.png</file>
+        <file>DashboardContent/images/Line 1.svg</file>
+        <file>DashboardContent/images/Line 2.svg</file>
+        <file>DashboardContent/images/_.png</file>
+        <file>DashboardContent/images/car.png</file>
+        <file>DashboardContent/images/dashboard.svg</file>
+        <file>DashboardContent/images/h.png</file>
+        <file>qtquickcontrols2.conf</file>
+    </qresource>
+</RCC>
