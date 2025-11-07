@@ -55,20 +55,14 @@ Each requirement is uniquely tracked, traceable, and versioned.
 │   └── testcases/
 │       ├── TC-ABS-001.yaml
 │       └── ...
-│
-├── modules/
-│   ├── abs_controller/
-│   │   ├── module.yaml
-│   │   ├── src/
-│   │   └── tests/
-│   ├── wheel_speed_sensor/
-│   └── ...
-│
 ├── docs/
 │   ├── architecture.md
 │   └── design/
 │
-├── src/
+├── apps/
+│  ├── cluster/
+│  ├── microcontroller/
+│  ├── abs_controller/
 ├── tests/
 └── .github/workflows/
 ```
