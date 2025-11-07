@@ -103,6 +103,7 @@ The following principles are applied when using GenAI:
 
 ## 4. Example Prompts used
 Below are examples of safe and useful prompt categories.
+
 ✅ **Useful:**
 - “Suggest a FreeRTOS task architecture for IMU + motor interface.”
 - “Help write a Markdown section describing the UART driver.”
