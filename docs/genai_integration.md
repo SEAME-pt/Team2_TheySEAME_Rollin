@@ -19,6 +19,7 @@ AI is **not** responsible for any final design or deployment decisions — those
 | Area | Description | AI’s Role |
 |------|--------------|-----------|
 | **Firmware Development** | STM32 embedded C code for I2C, UART, and sensor communication. | AI helps generate template code. |
+| **Task completion** | Use GitHub copilot automatic issue completion feature to complete simple, but repetitive tasks. | AI helps complete the task. |
 | **Requirements Definition** | AI can be used to expand Requirements and brainstorm potential needs of a system. | AI helps generate requirements. |
 | **Debugging Assistance** | Troubleshooting I2C failures, GPIO configuration, or LED logic. | AI suggests diagnostic steps, wiring verification, and HAL debugging approaches. |
 | **Documentation** | Technical reports and code explanations. | AI helps format and write structured `.md` files. |
@@ -32,6 +33,14 @@ GenAI is used to:
 - Suggest modular approaches and architecture
 - Provide examples of interrupt handling and queues
 Developers must validate and test all generated code on hardware.
+
+### Task completion
+GitHub has an automatic task completition feature, available when opening an Issue or a PR.
+Use for tasks like:
+- Create quick documentation
+- Fix a bug has been isolated
+- Make a localized code draft
+- Make a review / explanation of a specific diff
 
 ### Requirements Definition
 GenAI can:
