@@ -1,16 +1,14 @@
 # Trustable Software Framework (TSF) for Student Automotive Projects  
-> Using YAML-based Requirements & Module Documentation
 
 ## Overview
 
 This document describes how to apply a simplified **Trustable Software Framework (TSF)** in an **automotive project**.  
 The approach focuses on:
-- Lightweight tooling
 - Version-controlled artifacts
 - Clear traceability
 - Automotive-inspired workflow (ISO 26262 concepts)
 
-The TSF workflow ensures that requirements are well-defined, implemented in modules, and verified using associated test cases.
+The TSF workflow ensures that requirements are well-defined, implemented by components and type, and verified using associated test cases.
 
 This process keeps the spirit of professional safety-critical development—without requiring expensive commercial tools.
 
