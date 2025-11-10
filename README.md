@@ -13,7 +13,7 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 | Field | Details |
 |-------|----------|
 | **Sprint Number** | Sprint 3 |
-| **Sprint Goal** | Study and experiment with Module 1 technologies, defining concrete actions and tasks for future development. |
+| **Sprint Goal** | Study and experiment with Module 1 technologies, defining concrete actions, workflows and tasks for future development. |
 | **Sprint Duration** | Nov 10 – Nov 27, 2025 |
 | **Focus Areas** | Documentation, Study, ThreadX, Automotive Grade Linux |
 
