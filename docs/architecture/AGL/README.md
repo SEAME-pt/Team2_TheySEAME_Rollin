@@ -19,8 +19,8 @@ This project followed the [AGL docs](https://docs.automotivelinux.org/en/trout/#
 The image chosen was the ```agl-image-minimal-crosssdk```
 
 As of features choosen:
-- agl-all-features
-- agl-devel
+- agl-all-features :(agl-demo agl-netboot)
+- agl-devel :(agl-package-management)
 - agl-ic
 
-After the build, the image was extracted to a 128GB MicroSD card
+After the build, the image is extracted to a 128GB MicroSD card
