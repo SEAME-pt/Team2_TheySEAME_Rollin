@@ -1,6 +1,6 @@
 # Tools
 
-This is a list of tools this project uses and how to install them
+This is a list of tools used and how to install them
 
 ## LLVM tools
 
