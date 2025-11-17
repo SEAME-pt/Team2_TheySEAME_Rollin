@@ -12,10 +12,10 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 | Field | Details |
 |-------|----------|
-| **Sprint Number** | Sprint 2 |
-| **Sprint Goal** | Finish the assembly of the piRacer car defining the requirements for the software and hardware architectures, and setting up the stage for the integration of Module 1 components. |
-| **Sprint Duration** | Oct 27 – Nov 7, 2025 |
-| **Focus Areas** | Hardware integration, requirements definition, arquitecture , Car display UI/UX |
+| **Sprint Number** | Sprint 3 |
+| **Sprint Goal** | Study and experiment with Module 1 technologies, defining concrete actions, workflows and tasks for future development. |
+| **Sprint Duration** | Nov 10 – Nov 27, 2025 |
+| **Focus Areas** | Documentation, Study, ThreadX, Automotive Grade Linux |
 
 
 ## 📅 Scrum Team
@@ -48,20 +48,7 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 ## 🔄 Branching & Workflow
 
-Branch Naming Convention:
-
-Example:
-feature/<feature-name>
-bugfix/<issue-id>
-hotfix/<urgent-fix>
-release/<version-number>
-
-Pull Request Process:
-* Create a feature branch from develop.
-* Commit changes following the team’s commit message guidelines.
-* Open a pull request.
-* Request code review.
-* Merge after approval.
+This project branching strategy is explained in this [doc](https://github.com/SEAME-pt/Team2_TheySEAME_Rollin/blob/develop/docs/GitFlow.md)
 
 ## 📈 Product Backlog & Tracking
 
