@@ -113,7 +113,7 @@ We use the following denominations:
 
 The name part of the ID must be a character string consisting of Unicode letters and/or numbers separated by hyphen (`-`) . Whitespaces are not allowed.
 
-If the requirement is a feature (feat), the name should descripbe roughly what it does:
+If the requirement is a feature (feat), the name should describe roughly what it does:
 ```
     detect-traffic-sign
     software-updates
