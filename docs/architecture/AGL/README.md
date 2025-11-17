@@ -25,3 +25,11 @@ time bitbake agl-image-minimal-crosssdk
 ```
 
 After the build, the image is extracted to a 128GB MicroSD card
+
+### SDK
+
+This project followed the [AGL_SDK](https://docs.automotivelinux.org/en/trout/#04_Developer_Guides/01_Setting_Up_AGL_SDK/) to set up the SDK
+
+SDK mirrors the enviroment of the created AGL image.
+With it, apps can be developed and tested in a enviroment close to the real one without messing with physical hardware
+
