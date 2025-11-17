@@ -173,7 +173,7 @@ Status: proposed
 `requirements/components/cluster.md`
 
 ```
-`dsg~speed-information-over-can-bus~1`
+`dsn~speed-information-over-can-bus~1`
 Speed shall be sent via can bus with a minimum frequency of X Hz.
 
 Needs: impl, test
@@ -193,7 +193,7 @@ Status: draft
 Verify that the instrument cluster displays the vehicle speed.
 
 Covers:
-- dsg~speed-information-over-can-bus~1
+- dsn~speed-information-over-can-bus~1
 
 Script:
 - tests/cluster_latency_test.py
