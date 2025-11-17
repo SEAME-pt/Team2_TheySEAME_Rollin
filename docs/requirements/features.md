@@ -53,7 +53,7 @@ Needs: arch
 
 `feat~show-signs-obstacles~1`
 
-The vehicle shall display traffic signs and road elements on it's instrument cluster.
+The vehicle shall display traffic signs and road elements on its instrument cluster.
 
 Needs: arch
 
