@@ -160,7 +160,7 @@ The Cluster shall display speed data from the speedometer with a resolution of a
 
 Component: Instrument Cluster/Speed Data            <--- Architecture component linked to this arch Specification Item
 
-Needs: dsg
+Needs: dsn
 
 Covers:
 - feat~report-speed-battery~1              <--- This Specification Item has to cover a requirement that Needs an arch type (feature)
