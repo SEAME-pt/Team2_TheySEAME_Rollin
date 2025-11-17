@@ -31,7 +31,7 @@ A TSF-aligned project categorizes requirements into four levels of abstraction:
 | Type | Purpose | Example |
 |------|---------|---------|
 | Client/Feature | High-level features the software must have. Typically required by the Client, or deemed as necessary by the development team. | The vehicle must not skid under braking |
-| Architecture | Define performance and data interface behaviour, assigning responsabilities to each software component. | The braking system shall modulate pressure |
+| Architecture | Define performance and data interface behaviour, assigning responsibilities to each software component. | The braking system shall modulate pressure |
 | Design/Software | Describe the internal structure and behaviour of the software so that it achieve the higher-level requirements. | The ABS module shall sample wheel speed @ ≥1 kHz |
 | Test Case | Define tests that validate the code against each requirement. Can be Unit, Integration or System Tests | Verify sample rate ≥1 kHz |
 
