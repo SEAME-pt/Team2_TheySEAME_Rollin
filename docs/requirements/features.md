@@ -87,8 +87,8 @@ The system shall record  operation logs for debugging.
 
 Needs: arch
 
-`feat~innitialize-on-turn-of~1`
+`feat~initialize-on-turn-of~1`
 
-All the vehicle's systems shall innitialize on boot and await each other's readiness.
+All the vehicle's systems shall initialize on boot and await each other's readiness.
 
 Needs: arch
