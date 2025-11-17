@@ -9,7 +9,7 @@ The vehicle shall be able to detect relevant traffic control elements (e.g., sto
 
 Needs: arch
 
-`detect-traffic-signs~1`
+`feat~detect-traffic-signs~1`
 
 The vehicle shall be able to detect obstacles of any kind.
 
