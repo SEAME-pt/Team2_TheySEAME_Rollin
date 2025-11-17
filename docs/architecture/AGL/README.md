@@ -1,12 +1,12 @@
 # Intro to AGL
 
 AGL (Automotive Grade Linux) is an open source project, from the Linux Foundation, which purpose is to build open source software platforms for the automotive industry
-AGL can address all software in a vehicle, infotainment, instrument cluster (ic), advanced driver assistance systems (ADAS) and more 
+AGL can address all software in a vehicle like in-vehicle-infotainment (ivi), instrument cluster (ic), advanced driver assistance systems (ADAS) and more 
 
 ## Why AGL
 
-The project needed any OS that could run an Instrument Cluster for our car.
-AGL is an OS that can be tailored to our needs (ic) and it's open source software hence this choice
+The project required an Operating System capable of running an Instrument Cluster and supporting ADAS features for our car
+AGL can be tailored to our specific requirements and it's open source software, hence this choice
 
 ## Building AGL Image
 
