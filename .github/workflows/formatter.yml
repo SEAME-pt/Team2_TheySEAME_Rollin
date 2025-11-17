@@ -1,41 +1,40 @@
 name: Code Formatter
 
 on:
+  push:
+    paths:
+      - '**/*.c'
+      - '**/*.cpp'
+      - '**/*.h'
+      - '**/*.hpp'
+
   pull_request:
     types: [opened, synchronize, reopened]
-#    branches-ignore:
-#      - main
-    path:
-      - '**.c'
-      - '**.cpp'
-      - '**.h'
-      - '**.hpp'
+    paths:
+      - '**/*.c'
+      - '**/*.cpp'
+      - '**/*.h'
+      - '**/*.hpp'
 
 jobs:
-  format:
+  formatter:
     runs-on: ubuntu-latest
+    env:
+      DOCKER_TAG: format
 
     steps:
-      - name: Install Formatter
-        run: sudo apt install clang-format 
-
-      - name: Get Files
+      - name: Fetching repo
         uses: actions/checkout@v5
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 2
 
-      - name: Get changed files
-        id: changed_files
-        run: echo "Files=$(git diff --name-only HEAD^1 HEAD -- "*.c" "*.cpp" "*.h" "*.hpp" | xargs)" >> $GITHUB_OUTPUT
+      - name: Build Docker Container
+        run: docker build -t $DOCKER_TAG .
 
-      - name: Check files format
-        id: file_changes
-        run: echo "Changes=$(clang-format --style=file --dry-run ${{ steps.changed_files.outputs.files }} 2>&1 | wc -l)" >> $GITHUB_OUTPUT
-
-      - name: Bad Format
-        if: steps.file_changes.outputs.Changes > 0
-        run: |
-          clang-format --style=file --dry-run ${{ steps.changed_files.outputs.files }}
-          echo "Nbr of Changes: ${{ steps.file_changes.outputs.Changes }}"
-          echo "Code is badly formatted" && exit 1
+      - name: Run formatt script
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.event.after }}
+          EVENT: ${{ github.event_name }}
+        run: bash ./formatter.sh
