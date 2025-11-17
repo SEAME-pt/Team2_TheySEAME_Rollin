@@ -207,7 +207,7 @@ A software module is a cohesive functional unit with:
 - Tests
 - Requirements allocation
 
-Each module has a module_tests.md with all the unit, system and integration test Specification Items for traceability. The shall also be tests in a separate tests/ directory for each module.
+Each module has a module_tests.md with all the unit, system and integration test Specification Items for traceability. There shall also be tests in a separate tests/ directory for each module.
 
 ### Test Levels Overview
 
