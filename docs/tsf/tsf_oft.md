@@ -89,7 +89,7 @@ Examples:
     feat~show-signs-obstacles~1
     arch~cluster-show-sign-obstacles~1
     dsn~cluster-show-stop-sign~1
-    test~cluster-sow-stop-sign-test~4
+    test~cluster-show-stop-sign-test~4
 ```
 The following sections explain the each of the three parts in detail.
 
