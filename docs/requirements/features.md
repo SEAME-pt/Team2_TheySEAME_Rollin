@@ -9,7 +9,7 @@ The vehicle shall be able to detect relevant traffic control elements (e.g., sto
 
 Needs: arch
 
-`detect-traffic-signs~1`
+`feat~detect-traffic-signs~1`
 
 The vehicle shall be able to detect obstacles of any kind.
 
@@ -53,7 +53,7 @@ Needs: arch
 
 `feat~show-signs-obstacles~1`
 
-The vehicle shall display traffic signs and road elements on it's instrument cluster.
+The vehicle shall display traffic signs and road elements on its instrument cluster.
 
 Needs: arch
 
@@ -87,8 +87,8 @@ The system shall record  operation logs for debugging.
 
 Needs: arch
 
-`feat~innitialize-on-turn-of~1`
+`feat~initialize-on-turn-of~1`
 
-All the vehicle's systems shall innitialize on boot and await each other's readiness.
+All the vehicle's systems shall initialize on boot and await each other's readiness.
 
 Needs: arch

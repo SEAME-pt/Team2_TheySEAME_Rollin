@@ -12,7 +12,6 @@ The TSF workflow ensures that requirements are well-defined, implemented by comp
 
 This process keeps the spirit of professional safety-critical development—without requiring expensive commercial tools.
 
----
 
 ## Goals
 
@@ -22,22 +21,20 @@ This process keeps the spirit of professional safety-critical development—with
 - Enable automated verification via CI
 - Maintain required artifacts in version control
 
----
 
-# Requirement Types
+## Requirement Types
 
 A TSF-aligned project categorizes requirements into four levels of abstraction:
 
 | Type | Purpose | Example |
 |------|---------|---------|
 | Client/Feature | High-level features the software must have. Typically required by the Client, or deemed as necessary by the development team. | The vehicle must not skid under braking |
-| Architecture | Define performance and data interface behaviour, assigning responsabilities to each software component. | The braking system shall modulate pressure |
+| Architecture | Define performance and data interface behaviour, assigning responsibilities to each software component. | The braking system shall modulate pressure |
 | Design/Software | Describe the internal structure and behaviour of the software so that it achieve the higher-level requirements. | The ABS module shall sample wheel speed @ ≥1 kHz |
 | Test Case | Define tests that validate the code against each requirement. Can be Unit, Integration or System Tests | Verify sample rate ≥1 kHz |
 
----
 
-# Project Folder Structure
+## Project Folder Structure
 
 ```
 ├── docs/
@@ -61,7 +58,7 @@ A TSF-aligned project categorizes requirements into four levels of abstraction:
 
 ---
 
-# Specification Items
+## Specification Items
 
 "Specification Item" is a general term used to denominate all normative pieces of specifications and markers to their coverage in the implementation.
 
@@ -73,7 +70,7 @@ Examples:
 
 A **Requirement** is denoted as a Specification Item, but a Specification Item is not necessarily a requirement.
 
-## Specification Item ID
+### Specification Item ID
 
 The identifier (ID) of a [specification item](#specification-item) is a project-globally unique key which is used to refer to a specification item.
 
@@ -89,11 +86,11 @@ Examples:
     feat~show-signs-obstacles~1
     arch~cluster-show-sign-obstacles~1
     dsn~cluster-show-stop-sign~1
-    test~cluster-sow-stop-sign-test~4
+    test~cluster-show-stop-sign-test~4
 ```
 The following sections explain the each of the three parts in detail.
 
-### Specification Item Artifact Type
+#### Specification Item Artifact Type
 
 The artifact type serves two purposes:
 
@@ -109,11 +106,11 @@ We use the following denominations:
 * `impl` - implementation
 * `test` - test case: unit, system or integration test
 
-### Specification Item Name
+#### Specification Item Name
 
 The name part of the ID must be a character string consisting of Unicode letters and/or numbers separated by hyphen (`-`) . Whitespaces are not allowed.
 
-If the requirement is a feature (feat), the name should descripbe roughly what it does:
+If the requirement is a feature (feat), the name should describe roughly what it does:
 ```
     detect-traffic-sign
     software-updates
@@ -160,7 +157,7 @@ The Cluster shall display speed data from the speedometer with a resolution of a
 
 Component: Instrument Cluster/Speed Data            <--- Architecture component linked to this arch Specification Item
 
-Needs: dsg
+Needs: dsn
 
 Covers:
 - feat~report-speed-battery~1              <--- This Specification Item has to cover a requirement that Needs an arch type (feature)
@@ -199,7 +196,7 @@ Script:
 - tests/cluster_latency_test.py
 ```
 
-### Software Modules
+## Software Modules
 
 A software module is a cohesive functional unit with:
 - A defined responsibility
@@ -207,9 +204,9 @@ A software module is a cohesive functional unit with:
 - Tests
 - Requirements allocation
 
-Each module has a module_tests.md with all the unit, system and integration test Specification Items for traceability. The shall also be tests in a separate tests/ directory for each module.
+Each module has a module_tests.md with all the unit, system and integration test Specification Items for traceability. There shall also be tests in a separate tests/ directory for each module.
 
-### Test Levels Overview
+## Test Levels Overview
 
 This document summarizes the three primary levels of testing used in the project.
 
@@ -235,7 +232,7 @@ Traceability can be validated automatically in CI:
 
 ---
 
-### Workflow
+## Workflow
 ```
 Developer → Git Push → GitHub Action
                 ↓
