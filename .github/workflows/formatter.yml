@@ -30,11 +30,11 @@ jobs:
           fetch-depth: 2
 
       - name: Build Docker Container
-        run: docker build -t $DOCKER_TAG .
+        run: docker build -t $DOCKER_TAG ./actions/formatter
 
       - name: Run formatt script
         env:
           BEFORE: ${{ github.event.before }}
           AFTER: ${{ github.event.after }}
           EVENT: ${{ github.event_name }}
-        run: bash ./formatter.sh
+        run: bash ./actions/formatter/formatter.sh
