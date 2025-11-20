@@ -1,7 +1,7 @@
 name: Requirements Trace
 
 on:
-  pull_request:
+  push:
     paths:
       - "docs/requirements/**.md"
       - ".github/workflows/requirements-trace.yml"
