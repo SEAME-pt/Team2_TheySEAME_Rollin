@@ -1,0 +1,22 @@
+name: Requirements Trace
+
+on:
+  pull_request:
+    paths:
+      - "docs/requirements/**.md"
+      - ".github/workflows/requirements-trace.yml"
+
+jobs:
+  traceability:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run OpenFastTrace (with fail on issues)
+        run: |
+          docker run --rm \
+            -v "$PWD":/repo \
+            -w /repo \
+            ghcr.io/seame-pt/team2_theyseame_rollin/openfasttrace:latest \
+            trace --fail /docs/requirements/*.md
