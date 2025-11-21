@@ -1,7 +1,7 @@
 name: Requirements Trace
 
 on:
-  push:
+  pull_request:
 
 jobs:
   traceability:
