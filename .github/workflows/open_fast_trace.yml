@@ -2,9 +2,6 @@ name: Requirements Trace
 
 on:
   push:
-    paths:
-      - "docs/requirements/**.md"
-      - ".github/workflows/requirements-trace.yml"
 
 jobs:
   traceability:
