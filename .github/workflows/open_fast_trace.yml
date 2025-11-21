@@ -10,6 +10,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Log in to GHCR
+        run: |
+          echo "${{ secrets.OTF_KEY }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
       - name: Run OpenFastTrace (with fail on issues)
         run: |
           docker run --rm \
