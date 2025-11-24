@@ -12,10 +12,10 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 | Field | Details |
 |-------|----------|
-| **Sprint Number** | Sprint 3 |
-| **Sprint Goal** | Study and experiment with Module 1 technologies, defining concrete actions, workflows and tasks for future development. |
-| **Sprint Duration** | Nov 10 – Nov 27, 2025 |
-| **Focus Areas** | Documentation, Study, ThreadX, Automotive Grade Linux |
+| **Sprint Number** | Sprint 4 |
+| **Sprint Goal** | Lay the groundwork to enable the first **Script-Driven Functional Test SDFT** of the piRacer car operating using scripted driving data, without remote control or ADAS. |
+| **Sprint Duration** | Nov 24 – Dec 5, 2025 |
+| **Focus Areas** | AGL, ThreadX, CAN, Open Fast Trace |
 
 
 ## 📅 Scrum Team
