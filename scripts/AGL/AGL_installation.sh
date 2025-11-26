@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Init the build enviroment
-source meta-agl/scripts/aglsetup.sh -m raspberrypi5 -b $BUILD_DIR agl-all-features agl-devel agl-ic
+source meta-agl/scripts/aglsetup.sh -m raspberrypi5 -b $BUILD_DIR $AGL_FEATURES
 
 # Add meta-qt6 layer
-# bitbake-layers add-layer $AGL_TOP/external/meta-qt6
+bitbake-layers add-layer $AGL_TOP/external/meta-qt6
 
 # Add recipes to local.conf
 echo "IMAGE_INSTALL:append = \"$QT_RECIPES\"" >> $LOCAL_CONF

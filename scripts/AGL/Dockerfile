@@ -6,6 +6,8 @@ WORKDIR $AGL_TOP
 ENV TZ=Europe/London
 ENV BUILD_DIR=build
 ENV LOCAL_CONF=$AGL_TOP/$BUILD_DIR/conf/local.conf
+ENV AGL_FEATURES="agl-app-framework agl-buildstats agl-devel agl-drm-lease agl-ic \
+	agl-netboot agl-package-management agl-pipewire agl-selinux"
 ENV QT_RECIPES=" qtbase qtmultimedia qtquick3d qtdeclarative"
 ENV DEVEL_RECIPES=" cmake"
 
