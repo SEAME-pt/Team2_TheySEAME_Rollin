@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <poll.h>
 
 int send_msg(int sock, canid_t id, uint8_t *data, uint8_t len) {
 	struct can_frame frame;
@@ -41,12 +42,13 @@ int rec_msg(int sock) {
 
 int main() {
 	int sock;
-	struct sockaddr_can sockaddr;
+	struct sockaddr_can addr;
 	struct ifreq ifr;
+	struct pollfd fds;
 
 	sock = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 	if (sock < 0) {
-		printf("Error creating socket\n");
+		perror("Error creating socket:");
 		exit(1);
 	}
 	printf("Created socket\n");
@@ -55,25 +57,39 @@ int main() {
 	ioctl(sock, SIOCGIFINDEX, &ifr);
 	printf("Received CAN interface\n");
 
-	sockaddr.can_family = AF_CAN;
-	sockaddr.can_ifindex = ifr.ifr_ifindex;
-	if (bind(sock, (struct sockaddr *)&sockaddr, sizeof(struct sockaddr_can)) < 0) {
-		printf("Error in bind\n");
+	addr.can_family = AF_CAN;
+	addr.can_ifindex = ifr.ifr_ifindex;
+	if (bind(sock, (struct sockaddr *)&addr, sizeof(struct sockaddr_can)) < 0) {
+		perror("Error in bind:");
 		exit(1);
 	}
 	printf("Binded socket\n");
 
-	printf("Sending frame\n");
-	uint8_t data[2] = { 0x42, 0x54 };
-	if (send_msg(sock, 0x124, data, sizeof(data)) < 0) {
-		printf("Error sending can_frame\n");
-		exit(1);
+	fds.fd = sock;
+	fds.events = POLLIN;
+	while (1) {
+		if (poll(&fds, 1, 1000) < 0) {
+			perror("Error in poll:");
+			exit(1);
+		}
+		if (fds.revents & POLLIN) {
+			printf("Receiving frame\n");
+			if (rec_msg(sock) < 0) {
+				perror("Error in read:");
+				exit(1);
+			}
+		}
+		printf("Sending frame\n");
+		uint8_t data[2] = { 0x42, 0x54 };
+		if (send_msg(sock, 0x124, data, sizeof(data)) < 0) {
+			perror("Error sending can_frame:\n");
+			exit(1);
+		}
 	}
 
-	printf("Receiving frame\n");
-	if (rec_msg(sock) < 0) {
-		printf("Error in read\n");
-		exit(1);
+
+	if (close(sock) < 0) {
+		perror("Error in close:");
 	}
 	return (0);
 }
