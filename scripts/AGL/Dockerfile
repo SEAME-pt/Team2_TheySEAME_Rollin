@@ -1,6 +1,7 @@
 FROM ubuntu:22.04
 
 ENV AGL_TOP=/AGL
+ENV USER=agl
 WORKDIR $AGL_TOP
 
 ENV TZ=Europe/London
@@ -29,5 +30,10 @@ RUN repo init -b trout -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo
 COPY AGL_installation.sh .
 
 RUN chmod +x AGL_installation.sh
+
+RUN adduser --disabled-password --gecos '' $USER
+RUN chown -R agl:agl $AGL_TOP
+
+USER $USER
 
 CMD [ "./AGL_installation.sh" ]
