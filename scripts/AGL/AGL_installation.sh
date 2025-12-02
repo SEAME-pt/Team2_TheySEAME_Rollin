@@ -16,6 +16,7 @@ echo "DL_DIR = \"$HOME/downloads/\"" >> $LOCAL_CONF
 echo "INHERIT += \"rm_work\"" >> $LOCAL_CONF
 echo "RM_OLD_IMAGE = \"1\"" >> $LOCAL_CONF
 
-# Start creating the image
-time bitbake agl-image-compositor
+# Start creating the image and sdk
+time bitbake agl-image-weston
+time bitbake agl-image-weston -c do_populate_sdk
 

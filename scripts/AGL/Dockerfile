@@ -35,4 +35,4 @@ RUN adduser --disabled-password --gecos '' $USER && chown $USER:$USER $AGL_TOP
 
 USER $USER
 
-CMD [ "./AGL_installation.sh" ]
+ENTRYPOINT [ "./AGL_installation.sh" ]
