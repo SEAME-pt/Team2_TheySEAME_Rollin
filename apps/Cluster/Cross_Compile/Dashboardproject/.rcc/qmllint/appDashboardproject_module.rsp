@@ -1,0 +1,10 @@
+-I
+/home/team2/Cross_Compile/Dashboardproject
+-I
+/home/team2/Qt/6.7.3/gcc_64/qml
+--resource
+/home/team2/Cross_Compile/Dashboardproject/.qt/rcc/qmake_qml.qrc
+--resource
+/home/team2/Cross_Compile/Dashboardproject/.qt/rcc/appDashboardproject_raw_qml_0.qrc
+--module
+qml
