@@ -13,17 +13,25 @@ AGL can be tailored to our specific requirements and it's open source software, 
 
 This project followed the [AGL docs](https://docs.automotivelinux.org/en/trout/#) in the trout
 
-The target machine is a ```raspberrypi5``` and the image built is ```agl-image-compositor```
+The target machine is a ```raspberrypi5``` and the image built is ```[image]```.
+[Here](/scripts/AGL/README) is a Dockerfile which builds this image
 
 ### Features
 
 This image contains:
-- agl-all-features
 - agl-devel
+- agl-netboot
+- agl-pipewire
+- agl-app-framework
+- agl-selinux
+- agl-buildstats
 - agl-ic
+- agl-drm-lease
 
 ```bash
-source meta-agl/scripts/aglsetup.sh -m raspberrypi5 -d <build-name> agl-all-features agl-devel agl-ic
+source meta-agl/scripts/aglsetup.sh -m raspberrypi5 -d <build-name> \
+    agl-devel agl-netboot agl-pipewire agl-app-framework \
+    agl-selinux agl-buildstats agl-ic agl-drm-lease
 ```
 
 ### Layers
@@ -46,7 +54,7 @@ IMAGE_INSTALL:append = " cmake"
 Then build the image
 
 ```bash
-time bitbake agl-image-compositor
+time bitbake [image]
 ```
 
 ### SDK
@@ -56,6 +64,8 @@ With it, apps can be developed and tested in a enviroment close to the real one 
 
 To create the SDK run this command
 ```bash
-bitbake agl-image-compositor -c do_populate_sdk
+bitbake [image] -c do_populate_sdk
 ```
+
+[image]: agl-image-weston
 
