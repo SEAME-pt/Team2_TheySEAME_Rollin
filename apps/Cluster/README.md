@@ -103,7 +103,7 @@ The resulting executable is fully compatible with the Raspberry Pi target.
 
 # Steps
 
-##### **1 - Creates the Target Image (DockerfileRasp)**
+##### **1 - Creates the Target Image (Dockerfile-sysroot)**
 
 ```bash
 $ docker buildx build --platform linux/arm64 --load -f Dockerfile-sysroot -t raspimage .
