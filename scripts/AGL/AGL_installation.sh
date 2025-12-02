@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Init the build enviroment
-source meta-agl/scripts/aglsetup.sh -m raspberrypi5 -b $BUILD_DIR $AGL_FEATURES
+source meta-agl/scripts/aglsetup.sh -f -m raspberrypi5 -b $BUILD_DIR $AGL_FEATURES
 
 # Add meta-qt6 layer
 bitbake-layers add-layer $AGL_TOP/external/meta-qt6

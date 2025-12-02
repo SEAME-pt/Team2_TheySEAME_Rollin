@@ -31,8 +31,7 @@ COPY AGL_installation.sh .
 
 RUN chmod +x AGL_installation.sh
 
-RUN adduser --disabled-password --gecos '' $USER
-RUN chown -R agl:agl $AGL_TOP
+RUN adduser --disabled-password --gecos '' $USER && chown $USER:$USER $AGL_TOP
 
 USER $USER
 
