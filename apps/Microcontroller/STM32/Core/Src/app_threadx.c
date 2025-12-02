@@ -61,10 +61,13 @@ extern void Battery_Thread_Entry(ULONG thread_input);
 UINT App_ThreadX_Init(VOID *memory_ptr)
 {
   UINT ret = TX_SUCCESS;
+
   /* USER CODE BEGIN App_ThreadX_MEM_POOL */
 
   /* USER CODE END App_ThreadX_MEM_POOL */
+
   /* USER CODE BEGIN App_ThreadX_Init */
+  // Create the battery monitoring thread
   UINT status = tx_thread_create(&battery_thread, "Battery Thread",
                                   Battery_Thread_Entry, 0,
                                   battery_thread_stack, sizeof(battery_thread_stack),

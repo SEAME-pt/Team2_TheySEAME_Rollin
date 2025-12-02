@@ -78,7 +78,7 @@ extern "C" {
 /*#define HAL_SMBUS_MODULE_ENABLED */
 #define HAL_SPI_MODULE_ENABLED
 /*#define HAL_SRAM_MODULE_ENABLED */
-/*#define HAL_TIM_MODULE_ENABLED */
+#define HAL_TIM_MODULE_ENABLED
 /*#define HAL_TSC_MODULE_ENABLED */
 #define HAL_UART_MODULE_ENABLED
 /*#define HAL_USART_MODULE_ENABLED */
@@ -172,7 +172,7 @@ vary depending on the variations in voltage and temperature.*/
   * @brief This is the HAL system configuration section
   */
 #define  VDD_VALUE                    3300UL /*!< Value of VDD in mv */
-#define  TICK_INT_PRIORITY            (14UL)  /*!< tick interrupt priority */
+#define  TICK_INT_PRIORITY            (15UL)  /*!< tick interrupt priority (lowest by default) */
 #define  USE_RTOS                     0U
 #define  PREFETCH_ENABLE              1U               /*!< Enable prefetch */
 

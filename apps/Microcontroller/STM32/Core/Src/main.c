@@ -964,22 +964,19 @@ void Battery_Thread_Entry(ULONG thread_input) {
 
     // --- STEERING SERVO SWEEP TEST ---
     for (float angle = -30.0f; angle <= 30.0f; angle += 5.0f) {
-      // --- STEERING SERVO SWEEP TEST ---
-      for (float angle = -30.0f; angle <= 30.0f; angle += 5.0f) {
-          PCA9685_SetServoAngle(0, angle); // Channel 0 for steering
-          tx_thread_sleep(10); // 100ms per step
-      }
-      for (float angle = 30.0f; angle >= -30.0f; angle -= 5.0f) {
-          PCA9685_SetServoAngle(0, angle);
-          tx_thread_sleep(10);
-      }
-      Debug_Print("[SWEEP] Steering sweep complete\r\n");
+        PCA9685_SetServoAngle(0, angle); // Channel 0 for steering
+        tx_thread_sleep(10); // 100ms per step
+    }
+    for (float angle = 30.0f; angle >= -30.0f; angle -= 5.0f) {
+        PCA9685_SetServoAngle(0, angle);
+        tx_thread_sleep(10);
+    }
+    Debug_Print("[SWEEP] Steering sweep complete\r\n");
 
-      // Wait 1 second before throttle test
-      tx_thread_sleep(100); // 1 second
+    // Wait 1 second before throttle test
+    tx_thread_sleep(100); // 1 second
 
-
-      // --- THROTTLE MOTOR H-BRIDGE TEST (PCA9685 @ 0x60) ---
+    // --- THROTTLE MOTOR H-BRIDGE TEST (PCA9685 @ 0x60) ---
       // This test runs both motors forward at 50% duty for 2 seconds, then stops all motors.
       // Channels: 0 = M1 speed, 1 = M1 DIR1, 2 = M1 DIR2, 3 = M2 speed, 4 = M2 speed, 5 = M2 DIR2, 6 = M2 DIR1, 7 = M2 speed
 
@@ -1004,10 +1001,10 @@ void Battery_Thread_Entry(ULONG thread_input) {
       tx_thread_sleep(200); // 2 seconds
 
       // Stop all motors (set all speed and direction channels to 0)
-      for (uint8_t ch = 0; ch < 8; ++ch) {
-        PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, ch, 0, 0);
-      }
-      Debug_Print("[THROTTLE TEST] Motors stopped\r\n\r\n");
+    for (uint8_t ch = 0; ch < 8; ++ch) {
+      PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, ch, 0, 0);
+    }
+    Debug_Print("[THROTTLE TEST] Motors stopped\r\n\r\n");
 
     Debug_Print("[BATTERY_THREAD] Starting monitoring loop\r\n\r\n");
 
@@ -1016,15 +1013,15 @@ void Battery_Thread_Entry(ULONG thread_input) {
     uint8_t error_count = 0;
 
     while(1) {
-      // Toggle green LED (runs independently from other threads)
-      led_state = !led_state;
-      HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, led_state ? GPIO_PIN_SET : GPIO_PIN_RESET);
+        // Toggle green LED (runs independently from other threads)
+        led_state = !led_state;
+        HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, led_state ? GPIO_PIN_SET : GPIO_PIN_RESET);
 
-      // Read INA219 voltage and current with error recovery
-      uint8_t reg_addr;
-      uint8_t data[2];
+        // Read INA219 voltage and current with error recovery
+        uint8_t reg_addr;
+        uint8_t data[2];
 
-      // Read bus voltage with retry
+        // Read bus voltage with retry
         reg_addr = INA219_REG_BUS_VOLTAGE;
         ret = HAL_I2C_Master_Transmit(&hi2c1, INA219_ADDR, &reg_addr, 1, 200);
 
@@ -1039,7 +1036,7 @@ void Battery_Thread_Entry(ULONG thread_input) {
                 error_count = 0;
                 Debug_Print("[BATTERY_THREAD] I2C bus reset\r\n");
             }
-            snprintf(uart_buf, sizeof(uart_buf), "[BATTERY_THREAD][%lu] I2C transmit failed (status: %d)\r\n", count, ret);
+            snprintf(uart_buf, sizeof(uart_buf), "[BATTERY_THREAD][%lu] I2C TX error: %d\r\n", count, ret);
             Debug_Print(uart_buf);
         } else {
             // Small delay before receive
@@ -1050,6 +1047,14 @@ void Battery_Thread_Entry(ULONG thread_input) {
                 error_count = 0;  // Reset error counter on success
 
                 int16_t bus_voltage_raw = (data[0] << 8) | data[1];
+                
+                // Debug: show raw data
+                if (count < 3) {  // Only for first 3 readings
+                    snprintf(uart_buf, sizeof(uart_buf), "[DEBUG] Raw bytes: 0x%02X 0x%02X, raw_value: %d\r\n", 
+                            data[0], data[1], bus_voltage_raw);
+                    Debug_Print(uart_buf);
+                }
+                
                 bus_voltage_raw >>= 3;  // Remove lower 3 bits
                 float voltage = bus_voltage_raw * 0.004f;  // 4mV per bit
 
@@ -1070,29 +1075,36 @@ void Battery_Thread_Entry(ULONG thread_input) {
                         int16_t current_raw = (data[0] << 8) | data[1];
                         float current = current_raw * 0.001f;  // 1mA per bit (depends on calibration)
 
-                        snprintf(uart_buf, sizeof(uart_buf), "[BATTERY_THREAD][%lu] %.2fV (%.1f%%), %.0fmA\r\n",
-                                count, voltage, percentage, current);
+                        // Convert floats to integers for printf (floating point printf not enabled)
+                        int voltage_int = (int)voltage;
+                        int voltage_frac = (int)((voltage - voltage_int) * 100);
+                        int percentage_int = (int)percentage;
+                        int current_int = (int)current;
+
+                        snprintf(uart_buf, sizeof(uart_buf), "[BATTERY_THREAD][%lu] %d.%02dV (%d%%), %dmA\r\n",
+                                count, voltage_int, voltage_frac, percentage_int, current_int);
                         Debug_Print(uart_buf);
                     } else {
                         error_count++;
-                        snprintf(uart_buf, sizeof(uart_buf), "[BATTERY_THREAD][%lu] Current read failed (status: %d)\r\n", count, ret);
+                        snprintf(uart_buf, sizeof(uart_buf), "[BATTERY_THREAD][%lu] Current RX error: %d\r\n", count, ret);
                         Debug_Print(uart_buf);
                     }
                 } else {
                     error_count++;
+                    snprintf(uart_buf, sizeof(uart_buf), "[BATTERY_THREAD][%lu] Current TX error: %d\r\n", count, ret);
+                    Debug_Print(uart_buf);
                 }
             } else {
                 error_count++;
-                snprintf(uart_buf, sizeof(uart_buf), "[BATTERY_THREAD][%lu] Voltage read failed (status: %d)\r\n", count, ret);
+                snprintf(uart_buf, sizeof(uart_buf), "[BATTERY_THREAD][%lu] Voltage RX error: %d\r\n", count, ret);
                 Debug_Print(uart_buf);
             }
         }
 
         count++;
-    		tx_thread_sleep(200);  // 2 seconds (context switches to other threads)
-      }
-      }
-    } // Properly close Battery_Thread_Entry
+        tx_thread_sleep(200);  // 2 seconds (context switches to other threads)
+    }
+} // Properly close Battery_Thread_Entry
 
 void Debug_Print(const char *msg) {
     HAL_UART_Transmit(&huart1, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
@@ -1115,6 +1127,28 @@ void PCA9685_SetServoAngle(uint8_t channel, float angle) {
 /* USER CODE END 4 */
 
 /**
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM6 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM6)
+  {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  /* USER CODE END Callback 1 */
+}
+
+/**
   * @brief  This function is executed in case of error occurrence.
   * @retval None
   */
@@ -1123,8 +1157,11 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
+  // Blink red LED very fast to indicate error
   while (1)
   {
+    HAL_GPIO_TogglePin(GPIOH, LED_RED_Pin);
+    for(volatile uint32_t i = 0; i < 100000; i++);
   }
   /* USER CODE END Error_Handler_Debug */
 }

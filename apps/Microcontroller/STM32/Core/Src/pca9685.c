@@ -126,10 +126,6 @@ HAL_StatusTypeDef PCA9685_Init_Device(I2C_HandleTypeDef *hi2c, uint8_t addr, con
 // Set PWM - write each byte individually (C++ reference method)
 HAL_StatusTypeDef PCA9685_SetPWM(I2C_HandleTypeDef *hi2c, uint8_t device_addr, uint8_t channel, uint16_t on, uint16_t off) {
     uint8_t reg_base = 0x06 + 4 * channel;
-    char msg[64];
-    
-    snprintf(msg, sizeof(msg), "SetPWM ch%d: on=%d, off=%d\r\n", channel, on, off);
-    Debug_Print(msg);
     
     // Write each register individually (matches working C++ code)
     uint8_t cmd[2];
@@ -139,32 +135,25 @@ HAL_StatusTypeDef PCA9685_SetPWM(I2C_HandleTypeDef *hi2c, uint8_t device_addr, u
     cmd[0] = reg_base;
     cmd[1] = on & 0xFF;
     status = HAL_I2C_Master_Transmit(hi2c, device_addr, cmd, 2, 500);
-    if (status != HAL_OK) goto error;
+    if (status != HAL_OK) return status;
     
     // Write ON_H
     cmd[0] = reg_base + 1;
     cmd[1] = on >> 8;
     status = HAL_I2C_Master_Transmit(hi2c, device_addr, cmd, 2, 500);
-    if (status != HAL_OK) goto error;
+    if (status != HAL_OK) return status;
     
     // Write OFF_L
     cmd[0] = reg_base + 2;
     cmd[1] = off & 0xFF;
     status = HAL_I2C_Master_Transmit(hi2c, device_addr, cmd, 2, 500);
-    if (status != HAL_OK) goto error;
+    if (status != HAL_OK) return status;
     
     // Write OFF_H
     cmd[0] = reg_base + 3;
     cmd[1] = off >> 8;
     status = HAL_I2C_Master_Transmit(hi2c, device_addr, cmd, 2, 500);
-    if (status != HAL_OK) goto error;
     
-    Debug_Print("  SetPWM complete (4 registers written)\r\n");
-    return HAL_OK;
-    
-error:
-    snprintf(msg, sizeof(msg), "  SetPWM FAILED at register 0x%02X: %d\r\n", cmd[0], status);
-    Debug_Print(msg);
     return status;
 }
 
