@@ -109,3 +109,11 @@ The system shall record  operation logs for debugging.
 Needs: arch
 
 Status: approved
+
+`feat~failsafe-case-miscommunication~1`
+
+The Control Unit of the car shall enter FAILSAFE mode if it stops receiving periodic information (heartbeat) from the Raspberry Pi.
+
+Needs: arch
+
+Status: approved
