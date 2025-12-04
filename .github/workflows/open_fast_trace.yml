@@ -1,0 +1,23 @@
+name: Requirements Trace
+
+on:
+  pull_request:
+
+jobs:
+  traceability:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        run: |
+          echo "${{ secrets.OTF_KEY }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Run OpenFastTrace (with fail on issues)
+        run: |
+          docker run --rm \
+            -v "$PWD":/repo \
+            -w /repo \
+            ghcr.io/seame-pt/team2_theyseame_rollin/openfasttrace:latest \
+            trace ./docs/requirements/*.md

@@ -1,0 +1,7 @@
+--resource
+/home/team2/Cross_Compile/Dashboardproject/.qt/rcc/qmake_qml.qrc
+--resource
+/home/team2/Cross_Compile/Dashboardproject/.qt/rcc/appDashboardproject_raw_qml_0.qrc
+/qml/qml/Main.qml
+/qml/qml/Screen01.ui.qml
+/qml/qml/Constants.qml

@@ -1,130 +1,112 @@
-# Qt Dashboard Application for Raspberry Pi
 
-## 1. Introduction
+# Docker-Based Qt Cross-Compilation for AGL Linux
 
-This document explains how to build, deploy, and automatically run a Qt application on a Raspberry Pi using cross-compilation from a Linux PC.
+During development, we faced repeated failures when attempting a standard cross-compilation of Qt for ARM64. To overcome these issues, we transitioned to a Docker-based workflow, inspired by PhysicsX’s methodology, which allows for a fully controlled and reproducible build environment.
 
-The workflow consists of:
-1. Building the application on the host (PC)
-2. Deploying the compiled binaries to the Raspberry Pi
-3. Configuring the Raspberry Pi to run the application on boot
+This approach has been customized for our instrument cluster project on the Raspberry Pi, providing a clean separation between host and target environments and ensuring future scalability. Key references include:
+By using Docker, we avoid dependency conflicts and drastically reduce build time compared to compiling directly on the device.
 
----
+## Overview of the Workflow
 
-## 2. Development Environment
+The process uses **two dedicated Docker containers**:
+1. **Target Environment Container:** Simulates the Raspberry Pi OS and generates the sysroot.
+2. **Cross-Compilation Container:** Uses the sysroot to build Qt and the project on the host.
 
-| Component | Description |
-|------------|--------------|
-| **Host Machine** | Ubuntu 22.04 (x86_64) |
-| **Target Device** | Raspberry Pi 5 with Raspberry Pi OS |
-| **Toolchain** | arm-linux-gnueabihf-g++ |
+### Step 1 – Target Environment Container
 
----
+This container replicates the Raspberry Pi operating system and collects all required headers and libraries.
 
-## 3. Cross-Compilation Setup in Qt Creator
+**Tasks performed:**
+- Use `arm64v8/debian:bookworm` as the base image.
+- Install essential development packages (graphics, input, SSL, multimedia).
+- Archive system directories into a compressed sysroot (`rasp.tar.gz`).
 
-### 3.1 Install Qt and Tools on Host
-
-Install Qt 5.13 and required toolchains:
-
-```bash
-sudo apt update
-sudo apt install build-essential qt5-default qtbase5-dev qtchooser qt5-qmake g++-arm-linux-gnueabihf rsync ssh
+```dockerfile
+FROM arm64v8/debian:bookworm
+RUN apt-get update && apt-get install -y \
+    libboost-all-dev libinput-dev libxkbcommon-dev libegl1-mesa-dev \
+    libgles2-mesa-dev libglib2.0-dev libssl-dev libdbus-1-dev ...
+WORKDIR /build
+RUN tar czf rasp.tar.gz -C / lib usr/include usr/lib etc/alternatives
 ```
 
-### 3.2 Prepare the Raspberry Pi
+This step produces a snapshot of the target filesystem to be used in cross-compilation.
 
-On the Raspberry Pi, install the required Qt runtime libraries:
+### Step 2 – Cross-Compilation Container
 
-```bash
-sudo apt update
-sudo apt install qt5-default qtbase5-dev openssh-server
-```
-Copy sysroot from Raspberry Pi to Host
+The second container sets up the host environment to compile Qt and the application using the ARM64 sysroot.
 
-From the host machine, copy the system root (libraries and includes) from the Pi:
-```bash
-mkdir -p ~/rpi/sysroot
-rsync -avz --rsync-path="sudo rsync" pi@<raspberry_ip>:/lib ~/rpi/sysroot
-rsync -avz --rsync-path="sudo rsync" pi@<raspberry_ip>:/usr/include ~/rpi/sysroot/usr
-rsync -avz --rsync-path="sudo rsync" pi@<raspberry_ip>:/usr/lib ~/rpi/sysroot/usr
-```
+**Key actions:**
+- Install compilers and build tools (GCC, Ninja, Python, Git, etc.).
+- Build a compatible version of CMake from source.
+- Extract the sysroot from `rasp.tar.gz`.
+- Correct symlinks inside the sysroot to ensure portability.
 
-### 3.3 Configure Qt Creator for Raspberry Pi
-
-1. Open **Qt Creator → Tools → Options → Devices → Devices**
-   - Add a **Boot to Qt Device**
-   - Hostname: `<raspberry_ip>`
-   - User: `username`
-   - Test Connection ✅
-
-2. Open **Qt Creator → Tools → Options → Kits**
-   - Add a new **Kit** for the Raspberry Pi
-   - Compiler: `arm-linux-gnueabihf-g++`
-   - Qt Version: Qt 5.13 for Embedded Linux (ARM)
-   - Device type: **Boot to Qt Device**
-   - Device: your Raspberry Pi
-
-3. In your project, select this **Kit** (Raspberry Pi Kit).
-
-Now you can build and deploy directly from Qt Creator using the **Run** button.
-
----
-
-## 4. Deployment via Qt Creator
-
-Qt Creator will:
-- Build your app on the host.
-- Transfer the binary via SSH to `/opt/<ProjectName>` (or another path you define).
-  
-You can verify with:
-```bash
-ssh pi@<raspberry_ip>
-ls /opt/<ProjectName>
+```dockerfile
+FROM debian:bookworm
+RUN apt-get update && apt-get install -y git build-essential ninja-build python3 ...
+RUN git clone https://github.com/Kitware/CMake.git && ./bootstrap && make -j$(nproc) && make install
+COPY rasp.tar.gz /build/rasp.tar.gz
+RUN tar xvfz /build/rasp.tar.gz -C /build/sysroot
+RUN wget https://raw.githubusercontent.com/riscv/riscv-poky/master/scripts/sysroot-relativelinks.py \
+ && python3 sysroot-relativelinks.py /build/sysroot
 ```
 
----
+After this step, we have a fully prepared cross-compilation environment with all necessary tools and a clean sysroot.
 
-## 5. Auto-Start on Boot
+### Step 3 – Toolchain Configuration
 
-To automatically launch the app when the Raspberry Pi boots:
+The toolchain file (`toolchain.cmake`) informs CMake about:
+- The ARM64 compiler binaries.
+- Target architecture and system name.
+- Sysroot location.
+- Paths to Qt modules and system libraries.
 
-Create autostart dir and command file if not exists:
-```bash
-mkdir -p ~/.config/autostartnano
-nano ~/.config/autostart/qtapp.desktop
+### Step 4 – Compiling Qt for ARM64
+
+Before building our application, Qt itself must be cross-compiled for the target architecture.
+
+**Workflow:**
+- Fetch Qt modules (qtbase, qtdeclarative, qtshaderstools).
+- Configure Qt build using the toolchain.
+- Compile and install Qt into a dedicated directory (`/build/qt6/pi`).
+
+```dockerfile
+RUN { \
+    mkdir -p qt6 && \
+    wget ...qtbase...qtdeclarative...qtshadertools... && \
+    cmake -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake ... && \
+    cmake --build . && cmake --install .; \
+}
 ```
-Add this:
+
+### Step 5 – Building the Application
+
+Finally, the project is compiled against the cross-compiled Qt libraries.
+
+**Steps:**
+- Copy source code to `/build/project`.
+- Configure with the Qt toolchain.
+- Build the final ARM64 executable.
+
+```dockerfile
+COPY project /build/project
+RUN { \
+    cd /build/project && \
+    /build/qt6/pi/bin/qt-cmake . && \
+    cmake --build .; \
+}
 ```
-[Desktop Entry]
-Type=Application
-Name=Qt App
-Exec=qmlscene app dir
-X-GNOME-Autostart-enabled=true
-```
-And then:
-```bash
-sudo reboot
-```
 
-## 6. Fullscreen Configuration (Hide Taskbar)
+The resulting executable is fully compatible with the Raspberry Pi target.
 
-To remove the panel (taskbar) and make the Qt application fullscreen on Raspberry Pi OS (Wayfire environment):
+### Links
+- 🐐 https://github.com/PhysicsX/QTonRaspberryPi
+- https://www.docker.com/blog/compiling-qt-with-docker-multi-stage-and-multi-platform/
+- https://ruvi-d.medium.com/a-master-guide-to-linux-cross-compiling-b894bf909386
+- https://doc.qt.io/qt-6.9/cross-compiling-qt.html
+- https://wiki.qt.io/Cross-Compile_Qt_6_for_Raspberry_Pi
 
-1. Edit the panel configuration file:
-   ```bash
-   nano ~/.config/wf-panel-pi.ini
-   ```
+### Conclusion
 
-2. Add (or modify) the following lines:
-   ```
-   autohide=true
-   autohide_duration=500
-   ```
-
-3. Save and reboot:
-   ```bash
-   sudo reboot
-   ```
-
-After reboot, the taskbar will automatically hide, and the Qt application will appear fullscreen.
+Using a Dockerized workflow allows us to bypass the errors encountered with traditional cross-compilation. It provides a consistent, isolated environment, reduces build time, and creates a reusable framework for future ARM64 Qt projects.

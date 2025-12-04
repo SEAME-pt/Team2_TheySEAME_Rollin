@@ -1,0 +1,12 @@
+<RCC>
+  <qresource prefix="/qml/">
+    <file alias="qml/Main.qml">/home/team2/Cross_Compile/Dashboardproject/qml/Main.qml</file>
+    <file alias="qml/Screen01.ui.qml">/home/team2/Cross_Compile/Dashboardproject/qml/Screen01.ui.qml</file>
+    <file alias="qml/Constants.qml">/home/team2/Cross_Compile/Dashboardproject/qml/Constants.qml</file>
+    <file alias="qml/images/car.png">/home/team2/Cross_Compile/Dashboardproject/qml/images/car.png</file>
+    <file alias="qml/images/Line1.svg">/home/team2/Cross_Compile/Dashboardproject/qml/images/Line1.svg</file>
+    <file alias="qml/images/Line2.svg">/home/team2/Cross_Compile/Dashboardproject/qml/images/Line2.svg</file>
+    <file alias="qml/fonts/Jaro-Regular-VariableFont_opsz.ttf">/home/team2/Cross_Compile/Dashboardproject/qml/fonts/Jaro-Regular-VariableFont_opsz.ttf</file>
+  </qresource>
+</RCC>
+
