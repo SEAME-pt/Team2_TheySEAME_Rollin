@@ -13,7 +13,7 @@ for file in $1; do
 	docker run \
 		-v $(pwd):$(pwd) \
 		-w $(pwd) \
-		ghcr.io/seame-pt/team2_theyseame_rollin/formatter:latest \
+		ghcr.io/seame-pt/team2_theyseame_rollin/clang-format_docker:latest \
 		"--dry-run" \
 		"--style=file" \
 		$file 2> changes.txt
