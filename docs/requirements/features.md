@@ -64,15 +64,7 @@ Status: proposed
 
 `feat~test-manual-auto-mode~1`
 
-The vehicle shall have three operation modes: TEST, for RPI5 pre-defined control sequence, MANUAL, for remote control, and AUTO, for AI-based perception and decision-making system.
-
-Needs: arch
-
-Status: approved
-
-`feat~fail-safe-mode~1`
-
-The vehicle shall have a fail-safe mode in case a tester wants to interrupt driving during Manual mode.
+The vehicle shall have four operation modes: TEST, for RPI5 pre-defined control sequence, MANUAL, for remote control, and AUTO, for AI-based perception and decision-making system, and FAILSAFE, for an entire emergency vehicle shutdown.
 
 Needs: arch
 
