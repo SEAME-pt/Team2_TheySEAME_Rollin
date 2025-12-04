@@ -12,8 +12,7 @@ echo "# Formatter Details" >> $GITHUB_STEP_SUMMARY
 for file in $1; do
 	echo "Running Formatter in $file"
 	docker run \
-		-v $(pwd):$(pwd) \
-		-w $(pwd) \
+		-a stderr -v $(pwd):$(pwd) -w $(pwd) \
 		ghcr.io/seame-pt/team2_theyseame_rollin/clang-format_docker:latest \
 		"--dry-run" \
 		"--style=file" \
