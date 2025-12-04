@@ -1,0 +1,11 @@
+# ninja log v5
+0	46	1764679505071299911	appDashboardproject_autogen/timestamp	5b5d957b5b76febb
+0	46	1764679505071299911	appDashboardproject_autogen/mocs_compilation.cpp	5b5d957b5b76febb
+0	46	1764679505071299911	/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/build/default-Debug/appDashboardproject_autogen/timestamp	5b5d957b5b76febb
+98	303	1764679505335298193	CMakeFiles/appDashboardproject.dir/appDashboardproject_autogen/EWIEGA46WW/qrc_qml.cpp.o	e15e1cf2bcca04cc
+0	46	1764679505071299911	/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/build/default-Debug/appDashboardproject_autogen/mocs_compilation.cpp	5b5d957b5b76febb
+46	97	1764679505130299527	/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/build/default-Debug/appDashboardproject_autogen/EWIEGA46WW/qrc_qml.cpp	6c31a5a6165b0c49
+46	97	1764679505130299527	appDashboardproject_autogen/EWIEGA46WW/qrc_qml.cpp	6c31a5a6165b0c49
+97	1046	1764679506077293365	CMakeFiles/appDashboardproject.dir/main.cpp.o	b02d955b414c9d96
+97	131	1764679505164299306	CMakeFiles/appDashboardproject.dir/appDashboardproject_autogen/mocs_compilation.cpp.o	276c5a29f69a2b78
+1046	1272	1764679506303291897	appDashboardproject	59cbf665cf311043

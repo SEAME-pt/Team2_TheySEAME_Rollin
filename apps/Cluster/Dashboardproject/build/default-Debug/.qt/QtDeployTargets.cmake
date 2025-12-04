@@ -1,0 +1,2 @@
+set(__QT_DEPLOY_TARGET_appDashboardproject_FILE /home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/build/default-Debug/appDashboardproject)
+set(__QT_DEPLOY_TARGET_appDashboardproject_TYPE EXECUTABLE)

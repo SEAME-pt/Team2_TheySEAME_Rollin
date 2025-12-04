@@ -1,0 +1,36 @@
+{
+	"BUILD_DIR" : "/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/build/default-Release/appDashboardproject_autogen",
+	"CMAKE_BINARY_DIR" : "/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/build/default-Release",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/build/default-Release",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject",
+	"CMAKE_SOURCE_DIR" : "/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject",
+	"CROSS_CONFIG" : false,
+	"GENERATOR" : "Ninja",
+	"INCLUDE_DIR" : "/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/build/default-Release/appDashboardproject_autogen/include",
+	"INPUTS" : 
+	[
+		"/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/qml/Main.qml",
+		"/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/qml/Screen01.ui.qml",
+		"/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/qml/Constants.qml",
+		"/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/qml/images/partly-cloudy-day-256.png",
+		"/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/qml/images/rain-256.png",
+		"/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/qml/images/sun-256.png",
+		"/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/qml/images/cluster.png",
+		"/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/qml/images/clouds-256.png",
+		"/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/qml/images/moon-4-256.png",
+		"/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/qml/fonts/Inter-VariableFont_opsz,wght.ttf",
+		"/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/qml/fonts/BaseNeueTrial-Bold.ttf",
+		"/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/qml/fonts/Jaro-Regular-VariableFont_opsz.ttf"
+	],
+	"LOCK_FILE" : "/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/build/default-Release/CMakeFiles/appDashboardproject_autogen.dir/AutoRcc_qml_EWIEGA46WW_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "-name", "qml" ],
+	"OUTPUT_CHECKSUM" : "EWIEGA46WW",
+	"OUTPUT_NAME" : "qrc_qml.cpp",
+	"RCC_EXECUTABLE" : "/home/team2/Qt/6.7.3/gcc_64/libexec/rcc",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/build/default-Release/CMakeFiles/appDashboardproject_autogen.dir/AutoRcc_qml_EWIEGA46WW_Used.txt",
+	"SOURCE" : "/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/qml.qrc",
+	"USE_BETTER_GRAPH" : false,
+	"VERBOSITY" : 0
+}

@@ -1,0 +1,5 @@
+/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/build/default-Release/CMakeFiles/appDashboardproject.dir
+/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/build/default-Release/CMakeFiles/edit_cache.dir
+/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/build/default-Release/CMakeFiles/rebuild_cache.dir
+/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/build/default-Release/CMakeFiles/appDashboardproject_autogen_timestamp_deps.dir
+/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Cross_Compile/Dashboardproject/build/default-Release/CMakeFiles/appDashboardproject_autogen.dir
