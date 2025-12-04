@@ -15,9 +15,11 @@ for file in $1; do
 		-v $(pwd):$(pwd) \
 		-w $(pwd) \
 		ghcr.io/seame-pt/team2_theyseame_rollin/clang-format_docker:latest \
-		"--dry-run" \
-		"--style=file" \
-		$file 2> changes.txt
+		--dry-run \
+		--style=file \
+		$file \ 
+		2> \
+		changes.txt
 	changes_nbr=$(wc -l changes.txt)
 	echo "Changes Nbr: $changes_nbr"
 	if [[ "$changes_nbr" > 0 ]]; then
