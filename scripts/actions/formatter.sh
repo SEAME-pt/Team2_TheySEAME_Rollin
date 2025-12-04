@@ -15,7 +15,7 @@ for file in $1; do
 		-w $(pwd) \
 		ghcr.io/seame-pt/team2_theyseame_rollin/formatter:latest \
 		"--dry-run" \
-		"--style=file"
+		"--style=file" \
 		$file 2> changes.txt
 	changes_nbr=$(wc -l changes.txt)
 	echo "Changes Nbr: $changes_nbr"
