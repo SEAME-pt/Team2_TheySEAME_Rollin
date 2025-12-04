@@ -62,9 +62,9 @@ Needs: arch
 
 Status: proposed
 
-`feat~manual-auto-mode~1`
+`feat~test-manual-auto-mode~1`
 
-The vehicle shall have two operation modes: Manual, for remote control, and Auto, for AI-based perception and decision-making system.
+The vehicle shall have three operation modes: TEST, for RPI5 pre-defined control sequence, MANUAL, for remote control, and AUTO, for AI-based perception and decision-making system.
 
 Needs: arch
 
