@@ -27,5 +27,5 @@ jobs:
         run: echo "FILES=$(git diff --name-only HEAD~1 HEAD | grep -P '\.(c|cpp|h|hpp)(?!.)')" >> $GITHUB_OUTPUT
 
       - name: Run the llvm docker with clang-format
-        run: cd scripts/actions && chmod +x formatter.sh && ./formatter.sh ${{ steps.changed_files.outputs.files }}
+        run: chmod +x scripts/actions/formatter.sh && ./scripts/actions/formatter.sh ${{ steps.changed_files.outputs.files }}
 

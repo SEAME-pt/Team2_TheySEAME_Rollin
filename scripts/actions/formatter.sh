@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "PWD: $PWD"
 echo "CHANGED: $1"
 
 write_tag() {
