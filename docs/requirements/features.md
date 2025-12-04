@@ -117,3 +117,27 @@ The Control Unit of the car shall enter FAILSAFE mode if it stops receiving peri
 Needs: arch
 
 Status: approved
+
+`feat~remote-control~1`
+
+The system shall be controllable via remote control.
+
+Needs: arch
+
+Status: approved
+
+`feat~test-control-instructions~1`
+
+The system shall be controllable via pre-defined control instructions sent over a file/script.
+
+Needs: arch
+
+Status: approved
+
+`feat~rtos-control~1`
+
+The control system shall be implemented in a RTOS, deterministic, environment.
+
+Needs: arch
+
+Status: approved
