@@ -1,0 +1,38 @@
+{
+	"BUILD_DIR" : "/home/team2/Dashboardproject/appDashboardproject_autogen",
+	"CMAKE_BINARY_DIR" : "/home/team2/Dashboardproject",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/team2/Dashboardproject",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/team2/Dashboardproject",
+	"CMAKE_SOURCE_DIR" : "/home/team2/Dashboardproject",
+	"CROSS_CONFIG" : false,
+	"GENERATOR" : "Unix Makefiles",
+	"INCLUDE_DIR" : "/home/team2/Dashboardproject/appDashboardproject_autogen/include",
+	"INPUTS" : 
+	[
+		"/home/team2/Dashboardproject/qml/Main.qml",
+		"/home/team2/Dashboardproject/qml/Screen01.ui.qml",
+		"/home/team2/Dashboardproject/qml/Constants.qml",
+		"/home/team2/Dashboardproject/qml/images/thunderstorm-256.png",
+		"/home/team2/Dashboardproject/qml/images/partly-cloudy-day-256.png",
+		"/home/team2/Dashboardproject/qml/images/rain-256.png",
+		"/home/team2/Dashboardproject/qml/images/sun-256.png",
+		"/home/team2/Dashboardproject/qml/images/cluster.png",
+		"/home/team2/Dashboardproject/qml/images/snow-256.png",
+		"/home/team2/Dashboardproject/qml/images/clouds-256.png",
+		"/home/team2/Dashboardproject/qml/images/moon-4-256.png",
+		"/home/team2/Dashboardproject/qml/fonts/Inter-VariableFont_opsz,wght.ttf",
+		"/home/team2/Dashboardproject/qml/fonts/BaseNeueTrial-Bold.ttf",
+		"/home/team2/Dashboardproject/qml/fonts/Jaro-Regular-VariableFont_opsz.ttf"
+	],
+	"LOCK_FILE" : "/home/team2/Dashboardproject/CMakeFiles/appDashboardproject_autogen.dir/AutoRcc_qml_EWIEGA46WW_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "-name", "qml" ],
+	"OUTPUT_CHECKSUM" : "EWIEGA46WW",
+	"OUTPUT_NAME" : "qrc_qml.cpp",
+	"RCC_EXECUTABLE" : "/home/team2/Qt/6.7.3/gcc_64/libexec/rcc",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "/home/team2/Dashboardproject/CMakeFiles/appDashboardproject_autogen.dir/AutoRcc_qml_EWIEGA46WW_Used.txt",
+	"SOURCE" : "/home/team2/Dashboardproject/qml.qrc",
+	"USE_BETTER_GRAPH" : false,
+	"VERBOSITY" : 0
+}

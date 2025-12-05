@@ -8,27 +8,28 @@
 #include <QDateTime>
 #include <QJsonDocument>
 #include <QJsonObject>
-
+#include <iostream>
 
 class infoProvider : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString weatherInfo READ weatherInfo NOTIFY weatherInfoChanged)
-    Q_PROPERTY(float temperature READ temperature NOTIFY temperatureChanged)
-    Q_PROPERTY(QString localTime READ localTime NOTIFY localTimeChanged)
-    Q_PROPERTY(QDate currentDate READ currentDate NOTIFY currentDateChanged)
+    Q_PROPERTY(QString weatherInfo READ getWeatherInfo NOTIFY weatherInfoChanged)
+    Q_PROPERTY(int temperature READ getTemperature NOTIFY temperatureChanged)
+    Q_PROPERTY(QString localTime READ getLocalTime NOTIFY localTimeChanged)
+    Q_PROPERTY(QString currentDate READ getCurrentDate NOTIFY currentDateChanged)
 public:
     explicit infoProvider(QObject *parent = nullptr);
 
-    QString getWeatherInfo() const { return m_weatherInfo; }
-    float getTemperature() const { return m_temperature; }
-    QString getLocalTime() const { return m_localTime; }
-    QDate getCurrentDate() const { return m_currentDate; }
+    QString getWeatherInfo() const;
+    int getTemperature() const;
+    QString getLocalTime() const;
+    QString getCurrentDate() const;
 private:
     QString m_weatherInfo;
-    float m_temperature;
+    int m_temperature;
     QString m_localTime;
     QDate   m_currentDate;
+    QNetworkAccessManager* m_manager;
 
 signals:
     void weatherInfoChanged();

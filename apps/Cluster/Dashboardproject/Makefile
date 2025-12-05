@@ -57,10 +57,10 @@ RM = /usr/local/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/team2/Cross_Compile/Dashboardproject
+CMAKE_SOURCE_DIR = /home/team2/Dashboardproject
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/team2/Cross_Compile/Dashboardproject
+CMAKE_BINARY_DIR = /home/team2/Dashboardproject
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/team2/Cross_Compile/Dashboardproject/CMakeFiles /home/team2/Cross_Compile/Dashboardproject//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/team2/Dashboardproject/CMakeFiles /home/team2/Dashboardproject//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/team2/Cross_Compile/Dashboardproject/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/team2/Dashboardproject/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -227,6 +227,30 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/appDashboardproject.dir/build.make CMakeFiles/appDashboardproject.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+src/infoProvider.o: src/infoProvider.cpp.o
+.PHONY : src/infoProvider.o
+
+# target to build an object file
+src/infoProvider.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/appDashboardproject.dir/build.make CMakeFiles/appDashboardproject.dir/src/infoProvider.cpp.o
+.PHONY : src/infoProvider.cpp.o
+
+src/infoProvider.i: src/infoProvider.cpp.i
+.PHONY : src/infoProvider.i
+
+# target to preprocess a source file
+src/infoProvider.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/appDashboardproject.dir/build.make CMakeFiles/appDashboardproject.dir/src/infoProvider.cpp.i
+.PHONY : src/infoProvider.cpp.i
+
+src/infoProvider.s: src/infoProvider.cpp.s
+.PHONY : src/infoProvider.s
+
+# target to generate assembly for a file
+src/infoProvider.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/appDashboardproject.dir/build.make CMakeFiles/appDashboardproject.dir/src/infoProvider.cpp.s
+.PHONY : src/infoProvider.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -247,6 +271,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... src/infoProvider.o"
+	@echo "... src/infoProvider.i"
+	@echo "... src/infoProvider.s"
 .PHONY : help
 
 

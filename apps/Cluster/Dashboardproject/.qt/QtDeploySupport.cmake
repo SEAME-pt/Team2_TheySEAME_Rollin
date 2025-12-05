@@ -34,7 +34,7 @@ endif()
 set(__QT_DEPLOY_SYSTEM_NAME "Linux")
 set(__QT_DEPLOY_IS_SHARED_LIBS_BUILD "ON")
 set(__QT_DEPLOY_TOOL "GRD")
-set(__QT_DEPLOY_IMPL_DIR "/home/team2/Cross_Compile/Dashboardproject/.qt")
+set(__QT_DEPLOY_IMPL_DIR "/home/team2/Dashboardproject/.qt")
 set(__QT_DEPLOY_VERBOSE "")
 set(__QT_CMAKE_EXPORT_NAMESPACE "Qt6")
 set(__QT_DEPLOY_GENERATOR_IS_MULTI_CONFIG "0")
@@ -58,7 +58,7 @@ set(__QT_DEPLOY_QT_DEBUG_POSTFIX "")
 
 # Define the CMake commands to be made available during deployment.
 set(__qt_deploy_support_files
-    "/home/team2/Cross_Compile/Dashboardproject/.qt/QtDeployTargets.cmake"
+    "/home/team2/Documents/Team2_TheySEAME_Rollin/apps/Cluster/Dashboardproject/.qt/QtDeployTargets.cmake"
     "/home/team2/Qt/6.7.3/gcc_64/lib/cmake/Qt6Core/Qt6CoreDeploySupport.cmake"
     "/home/team2/Qt/6.7.3/gcc_64/lib/cmake/Qt6Qml/Qt6QmlDeploySupport.cmake"
 )

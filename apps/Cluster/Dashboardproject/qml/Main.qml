@@ -8,8 +8,8 @@ Window {
     visible: true
     title: "Dashboard"
 
+    flags: Qt.FramelessWindowHint
     Screen01 {
         id: mainScreen
     }
-
 }

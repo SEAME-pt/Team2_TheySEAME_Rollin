@@ -22,6 +22,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wl,-rpath-link,${CMAKE_SYSROOT}/u
 
 add_executable(appDashboardproject
     main.cpp
+    src/infoProvider.cpp
     qml.qrc
 )
 

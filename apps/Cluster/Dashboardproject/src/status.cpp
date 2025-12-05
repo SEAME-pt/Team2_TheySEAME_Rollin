@@ -11,8 +11,7 @@ float status::getBattery() const
 }
 void status::updateBatteryLevel()
 {
-    // Logic to update battery level
-    float newLevel = /* code to read battery level */ 0.0f; // Placeholder
+    float newLevel =
 
     if (batteryLevel != newLevel) {
         batteryLevel = newLevel;

@@ -1,2 +1,2 @@
-set(__QT_DEPLOY_TARGET_appDashboardproject_FILE /home/team2/Cross_Compile/Dashboardproject/appDashboardproject)
+set(__QT_DEPLOY_TARGET_appDashboardproject_FILE /home/team2/Dashboardproject/appDashboardproject)
 set(__QT_DEPLOY_TARGET_appDashboardproject_TYPE EXECUTABLE)

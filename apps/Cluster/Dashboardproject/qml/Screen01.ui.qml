@@ -35,7 +35,7 @@ Rectangle {
             text: qsTr("hm/h")
             font.pixelSize: 28
             font.bold: true
-            font.family: "Base Neue Trial"
+            font.family: "BaseNeueTrial-Bold"
         }
 
         Text {
@@ -45,9 +45,9 @@ Rectangle {
             width: 132
             height: 123
             color: "#47473f"
-            text: qsTr("42")
+            text: qsTr("0")
             font.pixelSize: 98
-            font.family: "Base Neue Trial"
+            font.family: "BaseNeueTrial-Bold"
             font.bold: true
         }
 
@@ -58,9 +58,9 @@ Rectangle {
             width: 218
             height: 119
             color: "#47473f"
-            text: qsTr("42%")
+            text: qsTr("90%")
             font.pixelSize: 98
-            font.family: "Base Neue Trial"
+            font.family: "BaseNeueTrial-Bold"
             font.bold: true
         }
 
@@ -71,7 +71,7 @@ Rectangle {
             width: 155
             height: 34
             color: "#ffffff"
-            text: qsTr("04/12/2025")
+            text: infoProvider ? infoProvider.currentDate.toString("dd/MM/yyyy") : ""
             font.pixelSize: 28
             font.family: "Inter"
             font.bold: true
@@ -84,7 +84,7 @@ Rectangle {
             width: 72
             height: 34
             color: "#ffffff"
-            text: qsTr("11:24")
+            text: infoProvider ? infoProvider.localTime : ""
             font.pixelSize: 28
             font.family: "Inter"
             font.bold: true
@@ -97,7 +97,7 @@ Rectangle {
             width: 72
             height: 34
             color: "#ffffff"
-            text: qsTr("12ºC")
+            text: infoProvider ? infoProvider.temperature + "°C" : ""
             font.pixelSize: 28
             font.family: "Inter"
             font.bold: true
@@ -109,7 +109,7 @@ Rectangle {
             y: 20
             width: 47
             height: 35
-            source: "images/rain-256.png"
+            source:  infoProvider ? "images/" + infoProvider.weatherInfo : "images/sun-256.png"
             fillMode: Image.PreserveAspectFit
         }
 
@@ -126,7 +126,7 @@ Rectangle {
                 id: baterry
                 x: 0
                 y: 0
-                width: 40
+                width: 147.6
                 height: 12
                 color: "#76b047"
                 border.color: "#76b047"

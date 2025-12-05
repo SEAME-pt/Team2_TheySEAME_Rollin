@@ -1,0 +1,5 @@
+/home/team2/Dashboardproject/CMakeFiles/appDashboardproject.dir
+/home/team2/Dashboardproject/CMakeFiles/edit_cache.dir
+/home/team2/Dashboardproject/CMakeFiles/rebuild_cache.dir
+/home/team2/Dashboardproject/CMakeFiles/appDashboardproject_autogen_timestamp_deps.dir
+/home/team2/Dashboardproject/CMakeFiles/appDashboardproject_autogen.dir
