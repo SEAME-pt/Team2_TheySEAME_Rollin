@@ -1,0 +1,8 @@
+appDashboardproject
+appDashboardproject_autogen
+CMakeFiles
+cmake_install.cmake
+.qt
+.qtcreator
+.rcc
+.vscode
