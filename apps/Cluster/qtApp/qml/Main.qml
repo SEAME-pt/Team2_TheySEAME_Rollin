@@ -6,7 +6,7 @@ Window {
     height: mainScreen.height
 
     visible: true
-    title: "Dashboard"
+    title: "qtApp"
 
     flags: Qt.FramelessWindowHint
     Screen01 {

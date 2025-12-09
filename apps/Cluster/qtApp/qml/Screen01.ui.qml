@@ -13,7 +13,6 @@ import QtQuick.Window 2.15
 
 Rectangle {
     id: rectangle
-    property var speedometerHandleCpp
     width: 1280
     height: 400
     color: "#FFE18D"

@@ -1,6 +1,0 @@
-<RCC>
-  <qresource prefix="/">
-    <file alias="/qml">/home/team2/Cross_Compile/Dashboardproject/qml</file>
-
-  </qresource>
-</RCC>

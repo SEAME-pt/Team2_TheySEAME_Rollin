@@ -1,5 +1,5 @@
 module qml
-typeinfo appDashboardproject.qmltypes
+typeinfo qtApp.qmltypes
 prefer :/qml/
 Main 1.0 qml/Main.qml
 Screen01 1.0 qml/Screen01.ui.qml
