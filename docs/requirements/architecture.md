@@ -12,7 +12,7 @@ Tags:
 
 Needs: dsn
 
-Covers: feat~manual-auto-mode~1
+Covers: `feat~manual-auto-mode~1`
 
 Status: draft
 
@@ -27,7 +27,7 @@ Tags:
 
 Needs: dsn  
 
-Covers: feat~report-speed-battery~1  
+Covers: `feat~report-speed-battery~1` 
 
 Status: draft
 
@@ -43,8 +43,8 @@ Tags:
 Needs: dsn  
 
 Covers:
-- feat~manual-auto-mode~1
-- feat~fail-safe-mode~1  
+- `feat~manual-auto-mode~1`
+- `feat~fail-safe-mode~1`
 
 Status: draft
 
@@ -58,7 +58,7 @@ Tags: Control
 
 Needs: dsn  
 
-Covers: feat~manual-auto-mode~1  
+Covers: `feat~manual-auto-mode~1`
 
 Status: draft
 
@@ -72,7 +72,7 @@ Tags:
 
 Needs: dsn  
 
-Covers: feat~fail-safe-mode~1  
+Covers: `feat~fail-safe-mode~1`  
 
 Status: draft
 
@@ -86,7 +86,7 @@ Tags: Drivers
 
 Needs: dsn  
 
-Covers: feat~manual-auto-mode~1  
+Covers: `feat~manual-auto-mode~1`  
 
 Status: draft
 
@@ -100,7 +100,7 @@ Tags: Sensing
 
 Needs: dsn  
 
-Covers: feat~report-speed-battery~1  
+Covers: `feat~report-speed-battery~1`  
 
 Status: draft
 
@@ -114,7 +114,7 @@ Tags: Logging
 
 Needs: dsn  
 
-Covers: feat~record-debugging-info~1  
+Covers: `feat~record-debugging-info~1`  
 
 Status: draft
 
@@ -129,8 +129,8 @@ Tags: Cluster
 Needs: dsn  
 
 Covers:
-- feat~report-speed-battery~1
-- feat~friendly-gui~1  
+- `feat~report-speed-battery~1`
+- `feat~friendly-gui~1`  
 
 Status: draft
 
@@ -142,12 +142,12 @@ Tags: HMI
 
 Needs: dsn  
 
-Covers: feat~friendly-gui~1  
+Covers: `feat~friendly-gui~1`  
 
 Status: draft
 
 ## RASP Remote
-´arch~remote~control~support~1´
+`arch~remote~control~support~1`
 
 The Remote Module shall communicate with a remote control and transmit it's input to the RASP Data Processing module.
 
@@ -155,12 +155,12 @@ Tags: Remote
 
 Needs: dsn  
 
-Covers: feat~remote-control~1
+Covers: `feat~remote-control~1`
 
 Status: draft
 
 ## RASP Data Processing
-`«arch~process-raw-data-rasp~1`
+`arch~process-raw-data-rasp~1`
 
 The RPi5 shall receive raw input data from the remote and process it in order to send normalized thrust and steering data in degrees and angles to the Rasp Comms module.
 
@@ -168,6 +168,6 @@ Tags: Data Processing
 
 Needs: dsn  
 
-Covers: feat~remote-control~1
+Covers: `feat~remote-control~1`
 
 Status: draft
