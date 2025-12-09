@@ -3,10 +3,10 @@ name: Code Formatter
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-#    branches-ignore:
-#      - main
-    path:
-      - 'apps/Cluster'
+    branches-ignore:
+      - main
+    paths:
+      - 'apps/Cluster/**'
 
 jobs:
   formatter:
