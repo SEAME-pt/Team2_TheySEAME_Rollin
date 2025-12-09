@@ -61,10 +61,11 @@ The interface is optimized for performance on the Raspberry Pi 5 and suitable fo
 ---
 
 ### 5 Cross-Compilation
-For instructions on cross-compiling, see [this README](https://github.com/SEAME-pt/Team2_TheySEAME_Rollin/blob/feat/QT/apps/Cluster/Cross_Compile/README.md)
-
+- For instructions on cross-compiling, see [this README](https://github.com/SEAME-pt/Team2_TheySEAME_Rollin/blob/feat/QT/apps/Cluster/Cross_Compile/README.md) 
 ---
-
-## 6. Conclusion
+### 6 Next features
+- Opening logo
+---
+## 7. Conclusion
 This document outlines the structure, requirements, and features of the Qt application designed for the Raspberry Pi 5. It serves as a guide for development, deployment, and future enhancements.
 
