@@ -178,7 +178,7 @@ Camera → Perception → Object/Lane Detection → World Model → Planning →
 │ ├── adas/ # Individual ADAS features
 │ ├── planning/ # Path planning and decision engine
 │ ├── control_interface/ # Sends commands to STM32
-│ ├── ui/ # Dashboard, HMI, overlays
+│ ├──  cluster/ # Dashboard, overlays
 │ └── configs/ # AI models, thresholds, calibration
 └── README.md
 ```
