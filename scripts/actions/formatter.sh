@@ -11,8 +11,13 @@ write_tag() {
 echo "# Formatter Details" >> $GITHUB_STEP_SUMMARY
 for file in $1; do
 	echo "Running Formatter in $file"
+	DIR=$(dirname $file)
+	while [ "$DIR" != "." ] && [ ! -f "$DIR/.clang-format" ]; do
+		DIR=$(dirname $DIR)
+	done
+	echo "Clang Format: $DIR/.clang-format"
 	docker run \
-		-a stderr -v $(pwd):$(pwd) -w $(pwd) \
+		-v $(pwd):$(pwd) -w $(pwd) \
 		ghcr.io/seame-pt/team2_theyseame_rollin/clang-format_docker:latest \
 		"--dry-run" \
 		"--style=file" \
