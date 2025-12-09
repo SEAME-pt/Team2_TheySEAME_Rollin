@@ -29,7 +29,7 @@ STM32 (Real-Time Control & Sensing layer)
 ├── Vehicle State Estimation
 ├── Motor/Actuator Control
 ├── Safety Supervisor (Critical)
-└── Comm Interface
+└── CAN Communnications Interface
 ```
 
 
@@ -50,10 +50,11 @@ Raspberry Pi 5 (High-Level Decision Making & Application Layers)
 ├── Perception (Vision, Object Detection, Lanes)
 ├── World Model (tracking, mapping)
 ├── ADAS Modules (AEB, ACC, LDW, TSR…)
-├── Planning / Decision Engine
+├── AI Planning / Decision Engine
 ├── Cluster
-├── remote
-└── Comms
+├── Remote Control
+├── Mode management
+└── CAN Communnications Interface
 ```
 
 
@@ -72,7 +73,7 @@ Low-level hardware access, abstracting MCU peripherals.
 
 > **Note:** Drivers do not implement control logic. They expose simple APIs for higher layers.
 
-### 2. Motor/Actuator Control
+### 2. Control
 
 High-level control of vehicle actuators.
 
@@ -135,7 +136,7 @@ Modular features that consume the world model:
 - Arbitrates between multiple ADAS modules  
 - Sends commands to STM32
 
-### 5. HMI / Display
+### 5. Cluster
 
 - Dashboard display: speed, camera overlays, ADAS feedback  
 - Optional web or GUI interface
@@ -146,18 +147,57 @@ Modular features that consume the world model:
 - Receives vehicle state, sensor data, and health information  
 - Ensures safe and synchronized data exchange
 
+### 7. Mode Manager
+- Manages the different modes: FAILSAFE, TEST, MANUAL, AUTO
+- Overrides AUTO with MANUAL for remote input priority control
+
+
 ---
 
-## Data Flow Diagram (Simplified)
+## Data Flow Diagram
 
-```
-Sensors → STM32 → State Estimation ────────────┐
-                                               ▼
-Camera → Perception → Object/Lane Detection → World Model → Planning → Control Commands → STM32 → Motors
-                                               ▲
-                                               │
-                                     ADAS Modules (ACC, LDW, AEB, TSR...)
+```mermaid
+flowchart LR
 
+    %% Input Sources
+    A[Remote Controller Input MANUAL]
+    B[AI Planner Output
+    AUTO]
+
+    %% Input Processing
+    C[Remote Input Handler]
+    D[AI Command Processor]
+
+    %% Mode Arbitration
+    E{Mode Manager & Arbiter}
+
+    %% Safety Stage
+    F[Data Processing]
+
+    %% Communication
+    G[Comms CAN]
+    H[STM32 Firmware]
+
+    %% STM32 Internal Modules
+    I[Actuator Control PWM Steering Throttle]
+    J[State Estimation RPM Battery]
+
+    %% Connections
+    A --> C
+    B --> D
+
+    C --> E
+    D --> E
+
+    E --> F
+    F --> G
+    G --> H
+
+    H --> I
+    H --> J
+
+    J --> G
+    G --> E
 ```
 
 
@@ -180,63 +220,11 @@ Camera → Perception → Object/Lane Detection → World Model → Planning →
 │ ├── adas/ # Individual ADAS features
 │ ├── planning/ # Path planning and decision engine
 │ ├── comms/ # Sends commands to STM32
-│ ├── remote/
+│ ├── mode_manager/
+│ ├──├── remote/
+│ ├──├── auto/
+│ ├──├── manager.c
 │ ├── cluster/ # Dashboard, overlays
 │ └── configs/ # AI models, thresholds, calibration
 └── README.md
-```
-
-
----
-
-## Key Concepts
-
-- **Separation of Concerns:** Low-level control (STM32) vs. high-level decision-making (Raspberry Pi)  
-- **Drivers vs. Controllers:** Drivers interface hardware; controllers implement logic on top  
-- **Modular ADAS:** Each feature works independently, receives perception input, and produces outputs  
-- **Structured Communication:** STM32 ↔ Raspberry Pi via CAN/UART ensures safe and clear data exchange  
-
----
-
-## High Level System Block
-```
- ┌──────────────────────────────────────────────────────────┐
- │              Raspberry Pi 5 + Halo AI HAT                │
- │         (High-Level Compute / AI / Decision)             │
- │                                                          │
- │  ┌──────────────┐    ┌──────────────────────────────┐    │
- │  │  Perception  │───▶│     World Model / Fusion     │    │
- │  │ (Camera AI)  │    │ (Tracking, Odometry, SLAM)    │   │
- │  └──────────────┘    └──────────────────────────────┘    │
- │         │ ⤵                         │ ⤵                 │
- │  ┌─────────────────┐        ┌─────────────────────────┐  │
- │  │   ADAS Modules  │◀──────▶│  Planning / Decision    │  │
- │  │  (LDW, AEB,...) │        │  (ACC, turning, path)    │ │
- │  └─────────────────┘        └─────────────────────────┘  │
- │                                 │ Control Commands       │
- │                                 ▼                        │
- │                     ┌──────────────────────────┐         │
- │                     │   Communication Layer     │────────┼────┐
- │                     └──────────────────────────┘         │    │
- └──────────────────────────────────────────────────────────┘    │
-                                                                 │
-                                                                 ▼
- ┌──────────────────────────────────────────────────────────┐    │
- │                     STM32 Microcontroller                │    │
- │               (Low-Level Real-Time Control)              │    │
- │                                                          │    │
- │  ┌──────────────┐    ┌──────────────────────────────┐    │    │
- │  │   Sensors    │───▶│  Vehicle State Estimation    │───▶│    │
- │  │ IMU, Battery │    │ (Speed, yaw, odom, health)   │    │    │
- │  │ Encoders etc │    └──────────────────────────────┘    │    │
- │  └──────────────┘                 │                      │    │
- │          ▲                        ▼                      │    │
- │  ┌─────────────────┐    ┌──────────────────────────┐     │    │
- │  │ Safety Monitor  │───▶│ Actuator Control (PWM)   │─────┘    │
- │  │ Watchdog / E-Stop│   │ Steering, Throttle, Brake│          │
- │  └─────────────────┘    └──────────────────────────┘          │
- │                ▲                                              │
- │                └────────── Communication Layer ◀──────────────┘
- │                           (CAN / UART / Ethernet)             │
- └───────────────────────────────────────────────────────────────┘
 ```
