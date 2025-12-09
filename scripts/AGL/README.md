@@ -8,7 +8,7 @@ The AGL installation is done through a Dockerfile to ensure the enviroment is co
 It will generate the same image described in [here](https://github.com/SEAME-pt/Team2_TheySEAME_Rollin/blob/develop/docs/architecture/AGL/README.md)
 
 ```bash
-docker build -y agl <path-to-Dockerfile>
+docker build -t agl <path-to-Dockerfile>
 mkdir -p agl
 docker run -it -v $PWD/agl:/AGL/build agl
 ```
