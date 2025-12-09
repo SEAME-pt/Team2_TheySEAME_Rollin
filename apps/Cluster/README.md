@@ -1,4 +1,6 @@
 # Documentation for Qt Application on Raspberry Pi 5
+<img width="1280" height="400" alt="Screenshot from 2025-12-09 10-41-42" src="https://github.com/user-attachments/assets/e56a72ff-da19-4a23-82c0-ebcc9298e8c2" />
+
 
 ## 1. Overview
 This application, developed using **Qt**, will run on a **Raspberry Pi 5** and is designed to display real-time information on the displayer screen:
