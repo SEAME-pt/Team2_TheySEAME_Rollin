@@ -41,7 +41,8 @@ Responsibilities:
 - Vehicle state fusion and world modeling
 - ADAS features: AEB, ACC, LDW, TSR, Blind-Spot Detection, Parking Assist
 - Planning and decision-making
-- HMI / Display
+- Display
+- Remote control
 - Communication with STM32
 
 ```
@@ -50,8 +51,9 @@ Raspberry Pi 5 (High-Level Decision Making & Application Layers)
 ├── World Model (tracking, mapping)
 ├── ADAS Modules (AEB, ACC, LDW, TSR…)
 ├── Planning / Decision Engine
-├── HMI/Display
-└── Comms Middleware
+├── Cluster
+├── remote
+└── Comms
 ```
 
 
@@ -170,15 +172,16 @@ Camera → Perception → Object/Lane Detection → World Model → Planning →
 │ ├── control/ # Throttle, Steering controllers, PID/MPC
 │ ├── sensing/ # Sensor preprocessing, state estimation
 │ ├── safety/ # Watchdog, E-stop
-│ ├── comm/ # CAN/UART message handling
+│ ├── comms/ # CAN/UART message handling
 │ └── app/ # Main loop
 ├── rpi-software/
 │ ├── perception/ # Camera capture, object/lane detection
 │ ├── fusion/ # Sensor fusion, tracking, mapping
 │ ├── adas/ # Individual ADAS features
 │ ├── planning/ # Path planning and decision engine
-│ ├── control_interface/ # Sends commands to STM32
-│ ├──  cluster/ # Dashboard, overlays
+│ ├── comms/ # Sends commands to STM32
+│ ├── remote/
+│ ├── cluster/ # Dashboard, overlays
 │ └── configs/ # AI models, thresholds, calibration
 └── README.md
 ```
