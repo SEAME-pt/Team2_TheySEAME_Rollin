@@ -17,7 +17,7 @@ for file in $1; do
 	done
 	echo "Clang Format: $DIR/.clang-format"
 	docker run \
-		-v $(pwd):$(pwd) -w $(pwd) \
+		-a stderr -v $(pwd)/$DIR:$(pwd)/$DIR -w $(pwd)/$DIR \
 		ghcr.io/seame-pt/team2_theyseame_rollin/clang-format_docker:latest \
 		"--dry-run" \
 		"--style=file" \
