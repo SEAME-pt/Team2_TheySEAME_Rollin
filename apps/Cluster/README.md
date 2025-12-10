@@ -16,20 +16,16 @@ The interface is optimized for performance on the Raspberry Pi 5 and suitable fo
 ## 2. Requirements
 ### 2.1 Hardware
 - Raspberry Pi 5
-- Compatible display (HDMI, DSI, or others)
+- Compatible displayer
 - Required sensors:
   - Speed sensor
-  - Battery monitoring module (via ADC or dedicated circuit)
+  - Battery monitoring module
 - Reliable power supply
 
 ### 2.2 Software
 - Qt 6.7.3
-- Raspberry Pi OS or another Linux distribution
-- Drivers/support for connected sensors
-- g++ compiler and build tools (CMake or qmake)
-
+- Automative Grade Linux(ARM64)
 ---
-
 ## 3. Application Features
 ### 3.1 Battery Monitoring
 - Displays battery percentage
@@ -49,23 +45,42 @@ The interface is optimized for performance on the Raspberry Pi 5 and suitable fo
 
 ## 4. System Architecture
 ### 4.1 Data Flow
-1. Sensors provide data via 
+1. Sensors provide data via microcontrollers
 2. Application reads sensor values through a backend module
 3. UI updates in real time using Qt signals and slots
 
 ### 4.2 Main Components
-- **--**: 
-- **--**: Links sensor data to UI elements
-- **MainWindow / QML Interface**: Visual interface of the application
+- **SystemInfo (Vehicle Data Manager)**: Central module responsible for managing all vehicle-related data.
+- **generalInfo**: Supplies general data such as the current time, date, and other non-vehicle-related information.
+- **Screen01**: Visual representation of all data from SystemInfo and InfoProvider.
 
 ---
 
-### 5 Cross-Compilation
-- For instructions on cross-compiling, see [this README](https://github.com/SEAME-pt/Team2_TheySEAME_Rollin/blob/feat/QT/apps/Cluster/Cross_Compile/README.md) 
+### 5 Compilation
+
+- **Native build (Linux host / dev machine)**  
+  - Create a build folder inside the project:  
+     ```bash
+     mkdir -p build
+     cd build
+     ```
+  - Run Qt CMake to generate Makefiles:  
+     ```bash
+     /path/to/qt/bin/qt-cmake ..
+     ```
+     > Replace `/path/to/qt/bin/qt-cmake` with your Qt installation path.  
+  - Build the project:  
+     ```bash
+     cmake --build .
+     ```
+  - Run the executable:  
+     ```bash
+     ./qtApp
+     ```
+
+- **Cross-compiling for Raspberry Pi (ARM target)**  
+  For instructions on cross-compiling, see [this README](https://github.com/SEAME-pt/Team2_TheySEAME_Rollin/blob/feat/QT/apps/Cluster/Cross_Compile/README.md)
 ---
-### 6 Next features
-- Opening logo
----
-## 7. Conclusion
+## 6. Conclusion
 This document outlines the structure, requirements, and features of the Qt application designed for the Raspberry Pi 5. It serves as a guide for development, deployment, and future enhancements.
 
