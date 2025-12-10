@@ -52,11 +52,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Middlewares/ST/threadx/ports/cortex_m33/gnu/inc/tx_port.h \
  ../Core/Inc/tx_user.h ../Core/Inc/../Src/utils/utils.h \
  ../Core/Inc/../Src/Control/control.h \
- ../Core/Inc/../Src/Control/../Drivers/drivers.h \
  ../Core/Inc/../Src/Drivers/drivers.h \
- ../Core/Inc/../Src/Sensors/sensors.h \
- ../Core/Inc/../Src/Sensors/../Drivers/drivers.h \
- ../Core/Inc/../Src/Sensors/../Control/control.h
+ ../Core/Inc/../Src/Sensors/sensors.h
 ../Core/Inc/main.h:
 ../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_hal.h:
 ../Core/Inc/stm32u5xx_hal_conf.h:
@@ -113,8 +110,5 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/tx_user.h:
 ../Core/Inc/../Src/utils/utils.h:
 ../Core/Inc/../Src/Control/control.h:
-../Core/Inc/../Src/Control/../Drivers/drivers.h:
 ../Core/Inc/../Src/Drivers/drivers.h:
 ../Core/Inc/../Src/Sensors/sensors.h:
-../Core/Inc/../Src/Sensors/../Drivers/drivers.h:
-../Core/Inc/../Src/Sensors/../Control/control.h:

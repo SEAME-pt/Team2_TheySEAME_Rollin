@@ -54,10 +54,7 @@ Core/Src/Control/steering.o: ../Core/Src/Control/steering.c \
  ../Core/Inc/tx_user.h ../Core/Inc/../Src/utils/utils.h \
  ../Core/Inc/../Src/Control/control.h \
  ../Core/Inc/../Src/Drivers/drivers.h \
- ../Core/Inc/../Src/Sensors/sensors.h \
- ../Core/Inc/../Src/Sensors/../Drivers/drivers.h \
- ../Core/Inc/../Src/Sensors/../Control/control.h \
- ../Core/Src/Control/../Drivers/drivers.h
+ ../Core/Inc/../Src/Sensors/sensors.h
 ../Core/Src/Control/control.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_hal.h:
@@ -117,6 +114,3 @@ Core/Src/Control/steering.o: ../Core/Src/Control/steering.c \
 ../Core/Inc/../Src/Control/control.h:
 ../Core/Inc/../Src/Drivers/drivers.h:
 ../Core/Inc/../Src/Sensors/sensors.h:
-../Core/Inc/../Src/Sensors/../Drivers/drivers.h:
-../Core/Inc/../Src/Sensors/../Control/control.h:
-../Core/Src/Control/../Drivers/drivers.h:
