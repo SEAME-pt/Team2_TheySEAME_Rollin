@@ -194,6 +194,18 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 
+/* MCP2515 CAN Controller GPIO Pin Definitions */
+#define MCP2515_CS_Pin GPIO_PIN_15
+#define MCP2515_CS_GPIO_Port GPIOD
+#define MCP2515_SCK_Pin GPIO_PIN_13
+#define MCP2515_SCK_GPIO_Port GPIOF
+#define MCP2515_MOSI_Pin GPIO_PIN_8
+#define MCP2515_MOSI_GPIO_Port GPIOD
+#define MCP2515_MISO_Pin GPIO_PIN_9
+#define MCP2515_MISO_GPIO_Port GPIOD
+#define MCP2515_INT_Pin GPIO_PIN_7
+#define MCP2515_INT_GPIO_Port GPIOE
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

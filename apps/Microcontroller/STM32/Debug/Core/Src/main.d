@@ -51,7 +51,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/app_threadx.h \
  ../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_gpio.h \
  ../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_dma.h \
  ../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_exti.h \
- ../Core/Inc/pca9685.h ../Core/Inc/main.h
+ ../Core/Inc/pca9685.h ../Core/Inc/main.h ../Core/Inc/mcp2515.h
 ../Core/Inc/app_threadx.h:
 ../Middlewares/ST/threadx/common/inc/tx_api.h:
 ../Middlewares/ST/threadx/ports/cortex_m33/gnu/inc/tx_port.h:
@@ -108,3 +108,4 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/app_threadx.h \
 ../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_exti.h:
 ../Core/Inc/pca9685.h:
 ../Core/Inc/main.h:
+../Core/Inc/mcp2515.h:

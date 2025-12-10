@@ -1,0 +1,23 @@
+2025-12-06 11:44:53,075 [INFO] WebApp:194 - Connection lost
+2025-12-06 11:44:57,363 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-06 11:44:59,032 [INFO] WebApp:191 - Connection restablished
+2025-12-06 11:45:02,466 [INFO] WebApp:194 - Connection lost
+2025-12-06 11:45:02,754 [INFO] WebApp:191 - Connection restablished
+2025-12-06 19:03:18,900 [INFO] WebApp:194 - Connection lost
+2025-12-06 19:03:23,027 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-06 19:03:28,126 [INFO] WebApp:191 - Connection restablished
+2025-12-06 20:18:58,223 [INFO] WebApp:194 - Connection lost
+2025-12-06 20:19:02,055 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-06 20:19:07,503 [INFO] WebApp:191 - Connection restablished
+2025-12-06 23:51:10,452 [INFO] WebApp:194 - Connection lost
+2025-12-06 23:51:10,669 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-06 23:51:12,351 [INFO] WebApp:191 - Connection restablished
+2025-12-06 23:52:13,659 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-06 23:52:14,165 [INFO] WebApp:194 - Connection lost
+2025-12-06 23:52:14,341 [INFO] WebApp:191 - Connection restablished
+2025-12-06 23:53:40,621 [INFO] WebApp:194 - Connection lost
+2025-12-06 23:53:40,847 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-06 23:53:42,535 [INFO] WebApp:191 - Connection restablished
+2025-12-06 23:54:43,755 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-06 23:54:44,257 [INFO] WebApp:194 - Connection lost
+2025-12-06 23:54:44,863 [INFO] WebApp:191 - Connection restablished

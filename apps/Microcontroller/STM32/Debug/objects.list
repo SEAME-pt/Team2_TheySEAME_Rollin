@@ -1,6 +1,7 @@
 "./AZURE_RTOS/App/app_azure_rtos.o"
 "./Core/Src/app_threadx.o"
 "./Core/Src/main.o"
+"./Core/Src/mcp2515.o"
 "./Core/Src/pca9685.o"
 "./Core/Src/stm32u5xx_hal_msp.o"
 "./Core/Src/stm32u5xx_hal_timebase_tim.o"

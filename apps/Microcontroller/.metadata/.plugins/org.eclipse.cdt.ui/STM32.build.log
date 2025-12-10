@@ -1,10 +1,10 @@
-16:43:52 **** Incremental Build of configuration Debug for project STM32 ****
+12:56:39 **** Incremental Build of configuration Debug for project STM32 ****
 make -j8 all 
 arm-none-eabi-size  STM32.elf 
    text	   data	    bss	    dec	    hex	filename
-  57443	     96	   9216	  66755	  104c3	STM32.elf
+  64539	     96	   9224	  73859	  12083	STM32.elf
 Finished building: default.size.stdout
  
 
-16:43:52 Build Finished. 0 errors, 0 warnings. (took 196ms)
+12:56:39 Build Finished. 0 errors, 0 warnings. (took 193ms)
 

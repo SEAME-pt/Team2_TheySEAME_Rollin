@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "pca9685.h"
+#include "mcp2515.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -784,7 +785,13 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(WRLS_WKUP_B_GPIO_Port, WRLS_WKUP_B_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOF, Mems_STSAFE_RESET_Pin|WRLS_WKUP_W_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOF, Mems_STSAFE_RESET_Pin|GPIO_PIN_13|WRLS_WKUP_W_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : WRLS_FLOW_Pin Mems_VLX_GPIO_Pin Mems_INT_LPS22HH_Pin */
   GPIO_InitStruct.Pin = WRLS_FLOW_Pin|Mems_VLX_GPIO_Pin|Mems_INT_LPS22HH_Pin;
@@ -839,6 +846,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : PD15 PD8 */
+  GPIO_InitStruct.Pin = GPIO_PIN_15|GPIO_PIN_8;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
   /*Configure GPIO pins : USB_UCPD_FLT_Pin Mems_ISM330DLC_INT1_Pin */
   GPIO_InitStruct.Pin = USB_UCPD_FLT_Pin|Mems_ISM330DLC_INT1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
@@ -851,11 +865,30 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(USB_VBUS_SENSE_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : PE7 */
+  GPIO_InitStruct.Pin = GPIO_PIN_7;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PD9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_9;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
   /*Configure GPIO pins : Mems_STSAFE_RESET_Pin WRLS_WKUP_W_Pin */
   GPIO_InitStruct.Pin = Mems_STSAFE_RESET_Pin|WRLS_WKUP_W_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PF13 */
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
   /*Configure GPIO pin : MIC_SDIN0_Pin */
@@ -865,6 +898,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.Alternate = GPIO_AF6_MDF1;
   HAL_GPIO_Init(MIC_SDIN0_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI7_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI7_IRQn);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
@@ -887,6 +924,20 @@ void Battery_Thread_Entry(ULONG thread_input) {
     Debug_Print("[BATTERY_THREAD] Running on ThreadX RTOS (Single Thread)\r\n");
     Debug_Print("[BATTERY_THREAD] This thread handles both LED blinking and battery monitoring\r\n");
     Debug_Print("[BATTERY_THREAD] Green LED will toggle every 2 seconds\r\n");
+
+    // Initialize MCP2515 CAN controller
+    Debug_Print("\r\n[CAN] Initializing MCP2515...\r\n");
+    
+    // Run connection test first
+    MCP2515_TestConnection();
+    
+    if (MCP2515_Init(CAN_SPEED_500KBPS) == HAL_OK) {
+        Debug_Print("[CAN] MCP2515 initialized successfully (500 kbps) - NORMAL MODE\r\n");
+        MCP2515_PrintDetailedStatus();  // Print detailed initial status
+    } else {
+        Debug_Print("[CAN] MCP2515 initialization FAILED!\r\n");
+        MCP2515_PrintDetailedStatus();  // Print detailed status to see what went wrong
+    }
 
     // Reset I2C bus to clear any stuck state
     Debug_Print("[BATTERY_THREAD] Resetting I2C bus...\r\n");
@@ -1081,9 +1132,23 @@ void Battery_Thread_Entry(ULONG thread_input) {
                         int percentage_int = (int)percentage;
                         int current_int = (int)current;
 
-                        snprintf(uart_buf, sizeof(uart_buf), "[BATTERY_THREAD][%lu] %d.%02dV (%d%%), %dmA\r\n",
-                                count, voltage_int, voltage_frac, percentage_int, current_int);
+                        // Send battery percentage over CAN
+                        HAL_StatusTypeDef can_status = MCP2515_SendBattery((uint8_t)percentage_int);
+                        const char* can_status_str = (can_status == HAL_OK) ? "OK" : 
+                                                      (can_status == HAL_BUSY) ? "BUSY" : 
+                                                      (can_status == HAL_TIMEOUT) ? "TIMEOUT" : "ERROR";
+
+                        snprintf(uart_buf, sizeof(uart_buf), "[BATTERY] %d.%02dV (%d%%), %dmA | CAN: %s \xF0\x9F\xA4\x91\r\n",
+                                voltage_int, voltage_frac, percentage_int, current_int, can_status_str);
                         Debug_Print(uart_buf);
+                        
+                        // Check for received CAN messages
+                        MCP2515_CheckForMessages();
+                        
+                        // Print detailed MCP2515 status every 10 iterations (20 seconds)
+                        if (count % 10 == 0) {
+                            MCP2515_PrintDetailedStatus();
+                        }
                     } else {
                         error_count++;
                         snprintf(uart_buf, sizeof(uart_buf), "[BATTERY_THREAD][%lu] Current RX error: %d\r\n", count, ret);

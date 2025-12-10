@@ -1,0 +1,706 @@
+2025-12-05 09:44:59,124 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 09:45:00,790 [INFO] WebApp:191 - Connection restablished
+2025-12-05 09:45:04,919 [INFO] WebApp:194 - Connection lost
+2025-12-05 09:45:05,183 [INFO] WebApp:191 - Connection restablished
+2025-12-05 11:28:44,918 [INFO] WebApp:194 - Connection lost
+2025-12-05 11:28:48,414 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 11:28:50,114 [INFO] WebApp:191 - Connection restablished
+2025-12-05 11:28:51,981 [INFO] WebApp:194 - Connection lost
+2025-12-05 11:28:52,258 [INFO] WebApp:191 - Connection restablished
+2025-12-05 11:30:37,263 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 399733672 Bytes (1073741824)
+2025-12-05 11:30:43,456 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 431045800 Bytes (1073741824)
+2025-12-05 11:30:44,241 [WARN] IP:2250 - SRAM5PowerDownInRunMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,242 [WARN] IP:2250 - RAM1Page4PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,242 [WARN] IP:2250 - RAM1Page5PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,242 [WARN] IP:2250 - RAM1Page6PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,242 [WARN] IP:2250 - RAM1Page7PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,242 [WARN] IP:2250 - RAM1Page8PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,242 [WARN] IP:2250 - RAM1Page9PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,242 [WARN] IP:2250 - RAM1Page10PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,242 [WARN] IP:2250 - RAM1Page11PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,242 [WARN] IP:2250 - RAM1Page12PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,243 [WARN] IP:2250 - RAM3Page9PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,243 [WARN] IP:2250 - RAM3Page10PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,243 [WARN] IP:2250 - RAM3Page11PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,243 [WARN] IP:2250 - RAM3Page12PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,243 [WARN] IP:2250 - RAM3Page13PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,243 [WARN] IP:2250 - RAM5Page1PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,243 [WARN] IP:2250 - RAM5Page2PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,243 [WARN] IP:2250 - RAM5Page3PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,243 [WARN] IP:2250 - RAM5Page4PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,243 [WARN] IP:2250 - RAM5Page5PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,243 [WARN] IP:2250 - RAM5Page6PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,243 [WARN] IP:2250 - RAM5Page7PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,243 [WARN] IP:2250 - RAM5Page8PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,243 [WARN] IP:2250 - RAM5Page9PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,243 [WARN] IP:2250 - RAM5Page10PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,244 [WARN] IP:2250 - RAM5Page11PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,244 [WARN] IP:2250 - RAM5Page12PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,244 [WARN] IP:2250 - RAM5Page13PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,245 [WARN] IP:2250 - Dcache2PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,246 [WARN] IP:2250 - GRAPHICPRAMPowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,246 [WARN] IP:2250 - DSIRAMPowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,272 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SPI
+2025-12-05 11:30:44,272 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: MDF
+2025-12-05 11:30:44,272 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: PWR
+2025-12-05 11:30:44,272 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: RCC
+2025-12-05 11:30:44,273 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: I2C
+2025-12-05 11:30:44,273 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: I2C
+2025-12-05 11:30:44,273 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: USART
+2025-12-05 11:30:44,273 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: OCTOSPI
+2025-12-05 11:30:44,273 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: OCTOSPI
+2025-12-05 11:30:44,273 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: ThreadX
+2025-12-05 11:30:44,273 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: MEMORYMAP
+2025-12-05 11:30:44,273 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: UCPD
+2025-12-05 11:30:44,273 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SYS
+2025-12-05 11:30:44,273 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: LPBAM
+2025-12-05 11:30:44,273 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: USB_OTG_FS
+2025-12-05 11:30:44,273 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: NVIC
+2025-12-05 11:30:44,273 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: ICACHE
+2025-12-05 11:30:44,273 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: UART
+2025-12-05 11:30:44,274 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: DEBUG
+2025-12-05 11:30:44,276 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: GPIO
+2025-12-05 11:30:44,276 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: LPBAMQUEUE
+2025-12-05 11:30:44,277 [INFO] CodeGenerator:892 - code generatio: config db path: /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.common.mx_6.15.0.202507011659//db/
+2025-12-05 11:30:44,558 [WARN] IP:2250 - TX_ENABLE_RANDOM_NUMBER_STACK_FILLING not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,558 [WARN] IP:2250 - TX_APP_THREAD_ENTRY not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,559 [WARN] IP:2250 - TX_APP_THREAD_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,559 [WARN] IP:2250 - TX_APP_THREAD_PRIO not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,559 [WARN] IP:2250 - TX_APP_STACK_SIZE not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,559 [WARN] IP:2250 - TX_SEMAPHORE_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,559 [WARN] IP:2250 - TX_SEMAPHORE_COUNT not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,559 [WARN] IP:2250 - TX_MUTEX_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,559 [WARN] IP:2250 - TX_MUTEX_INHERITANCE not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,560 [WARN] IP:2250 - TX_MSG_QUEUE_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,560 [WARN] IP:2250 - TX_MSG_SIZE_WORDS not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,560 [WARN] IP:2250 - TX_NB_MSG not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,560 [WARN] IP:2250 - TX_BASEPRI_VALUE not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:44,560 [WARN] IP:2250 - TX_PORT_BASEPRI_VALUE not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:45,163 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/license.tmp_save
+2025-12-05 11:30:45,523 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/license.tmp
+2025-12-05 11:30:46,022 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/gpio.tmp_save
+2025-12-05 11:30:46,196 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/gpio.tmp
+2025-12-05 11:30:47,003 [WARN] IPConfigManager:103 - WARNING: Missing Config File for DEBUG ip!!
+2025-12-05 11:30:48,414 [WARN] IPConfigManager:103 - WARNING: Missing Config File for MEMORYMAP ip!!
+2025-12-05 11:30:48,415 [WARN] IP:2250 - DefaultDataRegion not found: check if there is a RefParameter without a condition.
+2025-12-05 11:30:51,650 [WARN] IPConfigManager:4609 - WARNING: Missing Config File for LINKEDLIST ip!!
+2025-12-05 11:30:51,918 [WARN] IPConfigManager:3238 - Warning: the RefConfig PWREx_EnableUSBVoltageDetector is not available in your config.xml file
+2025-12-05 11:30:51,948 [ERROR] CodeGenerator:10662 - The current RTOS owner has not been found in the list of IPs
+2025-12-05 11:30:51,958 [INFO] Middleware:1452 - No code input for Bsp Dependency
+2025-12-05 11:30:51,973 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/cortex.tmp_save
+2025-12-05 11:30:52,069 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/cortex.tmp
+2025-12-05 11:30:52,080 [INFO] Middleware:1452 - No code input for Bsp Dependency
+2025-12-05 11:30:52,092 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/app_threadx.h_save
+2025-12-05 11:30:52,176 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/app_threadx.h
+2025-12-05 11:30:52,179 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/app_threadx.c_save
+2025-12-05 11:30:52,305 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/app_threadx.c
+2025-12-05 11:30:52,311 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.c_save
+2025-12-05 11:30:52,445 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.c
+2025-12-05 11:30:52,448 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.h_save
+2025-12-05 11:30:52,545 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.h
+2025-12-05 11:30:52,547 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/tx_user.h_save
+2025-12-05 11:30:52,615 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/tx_user.h
+2025-12-05 11:30:52,617 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/tx_initialize_low_level.S_save
+2025-12-05 11:30:52,681 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/tx_initialize_low_level.S
+2025-12-05 11:30:52,683 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos_config.h_save
+2025-12-05 11:30:52,777 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos_config.h
+2025-12-05 11:30:52,826 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_it.c_save
+2025-12-05 11:30:53,061 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_it.c
+2025-12-05 11:30:53,064 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_it.h_save
+2025-12-05 11:30:53,169 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_it.h
+2025-12-05 11:30:53,375 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_msp.c_save
+2025-12-05 11:30:53,572 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_msp.c
+2025-12-05 11:30:53,580 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/system.tmp_save
+2025-12-05 11:30:53,659 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/system.tmp
+2025-12-05 11:30:53,661 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32_assert.h_save
+2025-12-05 11:30:53,722 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32_assert.h
+2025-12-05 11:30:53,725 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_timebase_tim.c_save
+2025-12-05 11:30:53,789 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_timebase_tim.c
+2025-12-05 11:30:53,796 [INFO] CodeEngine:321 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_hal_conf.h_save
+2025-12-05 11:30:53,857 [INFO] CodeEngine:345 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_hal_conf.h
+2025-12-05 11:30:53,926 [WARN] IPConfigManager:3811 - IP not found : USB_OTG
+2025-12-05 11:30:53,928 [WARN] CodeGenerator:4259 - IP not found : null
+2025-12-05 11:30:53,936 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/main.h_save
+2025-12-05 11:30:54,132 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/main.h
+2025-12-05 11:30:54,142 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/main.c_save
+2025-12-05 11:30:54,446 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/main.c
+2025-12-05 11:30:55,257 [INFO] ProjectBuilder:3606 - Time for Copy HAL[1] : 310mS.
+2025-12-05 11:30:55,279 [INFO] ProjectBuilder:5216 - Project Generator version: 4.7.0-B52
+2025-12-05 11:30:55,467 [INFO] ConfigFileManager:1595 - The Die is : DIE482
+2025-12-05 11:30:57,870 [INFO] ProjectBuilder:5496 - Time for Generating toolchain IDE Files: 2591mS.
+2025-12-05 11:30:57,870 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 0mS.
+2025-12-05 11:30:57,874 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 0mS.
+2025-12-05 11:38:03,239 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 562596528 Bytes (1073741824)
+2025-12-05 11:38:03,499 [WARN] IP:2250 - SRAM5PowerDownInRunMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,500 [WARN] IP:2250 - RAM1Page4PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,500 [WARN] IP:2250 - RAM1Page5PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,500 [WARN] IP:2250 - RAM1Page6PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,500 [WARN] IP:2250 - RAM1Page7PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,500 [WARN] IP:2250 - RAM1Page8PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,500 [WARN] IP:2250 - RAM1Page9PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,500 [WARN] IP:2250 - RAM1Page10PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,500 [WARN] IP:2250 - RAM1Page11PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,500 [WARN] IP:2250 - RAM1Page12PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,500 [WARN] IP:2250 - RAM3Page9PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,500 [WARN] IP:2250 - RAM3Page10PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - RAM3Page11PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - RAM3Page12PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - RAM3Page13PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - RAM5Page1PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - RAM5Page2PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - RAM5Page3PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - RAM5Page4PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - RAM5Page5PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - RAM5Page6PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - RAM5Page7PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - RAM5Page8PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - RAM5Page9PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - RAM5Page10PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - RAM5Page11PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - RAM5Page12PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - RAM5Page13PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - Dcache2PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - GRAPHICPRAMPowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,501 [WARN] IP:2250 - DSIRAMPowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SPI
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: MDF
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: PWR
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: RCC
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: I2C
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: I2C
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: USART
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: OCTOSPI
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: OCTOSPI
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: ThreadX
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: MEMORYMAP
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: UCPD
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SYS
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: LPBAM
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: USB_OTG_FS
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: NVIC
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: ICACHE
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: UART
+2025-12-05 11:38:03,519 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: DEBUG
+2025-12-05 11:38:03,521 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: GPIO
+2025-12-05 11:38:03,521 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: LPBAMQUEUE
+2025-12-05 11:38:03,521 [INFO] CodeGenerator:892 - code generatio: config db path: /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.common.mx_6.15.0.202507011659//db/
+2025-12-05 11:38:03,663 [WARN] IP:2250 - TX_ENABLE_RANDOM_NUMBER_STACK_FILLING not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,663 [WARN] IP:2250 - TX_APP_THREAD_ENTRY not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,664 [WARN] IP:2250 - TX_APP_THREAD_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,664 [WARN] IP:2250 - TX_APP_THREAD_PRIO not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,664 [WARN] IP:2250 - TX_APP_STACK_SIZE not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,664 [WARN] IP:2250 - TX_SEMAPHORE_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,664 [WARN] IP:2250 - TX_SEMAPHORE_COUNT not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,664 [WARN] IP:2250 - TX_MUTEX_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,664 [WARN] IP:2250 - TX_MUTEX_INHERITANCE not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,664 [WARN] IP:2250 - TX_MSG_QUEUE_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,664 [WARN] IP:2250 - TX_MSG_SIZE_WORDS not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,664 [WARN] IP:2250 - TX_NB_MSG not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,664 [WARN] IP:2250 - TX_BASEPRI_VALUE not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,664 [WARN] IP:2250 - TX_PORT_BASEPRI_VALUE not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:03,905 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/license.tmp_save
+2025-12-05 11:38:03,991 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/license.tmp
+2025-12-05 11:38:04,326 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/gpio.tmp_save
+2025-12-05 11:38:04,437 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/gpio.tmp
+2025-12-05 11:38:04,969 [WARN] IPConfigManager:103 - WARNING: Missing Config File for DEBUG ip!!
+2025-12-05 11:38:05,940 [WARN] IPConfigManager:103 - WARNING: Missing Config File for MEMORYMAP ip!!
+2025-12-05 11:38:05,940 [WARN] IP:2250 - DefaultDataRegion not found: check if there is a RefParameter without a condition.
+2025-12-05 11:38:07,754 [WARN] IPConfigManager:4609 - WARNING: Missing Config File for LINKEDLIST ip!!
+2025-12-05 11:38:08,027 [WARN] IPConfigManager:3238 - Warning: the RefConfig PWREx_EnableUSBVoltageDetector is not available in your config.xml file
+2025-12-05 11:38:08,054 [ERROR] CodeGenerator:10662 - The current RTOS owner has not been found in the list of IPs
+2025-12-05 11:38:08,059 [INFO] Middleware:1452 - No code input for Bsp Dependency
+2025-12-05 11:38:08,065 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/cortex.tmp_save
+2025-12-05 11:38:08,155 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/cortex.tmp
+2025-12-05 11:38:08,164 [INFO] Middleware:1452 - No code input for Bsp Dependency
+2025-12-05 11:38:08,169 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/app_threadx.h_save
+2025-12-05 11:38:08,242 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/app_threadx.h
+2025-12-05 11:38:08,243 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/app_threadx.c_save
+2025-12-05 11:38:08,302 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/app_threadx.c
+2025-12-05 11:38:08,304 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.c_save
+2025-12-05 11:38:08,381 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.c
+2025-12-05 11:38:08,384 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.h_save
+2025-12-05 11:38:08,459 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.h
+2025-12-05 11:38:08,462 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/tx_user.h_save
+2025-12-05 11:38:08,548 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/tx_user.h
+2025-12-05 11:38:08,549 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/tx_initialize_low_level.S_save
+2025-12-05 11:38:08,623 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/tx_initialize_low_level.S
+2025-12-05 11:38:08,625 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos_config.h_save
+2025-12-05 11:38:08,680 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos_config.h
+2025-12-05 11:38:08,704 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_it.c_save
+2025-12-05 11:38:08,770 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_it.c
+2025-12-05 11:38:08,771 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_it.h_save
+2025-12-05 11:38:08,831 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_it.h
+2025-12-05 11:38:09,057 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_msp.c_save
+2025-12-05 11:38:09,162 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_msp.c
+2025-12-05 11:38:09,164 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/system.tmp_save
+2025-12-05 11:38:09,216 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/system.tmp
+2025-12-05 11:38:09,218 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32_assert.h_save
+2025-12-05 11:38:09,273 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32_assert.h
+2025-12-05 11:38:09,274 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_timebase_tim.c_save
+2025-12-05 11:38:09,330 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_timebase_tim.c
+2025-12-05 11:38:09,335 [INFO] CodeEngine:321 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_hal_conf.h_save
+2025-12-05 11:38:09,392 [INFO] CodeEngine:345 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_hal_conf.h
+2025-12-05 11:38:09,437 [WARN] IPConfigManager:3811 - IP not found : USB_OTG
+2025-12-05 11:38:09,438 [WARN] CodeGenerator:4259 - IP not found : null
+2025-12-05 11:38:09,442 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/main.h_save
+2025-12-05 11:38:09,511 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/main.h
+2025-12-05 11:38:09,512 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/main.c_save
+2025-12-05 11:38:09,721 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/main.c
+2025-12-05 11:38:09,988 [INFO] ProjectBuilder:3606 - Time for Copy HAL[1] : 55mS.
+2025-12-05 11:38:09,994 [INFO] ProjectBuilder:5216 - Project Generator version: 4.7.0-B52
+2025-12-05 11:38:10,088 [INFO] ConfigFileManager:1595 - The Die is : DIE482
+2025-12-05 11:38:11,590 [INFO] ProjectBuilder:5496 - Time for Generating toolchain IDE Files: 1596mS.
+2025-12-05 11:38:11,593 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 1mS.
+2025-12-05 11:38:11,601 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 0mS.
+2025-12-05 11:39:41,293 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 11:39:41,796 [INFO] WebApp:194 - Connection lost
+2025-12-05 11:39:42,388 [INFO] WebApp:191 - Connection restablished
+2025-12-05 11:41:15,800 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 11:41:16,297 [INFO] WebApp:194 - Connection lost
+2025-12-05 11:41:16,886 [INFO] WebApp:191 - Connection restablished
+2025-12-05 11:46:07,068 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 467046224 Bytes (1073741824)
+2025-12-05 11:46:07,298 [WARN] IP:2250 - SRAM5PowerDownInRunMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,299 [WARN] IP:2250 - RAM1Page4PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,299 [WARN] IP:2250 - RAM1Page5PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,299 [WARN] IP:2250 - RAM1Page6PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,299 [WARN] IP:2250 - RAM1Page7PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,299 [WARN] IP:2250 - RAM1Page8PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,299 [WARN] IP:2250 - RAM1Page9PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,299 [WARN] IP:2250 - RAM1Page10PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,299 [WARN] IP:2250 - RAM1Page11PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,299 [WARN] IP:2250 - RAM1Page12PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,299 [WARN] IP:2250 - RAM3Page9PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,299 [WARN] IP:2250 - RAM3Page10PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,299 [WARN] IP:2250 - RAM3Page11PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,299 [WARN] IP:2250 - RAM3Page12PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,299 [WARN] IP:2250 - RAM3Page13PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,300 [WARN] IP:2250 - RAM5Page1PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,300 [WARN] IP:2250 - RAM5Page2PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,300 [WARN] IP:2250 - RAM5Page3PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,300 [WARN] IP:2250 - RAM5Page4PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,300 [WARN] IP:2250 - RAM5Page5PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,300 [WARN] IP:2250 - RAM5Page6PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,300 [WARN] IP:2250 - RAM5Page7PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,300 [WARN] IP:2250 - RAM5Page8PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,300 [WARN] IP:2250 - RAM5Page9PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,300 [WARN] IP:2250 - RAM5Page10PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,300 [WARN] IP:2250 - RAM5Page11PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,300 [WARN] IP:2250 - RAM5Page12PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,300 [WARN] IP:2250 - RAM5Page13PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,300 [WARN] IP:2250 - Dcache2PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,300 [WARN] IP:2250 - GRAPHICPRAMPowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,300 [WARN] IP:2250 - DSIRAMPowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,333 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SPI
+2025-12-05 11:46:07,333 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: MDF
+2025-12-05 11:46:07,333 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: PWR
+2025-12-05 11:46:07,333 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: RCC
+2025-12-05 11:46:07,333 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: I2C
+2025-12-05 11:46:07,333 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: I2C
+2025-12-05 11:46:07,333 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: USART
+2025-12-05 11:46:07,333 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: OCTOSPI
+2025-12-05 11:46:07,333 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: OCTOSPI
+2025-12-05 11:46:07,333 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: ThreadX
+2025-12-05 11:46:07,333 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: MEMORYMAP
+2025-12-05 11:46:07,333 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: UCPD
+2025-12-05 11:46:07,333 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SYS
+2025-12-05 11:46:07,333 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: LPBAM
+2025-12-05 11:46:07,333 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: USB_OTG_FS
+2025-12-05 11:46:07,333 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: NVIC
+2025-12-05 11:46:07,334 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: ICACHE
+2025-12-05 11:46:07,334 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: UART
+2025-12-05 11:46:07,334 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: DEBUG
+2025-12-05 11:46:07,335 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: GPIO
+2025-12-05 11:46:07,335 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: LPBAMQUEUE
+2025-12-05 11:46:07,337 [INFO] CodeGenerator:892 - code generatio: config db path: /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.common.mx_6.15.0.202507011659//db/
+2025-12-05 11:46:07,567 [WARN] IP:2250 - TX_ENABLE_RANDOM_NUMBER_STACK_FILLING not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,567 [WARN] IP:2250 - TX_APP_THREAD_ENTRY not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,567 [WARN] IP:2250 - TX_APP_THREAD_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,567 [WARN] IP:2250 - TX_APP_THREAD_PRIO not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,567 [WARN] IP:2250 - TX_APP_STACK_SIZE not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,567 [WARN] IP:2250 - TX_SEMAPHORE_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,567 [WARN] IP:2250 - TX_SEMAPHORE_COUNT not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,568 [WARN] IP:2250 - TX_MUTEX_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,568 [WARN] IP:2250 - TX_MUTEX_INHERITANCE not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,568 [WARN] IP:2250 - TX_MSG_QUEUE_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,568 [WARN] IP:2250 - TX_MSG_SIZE_WORDS not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,568 [WARN] IP:2250 - TX_NB_MSG not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,568 [WARN] IP:2250 - TX_BASEPRI_VALUE not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,568 [WARN] IP:2250 - TX_PORT_BASEPRI_VALUE not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:07,752 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/license.tmp_save
+2025-12-05 11:46:07,851 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/license.tmp
+2025-12-05 11:46:08,069 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/gpio.tmp_save
+2025-12-05 11:46:08,126 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/gpio.tmp
+2025-12-05 11:46:08,573 [WARN] IPConfigManager:103 - WARNING: Missing Config File for DEBUG ip!!
+2025-12-05 11:46:09,293 [WARN] IPConfigManager:103 - WARNING: Missing Config File for MEMORYMAP ip!!
+2025-12-05 11:46:09,294 [WARN] IP:2250 - DefaultDataRegion not found: check if there is a RefParameter without a condition.
+2025-12-05 11:46:11,285 [WARN] IPConfigManager:4609 - WARNING: Missing Config File for LINKEDLIST ip!!
+2025-12-05 11:46:11,481 [WARN] IPConfigManager:3238 - Warning: the RefConfig PWREx_EnableUSBVoltageDetector is not available in your config.xml file
+2025-12-05 11:46:11,500 [ERROR] CodeGenerator:10662 - The current RTOS owner has not been found in the list of IPs
+2025-12-05 11:46:11,503 [INFO] Middleware:1452 - No code input for Bsp Dependency
+2025-12-05 11:46:11,507 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/cortex.tmp_save
+2025-12-05 11:46:11,561 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/cortex.tmp
+2025-12-05 11:46:11,567 [INFO] Middleware:1452 - No code input for Bsp Dependency
+2025-12-05 11:46:11,569 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/app_threadx.h_save
+2025-12-05 11:46:11,631 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/app_threadx.h
+2025-12-05 11:46:11,633 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/app_threadx.c_save
+2025-12-05 11:46:11,690 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/app_threadx.c
+2025-12-05 11:46:11,692 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.c_save
+2025-12-05 11:46:11,768 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.c
+2025-12-05 11:46:11,787 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.h_save
+2025-12-05 11:46:11,881 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.h
+2025-12-05 11:46:11,884 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/tx_user.h_save
+2025-12-05 11:46:12,037 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/tx_user.h
+2025-12-05 11:46:12,040 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/tx_initialize_low_level.S_save
+2025-12-05 11:46:12,229 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/tx_initialize_low_level.S
+2025-12-05 11:46:12,233 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos_config.h_save
+2025-12-05 11:46:12,370 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos_config.h
+2025-12-05 11:46:12,415 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_it.c_save
+2025-12-05 11:46:12,527 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_it.c
+2025-12-05 11:46:12,530 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_it.h_save
+2025-12-05 11:46:12,622 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_it.h
+2025-12-05 11:46:12,834 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_msp.c_save
+2025-12-05 11:46:12,947 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_msp.c
+2025-12-05 11:46:12,949 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/system.tmp_save
+2025-12-05 11:46:13,032 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/system.tmp
+2025-12-05 11:46:13,034 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32_assert.h_save
+2025-12-05 11:46:13,118 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32_assert.h
+2025-12-05 11:46:13,119 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_timebase_tim.c_save
+2025-12-05 11:46:13,191 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_timebase_tim.c
+2025-12-05 11:46:13,196 [INFO] CodeEngine:321 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_hal_conf.h_save
+2025-12-05 11:46:13,272 [INFO] CodeEngine:345 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_hal_conf.h
+2025-12-05 11:46:13,325 [WARN] IPConfigManager:3811 - IP not found : USB_OTG
+2025-12-05 11:46:13,326 [WARN] CodeGenerator:4259 - IP not found : null
+2025-12-05 11:46:13,330 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/main.h_save
+2025-12-05 11:46:13,396 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/main.h
+2025-12-05 11:46:13,397 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/main.c_save
+2025-12-05 11:46:13,566 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/main.c
+2025-12-05 11:46:13,917 [INFO] ProjectBuilder:3606 - Time for Copy HAL[1] : 54mS.
+2025-12-05 11:46:13,924 [INFO] ProjectBuilder:5216 - Project Generator version: 4.7.0-B52
+2025-12-05 11:46:14,010 [INFO] ConfigFileManager:1595 - The Die is : DIE482
+2025-12-05 11:46:15,650 [INFO] ProjectBuilder:5496 - Time for Generating toolchain IDE Files: 1726mS.
+2025-12-05 11:46:15,651 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 0mS.
+2025-12-05 11:46:15,661 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 0mS.
+2025-12-05 11:52:37,028 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 622349920 Bytes (1073741824)
+2025-12-05 11:52:37,222 [WARN] IP:2250 - SRAM5PowerDownInRunMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,222 [WARN] IP:2250 - RAM1Page4PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,222 [WARN] IP:2250 - RAM1Page5PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,222 [WARN] IP:2250 - RAM1Page6PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,222 [WARN] IP:2250 - RAM1Page7PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,222 [WARN] IP:2250 - RAM1Page8PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,222 [WARN] IP:2250 - RAM1Page9PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,222 [WARN] IP:2250 - RAM1Page10PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,222 [WARN] IP:2250 - RAM1Page11PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,222 [WARN] IP:2250 - RAM1Page12PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,222 [WARN] IP:2250 - RAM3Page9PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,222 [WARN] IP:2250 - RAM3Page10PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - RAM3Page11PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - RAM3Page12PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - RAM3Page13PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - RAM5Page1PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - RAM5Page2PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - RAM5Page3PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - RAM5Page4PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - RAM5Page5PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - RAM5Page6PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - RAM5Page7PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - RAM5Page8PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - RAM5Page9PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - RAM5Page10PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - RAM5Page11PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - RAM5Page12PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - RAM5Page13PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - Dcache2PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - GRAPHICPRAMPowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,223 [WARN] IP:2250 - DSIRAMPowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,267 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SPI
+2025-12-05 11:52:37,267 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: MDF
+2025-12-05 11:52:37,267 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: PWR
+2025-12-05 11:52:37,267 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: RCC
+2025-12-05 11:52:37,268 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: I2C
+2025-12-05 11:52:37,268 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: I2C
+2025-12-05 11:52:37,268 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: USART
+2025-12-05 11:52:37,268 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: OCTOSPI
+2025-12-05 11:52:37,268 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: OCTOSPI
+2025-12-05 11:52:37,269 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: ThreadX
+2025-12-05 11:52:37,269 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: MEMORYMAP
+2025-12-05 11:52:37,269 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: UCPD
+2025-12-05 11:52:37,269 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SYS
+2025-12-05 11:52:37,269 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: LPBAM
+2025-12-05 11:52:37,269 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: USB_OTG_FS
+2025-12-05 11:52:37,269 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: NVIC
+2025-12-05 11:52:37,269 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: ICACHE
+2025-12-05 11:52:37,269 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: UART
+2025-12-05 11:52:37,269 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: DEBUG
+2025-12-05 11:52:37,271 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: GPIO
+2025-12-05 11:52:37,271 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: LPBAMQUEUE
+2025-12-05 11:52:37,271 [INFO] CodeGenerator:892 - code generatio: config db path: /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.common.mx_6.15.0.202507011659//db/
+2025-12-05 11:52:37,394 [WARN] IP:2250 - TX_ENABLE_RANDOM_NUMBER_STACK_FILLING not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,395 [WARN] IP:2250 - TX_APP_THREAD_ENTRY not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,395 [WARN] IP:2250 - TX_APP_THREAD_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,395 [WARN] IP:2250 - TX_APP_THREAD_PRIO not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,395 [WARN] IP:2250 - TX_APP_STACK_SIZE not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,395 [WARN] IP:2250 - TX_SEMAPHORE_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,395 [WARN] IP:2250 - TX_SEMAPHORE_COUNT not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,395 [WARN] IP:2250 - TX_MUTEX_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,395 [WARN] IP:2250 - TX_MUTEX_INHERITANCE not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,395 [WARN] IP:2250 - TX_MSG_QUEUE_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,395 [WARN] IP:2250 - TX_MSG_SIZE_WORDS not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,395 [WARN] IP:2250 - TX_NB_MSG not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,395 [WARN] IP:2250 - TX_BASEPRI_VALUE not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,395 [WARN] IP:2250 - TX_PORT_BASEPRI_VALUE not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:37,507 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/license.tmp_save
+2025-12-05 11:52:37,564 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/license.tmp
+2025-12-05 11:52:37,823 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/gpio.tmp_save
+2025-12-05 11:52:37,894 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/gpio.tmp
+2025-12-05 11:52:38,265 [WARN] IPConfigManager:103 - WARNING: Missing Config File for DEBUG ip!!
+2025-12-05 11:52:38,989 [WARN] IPConfigManager:103 - WARNING: Missing Config File for MEMORYMAP ip!!
+2025-12-05 11:52:38,990 [WARN] IP:2250 - DefaultDataRegion not found: check if there is a RefParameter without a condition.
+2025-12-05 11:52:40,893 [WARN] IPConfigManager:4609 - WARNING: Missing Config File for LINKEDLIST ip!!
+2025-12-05 11:52:41,093 [WARN] IPConfigManager:3238 - Warning: the RefConfig PWREx_EnableUSBVoltageDetector is not available in your config.xml file
+2025-12-05 11:52:41,124 [ERROR] CodeGenerator:10662 - The current RTOS owner has not been found in the list of IPs
+2025-12-05 11:52:41,129 [INFO] Middleware:1452 - No code input for Bsp Dependency
+2025-12-05 11:52:41,135 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/cortex.tmp_save
+2025-12-05 11:52:41,214 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/cortex.tmp
+2025-12-05 11:52:41,220 [INFO] Middleware:1452 - No code input for Bsp Dependency
+2025-12-05 11:52:41,223 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/app_threadx.h_save
+2025-12-05 11:52:41,294 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/app_threadx.h
+2025-12-05 11:52:41,296 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/app_threadx.c_save
+2025-12-05 11:52:41,362 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/app_threadx.c
+2025-12-05 11:52:41,364 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.c_save
+2025-12-05 11:52:41,421 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.c
+2025-12-05 11:52:41,422 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.h_save
+2025-12-05 11:52:41,474 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.h
+2025-12-05 11:52:41,475 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/tx_user.h_save
+2025-12-05 11:52:41,542 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/tx_user.h
+2025-12-05 11:52:41,543 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/tx_initialize_low_level.S_save
+2025-12-05 11:52:41,609 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/tx_initialize_low_level.S
+2025-12-05 11:52:41,610 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos_config.h_save
+2025-12-05 11:52:41,664 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos_config.h
+2025-12-05 11:52:41,687 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_it.c_save
+2025-12-05 11:52:41,750 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_it.c
+2025-12-05 11:52:41,752 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_it.h_save
+2025-12-05 11:52:41,802 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_it.h
+2025-12-05 11:52:42,006 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_msp.c_save
+2025-12-05 11:52:42,157 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_msp.c
+2025-12-05 11:52:42,159 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/system.tmp_save
+2025-12-05 11:52:42,267 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/system.tmp
+2025-12-05 11:52:42,270 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32_assert.h_save
+2025-12-05 11:52:42,344 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32_assert.h
+2025-12-05 11:52:42,346 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_timebase_tim.c_save
+2025-12-05 11:52:42,405 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_timebase_tim.c
+2025-12-05 11:52:42,410 [INFO] CodeEngine:321 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_hal_conf.h_save
+2025-12-05 11:52:42,467 [INFO] CodeEngine:345 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_hal_conf.h
+2025-12-05 11:52:42,504 [WARN] IPConfigManager:3811 - IP not found : USB_OTG
+2025-12-05 11:52:42,505 [WARN] CodeGenerator:4259 - IP not found : null
+2025-12-05 11:52:42,508 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/main.h_save
+2025-12-05 11:52:42,569 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/main.h
+2025-12-05 11:52:42,570 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/main.c_save
+2025-12-05 11:52:42,704 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/main.c
+2025-12-05 11:52:42,943 [INFO] ProjectBuilder:3606 - Time for Copy HAL[1] : 40mS.
+2025-12-05 11:52:42,950 [INFO] ProjectBuilder:5216 - Project Generator version: 4.7.0-B52
+2025-12-05 11:52:43,030 [INFO] ConfigFileManager:1595 - The Die is : DIE482
+2025-12-05 11:52:44,126 [INFO] ProjectBuilder:5496 - Time for Generating toolchain IDE Files: 1176mS.
+2025-12-05 11:52:44,127 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 1mS.
+2025-12-05 11:52:44,134 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 0mS.
+2025-12-05 12:49:24,934 [INFO] WebApp:194 - Connection lost
+2025-12-05 12:49:28,599 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 12:49:30,315 [INFO] WebApp:191 - Connection restablished
+2025-12-05 12:49:32,234 [INFO] WebApp:194 - Connection lost
+2025-12-05 12:49:32,531 [INFO] WebApp:191 - Connection restablished
+2025-12-05 12:50:01,039 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 12:50:01,540 [INFO] WebApp:194 - Connection lost
+2025-12-05 12:50:02,368 [INFO] WebApp:191 - Connection restablished
+2025-12-05 13:05:44,933 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 575061888 Bytes (1073741824)
+2025-12-05 13:05:45,598 [WARN] IP:2250 - SRAM5PowerDownInRunMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,599 [WARN] IP:2250 - RAM1Page4PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,599 [WARN] IP:2250 - RAM1Page5PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,599 [WARN] IP:2250 - RAM1Page6PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,599 [WARN] IP:2250 - RAM1Page7PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,599 [WARN] IP:2250 - RAM1Page8PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,599 [WARN] IP:2250 - RAM1Page9PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,599 [WARN] IP:2250 - RAM1Page10PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,599 [WARN] IP:2250 - RAM1Page11PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,599 [WARN] IP:2250 - RAM1Page12PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,600 [WARN] IP:2250 - RAM3Page9PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,600 [WARN] IP:2250 - RAM3Page10PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,600 [WARN] IP:2250 - RAM3Page11PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,600 [WARN] IP:2250 - RAM3Page12PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,600 [WARN] IP:2250 - RAM3Page13PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,601 [WARN] IP:2250 - RAM5Page1PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,601 [WARN] IP:2250 - RAM5Page2PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,601 [WARN] IP:2250 - RAM5Page3PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,601 [WARN] IP:2250 - RAM5Page4PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,601 [WARN] IP:2250 - RAM5Page5PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,601 [WARN] IP:2250 - RAM5Page6PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,601 [WARN] IP:2250 - RAM5Page7PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,601 [WARN] IP:2250 - RAM5Page8PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,601 [WARN] IP:2250 - RAM5Page9PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,601 [WARN] IP:2250 - RAM5Page10PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,601 [WARN] IP:2250 - RAM5Page11PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,601 [WARN] IP:2250 - RAM5Page12PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,601 [WARN] IP:2250 - RAM5Page13PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,601 [WARN] IP:2250 - Dcache2PowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,601 [WARN] IP:2250 - GRAPHICPRAMPowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,601 [WARN] IP:2250 - DSIRAMPowerDownInStopMode not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SPI
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: MDF
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: PWR
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: RCC
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: I2C
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: I2C
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: USART
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: OCTOSPI
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: OCTOSPI
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: ThreadX
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: MEMORYMAP
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: UCPD
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SYS
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: LPBAM
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: USB_OTG_FS
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: NVIC
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: ICACHE
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: UART
+2025-12-05 13:05:45,620 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: DEBUG
+2025-12-05 13:05:45,623 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: GPIO
+2025-12-05 13:05:45,623 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: LPBAMQUEUE
+2025-12-05 13:05:45,624 [INFO] CodeGenerator:892 - code generatio: config db path: /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.common.mx_6.15.0.202507011659//db/
+2025-12-05 13:05:45,879 [WARN] IP:2250 - TX_ENABLE_RANDOM_NUMBER_STACK_FILLING not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,879 [WARN] IP:2250 - TX_APP_THREAD_ENTRY not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,880 [WARN] IP:2250 - TX_APP_THREAD_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,880 [WARN] IP:2250 - TX_APP_THREAD_PRIO not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,880 [WARN] IP:2250 - TX_APP_STACK_SIZE not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,880 [WARN] IP:2250 - TX_SEMAPHORE_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,880 [WARN] IP:2250 - TX_SEMAPHORE_COUNT not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,881 [WARN] IP:2250 - TX_MUTEX_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,881 [WARN] IP:2250 - TX_MUTEX_INHERITANCE not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,881 [WARN] IP:2250 - TX_MSG_QUEUE_NAME not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,881 [WARN] IP:2250 - TX_MSG_SIZE_WORDS not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,881 [WARN] IP:2250 - TX_NB_MSG not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,881 [WARN] IP:2250 - TX_BASEPRI_VALUE not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:45,882 [WARN] IP:2250 - TX_PORT_BASEPRI_VALUE not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:46,132 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/license.tmp_save
+2025-12-05 13:05:46,488 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/license.tmp
+2025-12-05 13:05:46,930 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/gpio.tmp_save
+2025-12-05 13:05:47,121 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/gpio.tmp
+2025-12-05 13:05:47,983 [WARN] IPConfigManager:103 - WARNING: Missing Config File for DEBUG ip!!
+2025-12-05 13:05:49,471 [WARN] IPConfigManager:103 - WARNING: Missing Config File for MEMORYMAP ip!!
+2025-12-05 13:05:49,472 [WARN] IP:2250 - DefaultDataRegion not found: check if there is a RefParameter without a condition.
+2025-12-05 13:05:52,270 [WARN] IPConfigManager:4609 - WARNING: Missing Config File for LINKEDLIST ip!!
+2025-12-05 13:05:52,684 [WARN] IPConfigManager:3238 - Warning: the RefConfig PWREx_EnableUSBVoltageDetector is not available in your config.xml file
+2025-12-05 13:05:52,716 [ERROR] CodeGenerator:10662 - The current RTOS owner has not been found in the list of IPs
+2025-12-05 13:05:52,724 [INFO] Middleware:1452 - No code input for Bsp Dependency
+2025-12-05 13:05:52,739 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/cortex.tmp_save
+2025-12-05 13:05:52,980 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/cortex.tmp
+2025-12-05 13:05:53,026 [INFO] Middleware:1452 - No code input for Bsp Dependency
+2025-12-05 13:05:53,056 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/app_threadx.h_save
+2025-12-05 13:05:53,232 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/app_threadx.h
+2025-12-05 13:05:53,234 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/app_threadx.c_save
+2025-12-05 13:05:53,358 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/app_threadx.c
+2025-12-05 13:05:53,361 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.c_save
+2025-12-05 13:05:53,497 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.c
+2025-12-05 13:05:53,500 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.h_save
+2025-12-05 13:05:53,603 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos.h
+2025-12-05 13:05:53,605 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/tx_user.h_save
+2025-12-05 13:05:53,687 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/tx_user.h
+2025-12-05 13:05:53,690 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/tx_initialize_low_level.S_save
+2025-12-05 13:05:53,761 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/tx_initialize_low_level.S
+2025-12-05 13:05:53,763 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos_config.h_save
+2025-12-05 13:05:53,820 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/AZURE_RTOS/App/app_azure_rtos_config.h
+2025-12-05 13:05:53,857 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_it.c_save
+2025-12-05 13:05:54,012 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_it.c
+2025-12-05 13:05:54,014 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_it.h_save
+2025-12-05 13:05:54,095 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_it.h
+2025-12-05 13:05:54,296 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_msp.c_save
+2025-12-05 13:05:54,431 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_msp.c
+2025-12-05 13:05:54,433 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/system.tmp_save
+2025-12-05 13:05:54,508 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/MXTmpFiles/system.tmp
+2025-12-05 13:05:54,510 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32_assert.h_save
+2025-12-05 13:05:54,583 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32_assert.h
+2025-12-05 13:05:54,585 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_timebase_tim.c_save
+2025-12-05 13:05:54,651 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/stm32u5xx_hal_timebase_tim.c
+2025-12-05 13:05:54,658 [INFO] CodeEngine:321 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_hal_conf.h_save
+2025-12-05 13:05:54,770 [INFO] CodeEngine:345 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/stm32u5xx_hal_conf.h
+2025-12-05 13:05:54,846 [WARN] IPConfigManager:3811 - IP not found : USB_OTG
+2025-12-05 13:05:54,848 [WARN] CodeGenerator:4259 - IP not found : null
+2025-12-05 13:05:54,855 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/main.h_save
+2025-12-05 13:05:54,970 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Inc/main.h
+2025-12-05 13:05:54,972 [INFO] CodeEngine:265 - oldGeneratedFile, /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/main.c_save
+2025-12-05 13:05:55,157 [INFO] CodeEngine:289 - Generated code: /home/hhzamith/SEA_ME/repo4/apps/Microcontroller/STM32/Core/Src/main.c
+2025-12-05 13:05:55,478 [INFO] ProjectBuilder:3606 - Time for Copy HAL[1] : 67mS.
+2025-12-05 13:05:55,487 [INFO] ProjectBuilder:5216 - Project Generator version: 4.7.0-B52
+2025-12-05 13:05:55,614 [INFO] ConfigFileManager:1595 - The Die is : DIE482
+2025-12-05 13:05:56,685 [INFO] ProjectBuilder:5496 - Time for Generating toolchain IDE Files: 1198mS.
+2025-12-05 13:05:56,686 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 1mS.
+2025-12-05 13:05:56,690 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 1mS.
+2025-12-05 14:00:45,869 [INFO] WebApp:194 - Connection lost
+2025-12-05 14:00:50,684 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 14:00:53,561 [INFO] WebApp:191 - Connection restablished
+2025-12-05 14:08:03,797 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 14:08:04,269 [INFO] WebApp:194 - Connection lost
+2025-12-05 14:08:05,035 [INFO] WebApp:191 - Connection restablished
+2025-12-05 15:03:27,144 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 15:03:27,643 [INFO] WebApp:194 - Connection lost
+2025-12-05 15:03:28,150 [INFO] WebApp:191 - Connection restablished
+2025-12-05 15:03:58,676 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 15:03:59,177 [INFO] WebApp:194 - Connection lost
+2025-12-05 15:03:59,999 [INFO] WebApp:191 - Connection restablished
+2025-12-05 15:04:32,260 [INFO] WebApp:194 - Connection lost
+2025-12-05 15:04:32,302 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 15:04:33,978 [INFO] WebApp:191 - Connection restablished
+2025-12-05 15:05:04,079 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 15:05:04,581 [INFO] WebApp:194 - Connection lost
+2025-12-05 15:05:05,336 [INFO] WebApp:191 - Connection restablished
+2025-12-05 15:05:46,489 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 15:05:46,987 [INFO] WebApp:194 - Connection lost
+2025-12-05 15:05:47,797 [INFO] WebApp:191 - Connection restablished
+2025-12-05 15:06:05,661 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 15:06:07,163 [INFO] WebApp:194 - Connection lost
+2025-12-05 15:06:07,536 [INFO] WebApp:191 - Connection restablished
+2025-12-05 15:06:41,883 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 15:06:42,382 [INFO] WebApp:194 - Connection lost
+2025-12-05 15:06:43,270 [INFO] WebApp:191 - Connection restablished
+2025-12-05 15:45:12,396 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 15:45:12,860 [INFO] WebApp:194 - Connection lost
+2025-12-05 15:45:13,291 [INFO] WebApp:191 - Connection restablished
+2025-12-05 15:45:45,199 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 15:45:45,694 [INFO] WebApp:194 - Connection lost
+2025-12-05 15:45:46,548 [INFO] WebApp:191 - Connection restablished
+2025-12-05 15:50:41,974 [INFO] WebApp:194 - Connection lost
+2025-12-05 15:50:46,430 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 15:50:49,743 [INFO] WebApp:191 - Connection restablished
+2025-12-05 15:53:30,858 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 15:53:31,359 [INFO] WebApp:194 - Connection lost
+2025-12-05 15:53:32,137 [INFO] WebApp:191 - Connection restablished
+2025-12-05 16:00:01,209 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 16:00:01,252 [INFO] WebApp:194 - Connection lost
+2025-12-05 16:00:06,436 [INFO] WebApp:191 - Connection restablished
+2025-12-05 16:00:33,944 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 16:00:34,445 [INFO] WebApp:194 - Connection lost
+2025-12-05 16:00:35,133 [INFO] WebApp:191 - Connection restablished
+2025-12-05 16:15:24,006 [INFO] WebApp:194 - Connection lost
+2025-12-05 16:15:39,466 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 16:15:42,521 [INFO] WebApp:191 - Connection restablished
+2025-12-05 16:16:12,316 [INFO] WebApp:194 - Connection lost
+2025-12-05 16:16:12,504 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 16:16:14,344 [INFO] WebApp:191 - Connection restablished
+2025-12-05 16:32:31,897 [INFO] WebApp:194 - Connection lost
+2025-12-05 16:32:38,731 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 16:32:41,735 [INFO] WebApp:191 - Connection restablished
+2025-12-05 16:33:11,943 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 16:33:13,448 [INFO] WebApp:194 - Connection lost
+2025-12-05 16:33:13,925 [INFO] WebApp:191 - Connection restablished
+2025-12-05 16:34:01,067 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 16:34:01,563 [INFO] WebApp:194 - Connection lost
+2025-12-05 16:34:02,259 [INFO] WebApp:191 - Connection restablished
+2025-12-05 16:36:04,651 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 16:36:05,154 [INFO] WebApp:194 - Connection lost
+2025-12-05 16:36:06,165 [INFO] WebApp:191 - Connection restablished
+2025-12-05 17:32:12,240 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 17:32:12,741 [INFO] WebApp:194 - Connection lost
+2025-12-05 17:32:13,131 [INFO] WebApp:191 - Connection restablished
+2025-12-05 17:37:08,985 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 17:37:09,482 [INFO] WebApp:194 - Connection lost
+2025-12-05 17:37:10,232 [INFO] WebApp:191 - Connection restablished
+2025-12-05 19:13:27,887 [INFO] WebApp:194 - Connection lost
+2025-12-05 19:13:32,064 [INFO] WebAppUi:1100 - Web application message: Reloading CAD
+2025-12-05 19:13:37,118 [INFO] WebApp:191 - Connection restablished
