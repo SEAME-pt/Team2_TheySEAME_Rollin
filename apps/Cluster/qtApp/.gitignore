@@ -1,0 +1,9 @@
+qtAppExec
+qtAppExec_autogen
+CMakeFiles
+cmake_install.cmake
+.qt
+build
+.qtcreator
+.rcc
+.vscode
