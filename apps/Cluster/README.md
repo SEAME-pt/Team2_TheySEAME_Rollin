@@ -83,4 +83,3 @@ The interface is optimized for performance on the Raspberry Pi 5 and suitable fo
 ---
 ## 6. Conclusion
 This document outlines the structure, requirements, and features of the Qt application designed for the Raspberry Pi 5. It serves as a guide for development, deployment, and future enhancements.
-
