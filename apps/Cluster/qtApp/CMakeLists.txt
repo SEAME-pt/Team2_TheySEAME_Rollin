@@ -22,7 +22,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wl,-rpath-link,${CMAKE_SYSROOT}/u
 
 add_executable(qtAppExec
     main.cpp
-    src/infoProvider.cpp
+    src/generalInfo.cpp
     qml.qrc
 )
 

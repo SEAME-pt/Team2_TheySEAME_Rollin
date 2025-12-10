@@ -4,7 +4,7 @@
 #include <iostream>
 #include <chrono>
 #include <ctime>
-#include "src/infoProvider.hpp"
+#include "src/generalInfo.hpp"
 
 
 int main(int argc, char *argv[])
@@ -12,9 +12,9 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
-    infoProvider info;
+    generalInfo info;
 
-    engine.rootContext()->setContextProperty("infoProvider", &info);
+    engine.rootContext()->setContextProperty("generalInfo", &info);
 
     engine.addImportPath("qrc:/qml");
     const QUrl url(QStringLiteral("qrc:/qml/Main.qml"));

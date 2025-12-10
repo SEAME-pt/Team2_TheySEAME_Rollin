@@ -21,3 +21,4 @@ private slots:
 private:
     QCanBusDevice *device = nullptr;
 };
+    

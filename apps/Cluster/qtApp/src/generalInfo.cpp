@@ -1,6 +1,6 @@
-#include "infoProvider.hpp"
+#include "generalInfo.hpp"
 
-infoProvider::infoProvider(QObject *parent)
+generalInfo::generalInfo(QObject *parent)
     : QObject(parent),
       m_weatherInfo("sun-256.png"),
       m_temperature(0.0f),
@@ -29,40 +29,40 @@ infoProvider::infoProvider(QObject *parent)
     timer->start(1000);
     m_manager = new QNetworkAccessManager(this);
     connect(m_manager, &QNetworkAccessManager::finished,
-            this, &infoProvider::onWeatherDataReceived);
+            this, &generalInfo::onWeatherDataReceived);
 
     fetchWeatherData();
 }
 
-QString infoProvider::getWeatherInfo() const
+QString generalInfo::getWeatherInfo() const
 {
     return m_weatherInfo;
 }
 
-int infoProvider::getTemperature() const
+int generalInfo::getTemperature() const
 {
     return m_temperature;
 }
 
-QString infoProvider::getLocalTime() const
+QString generalInfo::getLocalTime() const
 {
     return m_localTime;
 }
 
-QString infoProvider::getCurrentDate() const
+QString generalInfo::getCurrentDate() const
 {
     return m_currentDate.toString("dd/MM/yyyy");;
 }
 
-void infoProvider::fetchWeatherData()
+void generalInfo::fetchWeatherData()
 {
     connect(m_manager, &QNetworkAccessManager::finished,
-            this, &infoProvider::onWeatherDataReceived);
+            this, &generalInfo::onWeatherDataReceived);
     QNetworkRequest request(QUrl("https://api.open-meteo.com/v1/forecast?latitude=41.1496&longitude=-8.6109&current_weather=true"));
     m_manager->get(request);
 }
 
-void infoProvider::onWeatherDataReceived(QNetworkReply* reply)
+void generalInfo::onWeatherDataReceived(QNetworkReply* reply)
 {
     if (reply->error() != QNetworkReply::NoError) {
         qDebug() << "Network error:" << reply->errorString();

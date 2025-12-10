@@ -70,7 +70,8 @@ Rectangle {
             width: 155
             height: 34
             color: "#ffffff"
-            text: infoProvider ? infoProvider.currentDate.toString("dd/MM/yyyy") : ""
+            text: generalInfo ? generalInfo.currentDate.toString(
+                                     "dd/MM/yyyy") : ""
             font.pixelSize: 28
             font.family: "Inter"
             font.bold: true
@@ -83,7 +84,7 @@ Rectangle {
             width: 72
             height: 34
             color: "#ffffff"
-            text: infoProvider ? infoProvider.localTime : ""
+            text: generalInfo ? generalInfo.localTime : ""
             font.pixelSize: 28
             font.family: "Inter"
             font.bold: true
@@ -96,7 +97,7 @@ Rectangle {
             width: 72
             height: 34
             color: "#ffffff"
-            text: infoProvider ? infoProvider.temperature + "°C" : ""
+            text: generalInfo ? generalInfo.temperature + "°C" : ""
             font.pixelSize: 28
             font.family: "Inter"
             font.bold: true
@@ -108,13 +109,13 @@ Rectangle {
             y: 20
             width: 47
             height: 35
-            source:  infoProvider ? "images/" + infoProvider.weatherInfo : "images/sun-256.png"
+            source: generalInfo ? "images/" + generalInfo.weatherInfo : "images/sun-256.png"
             fillMode: Image.PreserveAspectFit
         }
 
         Rectangle {
             id: maxBattery
-            x: 1009
+            x: 1012
             y: 290
             width: 164
             height: 12

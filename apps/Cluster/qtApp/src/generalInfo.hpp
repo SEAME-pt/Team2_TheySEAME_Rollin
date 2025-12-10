@@ -10,7 +10,7 @@
 #include <QJsonObject>
 #include <iostream>
 
-class infoProvider : public QObject
+class generalInfo : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString weatherInfo READ getWeatherInfo NOTIFY weatherInfoChanged)
@@ -18,7 +18,7 @@ class infoProvider : public QObject
     Q_PROPERTY(QString localTime READ getLocalTime NOTIFY localTimeChanged)
     Q_PROPERTY(QString currentDate READ getCurrentDate NOTIFY currentDateChanged)
 public:
-    explicit infoProvider(QObject *parent = nullptr);
+    explicit generalInfo(QObject *parent = nullptr);
 
     QString getWeatherInfo() const;
     int getTemperature() const;
