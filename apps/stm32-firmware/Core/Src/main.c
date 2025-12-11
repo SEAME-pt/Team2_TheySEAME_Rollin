@@ -7,6 +7,7 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include "app_threadx.h"
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -41,6 +42,8 @@ OSPI_HandleTypeDef hospi2;
 
 SPI_HandleTypeDef hspi2;
 
+TIM_HandleTypeDef htim1;
+
 UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart1;
 
@@ -54,7 +57,7 @@ void SystemClock_Config(void);
 static void SystemPower_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_ADF1_Init(void);
-void MX_I2C1_Init(void);
+static void MX_I2C1_Init(void);
 static void MX_I2C2_Init(void);
 static void MX_ICACHE_Init(void);
 static void MX_OCTOSPI1_Init(void);
@@ -64,6 +67,7 @@ static void MX_UART4_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_UCPD1_Init(void);
 static void MX_USB_OTG_FS_PCD_Init(void);
+static void MX_TIM1_Init(void);
 /* USER CODE BEGIN PFP */
 void Debug_Print(const char *msg);
 void PCA9685_SetServoAngle(uint8_t channel, float angle);
@@ -117,8 +121,10 @@ int main(void)
   MX_USART1_UART_Init();
   MX_UCPD1_Init();
   MX_USB_OTG_FS_PCD_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
+  HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_3);
   /* USER CODE END 2 */
 
   MX_ThreadX_Init();
@@ -272,7 +278,7 @@ static void MX_ADF1_Init(void)
   * @param None
   * @retval None
   */
-void MX_I2C1_Init(void)
+static void MX_I2C1_Init(void)
 {
 
   /* USER CODE BEGIN I2C1_Init 0 */
@@ -569,6 +575,66 @@ static void MX_SPI2_Init(void)
   /* USER CODE BEGIN SPI2_Init 2 */
 
   /* USER CODE END SPI2_Init 2 */
+
+}
+
+/**
+  * @brief TIM1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM1_Init(void)
+{
+
+  /* USER CODE BEGIN TIM1_Init 0 */
+
+  /* USER CODE END TIM1_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_IC_InitTypeDef sConfigIC = {0};
+
+  /* USER CODE BEGIN TIM1_Init 1 */
+
+  /* USER CODE END TIM1_Init 1 */
+  htim1.Instance = TIM1;
+  htim1.Init.Prescaler = 0;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim1.Init.Period = 65535;
+  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim1.Init.RepetitionCounter = 0;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_IC_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+  sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
+  sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
+  sConfigIC.ICFilter = 0;
+  if (HAL_TIM_IC_ConfigChannel(&htim1, &sConfigIC, TIM_CHANNEL_3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM1_Init 2 */
+
+  /* USER CODE END TIM1_Init 2 */
 
 }
 

@@ -72,7 +72,6 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
-void MX_I2C1_Init(void);
 
 /* USER CODE BEGIN EFP */
 extern UART_HandleTypeDef huart1;
@@ -194,6 +193,8 @@ extern I2C_HandleTypeDef hi2c2;
 #define Mems_INT_LPS22HH_GPIO_Port GPIOG
 #define USB_VBUS_SENSE_Pin GPIO_PIN_14
 #define USB_VBUS_SENSE_GPIO_Port GPIOF
+#define Speed_TIM1_Pin GPIO_PIN_13
+#define Speed_TIM1_GPIO_Port GPIOE
 #define OCTOSPI_R_NCS_Pin GPIO_PIN_11
 #define OCTOSPI_R_NCS_GPIO_Port GPIOB
 #define WRLS_SPI2_NSS_Pin GPIO_PIN_12
