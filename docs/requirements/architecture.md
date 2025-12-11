@@ -138,7 +138,32 @@ Status: draft
 
 Shall automatically launch the graphical interface at system startup.
 
-Tags: HMI  
+Tags: Cluster  
+
+Needs: dsn  
+
+Covers: `feat~friendly-gui~1`  
+
+Status: draft
+
+
+`arch~speed-unit~1`
+
+The Cluster shall display the speed in meter per second (m/s).
+
+Tags: Cluster  
+
+Needs: dsn  
+
+Covers: `feat~friendly-gui~1`  
+
+Status: draft
+
+`arch~battery-unit~1`
+
+The Cluster shall battery in percentage of the voltage level compared to the minimum and maximum operating voltage.
+
+Tags: Cluster  
 
 Needs: dsn  
 
