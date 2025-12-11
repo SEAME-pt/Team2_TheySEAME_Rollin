@@ -25,7 +25,7 @@ It shall obtain this data from SystemInfo, which receives it from STM32 or other
 Needs: impl, testing
 
 Covers:
-- `arch~architecture-requirement-systeminfo~1`
+- `arch~architecture-requirement-systemInfo~1`
 
 Status: draft
 ```
@@ -33,13 +33,13 @@ Status: draft
 ```
 `dsn~design-requirement-cluster-battery~1`
 
-The Cluster Sub-Module shall display the battery state-of-charge and voltage in real time, updating whenever new data arrives from SystemInfo.
-Data is acquired from STM32 and other microcontrollers via the CAN bus.
+The Cluster Sub-Module shall display the battery state-of-charge in real time, updating whenever new data arrives.
+It shall obtain this data from SystemInfo, which receives it from STM32 or other microcontrollers via CAN bus.
 
 Needs: impl, testing
 
 Covers:
-- `arch~architecture-requirement-systeminfo~2`
+- `arch~architecture-requirement-systemInfo~2`
 
 Status: draft
 ```
@@ -47,13 +47,13 @@ Status: draft
 ```
 `dsn~design-requirement-cluster-datetime-weather~1`
 
-The Cluster Sub-Module shall display the current date, time, and weather information obtained from generalInfo.
+The Cluster Sub-Module shall display the current date, time, and weather information obtained from GeneralInfo.
 Updates shall occur at least every second.
 
 Needs: impl, testing
 
 Covers:
-- `arch~architecture-requirement-infoprovider~1`
+- `arch~architecture-requirement-generalInfo~1`
 
 Status: draft
 ```
