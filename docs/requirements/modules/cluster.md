@@ -45,9 +45,9 @@ Status: draft
 ```
 
 ```
-`dsn~design-requirement-cluster-datetime-weather~1`
+`dsn~design-requirement-cluster-weather~1`
 
-The Cluster Sub-Module shall display the current date, time, and weather information obtained from GeneralInfo.
+The Cluster Sub-Module shall display the current weather information obtained from GeneralInfo.
 Updates shall occur at least every second.
 
 Needs: impl, testing
@@ -58,6 +58,19 @@ Covers:
 Status: draft
 ```
 
+```
+`dsn~design-requirement-cluster-datetime~1`
+
+The Cluster Sub-Module shall display the current date and time information obtained from GeneralInfo.
+Updates shall occur at least every second.
+
+Needs: impl, testing
+
+Covers:
+- `arch~architecture-requirement-generalInfo~2`
+
+Status: draft
+```
 ---
 
 ## Further documentation
