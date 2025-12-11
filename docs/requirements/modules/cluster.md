@@ -74,4 +74,4 @@ Status: draft
 ---
 
 ## Further documentation
-- Available at: [Cluster doc](../../apps/Cluster/README.md)
+- Available at: [Cluster doc](../../../apps/Cluster/README.md)
