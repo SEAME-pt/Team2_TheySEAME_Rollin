@@ -1,5 +1,0 @@
-../Core/Src/Drivers/pwm_driver.c:10:26:PCA9685_SoftwareReset	1
-../Core/Src/Drivers/pwm_driver.c:37:26:PCA9685_WriteReg	2
-../Core/Src/Drivers/pwm_driver.c:71:26:PCA9685_ReadReg	3
-../Core/Src/Drivers/pwm_driver.c:104:19:PCA9685_Init_Device	7
-../Core/Src/Drivers/pwm_driver.c:199:19:PCA9685_SetPWM	4
