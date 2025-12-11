@@ -9,6 +9,7 @@ It will generate the same image described in [here](https://github.com/SEAME-pt/
 
 ```bash
 docker build -t agl <path-to-Dockerfile>
-mkdir -p agl
-docker run -it -v $PWD/agl:/AGL/build agl
+docker run -it -v $PWD/build:/home/buidl/agl agl
+... inside docker container ...
+bash AGL_installation.sh
 ```

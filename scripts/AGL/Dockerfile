@@ -9,18 +9,12 @@ RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && locale-gen
 RUN curl https://storage.googleapis.com/git-repo-downloads/repo >> /bin/repo && \
 	chmod a+x /bin/repo
 
-ENV USER=agl
+ENV USER=build
 ENV TZ=Europe/London
 RUN adduser --disabled-password --gecos '' $USER
-COPY AGL_installation.sh .
-RUN chmod +x AGL_installation.sh
-
 USER $USER
-WORKDIR /home/$USER/AGL
+WORKDIR /home/$USER/agl
 
-RUN repo init -b trout -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo && \
-	repo sync
+RUN git config --global user.email "$USER@example.com" && git config --global user.name "$USER"
 
-COPY meta-mylayer ./meta-mylayer
-
-CMD [ "./AGL_installation.sh" ]
+CMD [ "bash" ]

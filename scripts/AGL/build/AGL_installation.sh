@@ -6,6 +6,9 @@ AGL_FEATURES="agl-app-framework agl-buildstats agl-devel agl-drm-lease agl-ic \
 DEVEL_RECIPES=" cmake"
 QT_RECIPES=" qtbase qtmultimedia qtquick3d qtdeclarative"
 
+repo init -b trout -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo && \
+repo sync
+
 # Init the build enviroment
 source meta-agl/scripts/aglsetup.sh -f -m raspberrypi5 -b build $AGL_FEATURES
 
