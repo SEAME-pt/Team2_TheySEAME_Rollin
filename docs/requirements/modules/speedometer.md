@@ -54,5 +54,32 @@ Covers:
 Status: draft
 ```
 
+```
+`dsn~speed-counter-overflow~1`
+
+The Sensing module shall implement overflow handling for the TIM counter to ensure correct RPM calculation even if the timer rolls over between captures.
+
+Needs: impl, test
+
+Covers:
+- arch~rpm-battery-sensing~1
+
+Status: draft
+```
+
+```
+`dsn~rpm-accuracy~1`
+
+RPM accuracy shall be within ±1 RPM for signals in the range 1–857 RPM
+
+Needs: impl, test
+
+Covers:
+- arch~rpm-battery-sensing~1
+
+Status: draft
+```
+
+
 ## Further documentation:
 Available at: []()
