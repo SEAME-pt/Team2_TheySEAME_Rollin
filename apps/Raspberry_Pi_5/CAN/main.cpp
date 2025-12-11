@@ -1,41 +1,8 @@
 #include "CAN.hpp"
-#include <stdint.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <string.h>
 #include <stdlib.h>
 #include <poll.h>
-
-int send_msg(int sock, canid_t id, uint8_t *data, uint8_t len) {
-	struct can_frame frame;
-	int nbytes;
-
-	frame.can_id = id;
-	frame.len = len;
-	memcpy(frame.data, data, len);
-
-	nbytes = write(sock, &frame, sizeof(struct can_frame));
-	if (nbytes < 0) {
-		return (-1);
-	}
-	return (0);
-}
-
-int rec_msg(int sock) {
-	struct can_frame frame;
-
-	if (read(sock, &frame, sizeof(struct can_frame)) < 0) {
-		return (-1);
-	}
-
-	printf("\tFrame_id: %02xh\n", frame.can_id);
-	printf("\tData: ");
-	for (size_t i = 0; i < frame.len; i++) {
-		printf("%02x ", frame.data[i]);
-	}
-	printf("\nFinish\n");
-	return (0);
-}
 
 int main() {
 	CAN can;
