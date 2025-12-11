@@ -1,4 +1,5 @@
 #include "CAN.hpp"
+#include "RemoteControl.hpp"
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -6,6 +7,7 @@
 
 int main() {
 	CAN can;
+	RemoteControl remote;
 	struct pollfd fds;
 
 	can.openSocket("can0");
