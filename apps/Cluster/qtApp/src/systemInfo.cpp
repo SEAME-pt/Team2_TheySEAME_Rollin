@@ -5,7 +5,14 @@ systemInfo::systemInfo(QObject *parent)
 {
 }
 
-bool CanManager::start(const QString &interfaceName)
+/**
+ * @brief systemInfo::start
+ * Initializes CAN bus device on specified interface.
+ * Connects to framesReceived signal to process incoming frames.
+ * @param interfaceName CAN interface name (default "can0")
+ * @return true if device started successfully, false otherwise
+ */
+bool systemInfo::start(const QString &interfaceName)
 {
     device = QCanBus::instance()->createDevice("socketcan", interfaceName);
 
@@ -15,27 +22,38 @@ bool CanManager::start(const QString &interfaceName)
     }
 
     connect(device, &QCanBusDevice::framesReceived,
-            this, &CanManager::processFrames);
+            this, &systemInfo::processFrames);
 
     return true;
 }
 
-void CanManager::processFrames()
+/**
+ * @brief systemInfo::processFrames
+ * Reads available CAN frames and emits signals for speed and battery SOC updates.
+ * 
+ * =======================Requirements traceability========================
+ *        impl->dsg~design-requirement-cluster-speed~1
+ *       impl->dsg~design-requirement-cluster-battery~1
+ *========================================================================
+ */
+void systemInfo::processFrames()
 {
     while (device->framesAvailable()) {
 
         QCanBusFrame frame = device->readFrame();
-        quint32 id = frame.frameId();
+        qint64 id = frame.frameId();
         QByteArray data = frame.payload();
 
         if (id == 0x123) {
-            int speed = static_cast<unsigned char>(data[0]);
-            emit speedUpdated(speed);
+            speed = static_cast<unsigned char>(data[0]);
+            std::cout << "Speed: " << speed << " km/h" << std::endl;
+            emit speedUpdated();
         }
 
         if (id == 0x456) {
-            int soc = static_cast<unsigned char>(data[1]);
-            emit batteryUpdated(soc);
+            battery = static_cast<unsigned char>(data[1]);
+            std::cout << "Battery : " << battery << " %" << std::endl;
+            emit batteryUpdated();
         }
     }
 }
