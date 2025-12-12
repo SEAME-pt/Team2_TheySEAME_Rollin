@@ -39,13 +39,13 @@ It shall obtain this data from SystemInfo, which receives it from STM32 or other
 Needs: impl, testing
 
 Covers:
-- `arch~architecture-requirement-systemInfo~2`
+- `arch~display-vehicle-status~1`
 
 Status: draft
 ```
 
 ```
-`dsn~design-requirement-cluster-weather~1`
+`arch~display-vehicle-status~1`
 
 The Cluster Sub-Module shall display the current weather information obtained from GeneralInfo.
 Updates shall occur at least every second.
@@ -53,7 +53,7 @@ Updates shall occur at least every second.
 Needs: impl, testing
 
 Covers:
-- `arch~architecture-requirement-generalInfo~1`
+- ``
 
 Status: draft
 ```
@@ -67,7 +67,7 @@ Updates shall occur at least every second.
 Needs: impl, testing
 
 Covers:
-- `arch~architecture-requirement-generalInfo~2`
+- ``
 
 Status: draft
 ```
