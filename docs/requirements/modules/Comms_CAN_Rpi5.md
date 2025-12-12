@@ -17,7 +17,7 @@ What other modules interact with this module?
 ```
 `dsn~comms-can-rpi-frameformat-standard~1`
 
-The Comms CAN RPI5 shall follow the Standard CAN frame format (11-bit)
+The Comms CAN RPI5 shall follow the Standard CAN frame format
 
 It needs this fields:
 - Arbitration
@@ -31,7 +31,7 @@ Needs: impl, test
 Covers:
 - `arch~stm-rpi-can-control~1`
 
-Status: draft
+Status: approved
 ```
 
 ```
@@ -49,7 +49,7 @@ Needs: impl, test
 Covers:
 - `arch~stm-rpi-can-control~1`
 
-Status: draft
+Status: approved
 ```
 
 ```
@@ -62,7 +62,7 @@ Needs: impl, test
 Covers:
 - `arch~stm-rpi-can-control~1`
 
-Status: draft
+Status: approved
 ```
 
 ```
@@ -75,7 +75,7 @@ Needs: impl, test
 Covers:
 - `arch~stm-rpi-can-control~1`
 
-Status: draft
+Status: approved
 ```
 
 ```
@@ -88,7 +88,7 @@ Needs: impl, test
 Covers:
 - `arch~stm-rpi-can-control~1`
 
-Status: draft
+Status: approved
 ```
 
 ## Further documentation:
