@@ -136,7 +136,7 @@ The system shall record  operation logs for debugging.
 
 Needs: arch
 
-Status: approved
+Status: proposed
 ```
 
 ```
@@ -146,7 +146,7 @@ The Control Unit of the car shall enter FAILSAFE mode if it stops receiving peri
 
 Needs: arch
 
-Status: approved
+Status: proposed
 ```
 
 ```
@@ -166,7 +166,7 @@ The system shall be controllable via pre-defined control instructions sent over 
 
 Needs: arch
 
-Status: approved
+Status: proposed
 ```
 
 ```
