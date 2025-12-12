@@ -25,9 +25,9 @@ It shall obtain this data from SystemInfo, which receives it from STM32 or other
 Needs: impl, test
 
 Covers:
-- `arch~architecture-requirement-cluster-speed~1`
+- `arch~display-vehicle-status~1`
 
-Status: draft
+Status: approved
 ```
 
 ```
@@ -41,7 +41,7 @@ Needs: impl, test
 Covers:
 - `arch~display-vehicle-status~1`
 
-Status: draft
+Status: approved
 ```
 
 ```
@@ -55,7 +55,7 @@ Needs: impl, test
 Covers:
 - `arch~weather-display~1`
 
-Status: draft
+Status: approved
 ```
 
 ```
@@ -69,7 +69,7 @@ Needs: impl, test
 Covers:
 - `arch~time-display~1`
 
-Status: draft
+Status: approved
 ```
 ---
 
