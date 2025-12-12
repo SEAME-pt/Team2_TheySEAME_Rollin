@@ -23,7 +23,6 @@ int main() {
 		printf("Sending frame\n");
 		uint8_t data[2] = { 0x42, 0x54 };
 		can.sendMsg(0x12, data, sizeof(data));
-		break;
 	}
 
 	can.closeSocket();
