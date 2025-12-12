@@ -15,7 +15,7 @@ Needs: dsn
 
 Covers: `feat~manual-auto-mode~1`
 
-Status: draft
+Status: approved
 ```
 
 ```
@@ -31,7 +31,7 @@ Needs: dsn
 
 Covers: `feat~report-speed-battery~1` 
 
-Status: draft
+Status: approved
 ```
 
 ```
@@ -49,7 +49,7 @@ Covers:
 - `feat~manual-auto-mode~1`
 - `feat~fail-safe-mode~1`
 
-Status: draft
+Status: approved
 ```
 
 ## STM Control
@@ -65,7 +65,7 @@ Needs: dsn
 
 Covers: `feat~manual-auto-mode~1`
 
-Status: draft
+Status: approved
 ```
 
 ```
@@ -81,7 +81,7 @@ Needs: dsn
 
 Covers: `feat~fail-safe-mode~1`  
 
-Status: draft
+Status: proposed
 ```
 
 ## STM Drivers
@@ -96,7 +96,7 @@ Needs: dsn
 
 Covers: `feat~manual-auto-mode~1`  
 
-Status: draft
+Status: approved
 ```
 
 ## STM Sensing
@@ -111,7 +111,7 @@ Needs: dsn
 
 Covers: `feat~report-speed-battery~1`  
 
-Status: draft
+Status: approved
 ```
 
 
@@ -158,7 +158,7 @@ Needs: dsn
 
 Covers: `feat~weather-time-info~1`  
 
-Status: draft
+Status: approved
 ```
 
 ```
@@ -172,7 +172,7 @@ Needs: dsn
 
 Covers: `feat~weather-time-info~1`  
 
-Status: draft
+Status: approved
 ```
 
 ```
@@ -201,7 +201,7 @@ Needs: dsn
 
 Covers: `feat~remote-control~1`
 
-Status: draft
+Status: approved
 ```
 
 ## RASP Data Processing
@@ -216,7 +216,7 @@ Needs: dsn
 
 Covers: `feat~remote-control~1`
 
-Status: draft
+Status: approved
 ```
 
 
