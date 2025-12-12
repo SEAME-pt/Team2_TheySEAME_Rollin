@@ -4,30 +4,43 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <poll.h>
+#include <csignal>
+
+CAN can;
+RemoteControl remote;
+
+void signal_handler(int signal) {
+	can.closeSocket();
+	remote.closeRemoteControl();
+}
 
 int main() {
-	CAN can;
-	RemoteControl remote;
-	struct pollfd fds;
+	struct pollfd fds[2];
 
+	std::signal(SIGINT, signal_handler);
+
+	remote.openRemoteControl();
 	can.openSocket("can0");
-	fds.fd = can.getSocketFd();
-	fds.events = POLLIN;
+	fds[0].fd = can.getSocketFd();
+	fds[0].events = POLLIN;
+	fds[1].fd = remote.getfd();
+	fds[1].events = POLLIN;
 	while (1) {
-		if (poll(&fds, 1, 5000) < 0) {
+		if (poll(fds, 2, -1) < 0) {
 			perror("Error in poll:");
 			exit(1);
 		}
-		if (fds.revents & POLLIN) {
+		if (fds[0].revents & POLLIN) {
 			printf("Receiving frame\n");
 			can.readMsg();
+			uint8_t data[2] = { 0x42, 0x54 };
+			can.sendMsg(0x12, data, sizeof(data));
+			printf("Sending frame\n");
 		}
-		printf("Sending frame\n");
-		uint8_t data[2] = { 0x42, 0x54 };
-		can.sendMsg(0x12, data, sizeof(data));
-		break;
+		if (fds[1].revents & POLLIN) {
+			printf("Receiving RemoteControl command\n");
+			remote.readEvent();
+		}
 	}
-
-	can.closeSocket();
 	return (0);
 }
