@@ -213,8 +213,10 @@ The RPi5 shall receive raw input data from the remote and process it in order to
 Tags: Data Processing 
 
 Needs: dsn
-```
 
 Covers: `feat~remote-control~1`
 
 Status: draft
+```
+
+
