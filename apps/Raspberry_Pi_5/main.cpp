@@ -33,13 +33,17 @@ int main() {
 		if (fds[0].revents & POLLIN) {
 			printf("Receiving frame\n");
 			can.readMsg();
-			uint8_t data[2] = { 0x42, 0x54 };
-			can.sendMsg(0x12, data, sizeof(data));
-			printf("Sending frame\n");
 		}
 		if (fds[1].revents & POLLIN) {
 			printf("Receiving RemoteControl command\n");
 			remote.readEvent();
+			uint8_t throttle = abs((remote.axis_y - 127) / 1.27);
+			uint8_t steering = (remote.axis_x - 127) / 127;
+			printf("\tSteering %d\n", steering);
+			printf("\tThrottle %d\n", throttle);
+			uint8_t data[3] = { 0x00, throttle, steering };
+			printf("Sending frame\n");
+			can.sendMsg(0x100, data, sizeof(data));
 		}
 	}
 	return (0);

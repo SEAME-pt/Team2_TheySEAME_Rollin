@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <stdlib.h>
 #include <unistd.h>
-#include <linux/joystick.h>
+#include <linux/input.h>
 
 RemoteControl::RemoteControl() {
 	std::cout << "RemoteControl Constructor" << std::endl;
@@ -42,13 +42,24 @@ void RemoteControl::readEvent() {
 		std::perror("Error in read");
 		exit(1);
 	}
-	std::cout << "Type " << ev.type << std::endl;
 	switch (ev.type) {
 		case EV_ABS:
-			std::cout << "Value " << ev.value << std::endl;
+			if (ev.code == ABS_X) {
+				axis_x = ev.value;
+			} else if (ev.code == ABS_Y) {
+				axis_y = ev.value;
+			}
 			break;
 		case EV_KEY:
 			std::cout << "Value " << ev.value << std::endl;
 			break;
+		case EV_SYN:
+			if (ev.code == SYN_REPORT) {
+				std::cout << "Syn Report" << std::endl;
+			}
+			break;
+		default:
+			printf("Event not handled\n");
 	}
+	printf("\tX %d Y %d\n", axis_x, axis_y);
 }
