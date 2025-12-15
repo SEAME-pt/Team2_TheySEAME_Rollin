@@ -92,4 +92,7 @@ Status: approved
 ```
 
 ## Further documentation:
-Available at: []()
+Available at: 
+- [CAN-Bus](https://en.wikipedia.org/wiki/CAN_bus)
+- [CAN-Hardware](../../Hardware/README.md)
+- [SocketCAN](https://docs.kernel.org/networking/can.html)
