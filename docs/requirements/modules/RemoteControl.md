@@ -27,4 +27,5 @@ Status: draft
 ```
 
 ## Further documentation:
-Available at: []()
+Available at:
+- [Event Interface in the linux kernel](https://docs.kernel.org/input/input.html#event-interface)
