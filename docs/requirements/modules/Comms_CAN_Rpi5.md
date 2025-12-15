@@ -41,8 +41,8 @@ The Comms CAN RPI5 shall follow this frame format for any control commands (RPI-
 
 Data field:
 - 1ºbyte: Mode (AI, Manual, ...)
-- 2ºbyte: Throttle percentage
-- 3ºbyte: Steering angle
+- 2ºbyte: Throttle percentage (0-100%)
+- 3ºbyte: Steering angle (left: -1-0, right: 0-1, neutral: 0)
 
 Needs: impl, test
 
