@@ -43,9 +43,18 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
+TX_THREAD test_thread;
 TX_THREAD battery_thread;
+TX_THREAD speed_thread;
+
+UCHAR test_thread_stack[2048];
 UCHAR battery_thread_stack[2048];
+UCHAR speed_thread_stack[2048];
+
+extern void Test_Thread_Entry(ULONG thread_input);
 extern void Battery_Thread_Entry(ULONG thread_input);
+extern void Speed_Thread_Entry(ULONG thread_input);
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -67,10 +76,30 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   /* USER CODE END App_ThreadX_MEM_POOL */
 
   /* USER CODE BEGIN App_ThreadX_Init */
-  // Create the battery monitoring thread
-  UINT status = tx_thread_create(&battery_thread, "Battery Thread",
-                                  Battery_Thread_Entry, 0,
-                                  battery_thread_stack, sizeof(battery_thread_stack),
+  UINT status = 0;
+  #define TEST_MODE 1
+
+  if (TEST_MODE) {
+    status = tx_thread_create(&test_thread, "Test Routine Thread",
+                                  Test_Thread_Entry, 0,
+                                  test_thread_stack, sizeof(test_thread_stack),
+                                  10, 10, TX_NO_TIME_SLICE, TX_AUTO_START);
+    if (status != TX_SUCCESS) {
+      return TX_THREAD_ERROR;
+    }
+  }
+
+//  status = tx_thread_create(&battery_thread, "Battery Thread",
+//                                  Battery_Thread_Entry, 0,
+//                                  battery_thread_stack, sizeof(battery_thread_stack),
+//                                  10, 10, TX_NO_TIME_SLICE, TX_AUTO_START);
+//  if (status != TX_SUCCESS) {
+//      return TX_THREAD_ERROR;
+//  }
+
+  status = tx_thread_create(&speed_thread, "Speed Thread",
+                                  Speed_Thread_Entry, 0,
+                                  speed_thread_stack, sizeof(speed_thread_stack),
                                   10, 10, TX_NO_TIME_SLICE, TX_AUTO_START);
   if (status != TX_SUCCESS) {
       return TX_THREAD_ERROR;

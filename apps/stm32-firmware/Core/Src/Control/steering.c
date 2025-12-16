@@ -1,24 +1,24 @@
 #include "control.h"
 
+/*
+ * @brief
+ *
+ * Description
+ *
+ * ====================== Requirement Traceability ===========================
+ *
+ * ==========================================================================
+ *
+ * @param name         Function
+ *
+ * @return HAL_StatusTypeDef
+ *         - HAL_OK     : Write successful
+ *         - HAL_ERROR  : Transmission failed
+ *         - HAL_BUSY   : I2C peripheral is busy
+ *         - HAL_TIMEOUT: Communication timeout
+ *
+ */
 void PCA9685_SetServoAngle(uint8_t channel, float angle) {
-	/*
-	 * @brief
-	 *
-	 * Description
-	 *
-	 * ====================== Requirement Traceability ===========================
-	 *
-	 * ==========================================================================
-	 *
-	 * @param name         Function
-	 *
-	 * @return HAL_StatusTypeDef
-	 *         - HAL_OK     : Write successful
-	 *         - HAL_ERROR  : Transmission failed
-	 *         - HAL_BUSY   : I2C peripheral is busy
-	 *         - HAL_TIMEOUT: Communication timeout
-	 *
-	 */
 
     // Clamp angle to safe range
     if (angle < -30.0f) angle = -30.0f;
