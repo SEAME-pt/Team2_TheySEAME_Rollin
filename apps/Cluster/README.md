@@ -1,112 +1,85 @@
+# Documentation for Qt Application on Raspberry Pi 5
+<img width="1280" height="400" alt="Screenshot from 2025-12-09 10-41-42" src="https://github.com/user-attachments/assets/e56a72ff-da19-4a23-82c0-ebcc9298e8c2" />
 
-# Docker-Based Qt Cross-Compilation for AGL Linux
 
-During development, we faced repeated failures when attempting a standard cross-compilation of Qt for ARM64. To overcome these issues, we transitioned to a Docker-based workflow, inspired by PhysicsX’s methodology, which allows for a fully controlled and reproducible build environment.
+## 1. Overview
+This application, developed using **Qt**, will run on a **Raspberry Pi 5** and is designed to display real-time information on the displayer screen:
+- Battery level
+- Speed (hm/h)
+- weather
+- Date and time
 
-This approach has been customized for our instrument cluster project on the Raspberry Pi, providing a clean separation between host and target environments and ensuring future scalability. Key references include:
-By using Docker, we avoid dependency conflicts and drastically reduce build time compared to compiling directly on the device.
+The interface is optimized for performance on the Raspberry Pi 5 and suitable for small displays or integrated dashboards.
 
-## Overview of the Workflow
+---
 
-The process uses **two dedicated Docker containers**:
-1. **Target Environment Container:** Simulates the Raspberry Pi OS and generates the sysroot.
-2. **Cross-Compilation Container:** Uses the sysroot to build Qt and the project on the host.
+## 2. Requirements
+### 2.1 Hardware
+- Raspberry Pi 5
+- Compatible displayer
+- Required sensors:
+  - Speed sensor
+  - Battery monitoring module
+- Reliable power supply
 
-### Step 1 – Target Environment Container
+### 2.2 Software
+- Qt 6.7.3
+- Automative Grade Linux(ARM64)
+---
+## 3. Application Features
+### 3.1 Battery Monitoring
+- Displays battery percentage
+- The UI includes a battery level indicator bar
 
-This container replicates the Raspberry Pi operating system and collects all required headers and libraries.
+### 3.2 Speed Display
+- Shows current speed in hm/h
+- Receives data from a external microcontroller
 
-**Tasks performed:**
-- Use `arm64v8/debian:bookworm` as the base image.
-- Install essential development packages (graphics, input, SSL, multimedia).
-- Archive system directories into a compressed sysroot (`rasp.tar.gz`).
+### 3.4 Weather Monitoring
+- The temperature section includes a weather status icon
+- Displays temperature in °C
 
-```dockerfile
-FROM arm64v8/debian:bookworm
-RUN apt-get update && apt-get install -y \
-    libboost-all-dev libinput-dev libxkbcommon-dev libegl1-mesa-dev \
-    libgles2-mesa-dev libglib2.0-dev libssl-dev libdbus-1-dev ...
-WORKDIR /build
-RUN tar czf rasp.tar.gz -C / lib usr/include usr/lib etc/alternatives
-```
+### 3.5 Date and Time
+- Uses system clock to show current date and time
+---
 
-This step produces a snapshot of the target filesystem to be used in cross-compilation.
+## 4. System Architecture
+### 4.1 Data Flow
+1. Sensors provide data via microcontrollers
+2. Application reads sensor values through a backend module
+3. UI updates in real time using Qt signals and slots
 
-### Step 2 – Cross-Compilation Container
+### 4.2 Main Components
+- **SystemInfo (Vehicle Data Manager)**: Central module responsible for managing all vehicle-related data.
+- **generalInfo**: Supplies general data such as the current time, date, and other non-vehicle-related information.
+- **Screen01**: Visual representation of all data from SystemInfo and InfoProvider.
 
-The second container sets up the host environment to compile Qt and the application using the ARM64 sysroot.
+---
 
-**Key actions:**
-- Install compilers and build tools (GCC, Ninja, Python, Git, etc.).
-- Build a compatible version of CMake from source.
-- Extract the sysroot from `rasp.tar.gz`.
-- Correct symlinks inside the sysroot to ensure portability.
+### 5 Compilation
 
-```dockerfile
-FROM debian:bookworm
-RUN apt-get update && apt-get install -y git build-essential ninja-build python3 ...
-RUN git clone https://github.com/Kitware/CMake.git && ./bootstrap && make -j$(nproc) && make install
-COPY rasp.tar.gz /build/rasp.tar.gz
-RUN tar xvfz /build/rasp.tar.gz -C /build/sysroot
-RUN wget https://raw.githubusercontent.com/riscv/riscv-poky/master/scripts/sysroot-relativelinks.py \
- && python3 sysroot-relativelinks.py /build/sysroot
-```
+- **Native build (Linux host / dev machine)**  
+  - Create a build folder inside the project:  
+     ```bash
+     mkdir -p build
+     cd build
+     ```
+  - Run Qt CMake to generate Makefiles:  
+     ```bash
+     /path/to/qt/bin/qt-cmake ..
+     ```
+     > Replace `/path/to/qt/bin/qt-cmake` with your Qt installation path.  
+  - Build the project:  
+     ```bash
+     cmake --build .
+     ```
+  - Run the executable:  
+     ```bash
+     ./qtApp
+     ```
 
-After this step, we have a fully prepared cross-compilation environment with all necessary tools and a clean sysroot.
-
-### Step 3 – Toolchain Configuration
-
-The toolchain file (`toolchain.cmake`) informs CMake about:
-- The ARM64 compiler binaries.
-- Target architecture and system name.
-- Sysroot location.
-- Paths to Qt modules and system libraries.
-
-### Step 4 – Compiling Qt for ARM64
-
-Before building our application, Qt itself must be cross-compiled for the target architecture.
-
-**Workflow:**
-- Fetch Qt modules (qtbase, qtdeclarative, qtshaderstools).
-- Configure Qt build using the toolchain.
-- Compile and install Qt into a dedicated directory (`/build/qt6/pi`).
-
-```dockerfile
-RUN { \
-    mkdir -p qt6 && \
-    wget ...qtbase...qtdeclarative...qtshadertools... && \
-    cmake -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake ... && \
-    cmake --build . && cmake --install .; \
-}
-```
-
-### Step 5 – Building the Application
-
-Finally, the project is compiled against the cross-compiled Qt libraries.
-
-**Steps:**
-- Copy source code to `/build/project`.
-- Configure with the Qt toolchain.
-- Build the final ARM64 executable.
-
-```dockerfile
-COPY project /build/project
-RUN { \
-    cd /build/project && \
-    /build/qt6/pi/bin/qt-cmake . && \
-    cmake --build .; \
-}
-```
-
-The resulting executable is fully compatible with the Raspberry Pi target.
-
-### Links
-- 🐐 https://github.com/PhysicsX/QTonRaspberryPi
-- https://www.docker.com/blog/compiling-qt-with-docker-multi-stage-and-multi-platform/
-- https://ruvi-d.medium.com/a-master-guide-to-linux-cross-compiling-b894bf909386
-- https://doc.qt.io/qt-6.9/cross-compiling-qt.html
-- https://wiki.qt.io/Cross-Compile_Qt_6_for_Raspberry_Pi
-
-### Conclusion
-
-Using a Dockerized workflow allows us to bypass the errors encountered with traditional cross-compilation. It provides a consistent, isolated environment, reduces build time, and creates a reusable framework for future ARM64 Qt projects.
+- **Cross-compiling for Raspberry Pi (ARM target)**  
+  For instructions on cross-compiling, see [this README](Cross_Compile/README.md)
+---
+## 6. Conclusion
+This document outlines the structure, requirements, and features of the Qt application designed for the Raspberry Pi 5. It serves as a guide for development, deployment, and future enhancements.

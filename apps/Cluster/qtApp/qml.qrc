@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Main.qml</file>
+        <file>qml/Screen01.ui.qml</file>
+        <file>qml/Constants.qml</file>
+        
+        <file>qml/images/cluster.png</file>
+        <file>qml/images/clouds-256.png</file>
+        <file>qml/images/moon-4-256.png</file>
+        <file>qml/images/partly-cloudy-day-256.png</file>
+        <file>qml/images/rain-256.png</file>
+        <file>qml/images/sun-256.png</file>
+        <file>qml/images/thunderstorm-256.png</file>
+        <file>qml/images/snow-256.png</file>
+        <file>qml/images/logo.png</file>
+        
+        <file>qml/fonts/BaseNeueTrial-Bold.ttf</file>
+        <file>qml/fonts/Jaro-Regular-VariableFont_opsz.ttf</file>
+        <file>qml/fonts/Inter-VariableFont_opsz,wght.ttf</file>
+    </qresource>
+</RCC>

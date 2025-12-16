@@ -33,7 +33,7 @@ sudo docker create --name $CONTAINER_NAME $DOCKER_IMAGE
 # 4️⃣ Copy binary and necessary QML resources from the container
 echo "Copying binary and QML resources..."
 mkdir -p $LOCAL_BUILD_DIR/qtApp
-sudo docker cp $CONTAINER_NAME:/build/project/appDashboardproject $LOCAL_BUILD_DIR/qtApp/./qtApp
+sudo docker cp $CONTAINER_NAME:/build/project/qtAppExec $LOCAL_BUILD_DIR/qtApp/./qtAppExec
 
 # 5️⃣ Copy everything to the Raspberry Pi
 echo "Transferring files to Raspberry Pi at $REMOTE_HOST..."

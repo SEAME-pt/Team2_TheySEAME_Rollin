@@ -266,7 +266,7 @@ RUN tar -czvf qt-pi-binaries.tar.gz -C /build/qt6/pi .
 
 # Set up project directory
 RUN mkdir /build/project
-COPY     Dashboardproject /build/project
+COPY     ../qtApp /build/project
 
 # Build the project using Qt for Raspberry Pi
 RUN { \
