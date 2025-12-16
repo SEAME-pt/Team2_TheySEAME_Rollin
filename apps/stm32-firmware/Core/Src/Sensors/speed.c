@@ -50,9 +50,10 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
  * via UART debug interface every 0.5 seconds (5 readings average).
  *
  * Timer Configuration:
+ * - TIM1 Channel 3 set to Alternate Mode with Input Capture Direct Mode
  * - Timer frequency: 160MHz / (PSC+1) = 160MHz / 8000 = 20kHz (50μs per tick)
  * - Minimum valid period: 20 ticks (1ms) for noise filtering
- * - Thread sleep: 0.1s between iterations
+ * - Thread sleep: 0.1s between iterations (based on ThreadX timer)
  *
  * ====================== Requirement Traceability ===========================
  * impl->dsn~rpm-latency~1
