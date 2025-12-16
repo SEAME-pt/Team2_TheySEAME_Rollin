@@ -19,7 +19,7 @@ What other modules interact with this module?
 
 The Comms CAN RPI5 shall follow the Standard CAN frame format
 
-It needs this fields:
+It needs these fields:
 - Arbitration
 - Control
 - Data (0-8 bytes)
