@@ -1,10 +1,6 @@
 # Speedometer
 This sub-module is part of the Sensors module and is responsible for measuring the RPM provided by the tachometer sensor in terms of voltage highs and lows, convert it to a speed unit, and send to the Comms module.
 
----
-### Module Type:
-- [ ] Module
-- [x] Sub-Module
 
 ### Interacts with:
 What other modules interact with this module?
@@ -25,7 +21,7 @@ Covers:
 - `arch~report-speed-battery~1`
 - `feat~maximum-speed~1`
 
-Status: draft
+Status: approved
 ```
 
 ```
@@ -38,7 +34,7 @@ Needs: impl, test
 Covers:
 - `arch~report-speed-battery~1`
 
-Status: draft
+Status: approved
 ```
 
 ```
@@ -51,7 +47,7 @@ Needs: impl, test
 Covers:
 - `arch~speed-unit~1`
 
-Status: draft
+Status: approved
 ```
 
 ```
@@ -64,7 +60,7 @@ Needs: impl, test
 Covers:
 - arch~rpm-battery-sensing~1
 
-Status: draft
+Status: approved
 ```
 
 ```
@@ -72,7 +68,7 @@ Status: draft
 
 RPM accuracy shall be within ±1 RPM for signals in the range 1–857 RPM
 
-Needs: impl, test
+Needs: test
 
 Covers:
 - arch~rpm-battery-sensing~1
