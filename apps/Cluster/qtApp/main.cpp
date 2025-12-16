@@ -4,6 +4,7 @@
 #include <iostream>
 #include <chrono>
 #include <ctime>
+#include <linux/can.h>
 #include "src/generalInfo.hpp"
 #include "src/systemInfo.hpp"
 
@@ -14,7 +15,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     generalInfo info;
     systemInfo sysInfo;
-    if (!sysInfo.start("vcan0")) {
+    if (!sysInfo.start("can0")) {
         std::cerr << "Failed to start CAN bus on can0" << std::endl;
     }
 

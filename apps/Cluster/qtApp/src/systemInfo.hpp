@@ -8,12 +8,12 @@
 class systemInfo : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int speed READ getSpeed NOTIFY speedUpdated)
-    Q_PROPERTY(int battery READ getBattery NOTIFY batteryUpdated)
+    Q_PROPERTY(int speed READ getSpeed NOTIFY processFrames)
+    Q_PROPERTY(int battery READ getBattery NOTIFY processFrames)
 
 public:
     explicit systemInfo(QObject *parent = nullptr);
-    bool start(const QString &interfaceName = "vcan0");
+    bool start(const QString &interfaceName);
     int getSpeed() const { return speed; }
     int getBattery() const { return battery; }
 
