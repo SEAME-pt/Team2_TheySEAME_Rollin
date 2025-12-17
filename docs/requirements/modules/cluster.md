@@ -48,7 +48,7 @@ Status: approved
 `dsn~design-requirement-cluster-weather~1`
 
 The Cluster Sub-Module shall display the current weather information obtained from GeneralInfo.
-Updates shall occur at weather data received.
+Updates shall occur whenever weather data arrives.
 
 Needs: impl, test
 
