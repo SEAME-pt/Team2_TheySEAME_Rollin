@@ -8,8 +8,8 @@
 class systemInfo : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int speed READ getSpeed NOTIFY processFrames)
-    Q_PROPERTY(int battery READ getBattery NOTIFY processFrames)
+    Q_PROPERTY(int speed READ getSpeed NOTIFY speedUpdated)
+    Q_PROPERTY(int battery READ getBattery NOTIFY batteryUpdated)
 
 public:
     explicit systemInfo(QObject *parent = nullptr);

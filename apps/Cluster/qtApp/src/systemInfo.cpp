@@ -27,7 +27,6 @@ bool systemInfo::start(const QString &interfaceName)
         qWarning() << "CAN not available";
         return false;
     }
-    std::cout << "CAN device started on interface: " << interfaceName.toStdString() << std::endl;
     return true;
 }
 
@@ -43,23 +42,16 @@ bool systemInfo::start(const QString &interfaceName)
 void systemInfo::processFrames()
 {
     while (device->framesAvailable()) {
-        std::cout << "Frame received" << std::endl;
         QCanBusFrame frame = device->readFrame();
         qint64 id = frame.frameId();
         QByteArray data = frame.payload();
-        std::cout << "Frame ID: " << id  << std::endl;
-        for (int i = 0; i < data.size(); ++i) {
-            std::cout << "Data[" << i << "]: " << static_cast<int>(static_cast<unsigned char>(data[i])) << std::endl;
-        }
         if (id == 66) {
             speed = static_cast<unsigned char>(data[0]);
-            std::cout << "Speed: " << static_cast<int>(speed) << " km/h" << std::endl;
             emit speedUpdated();
         }
 
         if (id == 77) {
             battery = static_cast<unsigned char>(data[0]);
-            std::cout << "Battery : " << battery << " %" << std::endl;
             emit batteryUpdated();
         }
     }
