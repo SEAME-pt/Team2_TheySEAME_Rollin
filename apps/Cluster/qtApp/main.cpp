@@ -4,7 +4,6 @@
 #include <iostream>
 #include <chrono>
 #include <ctime>
-#include <linux/can.h>
 #include "src/generalInfo.hpp"
 #include "src/systemInfo.hpp"
 

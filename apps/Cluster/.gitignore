@@ -3,7 +3,7 @@ qtApp/qtAppExec_autogen
 qtApp/CMakeFiles
 qtApp/cmake_install.cmake
 qtApp/.qt
-qtApp/qbuild
+qtApp/build
 qtApp/.qtcreator
 qtApp/.rcc
 qtApp/.vscode

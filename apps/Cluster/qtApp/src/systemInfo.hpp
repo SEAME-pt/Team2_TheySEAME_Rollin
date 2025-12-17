@@ -21,7 +21,7 @@ signals:
     void speedUpdated();
     void batteryUpdated();
 
-private slots:
+public slots:
     void processFrames();
 
 private:

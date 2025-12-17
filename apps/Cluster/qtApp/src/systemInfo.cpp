@@ -15,7 +15,7 @@ systemInfo::systemInfo(QObject *parent)
 bool systemInfo::start(const QString &interfaceName)
 {
     device = QCanBus::instance()->createDevice("socketcan", interfaceName);
-    if (!device->connectDevice()) {
+    if (device && !device->connectDevice()) {
         qWarning() << "Failed to connect CAN device";
         return false;
     }
@@ -41,7 +41,7 @@ bool systemInfo::start(const QString &interfaceName)
  */
 void systemInfo::processFrames()
 {
-    while (device->framesAvailable()) {
+    while (device && device->framesAvailable()) {
         QCanBusFrame frame = device->readFrame();
         qint64 id = frame.frameId();
         QByteArray data = frame.payload();
