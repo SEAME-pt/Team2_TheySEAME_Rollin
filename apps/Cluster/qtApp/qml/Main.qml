@@ -23,16 +23,24 @@ Window {
         }
 
         Image {
+            id: logo
             anchors.centerIn: parent
             source: "qrc:/qml/images/logo.png"
             fillMode: Image.PreserveAspectFit
-        }
+            opacity: 0
 
-        Timer {
-            interval: 2000
-            running: true
-            repeat: false
-            onTriggered: splash.visible = false
+            SequentialAnimation on opacity {
+                running: true
+                loops: 1
+
+                NumberAnimation { from: 0; to: 1; duration: 1000 }
+
+                PauseAnimation { duration: 2000 }
+
+                NumberAnimation { from: 1; to: 0; duration: 1000 }
+
+                onStopped: splash.visible = false  // Esconde o splash no final
+            }
         }
         Loader {
             id: loader
