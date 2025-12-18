@@ -61,7 +61,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
  *
  * @param thread_input Thread parameter passed by ThreadX scheduler (unused in this implementation)
  *
- * @return void (infinite loop - never returns)
+ * @return void
  *
  */
 void Speed_Thread_Entry(ULONG thread_input)

@@ -49,7 +49,7 @@ extern "C" {
 #include "app_threadx.h"
 #include "../Src/utils/utils.h"
 #include "../Src/Control/control.h"
-#include "../Src/Drivers/drivers.h"
+#include "../Src/Drivers/pca9685.h"
 #include "../Src/Sensors/sensors.h"
 
 

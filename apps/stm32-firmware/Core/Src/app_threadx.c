@@ -89,13 +89,13 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
     }
   }
 
-//  status = tx_thread_create(&battery_thread, "Battery Thread",
-//                                  Battery_Thread_Entry, 0,
-//                                  battery_thread_stack, sizeof(battery_thread_stack),
-//                                  10, 10, TX_NO_TIME_SLICE, TX_AUTO_START);
-//  if (status != TX_SUCCESS) {
-//      return TX_THREAD_ERROR;
-//  }
+ status = tx_thread_create(&battery_thread, "Battery Thread",
+                                 Battery_Thread_Entry, 0,
+                                 battery_thread_stack, sizeof(battery_thread_stack),
+                                 10, 10, TX_NO_TIME_SLICE, TX_AUTO_START);
+ if (status != TX_SUCCESS) {
+     return TX_THREAD_ERROR;
+ }
 
   status = tx_thread_create(&speed_thread, "Speed Thread",
                                   Speed_Thread_Entry, 0,
