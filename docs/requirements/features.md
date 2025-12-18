@@ -20,16 +20,6 @@ Status: proposed
 ```
 
 ```
-`feat~detect-traffic-signs~1`
-
-The vehicle shall be able to detect obstacles of any kind.
-
-Needs: arch
-
-Status: proposed
-```
-
-```
 `feat~stop-before-obstacles~1`
 
 The vehicle shall stop or avoid unsafe interaction with obstacles or pedestrians.
@@ -38,7 +28,7 @@ Needs: arch
 
 Status: proposed
 ```
-
+u
 ```
 `feat~report-speed-battery~1`
 
