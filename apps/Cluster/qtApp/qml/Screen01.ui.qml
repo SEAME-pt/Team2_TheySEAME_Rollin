@@ -109,7 +109,7 @@ Rectangle {
             y: 20
             width: 47
             height: 35
-            source: generalInfo ? "images/" + generalInfo.weatherInfo : "images/sun-256.png"
+            source: generalInfo ? "images/" + generalInfo.weatherInfo + "-256.png" : "images/sun-256.png"
             fillMode: Image.PreserveAspectFit
         }
 

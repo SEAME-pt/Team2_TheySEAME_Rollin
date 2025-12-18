@@ -26,7 +26,7 @@
  */
 generalInfo::generalInfo(QObject *parent)
     : QObject(parent),
-      m_weatherInfo("sun-256.png"),
+      m_weatherInfo("sun"),
       m_temperature(0.0f),
       m_localTime("00:00"),
       m_currentDate(QDate::currentDate()),
@@ -39,12 +39,14 @@ generalInfo::generalInfo(QObject *parent)
         QString newTime = now.toString("HH:mm");
         if (newTime != m_localTime) {
             m_localTime = newTime;
+            qDebug() << "Local time updated to:" << m_localTime;
             emit localTimeChanged();
         }
 
         QDate newDate = now.date();
         if (newDate != m_currentDate) {
             m_currentDate = newDate;
+            qDebug() << "Current date updated to:" << m_currentDate.toString("dd/MM/yyyy");
             emit currentDateChanged();
         }
     });
@@ -152,29 +154,31 @@ void generalInfo::onWeatherDataReceived(QNetworkReply* reply)
         int temp = static_cast<int>(currentWeather["temperature"].toDouble());
         if (temp != m_temperature) {
             m_temperature = temp;
+            qDebug() << "Temperature updated to:" << m_temperature; 
             emit temperatureChanged();
         }
 
         int code = currentWeather["weathercode"].toInt();
         QString desc;
         switch(code) {
-            case 0: desc = "sun-256.png"; break;
-            case 1: case 2: case 3: desc = "partly-cloudy-day-256.png"; break;
-            case 45: case 48: desc = "clouds-256.png"; break;
-            case 51: case 53: case 55: desc = "rain-256.png"; break;
-            case 61: case 63: case 65: desc = "rain-256.png"; break;
-            case 66: case 67: desc = "rain-256.png"; break;
-            case 71: case 73: case 75: desc = "snow-256.png"; break;
-            case 77: desc = "snow-256.png"; break;
-            case 80: case 81: case 82: desc = "rain-256.png"; break;
-            case 85: case 86: desc = "snow-256.png"; break;
-            case 95: desc = "thunderstorm-256.png"; break;
-            case 96: case 99: desc = "thunderstorm-256.png"; break;
+            case 0: desc = "sun"; break;
+            case 1: case 2: case 3: desc = "partly-cloudy-day"; break;
+            case 45: case 48: desc = "clouds"; break;
+            case 51: case 53: case 55: desc = "rain"; break;
+            case 61: case 63: case 65: desc = "rain"; break;
+            case 66: case 67: desc = "rain"; break;
+            case 71: case 73: case 75: desc = "snow"; break;
+            case 77: desc = "snow"; break;
+            case 80: case 81: case 82: desc = "rain"; break;
+            case 85: case 86: desc = "snow"; break;
+            case 95: desc = "thunderstorm"; break;
+            case 96: case 99: desc = "thunderstorm"; break;
             default: desc = "unknown.png"; break;
         }
 
         if (desc != m_weatherInfo) {
             m_weatherInfo = desc;
+            qDebug() << "Weather updated to:" << m_weatherInfo << "with temperature:" << m_temperature;
             emit weatherInfoChanged();
         }
     }

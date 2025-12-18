@@ -47,11 +47,13 @@ void systemInfo::processFrames()
         QByteArray data = frame.payload();
         if (id == 66) {
             speed = static_cast<unsigned char>(data[0]);
+            qDebug() << "Speed updated to:" << speed;
             emit speedUpdated();
         }
 
         if (id == 77) {
             battery = static_cast<unsigned char>(data[0]);
+            qDebug() << "Battery SOC updated to:" << battery;
             emit batteryUpdated();
         }
     }
