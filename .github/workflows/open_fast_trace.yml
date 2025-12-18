@@ -20,4 +20,4 @@ jobs:
             -v "$PWD":/repo \
             -w /repo \
             ghcr.io/seame-pt/team2_theyseame_rollin/openfasttrace:latest \
-            trace ./docs/requirements/*.md
+            trace src/ requirements/
