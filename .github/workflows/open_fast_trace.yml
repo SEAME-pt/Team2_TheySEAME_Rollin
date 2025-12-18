@@ -25,4 +25,4 @@ jobs:
           docker run --rm \
             -v "$PWD":/repo \
             ghcr.io/seame-pt/team2_theyseame_rollin/oft:latest \
-            trace -o html -f "$PWD"/reports/pr_trace_report.html src/ requirements/
+            trace -o html -f "$PWD"/pr_trace_report.html src/ requirements/
