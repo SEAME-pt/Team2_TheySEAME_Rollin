@@ -20,3 +20,8 @@ jobs:
             -v "$PWD":/repo \
             ghcr.io/seame-pt/team2_theyseame_rollin/oft:latest \
             trace -o html -f /repo/pr_trace_report.html src/ requirements/
+      - name: Upload trace report
+        uses: actions/upload-artifact@v4
+        with:
+          name: trace-report
+          path: pr_trace_report.html
