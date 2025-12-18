@@ -19,4 +19,4 @@ jobs:
           docker run --rm \
             -v "$PWD":/repo \
             ghcr.io/seame-pt/team2_theyseame_rollin/openfasttrace:latest \
-            trace src/ requirements/
+            trace --v all src/ requirements/
