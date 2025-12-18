@@ -17,7 +17,7 @@ $(BUILD_DIR):
 	chmod 755 $@
 
 ## Generate HTML trace report
-oft-html: oft-build | $(BUILD_DIR)
+oft: oft-build | $(BUILD_DIR)
 	docker run --rm \
 		--user $(shell id -u):$(shell id -g) \
 		-v $(PWD)/$(BUILD_DIR):/output \
@@ -25,7 +25,7 @@ oft-html: oft-build | $(BUILD_DIR)
 		|| echo "Trace report generated with coverage issues - check trace_report.html"
 
 ## Run trace (no HTML)
-oft: oft-build | $(BUILD_DIR)
+oft-shell: oft-build | $(BUILD_DIR)
 	docker run --rm \
 		--user $(shell id -u):$(shell id -g) \
 		-v $(PWD)/$(BUILD_DIR):/output \

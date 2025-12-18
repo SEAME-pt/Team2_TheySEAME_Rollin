@@ -20,8 +20,8 @@
  *
  * @param parent Optional parent QObject
  *=======================Requirements traceability========================
- *        impl->dsg~design-requirement-cluster-datetime~1
- *        impl->dsg~design-requirement-cluster-weather~1
+ *        [impl->dsn~design-requirement-cluster-datetime~1]
+ *        [impl->dsn~design-requirement-cluster-weather~1]
  *========================================================================
  */
 generalInfo::generalInfo(QObject *parent)
@@ -63,7 +63,7 @@ generalInfo::generalInfo(QObject *parent)
  * @return QString representing icon (e.g., "sun-256.png")
  *
  *=======================Requirements traceability========================
- *        impl->dsn~design-requirement-cluster-weather~1
+ *        [impl->dsn~design-requirement-cluster-weather~1]
  *========================================================================
  */
 QString generalInfo::getWeatherInfo() const
@@ -76,7 +76,7 @@ QString generalInfo::getWeatherInfo() const
  * @return int temperature
  *
  *=======================Requirements traceability========================
- *        impl->dsn~design-requirement-cluster-weather~1
+ *        [impl->dsn~design-requirement-cluster-weather~1]
  *========================================================================
  */
 int generalInfo::getTemperature() const
@@ -89,7 +89,7 @@ int generalInfo::getTemperature() const
  * @return QString current time
  *
  *=======================Requirements traceability========================
- *        impl->dsn~design-requirement-cluster-datetime~1
+ *        [impl->dsn~design-requirement-cluster-datetime~1]
  *========================================================================
  */
 QString generalInfo::getLocalTime() const
@@ -102,7 +102,7 @@ QString generalInfo::getLocalTime() const
  * @return QString current date
  *
  *=======================Requirements traceability========================
- *        impl->dsn~design-requirement-cluster-datetime~1
+ *        [impl->dsn~design-requirement-cluster-datetime~1]
  *========================================================================
  */
 QString generalInfo::getCurrentDate() const
@@ -114,7 +114,7 @@ QString generalInfo::getCurrentDate() const
  * @brief Fetches current weather data from Open-Meteo API.
  *
  *=======================Requirements traceability========================
- *        impl->dsn~design-requirement-cluster-weather~1
+ *        [impl->dsn~design-requirement-cluster-weather~1]
  *========================================================================
  */
 void generalInfo::fetchWeatherData()
@@ -131,7 +131,7 @@ void generalInfo::fetchWeatherData()
  * @param reply QNetworkReply* from QNetworkAccessManager
  *
  *=======================Requirements traceability========================
- *        impl->dsn~design-requirement-cluster-weather~1
+ *        [impl->dsn~design-requirement-cluster-weather~1]
  *========================================================================
  */
 void generalInfo::onWeatherDataReceived(QNetworkReply* reply)

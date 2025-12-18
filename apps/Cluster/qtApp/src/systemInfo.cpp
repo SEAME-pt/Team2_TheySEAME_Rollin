@@ -35,8 +35,8 @@ bool systemInfo::start(const QString &interfaceName)
  * Reads available CAN frames and emits signals for speed and battery SOC updates.
  * 
  * =======================Requirements traceability========================
- *        impl->dsg~design-requirement-cluster-speed~1
- *       impl->dsg~design-requirement-cluster-battery~1
+ *        [impl->dsn~design-requirement-cluster-speed~1]
+ *        [impl->dsn~design-requirement-cluster-battery~1]
  *========================================================================
  */
 void systemInfo::processFrames()
