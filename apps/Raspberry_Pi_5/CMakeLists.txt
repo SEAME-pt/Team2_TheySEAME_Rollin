@@ -7,9 +7,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_library(can STATIC CAN/src/CAN.cpp)
 target_include_directories(can PRIVATE CAN/include)
 
-add_library(remote STATIC RemoteControl/src/RemoteControl.cpp)
-target_include_directories(remote PRIVATE RemoteControl/include)
+add_library(remote STATIC Evdev/Evdev.cpp Evdev/RemoteControl.cpp)
+target_include_directories(remote PRIVATE Evdev)
 
 add_executable(${CMAKE_PROJECT_NAME} main.cpp)
-target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE CAN/include RemoteControl/include)
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE CAN/include Evdev)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE can remote)

@@ -6,45 +6,50 @@
 #include <poll.h>
 #include <csignal>
 
-CAN can;
-RemoteControl remote;
+bool run = true;
 
 void signal_handler(int signal) {
-	can.closeSocket();
-	remote.closeRemoteControl();
+	run = false;
 }
 
 int main() {
 	struct pollfd fds[2];
+	CAN can;
+	Evdev evdev("/dev/input/event6");
+	RemoteControl remote(evdev);
 
 	std::signal(SIGINT, signal_handler);
 
-	remote.openRemoteControl();
 	can.openSocket("can0");
 	fds[0].fd = can.getSocketFd();
 	fds[0].events = POLLIN;
-	fds[1].fd = remote.getfd();
+	fds[1].fd = evdev.getfd();
 	fds[1].events = POLLIN;
-	while (1) {
-		if (poll(fds, 2, -1) < 0) {
+	while (run) {
+		if (poll(fds, 2, 0) < 0) {
 			perror("Error in poll:");
-			exit(1);
+			break;
 		}
 		if (fds[0].revents & POLLIN) {
 			printf("Receiving frame\n");
 			can.readMsg();
 		}
 		if (fds[1].revents & POLLIN) {
-			printf("Receiving RemoteControl command\n");
-			remote.readEvent();
-			uint8_t throttle = abs((remote.axis_y - 127) / 1.27);
-			uint8_t steering = (remote.axis_x - 127) / 127;
-			printf("\tSteering %d\n", steering);
-			printf("\tThrottle %d\n", throttle);
-			uint8_t data[3] = { 0x00, throttle, steering };
-			printf("Sending frame\n");
+			evdev.readEvent();
+		}
+		while (evdev.pendingEvent() > 0) {
+			struct input_event &ev = evdev.nextEvent();
+			remote.setkey(ev.code, ev.value);
+			uint8_t data[3];
+			data[0] = 0x00;
+			data[1] = abs((remote.getkey(ABS_Y) - 127) / 1.27);
+			data[2] = (remote.getkey(ABS_X) - 127) / 127;
+			printf("Throttle %d\n", data[1]);
+			printf("Steering %d\n\n", data[2]);
 			can.sendMsg(0x100, data, sizeof(data));
 		}
 	}
+
+	can.closeSocket();
 	return (0);
 }
