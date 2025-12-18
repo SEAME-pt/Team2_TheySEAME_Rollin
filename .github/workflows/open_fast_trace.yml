@@ -7,17 +7,21 @@ jobs:
   traceability:
     runs-on: ubuntu-latest
     steps:
+      # 1. Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Log in to GHCR
+      # 2. Log in to GHCR
+      - name: Log in to GitHub Container Registry
         run: |
           echo "${{ secrets.OTF_KEY }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Run OpenFastTrace (with fail on issues)
+      # 3. Run OpenFastTrace on repo files
+      - name: Run OpenFastTrace (fail on issues)
         run: |
+          set -e
           docker run --rm \
             -v "$PWD":/repo \
             -w /repo \
             ghcr.io/seame-pt/team2_theyseame_rollin/openfasttrace:latest \
-            trace src/ requirements/
+            trace src docs/requirements
