@@ -11,8 +11,8 @@ uint32_t delta_ticks = 0;
  * stored globally for processing by the Speed_Thread_Entry function.
  *
  * ====================== Requirement Traceability ===========================
- * impl->dsn~speed-counter-overflow~1
- * impl->dsn~rpm-sensing~1
+ * [impl->dsn~speed-counter-overflow~1]
+ * [impl->dsn~rpm-sensing~1]
  * ==========================================================================
  *
  * @param htim Pointer to TIM_HandleTypeDef structure containing timer configuration
@@ -56,7 +56,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
  * - Thread sleep: 0.1s between iterations (based on ThreadX timer)
  *
  * ====================== Requirement Traceability ===========================
- * impl->dsn~rpm-latency~1
+ * [impl->dsn~rpm-latency~1]
  * ==========================================================================
  *
  * @param thread_input Thread parameter passed by ThreadX scheduler (unused in this implementation)
