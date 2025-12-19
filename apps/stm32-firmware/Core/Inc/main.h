@@ -49,7 +49,8 @@ extern "C" {
 #include "app_threadx.h"
 #include "../Src/utils/utils.h"
 #include "../Src/Control/control.h"
-#include "../Src/Drivers/drivers.h"
+#include "../Src/Drivers/pca9685.h"
+#include "../Src/Drivers/ina219.h"
 #include "../Src/Sensors/sensors.h"
 #include "../Src/Communication/mcp2515.h"
 
@@ -63,7 +64,7 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+extern char uart_buff[128];
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -194,6 +195,8 @@ extern I2C_HandleTypeDef hi2c2;
 #define Mems_INT_LPS22HH_GPIO_Port GPIOG
 #define USB_VBUS_SENSE_Pin GPIO_PIN_14
 #define USB_VBUS_SENSE_GPIO_Port GPIOF
+#define SPEED_Pin GPIO_PIN_13
+#define SPEED_GPIO_Port GPIOE
 #define OCTOSPI_R_NCS_Pin GPIO_PIN_11
 #define OCTOSPI_R_NCS_GPIO_Port GPIOB
 #define WRLS_SPI2_NSS_Pin GPIO_PIN_12

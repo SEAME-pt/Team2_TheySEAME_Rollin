@@ -4,6 +4,9 @@
 #include "main.h"
 #include "tx_api.h"
 
+#define THREAD_SLEEP_TICKS 10
+#define PULSES_PER_REV 10
+
 /* Global Vehicle Data Structure */
 typedef struct {
     float battery_voltage;      // Battery voltage in volts
@@ -32,5 +35,4 @@ extern VehicleCommand_t g_vehicle_command;
 
 /* Mutex for protecting global vehicle command */
 extern TX_MUTEX g_vehicle_command_mutex;
-
 #endif

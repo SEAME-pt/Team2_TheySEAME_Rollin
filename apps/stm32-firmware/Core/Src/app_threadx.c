@@ -24,8 +24,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "Sensors/sensors.h"
-#include "Communication/comm.h"
-#include "Control/control.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,17 +43,24 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-TX_THREAD battery_thread;
-UCHAR battery_thread_stack[2048];
-extern void Battery_Thread_Entry(ULONG thread_input);
-
 TX_THREAD communication_thread;
-UCHAR communication_thread_stack[2048];
-extern void Communication_Thread_Entry(ULONG thread_input);
-
+TX_THREAD battery_thread;
+TX_THREAD speed_thread;
+TX_THREAD test_thread;
 TX_THREAD control_thread;
+
+UCHAR test_thread_stack[2048];
+UCHAR speed_thread_stack[2048];
+UCHAR battery_thread_stack[2048];
+UCHAR communication_thread_stack[2048];
 UCHAR control_thread_stack[2048];
+
+extern void Battery_Thread_Entry(ULONG thread_input);
+extern void Communication_Thread_Entry(ULONG thread_input);
 extern void Control_Thread_Entry(ULONG thread_input);
+extern void Test_Thread_Entry(ULONG thread_input);
+extern void Speed_Thread_Entry(ULONG thread_input);
+
 
 /* Global vehicle data and mutex */
 VehicleData_t g_vehicle_data;
@@ -81,20 +86,20 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   UINT ret = TX_SUCCESS;
 
   /* USER CODE BEGIN App_ThreadX_MEM_POOL */
-
+    
   /* USER CODE END App_ThreadX_MEM_POOL */
 
   /* USER CODE BEGIN App_ThreadX_Init */
-  // Initialize global command structure
-  g_vehicle_command.driving_mode = 0;
-  g_vehicle_command.throttle = 0;
-  g_vehicle_command.steering_angle = 0;
-  g_vehicle_command.command_valid = 0;
-  
-  // Create mutex for protecting global vehicle data
-  UINT status = tx_mutex_create(&g_vehicle_data_mutex, "VehicleData Mutex", TX_NO_INHERIT);
-  if (status != TX_SUCCESS) {
-      return TX_MUTEX_ERROR;
+    // Initialize global command structure
+    g_vehicle_command.driving_mode = 0;
+    g_vehicle_command.throttle = 0;
+    g_vehicle_command.steering_angle = 0;
+    g_vehicle_command.command_valid = 0;
+    
+    // Create mutex for protecting global vehicle data
+    UINT status = tx_mutex_create(&g_vehicle_data_mutex, "VehicleData Mutex", TX_NO_INHERIT);
+    if (status != TX_SUCCESS) {
+        return TX_MUTEX_ERROR;
   }
   
   // Create mutex for protecting global vehicle command
@@ -103,6 +108,18 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
       return TX_MUTEX_ERROR;
   }
 
+  #define TEST_MODE 1
+  
+  if (TEST_MODE) {
+    status = tx_thread_create(&test_thread, "Test Routine Thread",
+                                  Test_Thread_Entry, 0,
+                                  test_thread_stack, sizeof(test_thread_stack),
+                                  10, 10, TX_NO_TIME_SLICE, TX_AUTO_START);
+    if (status != TX_SUCCESS) {
+      return TX_THREAD_ERROR;
+    }
+  }
+  
   // Create the battery monitoring thread
   status = tx_thread_create(&battery_thread, "Battery Thread",
                             Battery_Thread_Entry, 0,
@@ -129,6 +146,15 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   if (status != TX_SUCCESS) {
       return TX_THREAD_ERROR;
   }
+
+  status = tx_thread_create(&speed_thread, "Speed Thread",
+                                  Speed_Thread_Entry, 0,
+                                  speed_thread_stack, sizeof(speed_thread_stack),
+                                  10, 10, TX_NO_TIME_SLICE, TX_AUTO_START);
+  if (status != TX_SUCCESS) {
+      return TX_THREAD_ERROR;
+  }
+
   /* USER CODE END App_ThreadX_Init */
 
   return ret;

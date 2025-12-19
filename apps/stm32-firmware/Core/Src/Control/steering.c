@@ -1,5 +1,5 @@
 #include "control.h"
-#include "../Drivers/drivers.h"
+#include "../Drivers/pca9685.h"
 #include "../Sensors/sensors.h"
 #include <stdio.h>
 
@@ -82,9 +82,18 @@ void Control_StopMotors(void) {
 void Control_Thread_Entry(ULONG thread_input) {
     (void)thread_input;
     
-    Debug_Print("\r\n=== CONTROL THREAD STARTED ===\r\n");
-    Debug_Print("[CONTROL] Reading commands from global structure\r\n");
-    Debug_Print("[CONTROL] Controlling motors via Driver module\r\n\r\n");
+    Debug_Print("[CONTROL] Initializing both PCA9685 devices...\r\n");
+    
+    // Initialize both PCA9685 devices with single software reset
+    HAL_StatusTypeDef pca_status = PCA9685_Init_Multiple(&hi2c1, 
+                                                        PCA9685_ADDR_STEERING, "Steering",
+                                                        PCA9685_ADDR_THROTTLE, "Throttle");
+    if (pca_status != HAL_OK) {
+        snprintf(control_uart_buf, sizeof(control_uart_buf), "[CONTROL] PCA9685 Multiple Init FAILED: %d\r\n", pca_status);
+        Debug_Print(control_uart_buf);
+    } else {
+        Debug_Print("[CONTROL] Both PCA9685 devices initialized successfully\r\n");
+    }
     
     // Wait for initialization
     tx_thread_sleep(100);  // 1 second
@@ -103,6 +112,9 @@ void Control_Thread_Entry(ULONG thread_input) {
         
         // Process command if valid
         if (local_cmd.command_valid) {
+            Debug_Print("\r\n=== CONTROL THREAD STARTED ===\r\n");
+            Debug_Print("[CONTROL] Reading commands from global structure\r\n");
+            Debug_Print("[CONTROL] Controlling motors via Driver module\r\n\r\n");
             // Check if command changed
             if (local_cmd.driving_mode != last_mode || 
                 local_cmd.throttle != last_throttle || 
