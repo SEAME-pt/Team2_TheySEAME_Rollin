@@ -49,9 +49,6 @@ target_link_libraries(qtAppExec
 )
 
 ######################### Tests #########################
-add_subdirectory(tests)
-
-add_subdirectory(tests/lib/googletest)
 
 enable_testing()
 

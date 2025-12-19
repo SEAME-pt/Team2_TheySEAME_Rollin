@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include <QCoreApplication>
 #include <QSignalSpy>
-#include "../src/systemInfo.hpp"
-#include "../src/generalInfo.hpp"
+#include "../qtApp/src/systemInfo.hpp"
+#include "../qtApp/src/generalInfo.hpp"
 
 class SystemInfoTest : public ::testing::Test {
 protected:
@@ -120,7 +120,7 @@ TEST_F(GeneralInfoTest, WeatherSignals) {
     genInfo->onWeatherDataReceived(&reply);
 
     EXPECT_EQ(genInfo->getTemperature(), 30);
-    EXPECT_EQ(genInfo->getWeatherInfo(), "partly-cloudy-day-256.png");
+    EXPECT_EQ(genInfo->getWeatherInfo(), "partly-cloudy-day");
     EXPECT_GE(tempSpy.count(), 1);
     EXPECT_GE(iconSpy.count(), 1);
 }
@@ -170,7 +170,7 @@ TEST_F(GeneralInfoTest, MultipleWeatherUpdates) {
     genInfo->onWeatherDataReceived(&reply2);
 
     EXPECT_EQ(genInfo->getTemperature(), 25);
-    EXPECT_EQ(genInfo->getWeatherInfo(), "partly-cloudy-day-256.png");
+    EXPECT_EQ(genInfo->getWeatherInfo(), "partly-cloudy-day");
     EXPECT_GE(tempSpy.count(), 2);
     EXPECT_GE(iconSpy.count(), 2);
 }

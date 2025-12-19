@@ -7,8 +7,13 @@ qtApp/build
 qtApp/.qtcreator
 qtApp/.rcc
 qtApp/.vscode
+qtApp/qml/.qtcreator
 
 Cross_Compile/qtApp
 Cross_Compile/qtAppPi
 Cross_Compile/rasp.tar.gz
 Cross_Compile/qt-pi-binaries.tar.gz
+
+tests/build
+
+.vscode
