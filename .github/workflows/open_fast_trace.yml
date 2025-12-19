@@ -14,6 +14,10 @@ jobs:
         run: |
           echo "${{ secrets.OTF_KEY }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
+      - name: Build
+        run: |
+          docker build -f scripts/OFT/Dockerfile -t ghcr.io/seame-pt/team2_theyseame_rollin/openfasttrace:latest .
+            
       - name: Run OpenFastTrace (with fail on issues)
         run: |
           docker run --rm \
