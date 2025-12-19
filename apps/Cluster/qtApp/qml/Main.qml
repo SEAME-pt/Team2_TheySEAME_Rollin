@@ -39,7 +39,7 @@ Window {
 
                 NumberAnimation { from: 1; to: 0; duration: 1000 }
 
-                onStopped: splash.visible = false  // Esconde o splash no final
+                onStopped: splash.visible = false  // Hides the splash screen at the end
             }
         }
         Loader {
