@@ -43,7 +43,7 @@ int main() {
 			uint8_t data[3];
 			data[0] = 0x00;
 			data[1] = abs((remote.getkey(ABS_Y) - 127) / 1.27);
-			data[2] = (remote.getkey(ABS_X) - 127) / 127;
+			data[2] = (remote.getkey(ABS_Z) - 127) / 127;
 			printf("Throttle %d\n", data[1]);
 			printf("Steering %d\n\n", data[2]);
 			can.sendMsg(0x100, data, sizeof(data));

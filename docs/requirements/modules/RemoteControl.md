@@ -8,7 +8,7 @@ The sub-module adds Car control via a remote control
 - [x] Sub-Module
 
 ### Interacts with:
-- Comms CAN RPI
+- RPI Data Processing
 
 ## Specification Items (Requirements)
 
@@ -16,12 +16,12 @@ The sub-module adds Car control via a remote control
 `dsn~remote-control-read-inputs~1`
 
 The Remote Control shall read inputs from the gamepad, updating it's state
-Then it fowards it's state to the Comms CAN RPI sub-module
+Then it fowards it's state to the RPI Data Processing sub-module
 
 Needs: impl, test
 
 Covers:
-- `arch~architecture-requirement-example~1` (Need to change)
+- `arch~remote~control~support~1`
 
 Status: draft
 ```
