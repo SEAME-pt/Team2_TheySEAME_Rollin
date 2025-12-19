@@ -51,6 +51,19 @@ void CAN::closeSocket() {
 	std::cout << "Closed CAN socket" << std::endl;
 }
 
+/*
+ * @brief Sends a CAN frame to the Bus
+ *
+ * This function fills the can_frame struct with the id, length and data and
+ * sends the frame to the Bus
+ *
+ * ====================== Requirement Traceability ===========================
+ * [impl->dsn~comms-can-rpi-sendMsg~1]
+ * ==========================================================================
+ *
+ * @return void
+ *
+ */
 void CAN::sendMsg(const canid_t id, const uint8_t *data, const uint8_t len) {
 	struct can_frame frame;
 	int nbytes;
@@ -66,6 +79,19 @@ void CAN::sendMsg(const canid_t id, const uint8_t *data, const uint8_t len) {
 	}
 }
 
+/*
+ * @brief Read a CAN frame from the Bus
+ *
+ * This function reads a CAN frame from the Bus and prints the information
+ * inside the can_frame struct
+ *
+ * ====================== Requirement Traceability ===========================
+ * [impl->dsn~comms-can-rpi-receiveMsg~1]
+ * ==========================================================================
+ *
+ * @return void
+ *
+ */
 void CAN::readMsg() {
 	struct can_frame frame;
 	int nbytes;
