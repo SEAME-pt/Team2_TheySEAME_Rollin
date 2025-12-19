@@ -15,18 +15,17 @@ systemInfo::systemInfo(QObject *parent)
 bool systemInfo::start(const QString &interfaceName)
 {
     device = QCanBus::instance()->createDevice("socketcan", interfaceName);
-    if (device && !device->connectDevice()) {
-        qWarning() << "Failed to connect CAN device";
-        return false;
-    }
-    if (device){
-        connect(device, &QCanBusDevice::framesReceived,
-                this, &systemInfo::processFrames);
-    }
-    else{
+    if (!device) {
         qWarning() << "CAN not available";
         return false;
     }
+    if (!device->connectDevice()) {
+        qWarning() << "Failed to connect CAN device";
+        return false;
+    }
+
+    connect(device, &QCanBusDevice::framesReceived,
+            this, &systemInfo::processFrames);
     return true;
 }
 
