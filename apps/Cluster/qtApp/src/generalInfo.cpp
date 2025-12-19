@@ -173,7 +173,7 @@ void generalInfo::onWeatherDataReceived(QNetworkReply* reply)
             case 85: case 86: desc = "snow"; break;
             case 95: desc = "thunderstorm"; break;
             case 96: case 99: desc = "thunderstorm"; break;
-            default: desc = "unknown.png"; break;
+            default: desc = "unknown"; break;
         }
 
         if (desc != m_weatherInfo) {
