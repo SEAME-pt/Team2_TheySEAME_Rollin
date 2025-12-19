@@ -44,7 +44,7 @@ Rectangle {
             width: 132
             height: 123
             color: "#47473f"
-            text: qsTr("0")
+            text: systemInfo ? systemInfo.speed.toString() : "0"
             font.pixelSize: 98
             font.family: "BaseNeueTrial-Bold"
             font.bold: true
@@ -57,8 +57,8 @@ Rectangle {
             width: 218
             height: 119
             color: "#47473f"
-            text: qsTr("90%")
-            font.pixelSize: 98
+            text: systemInfo ? systemInfo.battery.toString() + "%" : "0%"
+            font.pixelSize: 77
             font.family: "BaseNeueTrial-Bold"
             font.bold: true
         }
@@ -109,7 +109,7 @@ Rectangle {
             y: 20
             width: 47
             height: 35
-            source: generalInfo ? "images/" + generalInfo.weatherInfo : "images/sun-256.png"
+            source: generalInfo ? "images/" + generalInfo.weatherInfo + "-256.png" : "images/sun-256.png"
             fillMode: Image.PreserveAspectFit
         }
 
@@ -126,7 +126,7 @@ Rectangle {
                 id: baterry
                 x: 0
                 y: 0
-                width: 147.6
+                width: systemInfo ? (systemInfo.battery / 100) * maxBattery.width : 0
                 height: 12
                 color: "#76b047"
                 border.color: "#76b047"
