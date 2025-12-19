@@ -58,7 +58,7 @@ void CAN::closeSocket() {
  * sends the frame to the Bus
  *
  * ====================== Requirement Traceability ===========================
- * impl->dsn~comms-can-rpi-sendMsg~1
+ * [impl->dsn~comms-can-rpi-sendMsg~1]
  * ==========================================================================
  *
  * @return void
@@ -86,7 +86,7 @@ void CAN::sendMsg(const canid_t id, const uint8_t *data, const uint8_t len) {
  * inside the can_frame struct
  *
  * ====================== Requirement Traceability ===========================
- * impl->dsn~comms-can-rpi-receiveMsg~1
+ * [impl->dsn~comms-can-rpi-receiveMsg~1]
  * ==========================================================================
  *
  * @return void
