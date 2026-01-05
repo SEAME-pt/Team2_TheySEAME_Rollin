@@ -13,9 +13,9 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 | Field | Details |
 |-------|----------|
 | **Sprint Number** | Sprint 6 |
-| **Sprint Goal** | Perform full Integration test with unit tests per software module, requirements traceability, and explore OTA updates, COVESA, and uProtocol implementation. |
+| **Sprint Goal** | Perform full Integration test with unit tests per software module, requirements traceability, and implement CI/CD workflow for OTA updates. |
 | **Sprint Duration** | Jan 5 – Jan 16, 2025 |
-| **Focus Areas** | Tests, TSF, COVESA, Automotive Frameworks, uProtocol. |
+| **Focus Areas** | Tests, TSF, Automotive Frameworks, OTA updates. |
 
 
 ## 📅 Scrum Team
