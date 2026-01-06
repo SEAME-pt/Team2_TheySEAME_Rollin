@@ -804,3 +804,108 @@ Communication Module
         
     *   Communication Module remains operational
     
+### Requirement:  dsg-comm-error-safety-1
+---------------------
+
+### **UT-CES-01 – CAN Bus Error Detection**
+
+**Purpose:** Verify detection of CAN bus errors by the Communication Module.
+
+*    **Input:** CAN driver reports an error condition (e.g., error frame or bus-off).
+
+*    **Expected Behavior:**
+ 
+     *    CAN error is detected by the Communication Module
+
+     *    Internal CAN error flag is set
+
+     *    Error state is reflected in the vehicle status data
+
+### **UT-CES-02 – Communication Timeout Detection**
+
+**Purpose:** Verify detection of communication timeout when CAN messages are not received.
+
+*   **Input:** No CAN messages received within the configured timeout period.
+    
+*   **Expected Behavior:**
+    
+    *   Communication timeout is detected
+        
+    *   Timeout flag is set in the Communication Module
+        
+    *   Communication state is marked as lost
+        
+
+### **UT-CES-03 – Safe Fallback on Communication Loss**
+
+**Purpose:** Verify safe fallback behavior when communication is lost.
+
+*   **Input:** Communication timeout or CAN bus-off condition.
+    
+*   **Expected Behavior:**
+    
+    *   Vehicle stop command is issued by the Communication Module
+        
+    *   Vehicle state transitions to STOPPED
+        
+    *   No further motion commands are forwarded
+        
+
+### **UT-CES-04 – Safe State Maintenance During Communication Loss**
+
+**Purpose:** Verify that the vehicle remains in a safe state while communication is lost.
+
+*   **Input:** Persistent communication loss condition.
+    
+*   **Expected Behavior:**
+    
+    *   Vehicle remains in STOPPED state
+        
+    *   No drive or steering commands are forwarded
+        
+    *   Safe state is continuously enforced
+        
+
+### **UT-CES-05 – Communication Recovery Handling**
+
+**Purpose:** Verify system behavior when communication is restored after a loss.
+
+*   **Input:** Valid CAN messages received after a timeout or CAN error.
+    
+*   **Expected Behavior:**
+    
+    *   Communication error and timeout flags are cleared
+        
+    *   Vehicle remains in STOPPED state
+        
+    *   No automatic motion command is issued
+        
+
+### **UT-CES-06 – Vehicle Status Transmission to Raspberry Pi**
+
+**Purpose:** Verify transmission of vehicle status information to the Raspberry Pi.
+
+*   **Input:** Periodic status transmission trigger.
+    
+*   **Expected Behavior:**
+    
+    *   Vehicle status message is sent to the Raspberry Pi
+        
+    *   Status includes vehicle state and communication status
+        
+    *   Message format is valid and complete
+        
+
+### **UT-CES-07 – Error Status Reporting to Raspberry Pi**
+
+**Purpose:** Verify correct status reporting during communication error conditions.
+
+*   **Input:** Active CAN error or communication timeout.
+    
+*   **Expected Behavior:**
+    
+    *   Status message indicates CAN error and/or timeout
+        
+    *   Reported status matches internal Communication Module state
+        
+    *   No invalid or inconsistent data is transmitted
