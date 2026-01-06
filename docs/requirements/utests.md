@@ -1,4 +1,4 @@
-Unit Test Definitions
+Control Module
 ---------------------
 
 ### Requirement:  dsg-control-throttle-command-1
@@ -548,3 +548,145 @@ Unit Test Definitions
     *   Communication interface callback or handler is invoked exactly once
         
     *   Control Module receives the correct command payload
+
+Communication Module
+---------------------
+
+### Requirement:  dsg-comm-can-interface-1
+---------------------
+
+### **UT-CCI-01 – CAN Bus Initialization**
+
+**Purpose:** Verify correct initialization of the CAN interface.
+
+*   **Input:** Communication Module initialization request
+    
+*   **Expected Behavior:**
+    
+    *   CAN controller is initialized successfully
+        
+    *   Bitrate is configured to 500 kbit/s
+        
+    *   CAN interface enters operational state
+        
+
+### **UT-CCI-02 – CAN Protocol Configuration**
+
+**Purpose:** Verify CAN 2.0B protocol configuration.
+
+*   **Input:** CAN initialization sequence
+    
+*   **Expected Behavior:**
+    
+    *   Standard CAN 2.0B protocol is selected
+        
+    *   Only supported frame formats are enabled        
+
+### **UT-CCI-03 – Message Transmission**
+
+**Purpose:** Verify transmission of CAN messages to Raspberry Pi.
+
+*   **Input:** Valid CAN message request
+    
+*   **Expected Behavior:**
+    
+    *   Message is placed on the CAN bus
+        
+    *   Correct CAN ID and payload are used        
+
+### **UT-CCI-04 – Message Reception**
+
+**Purpose:** Verify reception of CAN messages from Raspberry Pi.
+
+*   **Input:** Valid CAN message received on bus
+    
+*   **Expected Behavior:**
+    
+    *   Message is correctly received
+        
+    *   CAN ID and payload are decoded correctly        
+
+### **UT-CCI-05 – CAN Message Filtering**
+
+**Purpose:** Verify filtering of CAN messages.
+
+*   **Input:** CAN messages with accepted and non-accepted CAN IDs
+    
+*   **Expected Behavior:**
+    
+    *   Messages matching configured filters are accepted
+        
+    *   Messages outside filter range are rejected
+        
+    *   No invalid messages are forwarded
+        
+
+### **UT-CCI-06 – Bus Error Detection**
+
+**Purpose:** Verify detection of CAN bus errors.
+
+*   **Input:** Simulated CAN error condition (e.g. bit error, CRC error)
+    
+*   **Expected Behavior:**
+    
+    *   Error is detected by the CAN controller
+        
+    *   Error status is reported to the Communication Module
+        
+
+### **UT-CCI-07 – Error Recovery Mechanism**
+
+**Purpose:** Verify CAN error recovery behavior.
+
+*   **Input:** CAN bus error followed by recovery condition
+    
+*   **Expected Behavior:**
+    
+    *   Communication Module attempts recovery
+        
+    *   CAN interface returns to operational state
+        
+    *   Normal communication resumes
+        
+
+### **UT-CCI-08 – Bus-Off Handling**
+
+**Purpose:** Verify handling of CAN bus-off state.
+
+*   **Input:** CAN controller enters bus-off condition
+    
+*   **Expected Behavior:**
+    
+    *   Bus-off state is detected
+        
+    *   CAN transmission is halted
+        
+    *   Recovery or reinitialization is triggered
+        
+
+### **UT-CCI-09 – Communication Reliability**
+
+**Purpose:** Verify stable communication under normal operation.
+
+*   **Input:** Continuous transmission and reception of valid CAN messages
+    
+*   **Expected Behavior:**
+    
+    *   No message loss within expected limits
+        
+    *   Communication remains stable over time
+        
+    *   No unexpected errors occur
+        
+
+### **UT-CCI-10 – Raspberry Pi Interface Compatibility**
+
+**Purpose:** Verify compatibility with Raspberry Pi CAN interface.
+
+*   **Input:** CAN communication session with Raspberry Pi
+    
+*   **Expected Behavior:**
+    
+    *   Messages are correctly exchanged
+        
+    *   Timing and bitrate remain synchronized
