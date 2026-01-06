@@ -270,18 +270,6 @@ Unit Test Definitions
     *   Motor output remains within safe operating range
         
     *   Driver Module is commanded with safe values only
-        
 
-### **UT-CTC-10 – Interface Acceptance**
-
-**Purpose:** Verify throttle control interface acceptance.
-
-*   **Input:** Any speed/direction command within specified limits
-    
-*   **Expected Behavior:**
-    
-    *   No error or rejection
-        
-    *   Correct PWM and direction computation
-        
-    *   Driver Module is commanded correctly
+### Requirement: dsg-control-safety-limits-1
+---------------------
