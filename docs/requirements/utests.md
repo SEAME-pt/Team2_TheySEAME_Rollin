@@ -273,3 +273,278 @@ Unit Test Definitions
 
 ### Requirement: dsg-control-safety-limits-1
 ---------------------
+
+### **UT-CSL-01 – Steering Upper Limit Enforcement**
+
+**Purpose:** Verify enforcement of the maximum steering angle limit.
+
+*   **Input:** Steering angle command greater than +30°
+    
+*   **Expected Behavior:**
+    
+    *   Steering command is clamped to +30°
+        
+    *   Actuator command corresponds to the clamped value
+        
+    *   No unsafe steering command is issued
+        
+
+### **UT-CSL-02 – Steering Lower Limit Enforcement**
+
+**Purpose:** Verify enforcement of the minimum steering angle limit.
+
+*   **Input:** Steering angle command less than -30°
+    
+*   **Expected Behavior:**
+    
+    *   Steering command is clamped to -30°
+        
+    *   Actuator command corresponds to the clamped value
+        
+    *   No unsafe steering command is issued
+        
+
+### **UT-CSL-03 – Speed Upper Limit Enforcement**
+
+**Purpose:** Verify enforcement of maximum allowed speed.
+
+*   **Input:** Speed command above the defined safe operational range
+    
+*   **Expected Behavior:**
+    
+    *   Speed command is clamped to the maximum allowed value
+        
+    *   PWM output remains within safe limits
+        
+    *   Motor actuator is commanded safely
+        
+
+### **UT-CSL-04 – Speed Lower Limit Enforcement**
+
+**Purpose:** Verify enforcement of minimum or zero speed limit.
+
+*   **Input:** Speed command below minimum allowed (e.g. negative when not allowed)
+    
+*   **Expected Behavior:**
+    
+    *   Speed command is forced to zero or minimum safe value
+        
+    *   Motor PWM corresponds to safe output
+        
+    *   No unintended vehicle motion occurs
+        
+
+### **UT-CSL-05 – Emergency Stop Activation**
+
+**Purpose:** Verify emergency stop overrides all control commands.
+
+*   **Input:** Emergency stop signal asserted
+    
+*   **Expected Behavior:**
+    
+    *   Steering output is disabled or set to safe neutral position
+        
+    *   Throttle output is set to zero speed
+        
+    *   Driver Module receives only safe actuator commands
+        
+
+### **UT-CSL-06 – Emergency Stop Priority**
+
+**Purpose:** Verify emergency stop has highest priority.
+
+*   **Input:** Valid steering and speed commands with emergency stop asserted
+    
+*   **Expected Behavior:**
+    
+    *   Normal control commands are ignored
+        
+    *   Emergency stop behavior is applied immediately
+        
+    *   No actuator follows user commands
+        
+
+### **UT-CSL-07 – Input Validation Before Actuation**
+
+**Purpose:** Verify validation of control inputs before actuator commands.
+
+*   **Input:** Any control command set (steering or speed)
+    
+*   **Expected Behavior:**
+    
+    *   Inputs are validated against safety limits
+        
+    *   Only validated and safe commands are forwarded
+        
+    *   Invalid or out-of-range inputs are not sent to actuators
+        
+
+### **UT-CSL-08 – Combined Steering and Speed Limits**
+
+**Purpose:** Verify simultaneous enforcement of multiple safety limits.
+
+*   **Input:** Steering angle and speed commands both exceeding limits
+    
+*   **Expected Behavior:**
+    
+    *   Each command is independently clamped to safe range
+        
+    *   Actuator commands reflect safe values only
+        
+    *   System remains in a valid operational state
+        
+
+### **UT-CSL-09 – Fail-Safe Behavior on Invalid Input**
+
+**Purpose:** Verify fail-safe behavior when input validation fails.
+
+*   **Input:** Corrupted or undefined control command values
+    
+*   **Expected Behavior:**
+    
+    *   System transitions to a safe state
+        
+    *   Throttle is set to zero speed
+        
+    *   Steering is set to neutral or last known safe value
+        
+    *   No unsafe actuator command is ever issued
+        
+    *   System behavior is deterministic and repeatable
+
+### Requirement: dsg-control-user-interface-1
+---------------------
+### **UT-CUI-01 – Steering Command Reception**
+
+**Purpose:** Verify reception of steering angle commands from the Communication Module.
+
+*   **Input:** Valid steering angle command message
+    
+*   **Expected Behavior:**
+    
+    *   Steering command is correctly received
+        
+    *   Value is forwarded to the steering control logic
+        
+    *   No data loss or modification occurs
+        
+
+### **UT-CUI-02 – Throttle Command Reception**
+
+**Purpose:** Verify reception of throttle/speed commands from the Communication Module.
+
+*   **Input:** Valid throttle or speed command message
+    
+*   **Expected Behavior:**
+    
+    *   Throttle command is correctly received
+        
+    *   Value is forwarded to the throttle control logic
+        
+    *   No data corruption occurs
+        
+
+### **UT-CUI-03 – Mode Selection Reception**
+
+**Purpose:** Verify reception of mode selection commands.
+
+*   **Input:** Mode command = Manual
+    
+*   **Expected Behavior:**
+    
+    *   Mode is correctly parsed and stored
+        
+    *   Control Module switches to manual mode
+        
+
+### **UT-CUI-04 – Autonomous Mode Selection**
+
+**Purpose:** Verify autonomous mode selection handling.
+
+*   **Input:** Mode command = Autonomous
+    
+*   **Expected Behavior:**
+    
+    *   Mode is correctly parsed and stored
+        
+    *   Control Module switches to autonomous mode
+        
+
+### **UT-CUI-05 – Command Routing in Manual Mode**
+
+**Purpose:** Verify correct routing of user commands in manual mode.
+
+*   **Input:** Manual mode active, valid steering and throttle commands
+    
+*   **Expected Behavior:**
+    
+    *   Commands are routed to manual control logic
+        
+    *   Autonomous control logic is not invoked
+        
+
+### **UT-CUI-06 – Command Routing in Autonomous Mode**
+
+**Purpose:** Verify correct routing of commands in autonomous mode.
+
+*   **Input:** Autonomous mode active, steering and throttle commands
+    
+*   **Expected Behavior:**
+    
+    *   Commands are routed to autonomous control logic
+        
+    *   Manual control logic is not invoked
+        
+
+### **UT-CUI-07 – Input Message Validation**
+
+**Purpose:** Verify validation of received communication messages.
+
+*   **Input:** Malformed or incomplete command message
+    
+*   **Expected Behavior:**
+    
+    *   Message is rejected
+        
+    *   No control action is triggered
+        
+    *   System remains in a safe state
+        
+
+### **UT-CUI-08 – Unsupported Command Handling**
+
+**Purpose:** Verify handling of unsupported or unknown command types.
+
+*   **Input:** Unknown command ID from Communication Module
+    
+*   **Expected Behavior:**
+    
+    *   Command is ignored or rejected
+        
+    *   No unintended control behavior occurs
+        
+
+### **UT-CUI-09 – Command Update Consistency**
+
+**Purpose:** Verify consistent processing of successive commands.
+
+*   **Input:** Sequence of valid steering, throttle, and mode commands
+    
+*   **Expected Behavior:**
+    
+    *   Each command is processed in order
+        
+    *   Latest valid command state is maintained
+        
+
+### **UT-CUI-10 – Communication Module Interface Invocation**
+
+**Purpose:** Verify integration with the Communication Module interface.
+
+*   **Input:** Any valid command message
+    
+*   **Expected Behavior:**
+    
+    *   Communication interface callback or handler is invoked exactly once
+        
+    *   Control Module receives the correct command payload
