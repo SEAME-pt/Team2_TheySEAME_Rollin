@@ -112,9 +112,9 @@ void Control_Thread_Entry(ULONG thread_input) {
         
         // Process command if valid
         if (local_cmd.command_valid) {
-            Debug_Print("\r\n=== CONTROL THREAD STARTED ===\r\n");
-            Debug_Print("[CONTROL] Reading commands from global structure\r\n");
-            Debug_Print("[CONTROL] Controlling motors via Driver module\r\n\r\n");
+//            Debug_Print("\r\n=== CONTROL THREAD STARTED ===\r\n");
+//            Debug_Print("[CONTROL] Reading commands from global structure\r\n");
+//            Debug_Print("[CONTROL] Controlling motors via Driver module\r\n\r\n");
             // Check if command changed
             if (local_cmd.driving_mode != last_mode || 
                 local_cmd.throttle != last_throttle || 

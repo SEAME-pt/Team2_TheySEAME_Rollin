@@ -58,9 +58,11 @@ void Communication_Thread_Entry(ULONG thread_input) {
             }
             
             // Check if data is valid before sending
-            if (local_data.data_valid) {
+            if (1) {
                 // Send battery percentage over CAN (ID: 0x4D)
-                HAL_StatusTypeDef status = MCP2515_SendBattery(local_data.battery_percentage);
+                uint8_t battery = (uint8_t)local_data.battery_percentage;
+                HAL_StatusTypeDef status = MCP2515_SendBattery(battery);
+                // HAL_StatusTypeDef status = MCP2515_SendBattery(90);
             
                 const char* status_str = (status == HAL_OK) ? "OK" : 
                                          (status == HAL_BUSY) ? "BUSY" : 
@@ -70,8 +72,8 @@ void Communication_Thread_Entry(ULONG thread_input) {
                 int voltage_frac = (int)((local_data.battery_voltage - voltage_int) * 100);
                 
                 snprintf(comm_uart_buf, sizeof(comm_uart_buf), 
-                        "[CAN_TX] Battery: %d.%02dV (%d%%) | %s\r\n",
-                        voltage_int, voltage_frac, local_data.battery_percentage, status_str);
+                        "[CAN_TX] Battery: %d.%02dV (%u%%) | %s\r\n",
+                        voltage_int, voltage_frac, battery, status_str);
                 Debug_Print(comm_uart_buf);
                 
                 // If bus-off detected, try to recover

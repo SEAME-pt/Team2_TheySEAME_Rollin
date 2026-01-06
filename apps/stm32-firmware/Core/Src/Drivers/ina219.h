@@ -14,7 +14,7 @@
 #include "stm32u5xx_hal.h"
 #include "main.h"
 
-#define INA219_ADDRESS 							(0x40)
+#define INA219_ADDRESS 							(0x41)
 
 //
 //	Registers

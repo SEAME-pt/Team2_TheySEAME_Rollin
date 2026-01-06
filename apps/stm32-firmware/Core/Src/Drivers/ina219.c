@@ -329,17 +329,34 @@ void INA219_setCalibration_32V_1A(INA219_t *ina219)
 
 void INA219_setCalibration_16V_400mA(INA219_t *ina219)
 {
+    // Changed from INA219_CONFIG_GAIN_1_40MV to INA219_CONFIG_GAIN_8_320MV to match Hugo work
 	uint16_t config = INA219_CONFIG_BVOLTAGERANGE_16V |
-	                    INA219_CONFIG_GAIN_1_40MV | INA219_CONFIG_BADCRES_12BIT |
+	                    INA219_CONFIG_GAIN_8_320MV | INA219_CONFIG_BADCRES_12BIT |
 	                    INA219_CONFIG_SADCRES_12BIT_1S_532US |
 	                    INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
 
-	ina219_calibrationValue = 8192;
-	ina219_currentDivider_mA = 20;    // Current LSB = 50uA per bit (1000/50 = 20)
-	ina219_powerMultiplier_mW = 1.0f; // Power LSB = 1mW per bit
+	ina219_calibrationValue = 33600; //Previous: 10240
+	ina219_currentDivider_mA = 11;    // Current LSB = 91uA per bit (1000/91 = 11)
+	ina219_powerMultiplier_mW = 2.0f; // Power LSB = 4mW per bit
 
 	INA219_setCalibration(ina219, ina219_calibrationValue);
 	INA219_setConfig(ina219, config);
+}
+
+void INA219_setCalibration_16V_3A(INA219_t *ina219)
+{
+    uint16_t config = INA219_CONFIG_BVOLTAGERANGE_16V |
+                      INA219_CONFIG_GAIN_1_40MV |
+                      INA219_CONFIG_BADCRES_12BIT |
+                      INA219_CONFIG_SADCRES_12BIT_1S_532US |
+                      INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
+
+    ina219_calibrationValue = 33600;       // Calibration register
+    ina219_currentDivider_mA = 11;        // Current LSB = 91 uA/bit
+    ina219_powerMultiplier_mW = 2;        // Power multiplier
+
+    INA219_setCalibration(ina219, ina219_calibrationValue);
+    INA219_setConfig(ina219, config);
 }
 
 void INA219_setPowerMode(INA219_t *ina219, uint8_t Mode)
@@ -388,7 +405,7 @@ uint8_t INA219_Init(INA219_t *ina219, I2C_HandleTypeDef *i2c, uint8_t Address)
 		batteryState = Battery_START; // go to starting position.
 		INA219_HealthCheck(ina219,0.0f,1.0f );
 		INA219_Reset(ina219);
-		INA219_setCalibration_32V_2A(ina219);
+		INA219_setCalibration_16V_3A(ina219);
 
 		return 1;
 	}

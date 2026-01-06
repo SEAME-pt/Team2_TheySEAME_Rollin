@@ -9,8 +9,8 @@
 
 /* Global Vehicle Data Structure */
 typedef struct {
-    float battery_voltage;      // Battery voltage in volts
-    uint8_t battery_percentage; // Battery percentage (0-100%)
+    uint16_t battery_voltage;      // Battery voltage in volts
+    float battery_percentage; // Battery percentage (0-100%)
     float battery_current;      // Battery current in mA
     float vehicle_speed;        // Vehicle speed in km/h or m/s
     uint8_t data_valid;         // Flag: 1 if data is valid, 0 if not updated yet

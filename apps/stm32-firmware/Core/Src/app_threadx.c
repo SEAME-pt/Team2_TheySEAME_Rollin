@@ -96,6 +96,13 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
     g_vehicle_command.steering_angle = 0;
     g_vehicle_command.command_valid = 0;
     
+    // Initialize global vehicle data structure
+    g_vehicle_data.battery_voltage = 0;
+    g_vehicle_data.battery_percentage = 0.0f;
+    g_vehicle_data.battery_current = 0.0f;
+    g_vehicle_data.vehicle_speed = 0.0f;
+    g_vehicle_data.data_valid = 0;
+    
     // Create mutex for protecting global vehicle data
     UINT status = tx_mutex_create(&g_vehicle_data_mutex, "VehicleData Mutex", TX_NO_INHERIT);
     if (status != TX_SUCCESS) {
