@@ -690,3 +690,117 @@ Communication Module
     *   Messages are correctly exchanged
         
     *   Timing and bitrate remain synchronized
+
+### Requirement:  dsg-comm-command-processing-1
+---------------------
+
+### **UT-CCP-01 – Steering Command Reception**
+
+**Purpose:** Verify reception of steering control commands via CAN.
+
+*   **Input:** Valid CAN message containing a steering angle command
+    
+*   **Expected Behavior:**
+    
+    *   Message is received by the Communication Module
+        
+    *   Steering command data is correctly extracted
+        
+    *   Command is forwarded to the Control Module
+        
+
+### **UT-CCP-02 – Throttle Command Reception**
+
+**Purpose:** Verify reception of throttle control commands via CAN.
+
+*   **Input:** Valid CAN message containing a throttle or speed command
+    
+*   **Expected Behavior:**
+    
+    *   Message is received by the Communication Module
+        
+    *   Throttle command data is correctly extracted
+        
+    *   Command is forwarded to the Control Module
+        
+
+### **UT-CCP-03 – CAN Message Parsing**
+
+**Purpose:** Verify correct parsing of CAN message payload.
+
+*   **Input:** CAN message with correctly formatted payload
+    
+*   **Expected Behavior:**
+    
+    *   All required fields are parsed correctly
+        
+    *   No data misalignment or corruption occurs
+
+### **UT-CCP-04 – Missing or Incomplete Data**
+
+**Purpose:** Verify handling of incomplete CAN command messages.
+
+*   **Input:** CAN message missing required fields
+    
+*   **Expected Behavior:**
+    
+    *   Message is rejected
+        
+    *   No control command is forwarded
+        
+    *   System remains in a safe state
+        
+
+### **UT-CCP-05 – Unknown Command Type**
+
+**Purpose:** Verify handling of unsupported command types.
+
+*   **Input:** CAN message with unknown command identifier
+    
+*   **Expected Behavior:**
+    
+    *   Message is ignored or rejected
+        
+    *   No action is forwarded to the Control Module
+        
+
+### **UT-CCP-06 – Forwarding to Control Module**
+
+**Purpose:** Verify correct forwarding of validated commands.
+
+*   **Input:** Valid steering or throttle CAN command
+    
+*   **Expected Behavior:**
+    
+    *   Control Module interface is invoked exactly once
+        
+    *   Forwarded data matches validated input
+        
+
+### **UT-CCP-07 – Command Processing Order**
+
+**Purpose:** Verify consistent processing of multiple commands.
+
+*   **Input:** Sequence of valid CAN command messages
+    
+*   **Expected Behavior:**
+    
+    *   Commands are processed in reception order
+        
+    *   No command is lost or overwritten unexpectedly
+        
+
+### **UT-CCP-08 – Robustness Against Corrupted Messages**
+
+**Purpose:** Verify fail-safe behavior for corrupted CAN messages.
+
+*   **Input:** CAN message with corrupted payload or checksum error
+    
+*   **Expected Behavior:**
+    
+    *   Message is discarded
+        
+    *   No control command is forwarded
+        
+    *   Communication Module remains operational
+    
