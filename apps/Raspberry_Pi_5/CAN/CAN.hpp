@@ -2,17 +2,16 @@
 
 #include <linux/can.h>
 #include <stdint.h>
+#include "Comms.hpp"
 
-class CAN {
+class CAN : public Comms {
 public:
-	CAN();
+	CAN(const char *interface);
 	~CAN();
 
 	int getSocketFd() const;
-	void openSocket(const char *interface);
-	void closeSocket();
-	void sendMsg(const canid_t id, const uint8_t *data, const uint8_t len);
-	void readMsg();
+	void readComm();
+	void sendComm(const canid_t id, const uint8_t *data, const uint8_t len);
 	void printCANFrame(const struct can_frame frame);
 
 private:

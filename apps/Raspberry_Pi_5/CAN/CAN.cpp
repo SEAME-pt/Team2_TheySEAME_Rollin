@@ -7,49 +7,37 @@
 #include <cstring>
 #include <iostream>
 
-CAN::CAN() {
-	std::cout << "CAN Constructor" << std::endl;
-}
-
-CAN::~CAN() {
-	std::cout << "CAN Destructor" << std::endl;
-}
-
-int CAN::getSocketFd() const { return (_sock); }
-
-void CAN::openSocket(const char *interface) {
+CAN::CAN(const char *interface) {
 	struct sockaddr_can addr;
 	struct ifreq ifr;
 
 	_sock = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 	if (_sock < 0) {
 		std::perror("Error creating socket");
-		exit(1);
 	}
 	std::cout << "Created Socket" << std::endl;
 
 	std::strcpy(ifr.ifr_name, interface);
 	if (ioctl(_sock, SIOCGIFINDEX, &ifr) < 0) {
 		std::perror("Error in ioctl");
-		exit(1);
 	}
 
 	addr.can_family = AF_CAN;
 	addr.can_ifindex = ifr.ifr_ifindex;
 	if (bind(_sock, (struct sockaddr *)&addr, sizeof(struct sockaddr_can)) < 0) {
 		std::perror("Error in bind");
-		exit(1);
 	}
 	std::cout << "Binded Socket" << std::endl;
 }
 
-void CAN::closeSocket() {
+CAN::~CAN() {
 	if (close(_sock) < 0) {
 		std::perror("Error in close");
-		exit(1);
 	}
 	std::cout << "Closed CAN socket" << std::endl;
 }
+
+int CAN::getSocketFd() const { return (_sock); }
 
 /*
  * @brief Sends a CAN frame to the Bus
@@ -64,7 +52,7 @@ void CAN::closeSocket() {
  * @return void
  *
  */
-void CAN::sendMsg(const canid_t id, const uint8_t *data, const uint8_t len) {
+void CAN::sendComm(const canid_t id, const uint8_t *data, const uint8_t len) {
 	struct can_frame frame;
 	int nbytes;
 
@@ -92,7 +80,7 @@ void CAN::sendMsg(const canid_t id, const uint8_t *data, const uint8_t len) {
  * @return void
  *
  */
-void CAN::readMsg() {
+void CAN::readComm() {
 	struct can_frame frame;
 	int nbytes;
 
