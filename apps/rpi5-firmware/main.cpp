@@ -1,4 +1,5 @@
 #include "CAN.hpp"
+#include "Evdev.hpp"
 #include "RemoteControl.hpp"
 #include <stdio.h>
 #include <unistd.h>
@@ -14,13 +15,12 @@ void signal_handler(int signal) {
 
 int main() {
 	struct pollfd fds[2];
-	CAN can;
+	CAN can("can0");
 	Evdev evdev("/dev/input/event6");
 	RemoteControl remote(evdev);
 
 	std::signal(SIGINT, signal_handler);
 
-	can.openSocket("can0");
 	fds[0].fd = can.getSocketFd();
 	fds[0].events = POLLIN;
 	fds[1].fd = evdev.getfd();
@@ -32,7 +32,7 @@ int main() {
 		}
 		if (fds[0].revents & POLLIN) {
 			printf("Receiving frame\n");
-			can.readMsg();
+			can.readFrame();
 		}
 		if (fds[1].revents & POLLIN) {
 			evdev.readEvent();
@@ -46,10 +46,8 @@ int main() {
 			data[2] = (remote.getkey(ABS_Z) - 127) / 127;
 			printf("Throttle %d\n", data[1]);
 			printf("Steering %d\n\n", data[2]);
-			can.sendMsg(0x100, data, sizeof(data));
+			can.sendFrame(0x100, data, sizeof(data));
 		}
 	}
-
-	can.closeSocket();
 	return (0);
 }

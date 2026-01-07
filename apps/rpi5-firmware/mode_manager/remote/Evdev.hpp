@@ -1,9 +1,9 @@
 #pragma once
 
-#include <linux/input.h>
 #include <cstdint>
+#include "IEvdev.hpp"
 
-class Evdev {
+class Evdev : public IEvdev {
 public:
 
 	Evdev(const char *device);

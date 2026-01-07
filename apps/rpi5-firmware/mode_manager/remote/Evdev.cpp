@@ -37,7 +37,6 @@ void Evdev::readEvent() {
 	nbytes = read(_fd, &ev, sizeof(struct input_event));
 	if (nbytes < 0) {
 		std::perror("Error in read");
-		exit(1);
 	}
 	switch (ev.type) {
 		case EV_KEY:

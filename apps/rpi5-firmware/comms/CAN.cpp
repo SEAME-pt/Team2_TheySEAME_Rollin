@@ -52,7 +52,7 @@ int CAN::getSocketFd() const { return (_sock); }
  * @return void
  *
  */
-void CAN::sendComm(const canid_t id, const uint8_t *data, const uint8_t len) {
+void CAN::sendFrame(const canid_t id, const uint8_t *data, const uint8_t len) {
 	struct can_frame frame;
 	int nbytes;
 
@@ -80,7 +80,7 @@ void CAN::sendComm(const canid_t id, const uint8_t *data, const uint8_t len) {
  * @return void
  *
  */
-void CAN::readComm() {
+void CAN::readFrame() {
 	struct can_frame frame;
 	int nbytes;
 
@@ -89,10 +89,6 @@ void CAN::readComm() {
 		std::perror("Error in read");
 		exit(1);
 	}
-	printCANFrame(frame);
-}
-
-void CAN::printCANFrame(const struct can_frame frame) {
 	std::cout << "\tFrameId: " << frame.can_id << std::endl;
 	std::cout << "\tData: ";
 	for (size_t i = 0; i < frame.len; i++) {
@@ -100,3 +96,4 @@ void CAN::printCANFrame(const struct can_frame frame) {
 	}
 	std::cout << "\nFinish" << std::endl;
 }
+
