@@ -71,6 +71,7 @@ void Speed_Thread_Entry(ULONG thread_input)
     uint32_t average = 0;
     float speed_ms = 0;
     int counter = 0;
+    int no_pulse_counter = 0;  // Track iterations without pulses
     char uart_buf[128];
 
 
@@ -91,16 +92,39 @@ void Speed_Thread_Entry(ULONG thread_input)
             local_delta = 0;
             average += rpm;
             counter++;
-            if (counter == 5) {
-                average = average / 5;
+            no_pulse_counter = 0;  // Reset no-pulse counter when we get a pulse
+            
+            if (counter == 2) {
+                average = average / 2;
                 speed_ms = (float)average * 0.21f / 60.0f;
                 snprintf(uart_buf, sizeof(uart_buf), "[SPEED THREAD] RPM = %lu, Speed (m/s) = %.2f\r\n", average, speed_ms);
                 Debug_Print(uart_buf);
-                if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
                 	g_vehicle_data.vehicle_speed = speed_ms;
-                    tx_mutex_put(&g_vehicle_command_mutex);
+                	g_vehicle_data.data_valid = 1;
+                    tx_mutex_put(&g_vehicle_data_mutex);
                 }
                 counter = 0;
+                average = 0;
+            }
+        }
+        else
+        {
+            // No valid pulse detected in this iteration
+            no_pulse_counter++;
+            
+            // stop after 0.2 sec without pulse
+            if (no_pulse_counter >= 2) {
+                if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                    if (g_vehicle_data.vehicle_speed != 0) {
+                        g_vehicle_data.vehicle_speed = 0;
+                        g_vehicle_data.data_valid = 1;
+                        Debug_Print("[SPEED THREAD] No pulses detected - Speed = 0 m/s\r\n");
+                    }
+                    tx_mutex_put(&g_vehicle_data_mutex);
+                }
+                no_pulse_counter = 10;  // Cap to prevent overflow
+                counter = 0;  // Reset averaging counter
                 average = 0;
             }
         }

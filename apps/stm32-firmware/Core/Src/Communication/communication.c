@@ -41,15 +41,15 @@ void Communication_Thread_Entry(ULONG thread_input) {
         MCP2515_PrintDetailedStatus();
     }
     
-    Debug_Print("[COMM] Starting CAN loop (TX every 2s, RX continuous)\r\n");
+    Debug_Print("[COMM] Starting CAN loop (TX every 200ms, RX continuous)\r\n");
     Debug_Print("[COMM] Reading from global vehicle data\r\n\r\n");
     
     uint32_t count = 0;
     VehicleData_t local_data;
     
     while(1) {
-        // Send battery status only once per second (every 100 loops)
-        if (count % 100 == 0) {
+        // Send status every 200ms (every 20 loops) for faster response
+        if (count % 20 == 0) {
             // Read global vehicle data with mutex protection
             if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
                 // Copy data locally to minimize mutex hold time
@@ -76,8 +76,19 @@ void Communication_Thread_Entry(ULONG thread_input) {
                         voltage_int, voltage_frac, battery, status_str);
                 Debug_Print(comm_uart_buf);
                 
+                // Send speed over CAN (ID: 66/0x42 - expected by cluster)
+                HAL_StatusTypeDef speed_status = MCP2515_SendSpeed(local_data.vehicle_speed);
+                const char* speed_status_str = (speed_status == HAL_OK) ? "OK" : 
+                                               (speed_status == HAL_BUSY) ? "BUSY" : 
+                                               (speed_status == HAL_TIMEOUT) ? "TIMEOUT" : "ERROR";
+                
+                snprintf(comm_uart_buf, sizeof(comm_uart_buf), 
+                        "[CAN_TX] Speed: %.2f m/s (%.1f dm/s) | %s\r\n",
+                        local_data.vehicle_speed, local_data.vehicle_speed * 10.0f, speed_status_str);
+                Debug_Print(comm_uart_buf);
+                
                 // If bus-off detected, try to recover
-                if (status == HAL_TIMEOUT) {
+                if (status == HAL_TIMEOUT || speed_status == HAL_TIMEOUT) {
                     static uint32_t busoff_count = 0;
                     busoff_count++;
                     if (busoff_count >= 3) {
@@ -86,9 +97,6 @@ void Communication_Thread_Entry(ULONG thread_input) {
                         busoff_count = 0;
                     }
                 }
-                
-                // TODO: Add speed CAN message when speed sensor is implemented
-                // MCP2515_SendMessage(0x102, &local_data.vehicle_speed, 4);
                 
             } else {
                 Debug_Print("[CAN_TX] Waiting for valid sensor data...\r\n");

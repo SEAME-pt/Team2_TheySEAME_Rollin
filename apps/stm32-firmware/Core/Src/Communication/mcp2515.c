@@ -339,8 +339,116 @@ HAL_StatusTypeDef MCP2515_SendMessage(uint16_t can_id, uint8_t *data, uint8_t le
     return HAL_TIMEOUT;
 }
 
-/**
- * @brief Send battery data over CAN bus
+/** * @brief Send speed data over CAN
+ * @param speed_ms Vehicle speed in meters per second
+ * @return HAL_OK if message sent successfully
+ * @note CAN Message Format (4 bytes - float):
+ *       Bytes 0-3: Speed as IEEE 754 float (m/s)
+ */
+HAL_StatusTypeDef MCP2515_SendSpeed(float speed_ms) {
+    extern UART_HandleTypeDef huart1;
+    char buffer[200];
+    
+    // CAN ID: 0x42 (66 decimal - Speed status message expected by cluster)
+    uint16_t can_id = 0x42;
+    
+    // Check TX buffer 0 status
+    uint8_t tx_ctrl = MCP2515_ReadRegister(MCP2515_REG_TXB0CTRL);
+    if (tx_ctrl & 0x08) {
+        // TX buffer busy - abort previous transmission
+        snprintf(buffer, sizeof(buffer), "[DEBUG] TX buffer busy (TXCTRL=0x%02X), aborting...\r\n", tx_ctrl);
+        HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
+        MCP2515_BitModify(MCP2515_REG_TXB0CTRL, 0x08, 0x00);  // Clear TXREQ
+        HAL_Delay(1);
+        return HAL_BUSY;
+    }
+    
+    // Set standard ID (11-bit)
+    MCP2515_WriteRegister(MCP2515_REG_TXB0SIDH, (uint8_t)(can_id >> 3));
+    MCP2515_WriteRegister(MCP2515_REG_TXB0SIDL, (uint8_t)(can_id << 5));
+    
+    // Set data length code (1 byte - cluster expects single byte)
+    MCP2515_WriteRegister(MCP2515_REG_TXB0DLC, 0x01);
+    
+    // Convert m/s to dm/s (decimeters per second): 1 m/s = 10 dm/s
+    float speed_dms = speed_ms * 10.0f;
+    
+    // Send speed in dm/s as single byte (0-255), clamp the value
+    uint8_t speed_byte = (uint8_t)(speed_dms > 255.0f ? 255 : (speed_dms < 0 ? 0 : speed_dms));
+    
+    // Write speed data (1 byte only)
+    MCP2515_WriteRegister(MCP2515_REG_TXB0DATA, speed_byte);
+    
+    // Verify what was written
+    uint8_t sidh_readback = MCP2515_ReadRegister(MCP2515_REG_TXB0SIDH);
+    uint8_t sidl_readback = MCP2515_ReadRegister(MCP2515_REG_TXB0SIDL);
+    uint8_t dlc_readback = MCP2515_ReadRegister(MCP2515_REG_TXB0DLC);
+    
+    snprintf(buffer, sizeof(buffer), "[DEBUG] TX Buffer verify: SIDH=0x%02X SIDL=0x%02X DLC=0x%02X\r\n",
+        sidh_readback, sidl_readback, dlc_readback);
+    HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
+    
+    snprintf(buffer, sizeof(buffer), "[DEBUG] Sending CAN ID 0x%03X: Speed=%.2f m/s (%.1f dm/s, byte=%d)\r\n", 
+            can_id, speed_ms, speed_dms, speed_byte);
+    HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
+    
+    // Check mode before transmission
+    uint8_t canstat_pre = MCP2515_ReadRegister(MCP2515_REG_CANSTAT);
+    uint8_t canctrl_pre = MCP2515_ReadRegister(MCP2515_REG_CANCTRL);
+    snprintf(buffer, sizeof(buffer), "[DEBUG] Pre-TX: CANSTAT=0x%02X CANCTRL=0x%02X\r\n", canstat_pre, canctrl_pre);
+    HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
+    
+    // Request transmission
+    MCP2515_BitModify(MCP2515_REG_TXB0CTRL, 0x08, 0x08);
+    
+    // Wait for transmission to complete (with timeout)
+    uint32_t start_tick = HAL_GetTick();
+    int poll_count = 0;
+    while (HAL_GetTick() - start_tick < 100) {
+        tx_ctrl = MCP2515_ReadRegister(MCP2515_REG_TXB0CTRL);
+        poll_count++;
+        
+        if (!(tx_ctrl & 0x08)) {
+            // Transmission complete
+            uint32_t elapsed = HAL_GetTick() - start_tick;
+            uint8_t eflg = MCP2515_ReadRegister(MCP2515_REG_EFLG);
+            uint8_t canintf = MCP2515_ReadRegister(MCP2515_REG_CANINTF);
+            
+            snprintf(buffer, sizeof(buffer), 
+                "[DEBUG] TX complete in %lums (%d polls), EFLG=0x%02X, CANINTF=0x%02X\r\n",
+                elapsed, poll_count, eflg, canintf);
+            HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
+            
+            if (eflg != 0) {
+                MCP2515_WriteRegister(MCP2515_REG_EFLG, 0x00);
+            }
+            return HAL_OK;
+        }
+        HAL_Delay(1);
+    }
+    
+    // Timeout - detailed error reporting
+    uint8_t eflg = MCP2515_ReadRegister(MCP2515_REG_EFLG);
+    uint8_t canintf = MCP2515_ReadRegister(MCP2515_REG_CANINTF);
+    uint8_t tec = MCP2515_ReadRegister(MCP2515_REG_TEC);
+    uint8_t rec = MCP2515_ReadRegister(MCP2515_REG_REC);
+    
+    snprintf(buffer, sizeof(buffer), 
+        "[ERROR] Speed TX timeout after 100ms (%d polls), TXCTRL=0x%02X, EFLG=0x%02X, CANINTF=0x%02X, TEC=%d, REC=%d\r\n",
+        poll_count, tx_ctrl, eflg, canintf, tec, rec);
+    HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
+    
+    // Clear error and interrupt flags
+    MCP2515_WriteRegister(MCP2515_REG_EFLG, 0x00);
+    MCP2515_WriteRegister(MCP2515_REG_CANINTF, 0x00);
+    
+    // Abort the stuck transmission
+    MCP2515_BitModify(MCP2515_REG_TXB0CTRL, 0x08, 0x00);  // Clear TXREQ
+    
+    return HAL_TIMEOUT;
+}
+
+/** * @brief Send battery data over CAN bus
  * @param percentage Battery percentage (0-100)
  * @return HAL_OK if message sent successfully
  * @note CAN Message Format (1 byte):

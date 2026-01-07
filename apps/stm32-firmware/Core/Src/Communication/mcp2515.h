@@ -66,6 +66,7 @@ typedef enum {
 HAL_StatusTypeDef MCP2515_Init(MCP2515_Speed_t speed);
 HAL_StatusTypeDef MCP2515_SendMessage(uint16_t can_id, uint8_t *data, uint8_t length);  // Generic CAN send
 HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage);  // Convenience wrapper for battery data
+HAL_StatusTypeDef MCP2515_SendSpeed(float speed_ms);  // Convenience wrapper for speed data
 HAL_StatusTypeDef MCP2515_SetMode(uint8_t mode);
 int MCP2515_ReceiveMessage(uint16_t *can_id, uint8_t *data, uint8_t *length);  // Returns 1 if message received, 0 otherwise
 void MCP2515_CheckForMessages(void);  // Check and print any received messages
