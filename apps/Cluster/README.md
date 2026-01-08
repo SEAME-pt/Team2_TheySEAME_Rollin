@@ -1,130 +1,85 @@
-# Qt Dashboard Application for Raspberry Pi
+# Documentation for Qt Application on Raspberry Pi 5
+<img width="1280" height="400" alt="Screenshot from 2025-12-09 10-41-42" src="https://github.com/user-attachments/assets/e56a72ff-da19-4a23-82c0-ebcc9298e8c2" />
 
-## 1. Introduction
 
-This document explains how to build, deploy, and automatically run a Qt application on a Raspberry Pi using cross-compilation from a Linux PC.
+## 1. Overview
+This application, developed using **Qt**, will run on a **Raspberry Pi 5** and is designed to display real-time information on the displayer screen:
+- Battery level
+- Speed (hm/h)
+- weather
+- Date and time
 
-The workflow consists of:
-1. Building the application on the host (PC)
-2. Deploying the compiled binaries to the Raspberry Pi
-3. Configuring the Raspberry Pi to run the application on boot
-
----
-
-## 2. Development Environment
-
-| Component | Description |
-|------------|--------------|
-| **Host Machine** | Ubuntu 22.04 (x86_64) |
-| **Target Device** | Raspberry Pi 5 with Raspberry Pi OS |
-| **Toolchain** | arm-linux-gnueabihf-g++ |
+The interface is optimized for performance on the Raspberry Pi 5 and suitable for small displays or integrated dashboards.
 
 ---
 
-## 3. Cross-Compilation Setup in Qt Creator
+## 2. Requirements
+### 2.1 Hardware
+- Raspberry Pi 5
+- Compatible displayer
+- Required sensors:
+  - Speed sensor
+  - Battery monitoring module
+- Reliable power supply
 
-### 3.1 Install Qt and Tools on Host
+### 2.2 Software
+- Qt 6.7.3
+- Automative Grade Linux(ARM64)
+---
+## 3. Application Features
+### 3.1 Battery Monitoring
+- Displays battery percentage
+- The UI includes a battery level indicator bar
 
-Install Qt 5.13 and required toolchains:
+### 3.2 Speed Display
+- Shows current speed in hm/h
+- Receives data from a external microcontroller
 
-```bash
-sudo apt update
-sudo apt install build-essential qt5-default qtbase5-dev qtchooser qt5-qmake g++-arm-linux-gnueabihf rsync ssh
-```
+### 3.4 Weather Monitoring
+- The temperature section includes a weather status icon
+- Displays temperature in °C
 
-### 3.2 Prepare the Raspberry Pi
+### 3.5 Date and Time
+- Uses system clock to show current date and time
+---
 
-On the Raspberry Pi, install the required Qt runtime libraries:
+## 4. System Architecture
+### 4.1 Data Flow
+1. Sensors provide data via microcontrollers
+2. Application reads sensor values through a backend module
+3. UI updates in real time using Qt signals and slots
 
-```bash
-sudo apt update
-sudo apt install qt5-default qtbase5-dev openssh-server
-```
-Copy sysroot from Raspberry Pi to Host
-
-From the host machine, copy the system root (libraries and includes) from the Pi:
-```bash
-mkdir -p ~/rpi/sysroot
-rsync -avz --rsync-path="sudo rsync" pi@<raspberry_ip>:/lib ~/rpi/sysroot
-rsync -avz --rsync-path="sudo rsync" pi@<raspberry_ip>:/usr/include ~/rpi/sysroot/usr
-rsync -avz --rsync-path="sudo rsync" pi@<raspberry_ip>:/usr/lib ~/rpi/sysroot/usr
-```
-
-### 3.3 Configure Qt Creator for Raspberry Pi
-
-1. Open **Qt Creator → Tools → Options → Devices → Devices**
-   - Add a **Boot to Qt Device**
-   - Hostname: `<raspberry_ip>`
-   - User: `username`
-   - Test Connection ✅
-
-2. Open **Qt Creator → Tools → Options → Kits**
-   - Add a new **Kit** for the Raspberry Pi
-   - Compiler: `arm-linux-gnueabihf-g++`
-   - Qt Version: Qt 5.13 for Embedded Linux (ARM)
-   - Device type: **Boot to Qt Device**
-   - Device: your Raspberry Pi
-
-3. In your project, select this **Kit** (Raspberry Pi Kit).
-
-Now you can build and deploy directly from Qt Creator using the **Run** button.
+### 4.2 Main Components
+- **SystemInfo (Vehicle Data Manager)**: Central module responsible for managing all vehicle-related data.
+- **generalInfo**: Supplies general data such as the current time, date, and other non-vehicle-related information.
+- **Screen01**: Visual representation of all data from SystemInfo and InfoProvider.
 
 ---
 
-## 4. Deployment via Qt Creator
+### 5 Compilation
 
-Qt Creator will:
-- Build your app on the host.
-- Transfer the binary via SSH to `/opt/<ProjectName>` (or another path you define).
-  
-You can verify with:
-```bash
-ssh pi@<raspberry_ip>
-ls /opt/<ProjectName>
-```
+- **Native build (Linux host / dev machine)**  
+  - Create a build folder inside the project:  
+     ```bash
+     mkdir -p build
+     cd build
+     ```
+  - Run Qt CMake to generate Makefiles:  
+     ```bash
+     /path/to/qt/bin/qt-cmake ..
+     ```
+     > Replace `/path/to/qt/bin/qt-cmake` with your Qt installation path.  
+  - Build the project:  
+     ```bash
+     cmake --build .
+     ```
+  - Run the executable:  
+     ```bash
+     ./qtApp
+     ```
 
+- **Cross-compiling for Raspberry Pi (ARM target)**  
+  For instructions on cross-compiling, see [this README](Cross_Compile/README.md)
 ---
-
-## 5. Auto-Start on Boot
-
-To automatically launch the app when the Raspberry Pi boots:
-
-Create autostart dir and command file if not exists:
-```bash
-mkdir -p ~/.config/autostartnano
-nano ~/.config/autostart/qtapp.desktop
-```
-Add this:
-```
-[Desktop Entry]
-Type=Application
-Name=Qt App
-Exec=qmlscene app dir
-X-GNOME-Autostart-enabled=true
-```
-And then:
-```bash
-sudo reboot
-```
-
-## 6. Fullscreen Configuration (Hide Taskbar)
-
-To remove the panel (taskbar) and make the Qt application fullscreen on Raspberry Pi OS (Wayfire environment):
-
-1. Edit the panel configuration file:
-   ```bash
-   nano ~/.config/wf-panel-pi.ini
-   ```
-
-2. Add (or modify) the following lines:
-   ```
-   autohide=true
-   autohide_duration=500
-   ```
-
-3. Save and reboot:
-   ```bash
-   sudo reboot
-   ```
-
-After reboot, the taskbar will automatically hide, and the Qt application will appear fullscreen.
+## 6. Conclusion
+This document outlines the structure, requirements, and features of the Qt application designed for the Raspberry Pi 5. It serves as a guide for development, deployment, and future enhancements.

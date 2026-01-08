@@ -5,8 +5,24 @@
 
 extern char uart_buf[64];
 
-// PCA9685 Software Reset via I2C General Call
-// This unsticks the chip from "zombie" state where only MODE1/PRESCALE work
+/*
+ * @brief
+ *
+ * Description
+ *
+ * ====================== Requirement Traceability ===========================
+ *
+ * ==========================================================================
+ *
+ * @param name         Function
+ *
+ * @return HAL_StatusTypeDef
+ *         - HAL_OK     : Write successful
+ *         - HAL_ERROR  : Transmission failed
+ *         - HAL_BUSY   : I2C peripheral is busy
+ *         - HAL_TIMEOUT: Communication timeout
+ *
+ */
 static HAL_StatusTypeDef PCA9685_SoftwareReset(I2C_HandleTypeDef *hi2c) {
 	/*
 	 * @brief
@@ -33,7 +49,24 @@ static HAL_StatusTypeDef PCA9685_SoftwareReset(I2C_HandleTypeDef *hi2c) {
     return status;
 }
 
-// Helper function to write a register value using raw I2C transmit
+/*
+ * @brief
+ *
+ * Description
+ *
+ * ====================== Requirement Traceability ===========================
+ *
+ * ==========================================================================
+ *
+ * @param name         Function
+ *
+ * @return HAL_StatusTypeDef
+ *         - HAL_OK     : Write successful
+ *         - HAL_ERROR  : Transmission failed
+ *         - HAL_BUSY   : I2C peripheral is busy
+ *         - HAL_TIMEOUT: Communication timeout
+ *
+ */
 static HAL_StatusTypeDef PCA9685_WriteReg(I2C_HandleTypeDef *hi2c, uint8_t device_addr, uint8_t reg, uint8_t val) {
 	/*
 	 * @brief
@@ -67,7 +100,24 @@ static HAL_StatusTypeDef PCA9685_WriteReg(I2C_HandleTypeDef *hi2c, uint8_t devic
     return status;
 }
 
-// Helper to read a register
+/*
+ * @brief
+ *
+ * Description
+ *
+ * ====================== Requirement Traceability ===========================
+ *
+ * ==========================================================================
+ *
+ * @param name         Function
+ *
+ * @return HAL_StatusTypeDef
+ *         - HAL_OK     : Write successful
+ *         - HAL_ERROR  : Transmission failed
+ *         - HAL_BUSY   : I2C peripheral is busy
+ *         - HAL_TIMEOUT: Communication timeout
+ *
+ */
 static HAL_StatusTypeDef PCA9685_ReadReg(I2C_HandleTypeDef *hi2c, uint8_t device_addr, uint8_t reg, uint8_t *val) {
 	/*
 	 * @brief
@@ -276,7 +326,24 @@ HAL_StatusTypeDef PCA9685_Init_Device(I2C_HandleTypeDef *hi2c, uint8_t addr, con
     return HAL_OK;
 }
 
-// Set PWM - write each byte individually (C++ reference method)
+/*
+ * @brief
+ *
+ * Description
+ *
+ * ====================== Requirement Traceability ===========================
+ *
+ * ==========================================================================
+ *
+ * @param name         Function
+ *
+ * @return HAL_StatusTypeDef
+ *         - HAL_OK     : Write successful
+ *         - HAL_ERROR  : Transmission failed
+ *         - HAL_BUSY   : I2C peripheral is busy
+ *         - HAL_TIMEOUT: Communication timeout
+ *
+ */
 HAL_StatusTypeDef PCA9685_SetPWM(I2C_HandleTypeDef *hi2c, uint8_t device_addr, uint8_t channel, uint16_t on, uint16_t off) {
 	/*
 	 * @brief

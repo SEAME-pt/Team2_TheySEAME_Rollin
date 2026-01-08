@@ -161,7 +161,6 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   if (status != TX_SUCCESS) {
       return TX_THREAD_ERROR;
   }
-
   /* USER CODE END App_ThreadX_Init */
 
   return ret;
