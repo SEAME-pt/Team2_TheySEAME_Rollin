@@ -1,4 +1,5 @@
 # CMake
-build/
+build_host/
+build_agl/
 compile_commands.json
 .cache

@@ -32,7 +32,8 @@ int main() {
 		}
 		if (fds[0].revents & POLLIN) {
 			printf("Receiving frame\n");
-			can.readFrame();
+			struct can_frame frame;
+			can.readFrame(frame);
 		}
 		if (fds[1].revents & POLLIN) {
 			evdev.readEvent();

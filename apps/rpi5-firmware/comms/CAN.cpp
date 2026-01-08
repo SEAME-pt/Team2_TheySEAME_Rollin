@@ -52,7 +52,7 @@ int CAN::getSocketFd() const { return (_sock); }
  * @return void
  *
  */
-void CAN::sendFrame(const canid_t id, const uint8_t *data, const uint8_t len) {
+int CAN::sendFrame(const canid_t id, const uint8_t *data, const uint8_t len) {
 	struct can_frame frame;
 	int nbytes;
 
@@ -63,8 +63,9 @@ void CAN::sendFrame(const canid_t id, const uint8_t *data, const uint8_t len) {
 	nbytes = write(_sock, &frame, sizeof(struct can_frame));
 	if (nbytes < 0) {
 		std::perror("Error in write");
-		exit(1);
+		return (-1);
 	}
+	return (0);
 }
 
 /*
@@ -80,20 +81,14 @@ void CAN::sendFrame(const canid_t id, const uint8_t *data, const uint8_t len) {
  * @return void
  *
  */
-void CAN::readFrame() {
-	struct can_frame frame;
+int CAN::readFrame(struct can_frame &frame) {
 	int nbytes;
 
 	nbytes = read(_sock, &frame, sizeof(struct can_frame));
 	if (nbytes < 0) {
 		std::perror("Error in read");
-		exit(1);
+		return (-1);
 	}
-	std::cout << "\tFrameId: " << frame.can_id << std::endl;
-	std::cout << "\tData: ";
-	for (size_t i = 0; i < frame.len; i++) {
-		printf("%02x ", frame.data[i]);
-	}
-	std::cout << "\nFinish" << std::endl;
+	return (0);
 }
 
