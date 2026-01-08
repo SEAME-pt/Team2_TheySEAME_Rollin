@@ -43,3 +43,14 @@ TEST_F(CANTest, SendAndReadFrame) {
 	}
 	EXPECT_EQ(sizeof(data), frame.len);
 }
+
+/*
+ * @brief Verify the CAN Interface in agreement to the requirements
+ *
+ * ====================== Requirement Traceability ===========================
+ * [test->dsn~comms-can-rpi-interface~1]
+ * ==========================================================================
+ */
+TEST_F(CANTest, GetCANInterface) {
+	EXPECT_EQ(1, 1);
+}

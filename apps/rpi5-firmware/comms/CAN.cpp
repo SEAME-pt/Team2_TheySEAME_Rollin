@@ -1,15 +1,14 @@
 #include "CAN.hpp"
+#include <ifaddrs.h>
 #include <sys/socket.h>
-#include <net/if.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <cstdio>
 #include <cstring>
 #include <iostream>
 
-CAN::CAN(const char *interface) {
+CAN::CAN(const std::string &interface) {
 	struct sockaddr_can addr;
-	struct ifreq ifr;
 
 	_sock = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 	if (_sock < 0) {
@@ -17,13 +16,12 @@ CAN::CAN(const char *interface) {
 	}
 	std::cout << "Created Socket" << std::endl;
 
-	std::strcpy(ifr.ifr_name, interface);
-	if (ioctl(_sock, SIOCGIFINDEX, &ifr) < 0) {
+	std::strcpy(_ifr.ifr_name, interface.c_str());
+	if (ioctl(_sock, SIOCGIFINDEX, &_ifr) < 0) {
 		std::perror("Error in ioctl");
 	}
-
 	addr.can_family = AF_CAN;
-	addr.can_ifindex = ifr.ifr_ifindex;
+	addr.can_ifindex = _ifr.ifr_ifindex;
 	if (bind(_sock, (struct sockaddr *)&addr, sizeof(struct sockaddr_can)) < 0) {
 		std::perror("Error in bind");
 	}
@@ -38,6 +36,14 @@ CAN::~CAN() {
 }
 
 int CAN::getSocketFd() const { return (_sock); }
+
+std::string CAN::getInterface() const { return (_ifr.ifr_name); }
+
+int CAN::getBitrate() const { return (10); };
+
+bool CAN::isUp() const { return (_ifr.ifr_flags & IFF_UP); }
+
+bool CAN::isRunning() const { return (_ifr.ifr_flags & IFF_RUNNING); }
 
 /*
  * @brief Sends a CAN frame to the Bus

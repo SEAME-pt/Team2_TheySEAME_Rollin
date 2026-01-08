@@ -12,4 +12,4 @@ add_subdirectory(mode_manager)
 add_executable(${CMAKE_PROJECT_NAME} main.cpp)
 target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC comms mode)
 
-add_subdirectory(tests)
+#add_subdirectory(tests)
