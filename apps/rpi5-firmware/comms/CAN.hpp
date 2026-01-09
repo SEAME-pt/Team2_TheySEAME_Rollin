@@ -17,6 +17,11 @@ public:
 	bool isRunning() const;
 
 private:
+	int sendDumpReq();
+	int netlinkSocket();
+	int getAttr();
+
 	struct ifreq _ifr;
 	int _sock;
+	int _nlSock;
 };
