@@ -108,7 +108,7 @@ void Speed_Thread_Entry(ULONG thread_input)
                 average = 0;
             }
         }
-        else
+        else //temporary fix
         {
             // No valid pulse detected in this iteration
             no_pulse_counter++;
