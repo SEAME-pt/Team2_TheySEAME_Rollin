@@ -68,7 +68,7 @@ Status: approved
 ```
 `dsn~comms-can-rpi-receiveMsg~1`
 
-The Comms CAN RPI5 shall receive CAN frames from the CAN bus in a non-blocking way
+The Comms CAN RPI5 shall receive CAN frames from the CAN bus
 
 Needs: impl, test
 
