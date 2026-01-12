@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.10)
 
 project(RaspTests)
 
@@ -23,9 +23,6 @@ target_include_directories(RaspTests PUBLIC
 )
 target_link_libraries(RaspTests
     PRIVATE
-	#gtest_main
-	#gtest
-	#gmock
 	${CMAKE_SOURCE_DIR}/../../libs/googletest/build/lib/libgmock.a
 	${CMAKE_SOURCE_DIR}/../../libs/googletest/build/lib/libgtest.a
 	${CMAKE_SOURCE_DIR}/../../libs/googletest/build/lib/libgtest_main.a
@@ -35,4 +32,3 @@ target_link_libraries(RaspTests
 )
 
 include(GoogleTest)
-#gtest_discover_tests(RaspTests)
