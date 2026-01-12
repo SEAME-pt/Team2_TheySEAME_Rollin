@@ -1,6 +1,6 @@
 #pragma once
 
-#include <gmock/gmock.h>
+#include "gmock/gmock.h"
 #include "../mode_manager/remote/IEvdev.hpp"
 
 class MockEvdev : public IEvdev {

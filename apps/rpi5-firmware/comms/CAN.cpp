@@ -7,46 +7,69 @@
 #include <cstring>
 #include <iostream>
 
-CAN::CAN(const std::string &interface) {
-	struct sockaddr_can addr;
+CAN::CAN(const std::string &interface) : _interface(interface) {
+	_up = false;
+	can_do_stop(_interface.c_str());
+}
 
-	_sock = socket(PF_CAN, SOCK_RAW, CAN_RAW);
-	if (_sock < 0) {
-		std::perror("Error creating socket");
-	}
-	std::cout << "Created Socket" << std::endl;
-
-	std::strcpy(_ifr.ifr_name, interface.c_str());
-	if (ioctl(_sock, SIOCGIFINDEX, &_ifr) < 0) {
-		std::perror("Error in ioctl");
-	}
-	addr.can_family = AF_CAN;
-	addr.can_ifindex = _ifr.ifr_ifindex;
-	if (bind(_sock, (struct sockaddr *)&addr, sizeof(struct sockaddr_can)) < 0) {
-		std::perror("Error in bind");
-	}
-	std::cout << "Binded Socket" << std::endl;
-	if (netlinkSocket() < 0) {
-		std::perror("Netlink");
-	}
-	getAttr();
+CAN::CAN(const std::string &interface, const unsigned int bitrate, 
+	unsigned int modeToControl, unsigned int modeToTurnOn) : _interface(interface) {
+	_up = false;
+	can_do_stop(_interface.c_str());
+	setBitrate(bitrate);
+	setMode(modeToControl, modeToTurnOn);
 }
 
 CAN::~CAN() {
 	close(_sock);
-	close(_nlSock);
+	can_do_stop(_interface.c_str());
 	std::cout << "Closed CAN socket" << std::endl;
+}
+
+/*
+ * @brief Set CAN bitrate
+ *
+ * This function sets the given bitrate to the CAN interface
+ *
+ * ====================== Requirement Traceability ===========================
+ * [impl->dsn~comms-can-rpi-interface~1]
+ * ==========================================================================
+ *
+ * @return 0 if success
+ * @return -1 if failed
+ *
+ */
+int CAN::setBitrate(unsigned int bitrate) {
+	return (can_set_bitrate(_interface.c_str(), bitrate * 1000));
+}
+
+int CAN::setMode(unsigned int modeToControl, unsigned int modeToTurnOn) {
+	struct can_ctrlmode canMode;
+
+	canMode.mask = modeToControl;
+	canMode.flags = modeToControl;
+	return (can_set_ctrlmode(_interface.c_str(), &canMode));
+}
+
+unsigned int CAN::getActiveMode() const {
+	struct can_ctrlmode cm;
+
+	can_get_ctrlmode(_interface.c_str(), &cm);
+	return (cm.flags);
 }
 
 int CAN::getSocketFd() const { return (_sock); }
 
-std::string CAN::getInterface() const { return (_ifr.ifr_name); }
+std::string CAN::getInterface() const { return (_interface); }
 
-int CAN::getBitrate() const { return (10); };
+bool CAN::isUp() const { return (_up); }
 
-bool CAN::isUp() const { return (_ifr.ifr_flags & IFF_UP); }
+unsigned int CAN::getBitrate() const {
+	struct can_bittiming bt;
 
-bool CAN::isRunning() const { return (_ifr.ifr_flags & IFF_RUNNING); }
+	can_get_bittiming(_interface.c_str(), &bt);
+	return (bt.bitrate / 1000);
+};
 
 /*
  * @brief Sends a CAN frame to the Bus
@@ -58,7 +81,8 @@ bool CAN::isRunning() const { return (_ifr.ifr_flags & IFF_RUNNING); }
  * [impl->dsn~comms-can-rpi-sendMsg~1]
  * ==========================================================================
  *
- * @return void
+ * @return 0 if success
+ * @return -1 if failed
  *
  */
 int CAN::sendFrame(const canid_t id, const uint8_t *data, const uint8_t len) {
@@ -87,7 +111,8 @@ int CAN::sendFrame(const canid_t id, const uint8_t *data, const uint8_t len) {
  * [impl->dsn~comms-can-rpi-receiveMsg~1]
  * ==========================================================================
  *
- * @return void
+ * @return 0 if success
+ * @return -1 if failed
  *
  */
 int CAN::readFrame(struct can_frame &frame) {
@@ -101,113 +126,30 @@ int CAN::readFrame(struct can_frame &frame) {
 	return (0);
 }
 
-int CAN::sendDumpReq() {
-	char buf[NLMSG_SPACE(sizeof(struct ifinfomsg))];
-	struct nlmsghdr *nh = (struct nlmsghdr *)buf;
-	struct ifinfomsg *ifi = (struct ifinfomsg *)NLMSG_DATA(nh);
-	struct sockaddr_nl sa;
-	struct iovec iov;
-	struct msghdr msg;
+int CAN::openSocket() {
+	struct sockaddr_can addr;
+	struct ifreq ifr;
 
-	std::memset(&sa, 0, sizeof(sa));
-	std::memset(&msg, 0, sizeof(msg));
-	sa.nl_family = AF_NETLINK;
-	*nh = {
-		.nlmsg_len = NLMSG_LENGTH(sizeof(*ifi)),
-		.nlmsg_type = RTM_GETLINK,
-		.nlmsg_flags = NLM_F_REQUEST,
-		.nlmsg_seq = 1,
-	};
-	nh->nlmsg_pid = getpid();
-	*ifi = {
-		.ifi_family = AF_PACKET,
-		.ifi_index = _ifr.ifr_ifindex
-	};
-	iov = {
-		.iov_base = &buf,
-		.iov_len = nh->nlmsg_len,
-	};
-	msg = {
-		.msg_name = &sa,
-		.msg_namelen = sizeof(sa),
-		.msg_iov = &iov,
-		.msg_iovlen = 1,
-	};
-
-	return (sendmsg(_nlSock, &msg, 0));
-}
-
-int CAN::netlinkSocket() {
-	struct sockaddr_nl sa;
-
-	std::memset(&sa, 0, sizeof(sa));
-	_nlSock = socket(AF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
-	if (_nlSock < 0) {
+	if (can_do_start(_interface.c_str()) < 0) {
 		return (-1);
 	}
-	sa.nl_family = AF_NETLINK;
-	sa.nl_pid = getpid();
-	if (bind(_nlSock, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+	_up = true;
+	_sock = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+	if (_sock < 0) {
 		return (-1);
 	}
-	std::cout << "Netlink Socket Created" << std::endl;
-	return (0);
-}
+	std::cout << "Created Socket" << std::endl;
 
-int CAN::getAttr() {
-	int ret;
-	char nhbuf[8192];
-	struct sockaddr_nl sa;
-	struct rtattr *rta;
-
-	sa.nl_family = AF_NETLINK;
-	struct iovec iov = {
-		.iov_base = (void *)nhbuf,
-		.iov_len = sizeof(nhbuf),
-	};
-	struct msghdr msg = {
-		.msg_name = (void *)&sa,
-		.msg_namelen = sizeof(sa),
-		.msg_iov = &iov,
-		.msg_iovlen = 1,
-		.msg_control = NULL,
-		.msg_controllen = 0,
-		.msg_flags = 0,
-	};
-
-	if (sendDumpReq() < 0) {
-		std::perror("SendDump");
+	std::strcpy(ifr.ifr_name, _interface.c_str());
+	if (ioctl(_sock, SIOCGIFINDEX, &ifr) < 0) {
 		return (-1);
 	}
-	std::cout << "Sended Msg" << std::endl;
-
-	struct nlmsghdr *nh;
-
-	while (true) {
-		ret = recvmsg(_nlSock, &msg, 0);
-		if (ret < 0) {
-			std::perror("NetlinkRecv");
-			return (-1);
-		}
-		std::cout << "Received Msg " << ret << std::endl;
-		for (nh = (struct nlmsghdr *)nhbuf; NLMSG_OK(nh, ret); NLMSG_NEXT(nh, ret)) {
-			int type = nh->nlmsg_type;
-
-			printf("MSG_TYPE: %d\n", type);
-			if (type == RTM_NEWLINK) {
-				struct ifinfomsg *ifi = (struct ifinfomsg *)NLMSG_DATA(nh);
-				printf("Ifi: %u\n", ifi->ifi_type);
-				int len = nh->nlmsg_len - NLMSG_LENGTH(sizeof(*ifi));
-				struct rtattr *canAttr;
-				for (canAttr = (struct rtattr *)IFLA_RTA(ifi);
-					RTA_OK(canAttr, len); RTA_NEXT(canAttr, len)) {
-					printf("rtattr %u\n", canAttr->rta_type);
-				}
-			}
-		}
-		break;
+	addr.can_family = AF_CAN;
+	addr.can_ifindex = ifr.ifr_ifindex;
+	if (bind(_sock, (struct sockaddr *)&addr, sizeof(struct sockaddr_can)) < 0) {
+		return (-1);
 	}
-
+	std::cout << "Binded Socket" << std::endl;
 	return (0);
 }
 
