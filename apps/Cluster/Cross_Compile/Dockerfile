@@ -111,7 +111,7 @@ RUN ( \
 RUN mkdir sysroot sysroot/usr sysroot/opt
 
 #  Raspberry Pi sysroot tarball (if available)
- rasp.tar.gz /build/rasp.tar.gz
+COPY rasp.tar.gz /build/rasp.tar.gz
 RUN tar xvfz /build/rasp.tar.gz -C /build/sysroot
 
 # Copy the toolchain file
