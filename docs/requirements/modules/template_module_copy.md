@@ -13,14 +13,14 @@ Copy this template and edit:
 ```
 `dsg~design-requirement-example~1`
 
+Status: approved/draft
+
 The Module Name shall ...
 
 Needs: impl, test
 
 Covers:
 - `arch~architecture-requirement-example~1`
-
-Status: approved/draft
 ```
 
 ## Further documentation:

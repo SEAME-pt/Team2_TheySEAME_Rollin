@@ -4,3 +4,4 @@ Debug
 *.launch
 *.o
 *.d
+Core/Tests/build/*

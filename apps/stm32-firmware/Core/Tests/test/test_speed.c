@@ -41,7 +41,11 @@ void tearDown(void) {
  * 
  * Tests the RPM calculation with normal input values.
  * Timer frequency is 20kHz (50µs per tick).
- * Expected RPM = (60 * 20000) / (delta_ticks * 10)
+ * Expected RPM = (60 * 20000) / (delta_ticks * 10)7
+ * 
+ * ====================== Requirement Traceability ===========================
+ * [test->dsn~calculate-rpm~1]
+ * ==========================================================================
  */
 void test_Speed_CalculateRPM_ValidInput_ReturnsCorrectRPM(void) {
     // Given: delta_ticks = 2000 (100ms between pulses)
@@ -59,6 +63,10 @@ void test_Speed_CalculateRPM_ValidInput_ReturnsCorrectRPM(void) {
  * 
  * Tests that the function filters out noise by returning 0 for 
  * delta values below the threshold (20 ticks).
+ * 
+ * ====================== Requirement Traceability ===========================
+ * [test->dsn~calculate-rpm~1]
+ * ==========================================================================
  */
 void test_Speed_CalculateRPM_NoiseFiltering_ReturnsZero(void) {
     // Given: delta_ticks below noise threshold
@@ -75,6 +83,10 @@ void test_Speed_CalculateRPM_NoiseFiltering_ReturnsZero(void) {
  * @brief Test Speed_CalculateRPM function with edge case (minimum valid input)
  * 
  * Tests the function behavior at the noise filtering threshold boundary.
+ * 
+ * ====================== Requirement Traceability ===========================
+ * [test->dsn~calculate-rpm~1]
+ * ==========================================================================
  */
 void test_Speed_CalculateRPM_MinimumValidInput_ReturnsRPM(void) {
     // Given: delta_ticks at threshold boundary
@@ -87,10 +99,15 @@ void test_Speed_CalculateRPM_MinimumValidInput_ReturnsRPM(void) {
     TEST_ASSERT_EQUAL_UINT32(3000, result);
 }
 
+
 /**
  * @brief Test Speed_RPMToMetersPerSecond function with zero RPM
  * 
  * Tests conversion of zero RPM to meters per second.
+ * 
+ * ====================== Requirement Traceability ===========================
+ * [test->dsn~rpm-data-interface~1]
+ * ==========================================================================
  */
 void test_Speed_RPMToMetersPerSecond_ZeroRPM_ReturnsZero(void) {
     // Given: Zero RPM
@@ -109,6 +126,10 @@ void test_Speed_RPMToMetersPerSecond_ZeroRPM_ReturnsZero(void) {
  * Tests conversion of a typical RPM value to meters per second.
  * Wheel circumference is 0.21 meters.
  * Formula: m/s = RPM * 0.21 / 60
+ * 
+ * ====================== Requirement Traceability ===========================
+ * [test->dsn~rpm-data-interface~1]
+ * ==========================================================================
  */
 void test_Speed_RPMToMetersPerSecond_TypicalRPM_ReturnsCorrectSpeed(void) {
     // Given: 60 RPM (1 revolution per second)
@@ -125,6 +146,10 @@ void test_Speed_RPMToMetersPerSecond_TypicalRPM_ReturnsCorrectSpeed(void) {
  * @brief Test Speed_RPMToMetersPerSecond function with high RPM value
  * 
  * Tests conversion with a higher RPM value to ensure accuracy.
+ * 
+ * ====================== Requirement Traceability ===========================
+ * [test->dsn~rpm-data-interface~1]
+ * ==========================================================================
  */
 void test_Speed_RPMToMetersPerSecond_HighRPM_ReturnsCorrectSpeed(void) {
     // Given: 1200 RPM
@@ -142,6 +167,10 @@ void test_Speed_RPMToMetersPerSecond_HighRPM_ReturnsCorrectSpeed(void) {
  * 
  * Tests that the function properly handles noise-filtered deltas 
  * (when Speed_CalculateRPM returns 0).
+ * 
+ * ====================== Requirement Traceability ===========================
+ * [test->dsn~rpm-noise-handling~1]
+ * ==========================================================================
  */
 void test_Speed_ProcessDelta_NoiseFiltered_ReturnsZero(void) {
     // Given: Initial state and noise delta
@@ -163,6 +192,10 @@ void test_Speed_ProcessDelta_NoiseFiltered_ReturnsZero(void) {
  * 
  * Tests that the function properly accumulates RPM readings
  * without generating output until 5 readings are collected.
+ * 
+ * ====================== Requirement Traceability ===========================
+ * [test->dsn~rpm-average~1]
+ * ==========================================================================
  */
 void test_Speed_ProcessDelta_AccumulatingReadings_ReturnsZero(void) {
     // Given: Initial state and valid delta
@@ -184,6 +217,10 @@ void test_Speed_ProcessDelta_AccumulatingReadings_ReturnsZero(void) {
  * 
  * Tests that the function generates output and resets counters
  * after accumulating 5 valid readings.
+ * 
+ * ====================== Requirement Traceability ===========================
+ * [test->dsn~rpm-average~1]
+ * ==========================================================================
  */
 void test_Speed_ProcessDelta_FifthReading_ReturnsOne(void) {
     // Given: State with 4 accumulated readings
@@ -209,6 +246,10 @@ void test_Speed_ProcessDelta_FifthReading_ReturnsOne(void) {
  * 
  * Tests the capture callback function with the expected TIM1 and Channel 3.
  * Tests normal operation where current capture >= previous capture.
+ * 
+ * ====================== Requirement Traceability ===========================
+ * [test->dsn~rpm-timer-settings~1]
+ * ==========================================================================
  */
 void test_HAL_TIM_IC_CaptureCallback_CorrectTimerChannel_UpdatesDelta(void) {
     // Given: TIM1 handle with Channel 3 active
@@ -234,6 +275,10 @@ void test_HAL_TIM_IC_CaptureCallback_CorrectTimerChannel_UpdatesDelta(void) {
  * 
  * Tests the capture callback function when timer overflow occurs
  * (current capture < previous capture).
+ * 
+ * ====================== Requirement Traceability ===========================
+ * [test->dsn~speed-counter-overflow~1]
+ * ==========================================================================
  */
 void test_HAL_TIM_IC_CaptureCallback_TimerOverflow_HandlesCorrectly(void) {
     // Given: TIM1 handle with Channel 3 active
@@ -258,6 +303,10 @@ void test_HAL_TIM_IC_CaptureCallback_TimerOverflow_HandlesCorrectly(void) {
  * @brief Test HAL_TIM_IC_CaptureCallback with wrong timer instance
  * 
  * Tests that the callback function ignores calls from wrong timer instances.
+ * 
+ * ====================== Requirement Traceability ===========================
+ * [test->dsn~rpm-timer-settings~1]
+ * ==========================================================================
  */
 void test_HAL_TIM_IC_CaptureCallback_WrongTimer_IgnoresCall(void) {
     // Given: Wrong timer instance (not TIM1)
@@ -277,6 +326,10 @@ void test_HAL_TIM_IC_CaptureCallback_WrongTimer_IgnoresCall(void) {
  * @brief Test HAL_TIM_IC_CaptureCallback with wrong channel
  * 
  * Tests that the callback function ignores calls from wrong channels.
+ * 
+ * ====================== Requirement Traceability ===========================
+ * [test->dsn~rpm-timer-settings~1]
+ * ==========================================================================
  */
 void test_HAL_TIM_IC_CaptureCallback_WrongChannel_IgnoresCall(void) {
     // Given: Correct timer but wrong channel
@@ -297,6 +350,10 @@ void test_HAL_TIM_IC_CaptureCallback_WrongChannel_IgnoresCall(void) {
  * 
  * Tests multiple consecutive calls to verify static variable behavior
  * and proper delta calculation between captures.
+ * 
+ * ====================== Requirement Traceability ===========================
+ * [test->dsn~rpm-timer-settings~1]
+ * ==========================================================================
  */
 void test_HAL_TIM_IC_CaptureCallback_ConsecutiveCalls_UpdatesCorrectly(void) {
     // Given: TIM1 handle with Channel 3 active
@@ -324,3 +381,4 @@ void test_HAL_TIM_IC_CaptureCallback_ConsecutiveCalls_UpdatesCorrectly(void) {
     HAL_TIM_IC_CaptureCallback(&htim);
     TEST_ASSERT_EQUAL_UINT32(200, delta_ticks); // 3200 - 3000
 }
+
