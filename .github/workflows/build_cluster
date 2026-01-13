@@ -1,0 +1,47 @@
+name: Release
+
+permissions:
+  contents: write 
+  
+on:
+  push:
+    tag:
+      - 'cluster*'
+
+jobs:
+  build:
+    runs-on: [self-hosted, Linux, X64, Docker]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Build sysroot Docker image
+        run: |
+          docker buildx build --platform linux/arm64 --load -f apps/Cluster/Cross_Compile/Dockerfile-sysroot -t sysroot .
+
+      - name: Extract sysroot
+        run: |
+          CONTAINER_ID=$(docker create sysroot)
+          docker cp $CONTAINER_ID:/build/rasp.tar.gz ./rasp.tar.gz
+          docker rm $CONTAINER_ID
+          
+      - name: Build cross-compile Docker image
+        run: |
+          docker build -f apps/Cluster/Cross_Compile/Dockerfile -t cross-compile .
+        
+      - name: Extract QT
+        run: |
+          CONTAINER_ID=$(docker create cross-compile)
+          docker cp $CONTAINER_ID:/build/project/qtAppExec ./qtApp
+          docker rm $CONTAINER_ID
+
+      - name: Create GitHub Release and upload binary
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Cluster ${{ github.ref_name }}
+          files: |
+            qtApp
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
