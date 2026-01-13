@@ -110,12 +110,12 @@ RUN ( \
 # Create sysroot directory
 RUN mkdir sysroot sysroot/usr sysroot/opt
 
-# Copy Raspberry Pi sysroot tarball (if available)
+#  Raspberry Pi sysroot tarball (if available)
 COPY rasp.tar.gz /build/rasp.tar.gz
 RUN tar xvfz /build/rasp.tar.gz -C /build/sysroot
 
 # Copy the toolchain file
-COPY opencvToolchain.cmake /build/
+COPY apps/Cluster/Cross_Compile/opencvToolchain.cmake /build/
 
 RUN set -e && \
     echo "Fix symbolic link" && \
@@ -175,7 +175,7 @@ RUN if [ "$BUILD_OPENCV" = "ON" ]; then \
 ; fi 2>&1 | tee -a /build.log
 
 # Copy the toolchain file
-COPY toolchain.cmake /build/
+COPY apps/Cluster/Cross_Compile/toolchain.cmake /build/
 
 RUN { \
     set -e && \
@@ -307,7 +307,7 @@ RUN tar -czvf qt-pi-binaries.tar.gz -C /build/qt6/pi .
 
 # Set up project directory
 RUN mkdir /build/project
-COPY     ../qtApp /build/project
+COPY     apps/Cluster/qtApp /build/project
 
 # Build the project using Qt for Raspberry Pi
 RUN { \
