@@ -7,8 +7,9 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - '*cluster*'
-  
+      - 'feature/cluster*'
+      - 'fix/cluster*'
+
 jobs:
   build:
     runs-on: [self-hosted, Linux, X64, Docker]
