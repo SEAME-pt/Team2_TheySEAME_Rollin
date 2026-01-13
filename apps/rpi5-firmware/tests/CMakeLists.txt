@@ -8,27 +8,18 @@ set(SOURCES
 	CANTest.cpp
 )
 
-add_custom_target(
-	googletest
-	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}../../../libs/googletest"
-	COMMAND ${CMAKE_COMMAND} -S "." -B "./build"
-	COMMAND ${CMAKE_COMMAND} --build "./build"
-)
+add_subdirectory(${CMAKE_SOURCE_DIR}/../../libs/googletest ${CMAKE_BINARY_DIR}/googletest)
 
 add_executable(RaspTests ${SOURCES})
-add_dependencies(RaspTests googletest)
 target_include_directories(RaspTests PUBLIC
-	../../../libs/googletest/googletest/include
-	../../../libs/googletest/googlemock/include
+	${CMAKE_SOURCE_DIR}/../../libs/googletest/include
 )
 target_link_libraries(RaspTests
     PRIVATE
-	${CMAKE_SOURCE_DIR}/../../libs/googletest/build/lib/libgmock.a
-	${CMAKE_SOURCE_DIR}/../../libs/googletest/build/lib/libgtest.a
-	${CMAKE_SOURCE_DIR}/../../libs/googletest/build/lib/libgtest_main.a
+	gtest
+	gtest_main
+	gmock
 	comms
 	mode
 	socketcan
 )
-
-include(GoogleTest)

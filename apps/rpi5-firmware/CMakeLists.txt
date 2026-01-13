@@ -4,14 +4,6 @@ project(CarControl)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-include(ExternalProject)
-
-ExternalProject_Add(googletest_add
-	PREFIX "${CMAKE_BINARY_DIR}/googletest"
-	SOURCE_DIR "${CMAKE_SOURCE_DIR}/../../libs/googletest"
-	INSTALL_COMMAND ""
-)
-
 include_directories(PUBLIC comms mode_manager/remote)
 
 add_subdirectory(comms)
