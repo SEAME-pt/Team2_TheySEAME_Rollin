@@ -41,7 +41,7 @@ TEST_F(CANTest, CANInterface) {
  * @brief Test CAN in loopback mode
  *
  * ====================== Requirement Traceability ===========================
- * [test->dsn~comms-can-rpi-receiveMsg~1]
+ * [test->dsn~comms-can-rpi-receiveMsg~2]
  * [test->dsn~comms-can-rpi-sendMsg~1]
  * ==========================================================================
  */

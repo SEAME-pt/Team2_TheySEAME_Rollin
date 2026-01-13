@@ -66,7 +66,7 @@ Status: approved
 ```
 
 ```
-`dsn~comms-can-rpi-receiveMsg~1`
+`dsn~comms-can-rpi-receiveMsg~2`
 
 The Comms CAN RPI5 shall receive CAN frames from the CAN bus
 
