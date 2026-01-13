@@ -115,7 +115,9 @@
 # Ceedling do the work for you!
 :files:
   :test: []
-  :source: []
+  :source:
+    - ../Src/Sensors/speed.c
+    # Add additional SUT files here if not picked up by path globs
 
 # Compilation symbols to be injected into builds
 # See documentation for advanced options:
@@ -184,7 +186,7 @@
     int8:     INT8
     bool:     UINT8
   #:treat_as_array:  {}            # hint to cmock that these types are pointers to something
-  #:treat_as_void:  []             # hint to cmock that these types are actually aliases of void
+  :treat_as_void:  ['VOID']        # hint to cmock that these types are actually aliases of void (add VOID for ThreadX)
   :memcmp_if_unknown:  true        # allow cmock to use the memory comparison assertions for unknown types
   :when_ptr:  :compare_data        # hint to cmock how to handle pointers in general, the options being :compare_ptr, :compare_data, or :smart
 
@@ -205,8 +207,7 @@
 
 # Configuration options specific to Unity. 
 :unity:
-  :defines:
-    - UNITY_EXCLUDE_FLOAT
+  :defines: []
 
 # You can optionally have ceedling create environment variables for you before
 # performing the rest of its tasks.
