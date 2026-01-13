@@ -16,6 +16,7 @@ RUN  echo "deb http://deb.debian.org/debian bookworm main contrib non-free" > /e
     libjpeg-dev libfontconfig1-dev libssl-dev libdbus-1-dev libglib2.0-dev libsystemd-dev libglib2.0-dev \
     libxkbcommon-dev libegl1-mesa-dev libgbm-dev libgles2-mesa-dev \
     mesa-common-dev libasound2-dev libpulse-dev gstreamer1.0-omx \
+    libdbus-1-dev libsystemd-dev \
     libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-alsa \
     libvpx-dev libsrtp2-dev libsnappy-dev libnss3-dev "^libxcb.*" \
     flex bison libxslt-dev libc6-arm64-cross ruby gperf libbz2-dev libcups2-dev \

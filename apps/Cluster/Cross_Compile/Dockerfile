@@ -241,6 +241,7 @@ RUN { \
     cd qtbase-everywhere-src-6.7.3 && \
     /build/qt6/host/bin/qt-cmake \
         -GNinja \
+        -DDBUS_IS_SHARED=ON \
         -DCMAKE_BUILD_TYPE=Release \
         -DQT_BUILD_EXAMPLES=OFF \
         -DQT_BUILD_TESTS=OFF \
