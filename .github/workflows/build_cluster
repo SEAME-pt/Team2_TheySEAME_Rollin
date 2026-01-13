@@ -18,7 +18,7 @@ jobs:
         
       - name: Build sysroot Docker image
         run: |
-          docker buildx build --platform linux/arm64 --load -f Dockerfile-sysroot -t sysroot .
+          docker buildx build --platform linux/arm64 --load -f apps/Cluster/Cross_Compile/Dockerfile-sysroot -t sysroot .
 
       - name: Extract sysroot
         run: |
@@ -28,7 +28,7 @@ jobs:
           
       - name: Build cross-compile Docker image
         run: |
-          docker build -f Dockerfile -t cross-compile .
+          docker build -f apps/Cluster/Cross_Compile/Dockerfile -t cross-compile .
         
       - name: Extract QT
         run: |
