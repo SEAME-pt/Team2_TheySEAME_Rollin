@@ -6,9 +6,9 @@ permissions:
 on:
   workflow_dispatch:
   push:
-    tags:
+    branches:
       - 'cluster*'
-
+  
 jobs:
   build:
     runs-on: [self-hosted, Linux, X64, Docker]
