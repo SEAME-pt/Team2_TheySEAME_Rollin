@@ -43,8 +43,8 @@ jobs:
       - name: Create GitHub Release and upload binary
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref_name }}
-          name: Cluster ${{ github.ref_name }}
+          tag_name: cluster
+          name: Cluster
           files: |
             qtApp
         env:
