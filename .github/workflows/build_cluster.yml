@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'feature/cluster*'
-      - 'fix/cluster*'
+      - 'feature/cluster**'
+      - 'fix/cluster**'
     paths:
       - 'apps/Cluster/qtApp/**'
 
