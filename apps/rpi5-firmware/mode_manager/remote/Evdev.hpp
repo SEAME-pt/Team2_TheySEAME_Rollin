@@ -14,7 +14,6 @@ public:
 	void readEvent();
 	struct input_event &nextEvent();
 	int pendingEvent() const;
-	void printQueue();
 
 private:
 	int _fd;

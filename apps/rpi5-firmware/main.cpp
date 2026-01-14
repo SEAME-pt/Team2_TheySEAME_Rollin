@@ -15,14 +15,12 @@ void signal_handler(int signal) {
 
 int main() {
 	struct pollfd fds[2];
-	CAN can("can0");
+	CAN can("can0", 500, 0, 0);
 	Evdev evdev("/dev/input/event6");
 	RemoteControl remote(evdev);
 
 	std::signal(SIGINT, signal_handler);
 
-	can.setBitrate(500);
-	can.openSocket();
 	fds[0].fd = can.getSocketFd();
 	fds[0].events = POLLIN;
 	fds[1].fd = evdev.getfd();
