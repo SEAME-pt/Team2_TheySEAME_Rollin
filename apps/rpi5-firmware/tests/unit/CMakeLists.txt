@@ -17,3 +17,4 @@ target_link_libraries(unit_tests
 	gmock
 	mode
 )
+install(TARGETS unit_tests DESTINATION ${RPI_BIN_DIR})

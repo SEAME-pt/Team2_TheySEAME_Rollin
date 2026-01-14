@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(RaspTests)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(INSTALL_GTEST OFF)
 
 # Build googletest
 add_subdirectory(${CMAKE_SOURCE_DIR}/../../libs/googletest ${CMAKE_BINARY_DIR}/googletest)

@@ -14,3 +14,4 @@ target_link_libraries(integration_tests
 	comms
 	socketcan
 )
+install(TARGETS integration_tests DESTINATION ${RPI_BIN_DIR})
