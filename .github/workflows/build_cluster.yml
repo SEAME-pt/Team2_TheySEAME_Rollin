@@ -7,8 +7,11 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - cluster
-  
+      - 'feature/cluster**'
+      - 'fix/cluster**'
+    paths:
+      - 'apps/Cluster/qtApp/**'
+     
 jobs:
   build:
     runs-on: [self-hosted, Linux, X64, Docker]
