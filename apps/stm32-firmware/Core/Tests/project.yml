@@ -117,22 +117,18 @@
   :test: []
   :source:
     - ../Src/Sensors/speed.c
-    # Add additional SUT files here if not picked up by path globs
-
-# Compilation symbols to be injected into builds
-# See documentation for advanced options:
+    - ../Src/Communication/mcp2515.c
 #  - Test name matchers for different symbols per test executable build
 #  - Referencing symbols in multiple lists using advanced YAML
 #  - Specifiying symbols used during test preprocessing
 :defines:
   :test:
     - TEST
+    - UNIT_TEST
     - CEXCEPTION_USE_CONFIG_FILE
   :test_preprocess:
     - TEST
-    - CEXCEPTION_USE_CONFIG_FILE
-
-  # Enable to inject name of a test as a unique compilation symbol into its respective executable build. 
+    - UNIT_TEST
   :use_test_definition: FALSE 
 
 # Configure additional command line flags provided to tools used in each build step
