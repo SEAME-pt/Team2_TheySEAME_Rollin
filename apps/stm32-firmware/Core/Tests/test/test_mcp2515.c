@@ -13,7 +13,7 @@ extern void fake_mcp2515_reset(void);
 extern void fake_mcp2515_set_read_sequence(const uint8_t *seq, int len);
 extern void fake_mcp2515_get_writes(uint8_t *addrs, uint8_t *vals, int *count);
 extern void fake_mcp2515_set_tick_sequence(const uint32_t *seq, int len);
-extern void fake_mcp2515_reset_state(void);
+extern x\void fake_mcp2515_reset_state(void);
 
 void setUp(void) {
     fake_mcp2515_reset_state();

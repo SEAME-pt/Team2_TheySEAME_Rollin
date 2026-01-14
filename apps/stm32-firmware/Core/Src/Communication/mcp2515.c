@@ -86,6 +86,7 @@ void MCP2515_Reset(void) {
  * @param address Register address
  * @return Register value
  */
+#ifndef UNIT_TEST
 uint8_t MCP2515_ReadRegister(uint8_t address) {
     uint8_t value;
     
@@ -125,6 +126,7 @@ void MCP2515_BitModify(uint8_t address, uint8_t mask, uint8_t value) {
     MCP2515_SPI_Transfer(value);
     MCP2515_CS_HIGH();
 }
+#endif /* UNIT_TEST */
 
 /**
  * @brief Set MCP2515 operating mode
