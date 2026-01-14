@@ -21,22 +21,6 @@ Covers:
 
 
 
-```
-`arch~stm-rpi-can-telemetry~1`
-
-Status: draft
-
-Shall support sending vehicle state information (speed/battery) from STM32 to Raspberry Pi via CAN.
-
-Tags:
-- STM Comms
-- Rasp Comms
-
-Needs: dsn  
-
-Covers:
-- `feat~report-speed-battery~1`
-``` 
 
 
 
@@ -118,7 +102,7 @@ Covers:
 ```
 `arch~rpm-battery-sensing~1`
 
-Status: draft
+Status: approved
 
 The Sensing moodule shall acquire wheel RPM and battery voltage measurements and expose them to Control and Communications layers.
 
@@ -163,21 +147,7 @@ Covers:
 
 
 ## RASP Cluster
-```
-`arch~display-vehicle-status~1`
-
-Status: draft
-
-Shall display vehicle speed, battery level, and system state via user interface.
-
-Tags: Cluster  
-
-Needs: dsn  
-
-Covers:
-- `feat~report-speed-battery~1`
-- `feat~friendly-gui~1`
-```  
+ 
 
 
 ```

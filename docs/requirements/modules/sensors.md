@@ -67,23 +67,9 @@ Covers:
 
 
 ```
-`dsn~rpm-accuracy~1`
-
-Status: draft
-
-RPM accuracy shall be within ±1 RPM for signals in the range 1–857 RPM
-
-Needs: test
-
-Covers:
-- arch~rpm-battery-sensing~1
-```
-
-
-```
 `dsn~calculate-rpm~1`
 
-Status: proposed
+Status: approved
 
 The Sensors module shall calculate RPM with PULSES_PER_REV equal to 20 pulses/rev.
 

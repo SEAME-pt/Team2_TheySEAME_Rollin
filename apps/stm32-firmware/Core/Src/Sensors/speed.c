@@ -127,7 +127,7 @@ int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter)
     
     if (rpm == 0)
     {
-        return 0; // Noise filtered, no processing
+        return 0;
     }
 
     *average += rpm;
@@ -149,10 +149,10 @@ int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter)
         
         *counter = 0;
         *average = 0;
-        return 1; // Output generated
+        return 1;
     }
 
-    return 0; // Still accumulating
+    return 0;
 }
 
 /*
