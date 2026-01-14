@@ -9,6 +9,8 @@ on:
     branches:
       - 'feature/cluster*'
       - 'fix/cluster*'
+    paths:
+      - 'apps/Cluster/qtApp/**'
 
 jobs:
   build:
