@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/">
+    <file alias="/qml">/home/team2/Cross_Compile/qtApp/qml</file>
+
+  </qresource>
+</RCC>

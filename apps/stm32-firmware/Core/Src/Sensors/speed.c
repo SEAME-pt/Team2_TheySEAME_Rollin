@@ -12,7 +12,6 @@ uint32_t delta_ticks = 0;
  *
  * ====================== Requirement Traceability ===========================
  * [impl->dsn~speed-counter-overflow~1]
- * [impl->dsn~rpm-sensing~1]
  * ==========================================================================
  *
  * @param htim Pointer to TIM_HandleTypeDef structure containing timer configuration
@@ -41,6 +40,116 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 }
 
 /*
+ * @brief Atomically read and reset delta_ticks global variable
+ *
+ * This function safely reads the delta_ticks value and resets it to zero
+ * in an atomic operation to prevent race conditions with the interrupt handler.
+ *
+ * @return The delta_ticks value before reset
+ */
+static uint32_t Speed_ReadDeltaTicks(void)
+{
+    uint32_t local_delta;
+    __disable_irq();
+    local_delta = delta_ticks;
+    delta_ticks = 0;
+    __enable_irq();
+    return local_delta;
+}
+
+/*
+ * @brief Calculate RPM from timer delta ticks
+ *
+ * Calculates motor RPM based on the time delta between pulses.
+ * Returns 0 if delta is below the noise filtering threshold.
+ *
+ * Timer Configuration:
+ * - Timer frequency: 160MHz / (PSC+1) = 160MHz / 8000 = 20kHz (50μs per tick)
+ * - Minimum valid period: 20 ticks (1ms) for noise filtering
+ *
+ * @param delta_ticks Time delta in timer ticks
+ * @return Calculated RPM, or 0 if delta is too small (noise filtered)
+ */
+uint32_t Speed_CalculateRPM(uint32_t delta_ticks)
+{
+    // Ignore zero or unrealistically small deltas (debounce/glitches)
+    // Timer tick frequency = 160 MHz / (PSC+1). With PSC=7999, tick = 50us => 20kHz.
+    // Minimum valid period threshold: e.g., 20 ticks (1ms) to filter noise.
+    if (delta_ticks < 20)
+    {
+        return 0;
+    }
+
+    const uint32_t timer_freq_hz = 160000000U / (7999U + 1U); // 20,000 Hz
+    return (60U * timer_freq_hz) / (delta_ticks * PULSES_PER_REV);
+}
+
+/*
+ * @brief Convert RPM to linear speed in m/s
+ *
+ * Converts rotational speed (RPM) to linear velocity using wheel circumference.
+ * Wheel circumference: 0.21 meters
+ *
+ * @param rpm Rotational speed in RPM
+ * @return Linear speed in meters per second
+ */
+float Speed_RPMToMetersPerSecond(uint32_t rpm)
+{
+    return (float)rpm * 0.21f / 60.0f;
+}
+
+/*
+ * @brief Process one iteration of speed calculation
+ *
+ * This function processes one delta reading, updates the running average,
+ * and outputs results when 5 readings have been accumulated. This is the
+ * core logic extracted from the thread loop for testability.
+ *
+  * ====================== Requirement Traceability ===========================
+ * [impl->dsn~rpm-latency~1]
+ * [impl->dsn~rpm-sensing~1]
+ * ==========================================================================
+
+ * @param delta_ticks Time delta in timer ticks
+ * @param average Pointer to running average accumulator (modified)
+ * @param counter Pointer to reading counter (modified)
+ * @return 1 if output was generated (5 readings reached), 0 otherwise
+ */
+int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter)
+{
+    uint32_t rpm = Speed_CalculateRPM(delta_ticks);
+    
+    if (rpm == 0)
+    {
+        return 0; // Noise filtered, no processing
+    }
+
+    *average += rpm;
+    (*counter)++;
+
+    if (*counter == 5)
+    {
+        *average = *average / 5;
+        float speed_ms = Speed_RPMToMetersPerSecond(*average);
+        char uart_buf[128];
+        snprintf(uart_buf, sizeof(uart_buf), "[SPEED THREAD] RPM = %lu, Speed (m/s) = %.2f\r\n", *average, speed_ms);
+        Debug_Print(uart_buf);
+        
+        if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS)
+        {
+            g_vehicle_data.vehicle_speed = speed_ms;
+            tx_mutex_put(&g_vehicle_data_mutex);
+        }
+        
+        *counter = 0;
+        *average = 0;
+        return 1; // Output generated
+    }
+
+    return 0; // Still accumulating
+}
+
+/*
  * @brief Main speed calculation thread for RPM and velocity computation
  *
  * This thread continuously processes pulse timing data captured by the timer interrupt
@@ -56,7 +165,6 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
  * - Thread sleep: 0.1s between iterations (based on ThreadX timer)
  *
  * ====================== Requirement Traceability ===========================
- * [impl->dsn~rpm-latency~1]
  * ==========================================================================
  *
  * @param thread_input Thread parameter passed by ThreadX scheduler (unused in this implementation)
@@ -66,10 +174,9 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
  */
 void Speed_Thread_Entry(ULONG thread_input)
 {
-    uint32_t local_delta;
-    uint32_t rpm;
+    (void)thread_input; // Unused parameter
+    
     uint32_t average = 0;
-    float speed_ms = 0;
     int counter = 0;
     int no_pulse_counter = 0;  // Track iterations without pulses
     char uart_buf[128];
@@ -77,47 +184,21 @@ void Speed_Thread_Entry(ULONG thread_input)
 
     while(1)
     {
-        __disable_irq();
-        local_delta = delta_ticks;
-        delta_ticks = 0;  
-        __enable_irq();
+        uint32_t local_delta = Speed_ReadDeltaTicks();
 
-        // Ignore zero or unrealistically small deltas (debounce/glitches)
-        // Timer tick frequency = 160 MHz / (PSC+1). With PSC=7999, tick = 50us => 20kHz.
-        // Minimum valid period threshold: e.g., 20 ticks (1ms) to filter noise.
-        if (local_delta >= 20)
-        {
-            const uint32_t timer_freq_hz = 160000000U / (7999U + 1U); // 20,000 Hz
-            rpm = (60U * timer_freq_hz) / (local_delta * PULSES_PER_REV);
-            local_delta = 0;
-            average += rpm;
-            counter++;
-            no_pulse_counter = 0;  // Reset no-pulse counter when we get a pulse
-            
-            if (counter == 2) {
-                average = average / 2;
-                speed_ms = (float)average * 0.21f / 60.0f;
-                snprintf(uart_buf, sizeof(uart_buf), "[SPEED THREAD] RPM = %lu, Speed (m/s) = %.2f\r\n", average, speed_ms);
-                Debug_Print(uart_buf);
-                if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                	g_vehicle_data.vehicle_speed = speed_ms;
-                	g_vehicle_data.data_valid = 1;
-                    tx_mutex_put(&g_vehicle_data_mutex);
-                }
-                counter = 0;
-                average = 0;
-            }
-        }
-        else //temporary fix
-        {
+        if (local_delta >= 20) {
+            // Valid pulse - reset no-pulse counter and process
+            no_pulse_counter = 0;
+            Speed_ProcessDelta(local_delta, &average, &counter);
+        } else {
             // No valid pulse detected in this iteration
             no_pulse_counter++;
-            
-            // stop after 0.2 sec without pulse
+
+            // Stop after ~0.2s without pulses (THREAD_SLEEP_TICKS is 10 ticks = 0.1s)
             if (no_pulse_counter >= 2) {
                 if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                    if (g_vehicle_data.vehicle_speed != 0) {
-                        g_vehicle_data.vehicle_speed = 0;
+                    if (g_vehicle_data.vehicle_speed != 0.0f) {
+                        g_vehicle_data.vehicle_speed = 0.0f;
                         g_vehicle_data.data_valid = 1;
                         Debug_Print("[SPEED THREAD] No pulses detected - Speed = 0 m/s\r\n");
                     }

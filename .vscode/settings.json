@@ -1,3 +1,37 @@
 {
+<<<<<<< HEAD
     "cmake.sourceDirectory": "/home/hhzamith/SEA_ME/ElRepo/apps/Cluster/Dashboard"
+=======
+  "doxdocgen.generators": {
+    "file": {
+      "template": [
+        "/**",
+        " * @file   $FILE_BASE_NAME$",
+        " * @brief  $FILE_DESCRIPTION$",
+        " * @author $USER_NAME$",
+        " * @date   $DATE$",
+        " */"
+      ]
+    },
+    "function": {
+      "template": [
+        "/*",
+        " * @brief $BRIEF$",
+        " *",
+        " * $DESCRIPTION$",
+        " * ",
+        " *",
+        " * ====================== Requirement Traceability ===========================",
+        " * $REQUIREMENT_TRACE$",
+        " * ==========================================================================",
+        " *",
+        " * @param $ARGS$ $ARG_DESCRIPTION$",
+        " *",
+        " * @return $RETURN_DESCRIPTION$",
+        " *",
+        " */"
+      ]
+    }
+  }
+>>>>>>> temp/unity_tests
 }

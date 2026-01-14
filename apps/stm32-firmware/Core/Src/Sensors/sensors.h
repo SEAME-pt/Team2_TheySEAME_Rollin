@@ -5,7 +5,7 @@
 #include "tx_api.h"
 
 #define THREAD_SLEEP_TICKS 10
-#define PULSES_PER_REV 10
+#define PULSES_PER_REV 20
 
 /* Global Vehicle Data Structure */
 typedef struct {
@@ -35,4 +35,12 @@ extern VehicleCommand_t g_vehicle_command;
 
 /* Mutex for protecting global vehicle command */
 extern TX_MUTEX g_vehicle_command_mutex;
+
+/* Speed calculation functions (for testing) */
+uint32_t Speed_CalculateRPM(uint32_t delta_ticks);
+float Speed_RPMToMetersPerSecond(uint32_t rpm);
+int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter);
+
+/* Speed thread entry point */
+extern void Speed_Thread_Entry(ULONG thread_input);
 #endif
