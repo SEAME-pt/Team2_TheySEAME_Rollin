@@ -8,10 +8,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include_directories(PUBLIC comms mode_manager/remote)
 
-add_subdirectory(comms)
 add_subdirectory(mode_manager)
 
 if(CMAKE_CROSSCOMPILING)
+	add_subdirectory(comms)
 	add_executable(${CMAKE_PROJECT_NAME} main.cpp)
 	target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC comms mode socketcan)
 	install(TARGETS CarControl DESTINATION ${RPI_BIN_DIR})
