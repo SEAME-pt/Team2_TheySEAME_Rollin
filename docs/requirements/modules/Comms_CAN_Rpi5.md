@@ -75,7 +75,7 @@ Needs: impl, test
 Covers:
 - `arch~stm-rpi-can-control~1`
 
-Status: approved
+Status: draft
 ```
 
 ```
