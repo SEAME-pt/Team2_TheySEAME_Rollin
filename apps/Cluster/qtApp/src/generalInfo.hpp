@@ -24,6 +24,7 @@ public:
     int getTemperature() const;
     QString getLocalTime() const;
     QString getCurrentDate() const;
+    
 private:
     QString m_weatherInfo;
     int m_temperature;

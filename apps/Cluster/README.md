@@ -75,7 +75,7 @@ The interface is optimized for performance on the Raspberry Pi 5 and suitable fo
      ```
   - Run the executable:  
      ```bash
-     ./qtApp
+     ./qtAppExec
      ```
 
 - **Cross-compiling for Raspberry Pi (ARM target)**  

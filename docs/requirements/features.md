@@ -1,3 +1,5 @@
+# Feature/Client Requirements
+```
 `feat~navigate-track-autonomously~1`
 
 The vehicle shall autonomously follow a designated track without human intervention.
@@ -5,7 +7,9 @@ The vehicle shall autonomously follow a designated track without human intervent
 Needs: arch
 
 Status: proposed
+```
 
+```
 `feat~detect-traffic-signs~1`
 
 The vehicle shall be able to detect relevant traffic control elements (e.g., stop signs, traffic lights, pedestrian crossings).
@@ -13,15 +17,9 @@ The vehicle shall be able to detect relevant traffic control elements (e.g., sto
 Needs: arch
 
 Status: proposed
+```
 
-`feat~detect-traffic-signs~1`
-
-The vehicle shall be able to detect obstacles of any kind.
-
-Needs: arch
-
-Status: proposed
-
+```
 `feat~stop-before-obstacles~1`
 
 The vehicle shall stop or avoid unsafe interaction with obstacles or pedestrians.
@@ -29,7 +27,9 @@ The vehicle shall stop or avoid unsafe interaction with obstacles or pedestrians
 Needs: arch
 
 Status: proposed
-
+```
+u
+```
 `feat~report-speed-battery~1`
 
 The vehicle shall determine and report its ground speed and remaining battery percentage.
@@ -37,7 +37,9 @@ The vehicle shall determine and report its ground speed and remaining battery pe
 Needs: arch
 
 Status: approved
+```
 
+```
 `feat~software-updates~1`
 
 The vehicle software shall be updateable remotely, with the car turned on, through authorized individuals.
@@ -45,7 +47,9 @@ The vehicle software shall be updateable remotely, with the car turned on, throu
 Needs: arch
 
 Status: proposed
+```
 
+```
 `feat~maximum-speed~1`
 
 The vehicle shall not exceed a maximum speed of 5 m/s.
@@ -53,7 +57,9 @@ The vehicle shall not exceed a maximum speed of 5 m/s.
 Needs: arch
 
 Status: proposed
+```
 
+```
 `feat~perception-using-camera~1`
 
 The vehicle shall use a vision based perception system (camera).
@@ -61,7 +67,9 @@ The vehicle shall use a vision based perception system (camera).
 Needs: arch
 
 Status: proposed
+```
 
+```
 `feat~test-manual-auto-mode~1`
 
 The vehicle shall have four operation modes: TEST, for RPI5 pre-defined control sequence, MANUAL, for remote control, and AUTO, for AI-based perception and decision-making system, and FAILSAFE, for an entire emergency vehicle shutdown.
@@ -69,7 +77,9 @@ The vehicle shall have four operation modes: TEST, for RPI5 pre-defined control 
 Needs: arch
 
 Status: approved
+```
 
+```
 `feat~show-signs-obstacles~1`
 
 The vehicle shall display traffic signs and road elements on its instrument cluster.
@@ -77,7 +87,9 @@ The vehicle shall display traffic signs and road elements on its instrument clus
 Needs: arch
 
 Status: proposed
+```
 
+```
 `feat~friendly-gui~1`
 
 The vehicle shall have a friendly user-interface, automatically displaying the user interface when the car turns on.
@@ -85,7 +97,9 @@ The vehicle shall have a friendly user-interface, automatically displaying the u
 Needs: arch
 
 Status: approved
+```
 
+```
 `feat~recover-from-non-critical-errors~1`
 
 The system shall recover gracefully from non-critical errors without human intervention.
@@ -93,7 +107,9 @@ The system shall recover gracefully from non-critical errors without human inter
 Needs: arch
 
 Status: proposed
+```
 
+```
 `feat~store-conf-data~1`
 
 The software shall store configuration data (e.g., speed limit, calibration data, ...)
@@ -101,23 +117,29 @@ The software shall store configuration data (e.g., speed limit, calibration data
 Needs: arch
 
 Status: proposed
+```
 
+```
 `feat~record-debugging-info~1`
 
 The system shall record  operation logs for debugging.
 
 Needs: arch
 
-Status: approved
+Status: proposed
+```
 
+```
 `feat~failsafe-case-miscommunication~1`
 
 The Control Unit of the car shall enter FAILSAFE mode if it stops receiving periodic information (heartbeat) from the Raspberry Pi.
 
 Needs: arch
 
-Status: approved
+Status: proposed
+```
 
+```
 `feat~remote-control~1`
 
 The system shall be controllable via remote control.
@@ -125,15 +147,19 @@ The system shall be controllable via remote control.
 Needs: arch
 
 Status: approved
+```
 
+```
 `feat~test-control-instructions~1`
 
 The system shall be controllable via pre-defined control instructions sent over a file/script.
 
 Needs: arch
 
-Status: approved
+Status: proposed
+```
 
+```
 `feat~rtos-control~1`
 
 The control system shall be implemented in a RTOS, deterministic, environment.
@@ -141,3 +167,14 @@ The control system shall be implemented in a RTOS, deterministic, environment.
 Needs: arch
 
 Status: approved
+```
+
+```
+`feat~time-weather-info~1`
+
+The system shall display time and weather information on the UI.
+
+Needs: arch
+
+Status: approved
+```
