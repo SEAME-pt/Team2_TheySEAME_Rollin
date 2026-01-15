@@ -141,10 +141,10 @@ int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter)
         snprintf(uart_buf, sizeof(uart_buf), "[SPEED THREAD] RPM = %lu, Speed (m/s) = %.2f\r\n", *average, speed_ms);
         Debug_Print(uart_buf);
         
-        if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS)
+        if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS)
         {
             g_vehicle_data.vehicle_speed = speed_ms;
-            tx_mutex_put(&g_vehicle_command_mutex);
+            tx_mutex_put(&g_vehicle_data_mutex);
         }
         
         *counter = 0;
