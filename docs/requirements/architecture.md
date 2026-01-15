@@ -5,7 +5,7 @@
 ```
 `arch~stm-rpi-can-control~1`
 
-Status: draft
+Status: approved
 
 The STM and Rasp Comms modules shall support sending control instructions from the RPi5 to the STM via CAN.
 
@@ -39,7 +39,7 @@ Covers:
 ```
 `arch~communication-mode-handling~1`
 
-Status: draft
+Status: proposed
 
 Shall provide a mechanism to transmit mode selection (Test/Manual/Auto) and fail-safe activation between RPi5 and STM.
 
@@ -58,7 +58,7 @@ Covers:
 ```
 `arch~control-actuation-flow~1`
 
-Status: draft
+Status: approved
 
 The STM Control module shall support mapping incoming control instructions to driver actuators.
 
@@ -73,7 +73,7 @@ Covers:
 ```
 `arch~control-failsafe-override~1`
 
-Status: draft
+Status: proposed
 
 The STM Control module shall support a mechanism for overriding actuation output when fail-safe mode is triggered by the Safety module.
 
@@ -91,7 +91,7 @@ Covers:
 ```
 `arch~pca-driver-layer~1`
 
-Status: draft
+Status: approved
 
 The Drivers module shall provide a dedicated motor controller to send throttle and steering instructions via I2C to the PCA9685.
 
@@ -136,7 +136,7 @@ Covers:
 ```
 `arch~runtime-logging~1`
 
-Status: draft
+Status: proposed
 
 Shall record on SD card operational and debugging data during system use.
 
@@ -152,7 +152,7 @@ Covers:
 ```
 `arch~display-vehicle-status~1`
 
-Status: draft
+Status: approved
 
 Shall display vehicle speed, battery level, and system state via user interface.
 
@@ -198,7 +198,7 @@ Covers:
 ```
 `arch~auto-ui-boot~1`
 
-Status: draft
+Status: approved
 
 Shall automatically launch the graphical interface at system startup.
 
@@ -215,7 +215,7 @@ Covers:
 
 Status: draft
 
-The Cluster shall display the speed in meter per second (m/s).
+The Cluster shall display the speed in a user friendly unit (m/s or dm/s).
 
 Tags: Cluster  
 
