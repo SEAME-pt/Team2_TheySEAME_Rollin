@@ -2,6 +2,10 @@ FROM ubuntu:22.04
 
 ENV USER=build
 ENV TZ=Europe/London
+ENV AGL_TOP=/home/$USER/agl/build
+ENV LOCAL_CONF=$AGL_TOP/conf/local.conf
+ENV AGL_FEATURES="agl-app-framework agl-buildstats agl-devel agl-drm-lease agl-ic \
+	agl-netboot agl-package-management agl-pipewire agl-selinux"
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get update && apt-get install -y build-essential chrpath \
@@ -15,6 +19,8 @@ RUN adduser --disabled-password --gecos '' $USER
 USER $USER
 WORKDIR /home/$USER/agl
 
-RUN git config --global user.email "$USER@example.com" && git config --global user.name "$USER"
+RUN git config --global user.email "$USER@example.com" && \
+	git config --global user.name "$USER" && \
+	git config --global color.ui false
 
-CMD [ "bash" ]
+CMD [ "bash", "AGL_installation.sh" ]
