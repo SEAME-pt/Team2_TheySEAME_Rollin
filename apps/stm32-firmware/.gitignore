@@ -5,3 +5,4 @@ Debug
 *.o
 *.d
 Core/Tests/build/*
+tests/build/
