@@ -118,6 +118,10 @@
   :source:
     - ../Src/Sensors/speed.c
     - ../Src/Communication/mcp2515.c
+
+# Use explicit inclusion of source files for test builds
+:use_test_definition: FALSE
+
 #  - Test name matchers for different symbols per test executable build
 #  - Referencing symbols in multiple lists using advanced YAML
 #  - Specifiying symbols used during test preprocessing
