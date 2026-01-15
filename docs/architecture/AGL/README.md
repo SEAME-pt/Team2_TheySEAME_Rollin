@@ -14,7 +14,7 @@ AGL can be tailored to our specific requirements and it's open source software, 
 This project followed the [AGL docs](https://docs.automotivelinux.org/en/trout/#) in the trout
 
 The target machine is a ```raspberrypi5``` and the image built is ```agl-image-weston```.
-[Here](/scripts/AGL/README) is a Dockerfile which builds this image
+[Here](/scripts/AGL) is a Dockerfile which builds this image
 
 ### Features
 
