@@ -19,10 +19,22 @@ Covers:
 - `feat~manual-auto-mode~1`
 ```
 
+```
+`arch~stm-rpi-can-telemetry~1`
 
+Status: approved
 
+Shall support sending vehicle state information (speed/battery) from STM32 to Raspberry Pi via CAN.
 
+Tags:
+- STM Comms
+- Rasp Comms
 
+Needs: dsn  
+
+Covers:
+- `feat~report-speed-battery~1` 
+```
 
 ```
 `arch~communication-mode-handling~1`
@@ -42,8 +54,6 @@ Covers:
 - `feat~fail-safe-mode~1`
 ```
 
-
-
 ## STM Control
 ```
 `arch~control-actuation-flow~1`
@@ -59,7 +69,6 @@ Needs: dsn
 Covers:
 - `feat~manual-auto-mode~1`
 ```
-
 
 ```
 `arch~control-failsafe-override~1`
@@ -78,8 +87,6 @@ Covers:
 - `feat~fail-safe-mode~1`
 ```  
 
-
-
 ## STM Drivers
 ```
 `arch~pca-driver-layer~1`
@@ -95,8 +102,6 @@ Needs: dsn
 Covers:
 - `feat~manual-auto-mode~1`
 ```  
-
-
 
 ## STM Sensing
 ```
@@ -125,7 +130,6 @@ Needs: dsn
 
 Covers:
 - `feat~report-speed-battery~1` 
-
 ```
 
 ## RASP Logging
@@ -144,11 +148,52 @@ Covers:
 - `feat~record-debugging-info~1`
 ```  
 
-
-
 ## RASP Cluster
- 
+```
+`arch~display-vehicle-status~1`
 
+Status: draft
+
+Shall display vehicle speed, battery level, and system state via user interface.
+
+Tags: Cluster  
+
+Needs: dsn  
+
+Covers:
+- `feat~report-speed-battery~1`
+- `feat~friendly-gui~1`
+```
+
+```
+`arch~weather-display~1`
+
+Status: approved
+
+Shall fetch the current weather in Porto, from Open-Meteo API, and display it on the user interface.
+
+Tags: Cluster  
+
+Needs: dsn  
+
+Covers:
+- `feat~weather-time-info~1`
+```
+
+```
+`arch~time-display~1`
+
+Status: approved
+
+Shall display the system's date and time utilizing QDateTime class from QT library.
+
+Tags: Cluster  
+
+Needs: dsn  
+
+Covers:
+- `feat~weather-time-info~1`
+```
 
 ```
 `arch~auto-ui-boot~1`
@@ -165,8 +210,6 @@ Covers:
 - `feat~friendly-gui~1`
 ```  
 
-
-
 ```
 `arch~speed-unit~1`
 
@@ -182,7 +225,6 @@ Covers:
 - `feat~friendly-gui~1`
 ```  
 
-
 ```
 `arch~battery-unit~1`
 
@@ -197,7 +239,6 @@ Needs: dsn
 Covers:
 - `feat~friendly-gui~1`
 ```  
-
 
 ## RASP Remote
 ```
@@ -215,7 +256,6 @@ Covers:
 - `feat~remote-control~1`
 ```
 
-
 ## RASP Data Processing
 ```
 `arch~process-raw-data-rasp~1`
@@ -226,7 +266,7 @@ The RPi5 shall receive raw input data from the remote and process it in order to
 
 Tags: Data Processing 
 
-Needs: dsn  
+Needs: dsn
 
 Covers:
 - `feat~remote-control~1`

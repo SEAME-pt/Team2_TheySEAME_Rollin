@@ -11,7 +11,7 @@ What other modules interact with this module?
 Copy this template and edit:
 
 ```
-`dsg~design-requirement-example~1`
+`dsn~design-requirement-example~1`
 
 Status: approved/draft
 

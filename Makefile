@@ -21,7 +21,7 @@ oft: oft-build | $(BUILD_DIR)
 	docker run --rm \
 		--user $(shell id -u):$(shell id -g) \
 		-v $(PWD)/$(BUILD_DIR):/output \
-		$(OFT_IMAGE) trace -o aspec -o html -f /output/trace_report.html src/ requirements/ \
+		$(OFT_IMAGE) trace -o html -f /output/trace_report.html src/ requirements/ \
 		|| echo "Trace report generated with coverage issues - check trace_report.html"
 
 ## Run trace (no HTML)

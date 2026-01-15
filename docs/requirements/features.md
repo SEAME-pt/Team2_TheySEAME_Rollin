@@ -1,4 +1,5 @@
-# Feature Requirements
+# Feature/Client Requirements
+
 ```
 `feat~navigate-track-autonomously~1`
 
@@ -20,7 +21,7 @@ Needs: arch
 ```
 
 ```
-`feat~detect-traffic-signs~1`
+`feat~detect-obstacles~1`
 
 Status: proposed
 
@@ -80,7 +81,7 @@ Needs: arch
 ```
 
 ```
-`feat~test-manual-auto-mode~1`
+`feat~manual-auto-mode~1`
 
 Status: approved
 
@@ -140,9 +141,9 @@ Needs: arch
 ```
 
 ```
-`feat~failsafe-case-miscommunication~1`
+`feat~fail-safe-mode~1`
 
-Status: approved
+Status: proposed
 
 The Control Unit of the car shall enter FAILSAFE mode if it stops receiving periodic information (heartbeat) from the Raspberry Pi.
 
@@ -152,7 +153,7 @@ Needs: arch
 ```
 `feat~remote-control~1`
 
-Status: approved
+Status: proposed
 
 The system shall be controllable via remote control.
 
@@ -175,6 +176,16 @@ Needs: arch
 Status: approved
 
 The control system shall be implemented in a RTOS, deterministic, environment.
+
+Needs: arch
+```
+
+```
+`feat~weather-time-info~1`
+
+Status: approved
+
+The system shall display time and weather information on the UI.
 
 Needs: arch
 ```

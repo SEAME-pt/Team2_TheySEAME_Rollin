@@ -5,37 +5,55 @@ systemInfo::systemInfo(QObject *parent)
 {
 }
 
-bool CanManager::start(const QString &interfaceName)
+/**
+ * @brief systemInfo::start
+ * Initializes CAN bus device on specified interface.
+ * Connects to framesReceived signal to process incoming frames.
+ * @param interfaceName CAN interface name (default "can0")
+ * @return true if device started successfully, false otherwise
+ */
+bool systemInfo::start(const QString &interfaceName)
 {
     device = QCanBus::instance()->createDevice("socketcan", interfaceName);
-
-    if (!device || !device->connectDevice()) {
+    if (!device) {
         qWarning() << "CAN not available";
+        return false;
+    }
+    if (!device->connectDevice()) {
+        qWarning() << "Failed to connect CAN device";
         return false;
     }
 
     connect(device, &QCanBusDevice::framesReceived,
-            this, &CanManager::processFrames);
-
+            this, &systemInfo::processFrames);
     return true;
 }
 
-void CanManager::processFrames()
+/**
+ * @brief systemInfo::processFrames
+ * Reads available CAN frames and emits signals for speed and battery SOC updates.
+ * 
+ * =======================Requirements traceability========================
+ *        [impl->dsn~design-requirement-cluster-speed~1]
+ *        [impl->dsn~design-requirement-cluster-battery~1]
+ *========================================================================
+ */
+void systemInfo::processFrames()
 {
-    while (device->framesAvailable()) {
-
+    while (device && device->framesAvailable()) {
         QCanBusFrame frame = device->readFrame();
-        quint32 id = frame.frameId();
+        qint64 id = frame.frameId();
         QByteArray data = frame.payload();
-
-        if (id == 0x123) {
-            int speed = static_cast<unsigned char>(data[0]);
-            emit speedUpdated(speed);
+        if (id == 66) {
+            speed = static_cast<unsigned char>(data[0]);
+            qDebug() << "Speed updated to:" << speed;
+            emit speedUpdated();
         }
 
-        if (id == 0x456) {
-            int soc = static_cast<unsigned char>(data[1]);
-            emit batteryUpdated(soc);
+        if (id == 77) {
+            battery = static_cast<unsigned char>(data[0]);
+            qDebug() << "Battery SOC updated to:" << battery;
+            emit batteryUpdated();
         }
     }
 }

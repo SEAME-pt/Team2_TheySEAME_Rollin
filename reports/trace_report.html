@@ -156,11 +156,11 @@ summary .title {
           <p class="id">arch~auto-ui-boot~1</p>
           <p>Shall automatically launch the graphical interface at system startup.</p>
           <h6>Needs: <ins>dsn</ins></h6>
-          <p class="origin">requirements/architecture.md:154</p>
+          <p class="origin">requirements/architecture.md:199</p>
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#feat~friendly-gui~1">feat~friendly-gui~1</a> <span class="origin">requirements/features.md:103</span></li>
+              <li><a href="#feat~friendly-gui~1">feat~friendly-gui~1</a> <span class="origin">requirements/features.md:104</span></li>
             </ul>
           </div>
         </details>
@@ -171,11 +171,11 @@ summary .title {
           <p class="id">arch~battery-unit~1</p>
           <p>The Cluster shall display battery in percentage of the voltage level compared to the minimum and maximum operating voltage.</p>
           <h6>Needs: <ins>dsn</ins></h6>
-          <p class="origin">requirements/architecture.md:187</p>
+          <p class="origin">requirements/architecture.md:229</p>
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#feat~friendly-gui~1">feat~friendly-gui~1</a> <span class="origin">requirements/features.md:103</span></li>
+              <li><a href="#feat~friendly-gui~1">feat~friendly-gui~1</a> <span class="origin">requirements/features.md:104</span></li>
             </ul>
           </div>
         </details>
@@ -186,12 +186,12 @@ summary .title {
           <p class="id">arch~communication-mode-handling~1</p>
           <p>Shall provide a mechanism to transmit mode selection (Test/Manual/Auto) and fail-safe activation between RPi5 and STM.</p>
           <h6>Needs: <ins>dsn</ins></h6>
-          <p class="origin">requirements/architecture.md:28</p>
+          <p class="origin">requirements/architecture.md:40</p>
           <div class="out">
             <h6>Out: 2</h6>
             <ul>
-              <li><a href="#feat~fail-safe-mode~1">feat~fail-safe-mode~1</a> <em>(orphaned)</em></li>
-              <li><a href="#feat~manual-auto-mode~1">feat~manual-auto-mode~1</a> <em>(orphaned)</em></li>
+              <li><a href="#feat~fail-safe-mode~1">feat~fail-safe-mode~1</a> <span class="origin">requirements/features.md:144</span></li>
+              <li><a href="#feat~manual-auto-mode~1">feat~manual-auto-mode~1</a> <span class="origin">requirements/features.md:84</span></li>
             </ul>
           </div>
         </details>
@@ -202,11 +202,11 @@ summary .title {
           <p class="id">arch~control-actuation-flow~1</p>
           <p>The STM Control module shall support mapping incoming control instructions to driver actuators.</p>
           <h6>Needs: <ins>dsn</ins></h6>
-          <p class="origin">requirements/architecture.md:49</p>
+          <p class="origin">requirements/architecture.md:59</p>
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#feat~manual-auto-mode~1">feat~manual-auto-mode~1</a> <em>(orphaned)</em></li>
+              <li><a href="#feat~manual-auto-mode~1">feat~manual-auto-mode~1</a> <span class="origin">requirements/features.md:84</span></li>
             </ul>
           </div>
         </details>
@@ -217,11 +217,34 @@ summary .title {
           <p class="id">arch~control-failsafe-override~1</p>
           <p>The STM Control module shall support a mechanism for overriding actuation output when fail-safe mode is triggered by the Safety module.</p>
           <h6>Needs: <ins>dsn</ins></h6>
-          <p class="origin">requirements/architecture.md:65</p>
+          <p class="origin">requirements/architecture.md:74</p>
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#feat~fail-safe-mode~1">feat~fail-safe-mode~1</a> <em>(orphaned)</em></li>
+              <li><a href="#feat~fail-safe-mode~1">feat~fail-safe-mode~1</a> <span class="origin">requirements/features.md:144</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="arch~display-vehicle-status~1">
+        <details>
+          <summary title="arch~display-vehicle-status~1"><span class="green">&check;</span> <b>display-vehicle-status</b><small>, rev. 1, arch</small></summary>
+          <p class="id">arch~display-vehicle-status~1</p>
+          <p>Shall display vehicle speed, battery level, and system state via user interface.</p>
+          <h6>Needs: dsn</h6>
+          <p class="origin">requirements/architecture.md:153</p>
+          <div class="in">
+            <h6>In: 2</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-battery~1">dsn~design-requirement-cluster-battery~1</a> <span class="origin">requirements/cluster.md:34</span></li>
+              <li><a href="#dsn~design-requirement-cluster-speed~1">dsn~design-requirement-cluster-speed~1</a> <span class="origin">requirements/cluster.md:20</span></li>
+            </ul>
+          </div>
+          <div class="out">
+            <h6>Out: 2</h6>
+            <ul>
+              <li><a href="#feat~friendly-gui~1">feat~friendly-gui~1</a> <span class="origin">requirements/features.md:104</span></li>
+              <li><a href="#feat~report-speed-battery~1">feat~report-speed-battery~1</a> <span class="origin">requirements/features.md:44</span></li>
             </ul>
           </div>
         </details>
@@ -232,11 +255,11 @@ summary .title {
           <p class="id">arch~pca-driver-layer~1</p>
           <p>The Drivers module shall provide a dedicated motor controller to send throttle and steering instructions via I2C to the PCA9685.</p>
           <h6>Needs: <ins>dsn</ins></h6>
-          <p class="origin">requirements/architecture.md:85</p>
+          <p class="origin">requirements/architecture.md:92</p>
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#feat~manual-auto-mode~1">feat~manual-auto-mode~1</a> <em>(orphaned)</em></li>
+              <li><a href="#feat~manual-auto-mode~1">feat~manual-auto-mode~1</a> <span class="origin">requirements/features.md:84</span></li>
             </ul>
           </div>
         </details>
@@ -247,11 +270,11 @@ summary .title {
           <p class="id">arch~process-raw-data-rasp~1</p>
           <p>The RPi5 shall receive raw input data from the remote and process it in order to send normalized thrust and steering data in degrees and angles to the Rasp Comms module.</p><p>Tags: Data Processing</p>
           <h6>Needs: <ins>dsn</ins></h6>
-          <p class="origin">requirements/architecture.md:221</p>
+          <p class="origin">requirements/architecture.md:261</p>
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#feat~remote-control~1">feat~remote-control~1</a> <span class="origin">requirements/features.md:153</span></li>
+              <li><a href="#feat~remote-control~1">feat~remote-control~1</a> <span class="origin">requirements/features.md:154</span></li>
             </ul>
           </div>
         </details>
@@ -262,7 +285,7 @@ summary .title {
           <p class="id">arch~rpm-battery-sensing~1</p>
           <p>The Sensing moodule shall acquire wheel RPM and battery voltage measurements and expose them to Control and Communications layers.</p>
           <h6>Needs: dsn</h6>
-          <p class="origin">requirements/architecture.md:103</p>
+          <p class="origin">requirements/architecture.md:108</p>
           <div class="in">
             <h6>In: 4</h6>
             <ul>
@@ -275,7 +298,7 @@ summary .title {
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#feat~report-speed-battery~1">feat~report-speed-battery~1</a> <span class="origin">requirements/features.md:43</span></li>
+              <li><a href="#feat~report-speed-battery~1">feat~report-speed-battery~1</a> <span class="origin">requirements/features.md:44</span></li>
             </ul>
           </div>
         </details>
@@ -286,7 +309,7 @@ summary .title {
           <p class="id">arch~rpm-latency~1</p>
           <p>The speed shall be captured at a frequency of at least 2Hz.</p>
           <h6>Needs: dsn</h6>
-          <p class="origin">requirements/architecture.md:118</p>
+          <p class="origin">requirements/architecture.md:123</p>
           <div class="in">
             <h6>In: 1</h6>
             <ul>
@@ -296,7 +319,7 @@ summary .title {
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#feat~report-speed-battery~1">feat~report-speed-battery~1</a> <span class="origin">requirements/features.md:43</span></li>
+              <li><a href="#feat~report-speed-battery~1">feat~report-speed-battery~1</a> <span class="origin">requirements/features.md:44</span></li>
             </ul>
           </div>
         </details>
@@ -307,11 +330,11 @@ summary .title {
           <p class="id">arch~runtime-logging~1</p>
           <p>Shall record on SD card operational and debugging data during system use.</p>
           <h6>Needs: <ins>dsn</ins></h6>
-          <p class="origin">requirements/architecture.md:133</p>
+          <p class="origin">requirements/architecture.md:137</p>
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#feat~record-debugging-info~1">feat~record-debugging-info~1</a> <span class="origin">requirements/features.md:133</span></li>
+              <li><a href="#feat~record-debugging-info~1">feat~record-debugging-info~1</a> <span class="origin">requirements/features.md:134</span></li>
             </ul>
           </div>
         </details>
@@ -322,7 +345,7 @@ summary .title {
           <p class="id">arch~speed-unit~1</p>
           <p>The Cluster shall display the speed in meter per second (m/s).</p>
           <h6>Needs: dsn</h6>
-          <p class="origin">requirements/architecture.md:171</p>
+          <p class="origin">requirements/architecture.md:214</p>
           <div class="in">
             <h6>In: 2</h6>
             <ul>
@@ -333,7 +356,7 @@ summary .title {
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#feat~friendly-gui~1">feat~friendly-gui~1</a> <span class="origin">requirements/features.md:103</span></li>
+              <li><a href="#feat~friendly-gui~1">feat~friendly-gui~1</a> <span class="origin">requirements/features.md:104</span></li>
             </ul>
           </div>
         </details>
@@ -348,7 +371,64 @@ summary .title {
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#feat~manual-auto-mode~1">feat~manual-auto-mode~1</a> <em>(orphaned)</em></li>
+              <li><a href="#feat~manual-auto-mode~1">feat~manual-auto-mode~1</a> <span class="origin">requirements/features.md:84</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="arch~stm-rpi-can-telemetry~1">
+        <details>
+          <summary title="arch~stm-rpi-can-telemetry~1"><span class="red">&cross;</span> <b>stm-rpi-can-telemetry</b><small>, rev. 1, arch</small></summary>
+          <p class="id">arch~stm-rpi-can-telemetry~1</p>
+          <p>Shall support sending vehicle state information (speed/battery) from STM32 to Raspberry Pi via CAN.</p>
+          <h6>Needs: <ins>dsn</ins></h6>
+          <p class="origin">requirements/architecture.md:23</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#feat~report-speed-battery~1">feat~report-speed-battery~1</a> <span class="origin">requirements/features.md:44</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="arch~time-display~1">
+        <details>
+          <summary title="arch~time-display~1"><span class="green">&check;</span> <b>time-display</b><small>, rev. 1, arch</small></summary>
+          <p class="id">arch~time-display~1</p>
+          <p>Shall display the system's date and time utilizing QDateTime class from QT library.</p>
+          <h6>Needs: dsn</h6>
+          <p class="origin">requirements/architecture.md:184</p>
+          <div class="in">
+            <h6>In: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-datetime~1">dsn~design-requirement-cluster-datetime~1</a> <span class="origin">requirements/cluster.md:62</span></li>
+            </ul>
+          </div>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#feat~weather-time-info~1">feat~weather-time-info~1</a> <span class="origin">requirements/features.md:184</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="arch~weather-display~1">
+        <details>
+          <summary title="arch~weather-display~1"><span class="green">&check;</span> <b>weather-display</b><small>, rev. 1, arch</small></summary>
+          <p class="id">arch~weather-display~1</p>
+          <p>Shall fetch the current weather in Porto, from Open-Meteo API, and display it on the user interface.</p>
+          <h6>Needs: dsn</h6>
+          <p class="origin">requirements/architecture.md:169</p>
+          <div class="in">
+            <h6>In: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-weather~1">dsn~design-requirement-cluster-weather~1</a> <span class="origin">requirements/cluster.md:48</span></li>
+            </ul>
+          </div>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#feat~weather-time-info~1">feat~weather-time-info~1</a> <span class="origin">requirements/features.md:184</span></li>
             </ul>
           </div>
         </details>
@@ -375,7 +455,107 @@ summary .title {
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#arch~rpm-battery-sensing~1">arch~rpm-battery-sensing~1</a> <span class="origin">requirements/architecture.md:103</span></li>
+              <li><a href="#arch~rpm-battery-sensing~1">arch~rpm-battery-sensing~1</a> <span class="origin">requirements/architecture.md:108</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="dsn~design-requirement-cluster-battery~1">
+        <details>
+          <summary title="dsn~design-requirement-cluster-battery~1"><span class="green">&check;</span> <b>design-requirement-cluster-battery</b><small>, rev. 1, dsn</small></summary>
+          <p class="id">dsn~design-requirement-cluster-battery~1</p>
+          <p>The Cluster Sub-Module shall display the battery state-of-charge in real time, updating whenever new data arrives. It shall obtain this data from SystemInfo, which receives it from STM32 or other microcontrollers via CAN bus.</p>
+          <h6>Needs: impl, test</h6>
+          <p class="origin">requirements/cluster.md:34</p>
+          <div class="in">
+            <h6>In: 3</h6>
+            <ul>
+              <li><a href="#impl~design-requirement-cluster-battery-3812905929~0">impl~design-requirement-cluster-battery-3812905929~0</a> <span class="origin">src/Cluster/qtApp/src/systemInfo.cpp:38</span></li>
+              <li><a href="#test~design-requirement-cluster-battery-1743262429~0">test~design-requirement-cluster-battery-1743262429~0</a> <span class="origin">src/Cluster/tests/cluster_test.cpp:32</span></li>
+              <li><a href="#test~design-requirement-cluster-battery-3631169775~0">test~design-requirement-cluster-battery-3631169775~0</a> <span class="origin">src/Cluster/tests/cluster_test.cpp:19</span></li>
+            </ul>
+          </div>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#arch~display-vehicle-status~1">arch~display-vehicle-status~1</a> <span class="origin">requirements/architecture.md:153</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="dsn~design-requirement-cluster-datetime~1">
+        <details>
+          <summary title="dsn~design-requirement-cluster-datetime~1"><span class="green">&check;</span> <b>design-requirement-cluster-datetime</b><small>, rev. 1, dsn</small></summary>
+          <p class="id">dsn~design-requirement-cluster-datetime~1</p>
+          <p>The Cluster Sub-Module shall display the current date and time information obtained from GeneralInfo. Updates shall occur at least every second.</p>
+          <h6>Needs: impl, test</h6>
+          <p class="origin">requirements/cluster.md:62</p>
+          <div class="in">
+            <h6>In: 5</h6>
+            <ul>
+              <li><a href="#impl~design-requirement-cluster-datetime-2049698224~0">impl~design-requirement-cluster-datetime-2049698224~0</a> <span class="origin">src/Cluster/qtApp/src/generalInfo.cpp:94</span></li>
+              <li><a href="#impl~design-requirement-cluster-datetime-2154406631~0">impl~design-requirement-cluster-datetime-2154406631~0</a> <span class="origin">src/Cluster/qtApp/src/generalInfo.cpp:23</span></li>
+              <li><a href="#impl~design-requirement-cluster-datetime-2800054533~0">impl~design-requirement-cluster-datetime-2800054533~0</a> <span class="origin">src/Cluster/qtApp/src/generalInfo.cpp:107</span></li>
+              <li><a href="#test~design-requirement-cluster-datetime-2023556935~0">test~design-requirement-cluster-datetime-2023556935~0</a> <span class="origin">src/Cluster/tests/cluster_test.cpp:72</span></li>
+              <li><a href="#test~design-requirement-cluster-datetime-583512355~0">test~design-requirement-cluster-datetime-583512355~0</a> <span class="origin">src/Cluster/tests/cluster_test.cpp:55</span></li>
+            </ul>
+          </div>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#arch~time-display~1">arch~time-display~1</a> <span class="origin">requirements/architecture.md:184</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="dsn~design-requirement-cluster-speed~1">
+        <details>
+          <summary title="dsn~design-requirement-cluster-speed~1"><span class="green">&check;</span> <b>design-requirement-cluster-speed</b><small>, rev. 1, dsn</small></summary>
+          <p class="id">dsn~design-requirement-cluster-speed~1</p>
+          <p>The Cluster Sub-Module shall display the current vehicle speed in real time, refreshing at least 10 times per second. It shall obtain this data from SystemInfo, which receives it from STM32 or other microcontrollers via CAN bus.</p>
+          <h6>Needs: impl, test</h6>
+          <p class="origin">requirements/cluster.md:20</p>
+          <div class="in">
+            <h6>In: 3</h6>
+            <ul>
+              <li><a href="#impl~design-requirement-cluster-speed-3594594269~0">impl~design-requirement-cluster-speed-3594594269~0</a> <span class="origin">src/Cluster/qtApp/src/systemInfo.cpp:37</span></li>
+              <li><a href="#test~design-requirement-cluster-speed-3415254692~0">test~design-requirement-cluster-speed-3415254692~0</a> <span class="origin">src/Cluster/tests/cluster_test.cpp:31</span></li>
+              <li><a href="#test~design-requirement-cluster-speed-368677407~0">test~design-requirement-cluster-speed-368677407~0</a> <span class="origin">src/Cluster/tests/cluster_test.cpp:18</span></li>
+            </ul>
+          </div>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#arch~display-vehicle-status~1">arch~display-vehicle-status~1</a> <span class="origin">requirements/architecture.md:153</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="dsn~design-requirement-cluster-weather~1">
+        <details>
+          <summary title="dsn~design-requirement-cluster-weather~1"><span class="green">&check;</span> <b>design-requirement-cluster-weather</b><small>, rev. 1, dsn</small></summary>
+          <p class="id">dsn~design-requirement-cluster-weather~1</p>
+          <p>The Cluster Sub-Module shall display the current weather information obtained from GeneralInfo. Updates shall occur whenever weather data arrives.</p>
+          <h6>Needs: impl, test</h6>
+          <p class="origin">requirements/cluster.md:48</p>
+          <div class="in">
+            <h6>In: 9</h6>
+            <ul>
+              <li><a href="#impl~design-requirement-cluster-weather-1707288997~0">impl~design-requirement-cluster-weather-1707288997~0</a> <span class="origin">src/Cluster/qtApp/src/generalInfo.cpp:136</span></li>
+              <li><a href="#impl~design-requirement-cluster-weather-2304993918~0">impl~design-requirement-cluster-weather-2304993918~0</a> <span class="origin">src/Cluster/qtApp/src/generalInfo.cpp:24</span></li>
+              <li><a href="#impl~design-requirement-cluster-weather-2931005983~0">impl~design-requirement-cluster-weather-2931005983~0</a> <span class="origin">src/Cluster/qtApp/src/generalInfo.cpp:68</span></li>
+              <li><a href="#impl~design-requirement-cluster-weather-436512518~0">impl~design-requirement-cluster-weather-436512518~0</a> <span class="origin">src/Cluster/qtApp/src/generalInfo.cpp:81</span></li>
+              <li><a href="#impl~design-requirement-cluster-weather-858874604~0">impl~design-requirement-cluster-weather-858874604~0</a> <span class="origin">src/Cluster/qtApp/src/generalInfo.cpp:119</span></li>
+              <li><a href="#test~design-requirement-cluster-weather-2293734610~0">test~design-requirement-cluster-weather-2293734610~0</a> <span class="origin">src/Cluster/tests/cluster_test.cpp:154</span></li>
+              <li><a href="#test~design-requirement-cluster-weather-2843002150~0">test~design-requirement-cluster-weather-2843002150~0</a> <span class="origin">src/Cluster/tests/cluster_test.cpp:56</span></li>
+              <li><a href="#test~design-requirement-cluster-weather-2983836271~0">test~design-requirement-cluster-weather-2983836271~0</a> <span class="origin">src/Cluster/tests/cluster_test.cpp:132</span></li>
+              <li><a href="#test~design-requirement-cluster-weather-815873271~0">test~design-requirement-cluster-weather-815873271~0</a> <span class="origin">src/Cluster/tests/cluster_test.cpp:107</span></li>
+            </ul>
+          </div>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#arch~weather-display~1">arch~weather-display~1</a> <span class="origin">requirements/architecture.md:169</span></li>
             </ul>
           </div>
         </details>
@@ -398,7 +578,7 @@ summary .title {
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#arch~speed-unit~1">arch~speed-unit~1</a> <span class="origin">requirements/architecture.md:171</span></li>
+              <li><a href="#arch~speed-unit~1">arch~speed-unit~1</a> <span class="origin">requirements/architecture.md:214</span></li>
             </ul>
           </div>
         </details>
@@ -422,7 +602,7 @@ summary .title {
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#arch~speed-unit~1">arch~speed-unit~1</a> <span class="origin">requirements/architecture.md:171</span></li>
+              <li><a href="#arch~speed-unit~1">arch~speed-unit~1</a> <span class="origin">requirements/architecture.md:214</span></li>
             </ul>
           </div>
         </details>
@@ -444,7 +624,7 @@ summary .title {
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#arch~rpm-battery-sensing~1">arch~rpm-battery-sensing~1</a> <span class="origin">requirements/architecture.md:103</span></li>
+              <li><a href="#arch~rpm-battery-sensing~1">arch~rpm-battery-sensing~1</a> <span class="origin">requirements/architecture.md:108</span></li>
             </ul>
           </div>
         </details>
@@ -468,7 +648,7 @@ summary .title {
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#arch~rpm-latency~1">arch~rpm-latency~1</a> <span class="origin">requirements/architecture.md:118</span></li>
+              <li><a href="#arch~rpm-latency~1">arch~rpm-latency~1</a> <span class="origin">requirements/architecture.md:123</span></li>
             </ul>
           </div>
         </details>
@@ -493,7 +673,7 @@ summary .title {
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#arch~rpm-battery-sensing~1">arch~rpm-battery-sensing~1</a> <span class="origin">requirements/architecture.md:103</span></li>
+              <li><a href="#arch~rpm-battery-sensing~1">arch~rpm-battery-sensing~1</a> <span class="origin">requirements/architecture.md:108</span></li>
             </ul>
           </div>
         </details>
@@ -515,7 +695,7 @@ summary .title {
           <div class="out">
             <h6>Out: 1</h6>
             <ul>
-              <li><a href="#arch~rpm-battery-sensing~1">arch~rpm-battery-sensing~1</a> <span class="origin">requirements/architecture.md:103</span></li>
+              <li><a href="#arch~rpm-battery-sensing~1">arch~rpm-battery-sensing~1</a> <span class="origin">requirements/architecture.md:108</span></li>
             </ul>
           </div>
         </details>
@@ -523,31 +703,38 @@ summary .title {
     </section>
     <section id="feat">
       <h3>feat</h3>
+      <section class="sitem" id="feat~detect-obstacles~1">
+        <details>
+          <summary title="feat~detect-obstacles~1"><span class="red">&cross;</span> <b>detect-obstacles</b><small>, rev. 1, feat</small></summary>
+          <p class="id">feat~detect-obstacles~1</p>
+          <p>The vehicle shall be able to detect obstacles of any kind. <code></code>`</p><p><code></code>`</p>
+          <h6>Needs: <ins>arch</ins></h6>
+          <p class="origin">requirements/features.md:24</p>
+        </details>
+      </section>
       <section class="sitem" id="feat~detect-traffic-signs~1">
         <details>
           <summary title="feat~detect-traffic-signs~1"><span class="red">&cross;</span> <b>detect-traffic-signs</b><small>, rev. 1, feat</small></summary>
           <p class="id">feat~detect-traffic-signs~1</p>
           <p>The vehicle shall be able to detect relevant traffic control elements (e.g., stop signs, traffic lights, pedestrian crossings). <code></code>`</p><p><code></code>`</p>
           <h6>Needs: <ins>arch</ins></h6>
-          <p class="origin">requirements/features.md:13</p>
+          <p class="origin">requirements/features.md:14</p>
         </details>
       </section>
-      <section class="sitem" id="feat~detect-traffic-signs~1">
+      <section class="sitem" id="feat~fail-safe-mode~1">
         <details>
-          <summary title="feat~detect-traffic-signs~1"><span class="red">&cross;</span> <b>detect-traffic-signs</b><small>, rev. 1, feat</small></summary>
-          <p class="id">feat~detect-traffic-signs~1</p>
-          <p>The vehicle shall be able to detect obstacles of any kind. <code></code>`</p><p><code></code>`</p>
-          <h6>Needs: <ins>arch</ins></h6>
-          <p class="origin">requirements/features.md:23</p>
-        </details>
-      </section>
-      <section class="sitem" id="feat~failsafe-case-miscommunication~1">
-        <details>
-          <summary title="feat~failsafe-case-miscommunication~1"><span class="red">&cross;</span> <b>failsafe-case-miscommunication</b><small>, rev. 1, feat</small></summary>
-          <p class="id">feat~failsafe-case-miscommunication~1</p>
+          <summary title="feat~fail-safe-mode~1"><span class="red">&cross;</span> <b>fail-safe-mode</b><small>, rev. 1, feat</small></summary>
+          <p class="id">feat~fail-safe-mode~1</p>
           <p>The Control Unit of the car shall enter FAILSAFE mode if it stops receiving periodic information (heartbeat) from the Raspberry Pi. <code></code>`</p><p><code></code>`</p>
-          <h6>Needs: <ins>arch</ins></h6>
-          <p class="origin">requirements/features.md:143</p>
+          <h6>Needs: arch</h6>
+          <p class="origin">requirements/features.md:144</p>
+          <div class="in">
+            <h6>In: 2</h6>
+            <ul>
+              <li><a href="#arch~communication-mode-handling~1">arch~communication-mode-handling~1</a> <span class="origin">requirements/architecture.md:40</span></li>
+              <li><a href="#arch~control-failsafe-override~1">arch~control-failsafe-override~1</a> <span class="origin">requirements/architecture.md:74</span></li>
+            </ul>
+          </div>
         </details>
       </section>
       <section class="sitem" id="feat~friendly-gui~1">
@@ -556,13 +743,32 @@ summary .title {
           <p class="id">feat~friendly-gui~1</p>
           <p>The vehicle shall have a friendly user-interface, automatically displaying the user interface when the car turns on. <code></code>`</p><p><code></code>`</p>
           <h6>Needs: arch</h6>
-          <p class="origin">requirements/features.md:103</p>
+          <p class="origin">requirements/features.md:104</p>
           <div class="in">
-            <h6>In: 3</h6>
+            <h6>In: 4</h6>
             <ul>
-              <li><a href="#arch~auto-ui-boot~1">arch~auto-ui-boot~1</a> <span class="origin">requirements/architecture.md:154</span></li>
-              <li><a href="#arch~battery-unit~1">arch~battery-unit~1</a> <span class="origin">requirements/architecture.md:187</span></li>
-              <li><a href="#arch~speed-unit~1">arch~speed-unit~1</a> <span class="origin">requirements/architecture.md:171</span></li>
+              <li><a href="#arch~auto-ui-boot~1">arch~auto-ui-boot~1</a> <span class="origin">requirements/architecture.md:199</span></li>
+              <li><a href="#arch~battery-unit~1">arch~battery-unit~1</a> <span class="origin">requirements/architecture.md:229</span></li>
+              <li><a href="#arch~display-vehicle-status~1">arch~display-vehicle-status~1</a> <span class="origin">requirements/architecture.md:153</span></li>
+              <li><a href="#arch~speed-unit~1">arch~speed-unit~1</a> <span class="origin">requirements/architecture.md:214</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="feat~manual-auto-mode~1">
+        <details>
+          <summary title="feat~manual-auto-mode~1"><span class="red">&cross;</span> <b>manual-auto-mode</b><small>, rev. 1, feat</small></summary>
+          <p class="id">feat~manual-auto-mode~1</p>
+          <p>The vehicle shall have four operation modes: TEST, for RPI5 pre-defined control sequence, MANUAL, for remote control, and AUTO, for AI-based perception and decision-making system, and FAILSAFE, for an entire emergency vehicle shutdown. <code></code>`</p><p><code></code>`</p>
+          <h6>Needs: arch</h6>
+          <p class="origin">requirements/features.md:84</p>
+          <div class="in">
+            <h6>In: 4</h6>
+            <ul>
+              <li><a href="#arch~communication-mode-handling~1">arch~communication-mode-handling~1</a> <span class="origin">requirements/architecture.md:40</span></li>
+              <li><a href="#arch~control-actuation-flow~1">arch~control-actuation-flow~1</a> <span class="origin">requirements/architecture.md:59</span></li>
+              <li><a href="#arch~pca-driver-layer~1">arch~pca-driver-layer~1</a> <span class="origin">requirements/architecture.md:92</span></li>
+              <li><a href="#arch~stm-rpi-can-control~1">arch~stm-rpi-can-control~1</a> <span class="origin">requirements/architecture.md:6</span></li>
             </ul>
           </div>
         </details>
@@ -573,7 +779,7 @@ summary .title {
           <p class="id">feat~maximum-speed~1</p>
           <p>The vehicle shall not exceed a maximum speed of 5 m/s. <code></code>`</p><p><code></code>`</p>
           <h6>Needs: <ins>arch</ins></h6>
-          <p class="origin">requirements/features.md:63</p>
+          <p class="origin">requirements/features.md:64</p>
         </details>
       </section>
       <section class="sitem" id="feat~navigate-track-autonomously~1">
@@ -582,7 +788,7 @@ summary .title {
           <p class="id">feat~navigate-track-autonomously~1</p>
           <p>The vehicle shall autonomously follow a designated track without human intervention. <code></code>`</p><p><code></code>`</p>
           <h6>Needs: <ins>arch</ins></h6>
-          <p class="origin">requirements/features.md:3</p>
+          <p class="origin">requirements/features.md:4</p>
         </details>
       </section>
       <section class="sitem" id="feat~perception-using-camera~1">
@@ -591,7 +797,7 @@ summary .title {
           <p class="id">feat~perception-using-camera~1</p>
           <p>The vehicle shall use a vision based perception system (camera). <code></code>`</p><p><code></code>`</p>
           <h6>Needs: <ins>arch</ins></h6>
-          <p class="origin">requirements/features.md:73</p>
+          <p class="origin">requirements/features.md:74</p>
         </details>
       </section>
       <section class="sitem" id="feat~record-debugging-info~1">
@@ -600,11 +806,11 @@ summary .title {
           <p class="id">feat~record-debugging-info~1</p>
           <p>The system shall record  operation logs for debugging. <code></code>`</p><p><code></code>`</p>
           <h6>Needs: arch</h6>
-          <p class="origin">requirements/features.md:133</p>
+          <p class="origin">requirements/features.md:134</p>
           <div class="in">
             <h6>In: 1</h6>
             <ul>
-              <li><a href="#arch~runtime-logging~1">arch~runtime-logging~1</a> <span class="origin">requirements/architecture.md:133</span></li>
+              <li><a href="#arch~runtime-logging~1">arch~runtime-logging~1</a> <span class="origin">requirements/architecture.md:137</span></li>
             </ul>
           </div>
         </details>
@@ -615,7 +821,7 @@ summary .title {
           <p class="id">feat~recover-from-non-critical-errors~1</p>
           <p>The system shall recover gracefully from non-critical errors without human intervention. <code></code>`</p><p><code></code>`</p>
           <h6>Needs: <ins>arch</ins></h6>
-          <p class="origin">requirements/features.md:113</p>
+          <p class="origin">requirements/features.md:114</p>
         </details>
       </section>
       <section class="sitem" id="feat~remote-control~1">
@@ -624,27 +830,29 @@ summary .title {
           <p class="id">feat~remote-control~1</p>
           <p>The system shall be controllable via remote control. <code></code>`</p><p><code></code>`</p>
           <h6>Needs: arch</h6>
-          <p class="origin">requirements/features.md:153</p>
+          <p class="origin">requirements/features.md:154</p>
           <div class="in">
             <h6>In: 1</h6>
             <ul>
-              <li><a href="#arch~process-raw-data-rasp~1">arch~process-raw-data-rasp~1</a> <span class="origin">requirements/architecture.md:221</span></li>
+              <li><a href="#arch~process-raw-data-rasp~1">arch~process-raw-data-rasp~1</a> <span class="origin">requirements/architecture.md:261</span></li>
             </ul>
           </div>
         </details>
       </section>
       <section class="sitem" id="feat~report-speed-battery~1">
         <details>
-          <summary title="feat~report-speed-battery~1"><span class="green">&check;</span> <b>report-speed-battery</b><small>, rev. 1, feat</small></summary>
+          <summary title="feat~report-speed-battery~1"><span class="red">&cross;</span> <b>report-speed-battery</b><small>, rev. 1, feat</small></summary>
           <p class="id">feat~report-speed-battery~1</p>
           <p>The vehicle shall determine and report its ground speed and remaining battery percentage. <code></code>`</p><p><code></code>`</p>
           <h6>Needs: arch</h6>
-          <p class="origin">requirements/features.md:43</p>
+          <p class="origin">requirements/features.md:44</p>
           <div class="in">
-            <h6>In: 2</h6>
+            <h6>In: 4</h6>
             <ul>
-              <li><a href="#arch~rpm-battery-sensing~1">arch~rpm-battery-sensing~1</a> <span class="origin">requirements/architecture.md:103</span></li>
-              <li><a href="#arch~rpm-latency~1">arch~rpm-latency~1</a> <span class="origin">requirements/architecture.md:118</span></li>
+              <li><a href="#arch~display-vehicle-status~1">arch~display-vehicle-status~1</a> <span class="origin">requirements/architecture.md:153</span></li>
+              <li><a href="#arch~rpm-battery-sensing~1">arch~rpm-battery-sensing~1</a> <span class="origin">requirements/architecture.md:108</span></li>
+              <li><a href="#arch~rpm-latency~1">arch~rpm-latency~1</a> <span class="origin">requirements/architecture.md:123</span></li>
+              <li><a href="#arch~stm-rpi-can-telemetry~1">arch~stm-rpi-can-telemetry~1</a> <span class="origin">requirements/architecture.md:23</span></li>
             </ul>
           </div>
         </details>
@@ -653,9 +861,9 @@ summary .title {
         <details>
           <summary title="feat~rtos-control~1"><span class="red">&cross;</span> <b>rtos-control</b><small>, rev. 1, feat</small></summary>
           <p class="id">feat~rtos-control~1</p>
-          <p>The control system shall be implemented in a RTOS, deterministic, environment. <code></code>`</p>
+          <p>The control system shall be implemented in a RTOS, deterministic, environment. <code></code>`</p><p><code></code>`</p>
           <h6>Needs: <ins>arch</ins></h6>
-          <p class="origin">requirements/features.md:173</p>
+          <p class="origin">requirements/features.md:174</p>
         </details>
       </section>
       <section class="sitem" id="feat~show-signs-obstacles~1">
@@ -664,7 +872,7 @@ summary .title {
           <p class="id">feat~show-signs-obstacles~1</p>
           <p>The vehicle shall display traffic signs and road elements on its instrument cluster. <code></code>`</p><p><code></code>`</p>
           <h6>Needs: <ins>arch</ins></h6>
-          <p class="origin">requirements/features.md:93</p>
+          <p class="origin">requirements/features.md:94</p>
         </details>
       </section>
       <section class="sitem" id="feat~software-updates~1">
@@ -673,7 +881,7 @@ summary .title {
           <p class="id">feat~software-updates~1</p>
           <p>The vehicle software shall be updateable remotely, with the car turned on, through authorized individuals. <code></code>`</p><p><code></code>`</p>
           <h6>Needs: <ins>arch</ins></h6>
-          <p class="origin">requirements/features.md:53</p>
+          <p class="origin">requirements/features.md:54</p>
         </details>
       </section>
       <section class="sitem" id="feat~stop-before-obstacles~1">
@@ -682,7 +890,7 @@ summary .title {
           <p class="id">feat~stop-before-obstacles~1</p>
           <p>The vehicle shall stop or avoid unsafe interaction with obstacles or pedestrians. <code></code>`</p><p><code></code>`</p>
           <h6>Needs: <ins>arch</ins></h6>
-          <p class="origin">requirements/features.md:33</p>
+          <p class="origin">requirements/features.md:34</p>
         </details>
       </section>
       <section class="sitem" id="feat~store-conf-data~1">
@@ -691,7 +899,7 @@ summary .title {
           <p class="id">feat~store-conf-data~1</p>
           <p>The software shall store configuration data (e.g., speed limit, calibration data, ...) <code></code>`</p><p><code></code>`</p>
           <h6>Needs: <ins>arch</ins></h6>
-          <p class="origin">requirements/features.md:123</p>
+          <p class="origin">requirements/features.md:124</p>
         </details>
       </section>
       <section class="sitem" id="feat~test-control-instructions~1">
@@ -700,16 +908,23 @@ summary .title {
           <p class="id">feat~test-control-instructions~1</p>
           <p>The system shall be controllable via pre-defined control instructions sent over a file/script. <code></code>`</p><p><code></code>`</p>
           <h6>Needs: <ins>arch</ins></h6>
-          <p class="origin">requirements/features.md:163</p>
+          <p class="origin">requirements/features.md:164</p>
         </details>
       </section>
-      <section class="sitem" id="feat~test-manual-auto-mode~1">
+      <section class="sitem" id="feat~weather-time-info~1">
         <details>
-          <summary title="feat~test-manual-auto-mode~1"><span class="red">&cross;</span> <b>test-manual-auto-mode</b><small>, rev. 1, feat</small></summary>
-          <p class="id">feat~test-manual-auto-mode~1</p>
-          <p>The vehicle shall have four operation modes: TEST, for RPI5 pre-defined control sequence, MANUAL, for remote control, and AUTO, for AI-based perception and decision-making system, and FAILSAFE, for an entire emergency vehicle shutdown. <code></code>`</p><p><code></code>`</p>
-          <h6>Needs: <ins>arch</ins></h6>
-          <p class="origin">requirements/features.md:83</p>
+          <summary title="feat~weather-time-info~1"><span class="green">&check;</span> <b>weather-time-info</b><small>, rev. 1, feat</small></summary>
+          <p class="id">feat~weather-time-info~1</p>
+          <p>The system shall display time and weather information on the UI. <code></code>`</p>
+          <h6>Needs: arch</h6>
+          <p class="origin">requirements/features.md:184</p>
+          <div class="in">
+            <h6>In: 2</h6>
+            <ul>
+              <li><a href="#arch~time-display~1">arch~time-display~1</a> <span class="origin">requirements/architecture.md:184</span></li>
+              <li><a href="#arch~weather-display~1">arch~weather-display~1</a> <span class="origin">requirements/architecture.md:169</span></li>
+            </ul>
+          </div>
         </details>
       </section>
     </section>
@@ -724,6 +939,136 @@ summary .title {
             <h6>Out: 1</h6>
             <ul>
               <li><a href="#dsn~calculate-rpm~1">dsn~calculate-rpm~1</a> <span class="origin">requirements/sensors.md:70</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="impl~design-requirement-cluster-battery-3812905929~0">
+        <details>
+          <summary title="impl~design-requirement-cluster-battery-3812905929~0"><span class="green">&check;</span> <b>design-requirement-cluster-battery-3812905929</b><small>, rev. 0, impl</small></summary>
+          <p class="id">impl~design-requirement-cluster-battery-3812905929~0</p>
+          <p class="origin">src/Cluster/qtApp/src/systemInfo.cpp:38</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-battery~1">dsn~design-requirement-cluster-battery~1</a> <span class="origin">requirements/cluster.md:34</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="impl~design-requirement-cluster-datetime-2049698224~0">
+        <details>
+          <summary title="impl~design-requirement-cluster-datetime-2049698224~0"><span class="green">&check;</span> <b>design-requirement-cluster-datetime-2049698224</b><small>, rev. 0, impl</small></summary>
+          <p class="id">impl~design-requirement-cluster-datetime-2049698224~0</p>
+          <p class="origin">src/Cluster/qtApp/src/generalInfo.cpp:94</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-datetime~1">dsn~design-requirement-cluster-datetime~1</a> <span class="origin">requirements/cluster.md:62</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="impl~design-requirement-cluster-datetime-2154406631~0">
+        <details>
+          <summary title="impl~design-requirement-cluster-datetime-2154406631~0"><span class="green">&check;</span> <b>design-requirement-cluster-datetime-2154406631</b><small>, rev. 0, impl</small></summary>
+          <p class="id">impl~design-requirement-cluster-datetime-2154406631~0</p>
+          <p class="origin">src/Cluster/qtApp/src/generalInfo.cpp:23</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-datetime~1">dsn~design-requirement-cluster-datetime~1</a> <span class="origin">requirements/cluster.md:62</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="impl~design-requirement-cluster-datetime-2800054533~0">
+        <details>
+          <summary title="impl~design-requirement-cluster-datetime-2800054533~0"><span class="green">&check;</span> <b>design-requirement-cluster-datetime-2800054533</b><small>, rev. 0, impl</small></summary>
+          <p class="id">impl~design-requirement-cluster-datetime-2800054533~0</p>
+          <p class="origin">src/Cluster/qtApp/src/generalInfo.cpp:107</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-datetime~1">dsn~design-requirement-cluster-datetime~1</a> <span class="origin">requirements/cluster.md:62</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="impl~design-requirement-cluster-speed-3594594269~0">
+        <details>
+          <summary title="impl~design-requirement-cluster-speed-3594594269~0"><span class="green">&check;</span> <b>design-requirement-cluster-speed-3594594269</b><small>, rev. 0, impl</small></summary>
+          <p class="id">impl~design-requirement-cluster-speed-3594594269~0</p>
+          <p class="origin">src/Cluster/qtApp/src/systemInfo.cpp:37</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-speed~1">dsn~design-requirement-cluster-speed~1</a> <span class="origin">requirements/cluster.md:20</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="impl~design-requirement-cluster-weather-1707288997~0">
+        <details>
+          <summary title="impl~design-requirement-cluster-weather-1707288997~0"><span class="green">&check;</span> <b>design-requirement-cluster-weather-1707288997</b><small>, rev. 0, impl</small></summary>
+          <p class="id">impl~design-requirement-cluster-weather-1707288997~0</p>
+          <p class="origin">src/Cluster/qtApp/src/generalInfo.cpp:136</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-weather~1">dsn~design-requirement-cluster-weather~1</a> <span class="origin">requirements/cluster.md:48</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="impl~design-requirement-cluster-weather-2304993918~0">
+        <details>
+          <summary title="impl~design-requirement-cluster-weather-2304993918~0"><span class="green">&check;</span> <b>design-requirement-cluster-weather-2304993918</b><small>, rev. 0, impl</small></summary>
+          <p class="id">impl~design-requirement-cluster-weather-2304993918~0</p>
+          <p class="origin">src/Cluster/qtApp/src/generalInfo.cpp:24</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-weather~1">dsn~design-requirement-cluster-weather~1</a> <span class="origin">requirements/cluster.md:48</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="impl~design-requirement-cluster-weather-2931005983~0">
+        <details>
+          <summary title="impl~design-requirement-cluster-weather-2931005983~0"><span class="green">&check;</span> <b>design-requirement-cluster-weather-2931005983</b><small>, rev. 0, impl</small></summary>
+          <p class="id">impl~design-requirement-cluster-weather-2931005983~0</p>
+          <p class="origin">src/Cluster/qtApp/src/generalInfo.cpp:68</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-weather~1">dsn~design-requirement-cluster-weather~1</a> <span class="origin">requirements/cluster.md:48</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="impl~design-requirement-cluster-weather-436512518~0">
+        <details>
+          <summary title="impl~design-requirement-cluster-weather-436512518~0"><span class="green">&check;</span> <b>design-requirement-cluster-weather-436512518</b><small>, rev. 0, impl</small></summary>
+          <p class="id">impl~design-requirement-cluster-weather-436512518~0</p>
+          <p class="origin">src/Cluster/qtApp/src/generalInfo.cpp:81</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-weather~1">dsn~design-requirement-cluster-weather~1</a> <span class="origin">requirements/cluster.md:48</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="impl~design-requirement-cluster-weather-858874604~0">
+        <details>
+          <summary title="impl~design-requirement-cluster-weather-858874604~0"><span class="green">&check;</span> <b>design-requirement-cluster-weather-858874604</b><small>, rev. 0, impl</small></summary>
+          <p class="id">impl~design-requirement-cluster-weather-858874604~0</p>
+          <p class="origin">src/Cluster/qtApp/src/generalInfo.cpp:119</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-weather~1">dsn~design-requirement-cluster-weather~1</a> <span class="origin">requirements/cluster.md:48</span></li>
             </ul>
           </div>
         </details>
@@ -844,6 +1189,136 @@ summary .title {
             <h6>Out: 1</h6>
             <ul>
               <li><a href="#dsn~calculate-rpm~1">dsn~calculate-rpm~1</a> <span class="origin">requirements/sensors.md:70</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="test~design-requirement-cluster-battery-1743262429~0">
+        <details>
+          <summary title="test~design-requirement-cluster-battery-1743262429~0"><span class="green">&check;</span> <b>design-requirement-cluster-battery-1743262429</b><small>, rev. 0, test</small></summary>
+          <p class="id">test~design-requirement-cluster-battery-1743262429~0</p>
+          <p class="origin">src/Cluster/tests/cluster_test.cpp:32</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-battery~1">dsn~design-requirement-cluster-battery~1</a> <span class="origin">requirements/cluster.md:34</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="test~design-requirement-cluster-battery-3631169775~0">
+        <details>
+          <summary title="test~design-requirement-cluster-battery-3631169775~0"><span class="green">&check;</span> <b>design-requirement-cluster-battery-3631169775</b><small>, rev. 0, test</small></summary>
+          <p class="id">test~design-requirement-cluster-battery-3631169775~0</p>
+          <p class="origin">src/Cluster/tests/cluster_test.cpp:19</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-battery~1">dsn~design-requirement-cluster-battery~1</a> <span class="origin">requirements/cluster.md:34</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="test~design-requirement-cluster-datetime-2023556935~0">
+        <details>
+          <summary title="test~design-requirement-cluster-datetime-2023556935~0"><span class="green">&check;</span> <b>design-requirement-cluster-datetime-2023556935</b><small>, rev. 0, test</small></summary>
+          <p class="id">test~design-requirement-cluster-datetime-2023556935~0</p>
+          <p class="origin">src/Cluster/tests/cluster_test.cpp:72</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-datetime~1">dsn~design-requirement-cluster-datetime~1</a> <span class="origin">requirements/cluster.md:62</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="test~design-requirement-cluster-datetime-583512355~0">
+        <details>
+          <summary title="test~design-requirement-cluster-datetime-583512355~0"><span class="green">&check;</span> <b>design-requirement-cluster-datetime-583512355</b><small>, rev. 0, test</small></summary>
+          <p class="id">test~design-requirement-cluster-datetime-583512355~0</p>
+          <p class="origin">src/Cluster/tests/cluster_test.cpp:55</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-datetime~1">dsn~design-requirement-cluster-datetime~1</a> <span class="origin">requirements/cluster.md:62</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="test~design-requirement-cluster-speed-3415254692~0">
+        <details>
+          <summary title="test~design-requirement-cluster-speed-3415254692~0"><span class="green">&check;</span> <b>design-requirement-cluster-speed-3415254692</b><small>, rev. 0, test</small></summary>
+          <p class="id">test~design-requirement-cluster-speed-3415254692~0</p>
+          <p class="origin">src/Cluster/tests/cluster_test.cpp:31</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-speed~1">dsn~design-requirement-cluster-speed~1</a> <span class="origin">requirements/cluster.md:20</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="test~design-requirement-cluster-speed-368677407~0">
+        <details>
+          <summary title="test~design-requirement-cluster-speed-368677407~0"><span class="green">&check;</span> <b>design-requirement-cluster-speed-368677407</b><small>, rev. 0, test</small></summary>
+          <p class="id">test~design-requirement-cluster-speed-368677407~0</p>
+          <p class="origin">src/Cluster/tests/cluster_test.cpp:18</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-speed~1">dsn~design-requirement-cluster-speed~1</a> <span class="origin">requirements/cluster.md:20</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="test~design-requirement-cluster-weather-2293734610~0">
+        <details>
+          <summary title="test~design-requirement-cluster-weather-2293734610~0"><span class="green">&check;</span> <b>design-requirement-cluster-weather-2293734610</b><small>, rev. 0, test</small></summary>
+          <p class="id">test~design-requirement-cluster-weather-2293734610~0</p>
+          <p class="origin">src/Cluster/tests/cluster_test.cpp:154</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-weather~1">dsn~design-requirement-cluster-weather~1</a> <span class="origin">requirements/cluster.md:48</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="test~design-requirement-cluster-weather-2843002150~0">
+        <details>
+          <summary title="test~design-requirement-cluster-weather-2843002150~0"><span class="green">&check;</span> <b>design-requirement-cluster-weather-2843002150</b><small>, rev. 0, test</small></summary>
+          <p class="id">test~design-requirement-cluster-weather-2843002150~0</p>
+          <p class="origin">src/Cluster/tests/cluster_test.cpp:56</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-weather~1">dsn~design-requirement-cluster-weather~1</a> <span class="origin">requirements/cluster.md:48</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="test~design-requirement-cluster-weather-2983836271~0">
+        <details>
+          <summary title="test~design-requirement-cluster-weather-2983836271~0"><span class="green">&check;</span> <b>design-requirement-cluster-weather-2983836271</b><small>, rev. 0, test</small></summary>
+          <p class="id">test~design-requirement-cluster-weather-2983836271~0</p>
+          <p class="origin">src/Cluster/tests/cluster_test.cpp:132</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-weather~1">dsn~design-requirement-cluster-weather~1</a> <span class="origin">requirements/cluster.md:48</span></li>
+            </ul>
+          </div>
+        </details>
+      </section>
+      <section class="sitem" id="test~design-requirement-cluster-weather-815873271~0">
+        <details>
+          <summary title="test~design-requirement-cluster-weather-815873271~0"><span class="green">&check;</span> <b>design-requirement-cluster-weather-815873271</b><small>, rev. 0, test</small></summary>
+          <p class="id">test~design-requirement-cluster-weather-815873271~0</p>
+          <p class="origin">src/Cluster/tests/cluster_test.cpp:107</p>
+          <div class="out">
+            <h6>Out: 1</h6>
+            <ul>
+              <li><a href="#dsn~design-requirement-cluster-weather~1">dsn~design-requirement-cluster-weather~1</a> <span class="origin">requirements/cluster.md:48</span></li>
             </ul>
           </div>
         </details>
@@ -1033,6 +1508,6 @@ summary .title {
     </section>
   </main>
   <nav>
-    <span class="red">&cross;</span> 61 total <meter value="35" low="60" max="61">57%</meter> <span class=".red">26 defects</span> | <a href="#arch">arch</a> &middot; <a href="#dsn">dsn</a> &middot; <a href="#feat">feat</a> &middot; <a href="#impl">impl</a> &middot; <a href="#test">test</a>  </nav>
+    <span class="red">&cross;</span> 90 total <meter value="62" low="89" max="90">68%</meter> <span class=".red">28 defects</span> | <a href="#arch">arch</a> &middot; <a href="#dsn">dsn</a> &middot; <a href="#feat">feat</a> &middot; <a href="#impl">impl</a> &middot; <a href="#test">test</a>  </nav>
   </body>
 </html>

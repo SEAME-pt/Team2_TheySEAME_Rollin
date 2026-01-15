@@ -18,7 +18,7 @@ RUN { \
     sed \
     libclang-dev \
     ninja-build \
-    qt6-base-dev qt6-tools-dev qt6-base-dev-tools \
+    qt6-base-dev qt6-tools-dev qt6-base-dev-tools qt6-serialbus-dev\
     gcc \
     bison \
     python3 \
@@ -29,6 +29,8 @@ RUN { \
     libx11-6 \
     libxext6  libxrender1 libxfixes3 libxrandr2 \
     libx11-dev \
+    libwayland-dev libwayland-client0 libwayland-egl1-mesa \
+    libxkbcommon-dev \
     libx11-xcb-dev \
     libxext-dev \
     libxfixes-dev \
@@ -37,6 +39,7 @@ RUN { \
     libxcb1-dev \
     libxcb-glx0-dev \
     libxcb-keysyms1-dev \
+    libglvnd0 libgl1-mesa-glx libegl1-mesa \
     libxcb-image0-dev \
     libxcb-shm0-dev \
     libxcb-icccm4-dev \
@@ -180,6 +183,8 @@ RUN { \
     cd qt6/src && \
     echo "=== Downloading Qt 6.7.3 submodules ===" && \
     wget https://download.qt.io/archive/qt/6.7/6.7.3/submodules/qtbase-everywhere-src-6.7.3.tar.xz && \
+    wget https://download.qt.io/archive/qt/6.7/6.7.3/submodules/qtwayland-everywhere-src-6.7.3.tar.xz && \
+    wget https://download.qt.io/archive/qt/6.7/6.7.3/submodules/qtserialbus-everywhere-src-6.7.3.tar.xz && \
     wget https://download.qt.io/archive/qt/6.7/6.7.3/submodules/qtshadertools-everywhere-src-6.7.3.tar.xz && \
     wget https://download.qt.io/archive/qt/6.7/6.7.3/submodules/qtdeclarative-everywhere-src-6.7.3.tar.xz && \
     \
@@ -187,6 +192,8 @@ RUN { \
     cd ../host-build && \
     tar xf ../src/qtbase-everywhere-src-6.7.3.tar.xz && \
     tar xf ../src/qtshadertools-everywhere-src-6.7.3.tar.xz && \
+    tar xf ../src/qtserialbus-everywhere-src-6.7.3.tar.xz && \
+    tar xf ../src/qtwayland-everywhere-src-6.7.3.tar.xz && \
     tar xf ../src/qtdeclarative-everywhere-src-6.7.3.tar.xz && \
     \
     echo "=== Building qtbase for host ===" && \
@@ -210,10 +217,24 @@ RUN { \
     cmake --build . --parallel $(nproc) && \
     cmake --install . && \
     \
+    echo "=== Building qtserialbus for host ===" && \
+    cd ../qtserialbus-everywhere-src-6.7.3 && \
+    /build/qt6/host/bin/qt-configure-module . && \
+    cmake --build . --parallel $(nproc) && \
+    cmake --install . && \
+    \
+    echo "=== Building qtwayland for host ===" && \
+    cd ../qtwayland-everywhere-src-6.7.3 && \
+    /build/qt6/host/bin/qt-configure-module . && \
+    cmake --build . --parallel && \
+    cmake --install . && \
+    \
     echo "=== Extracting Qt sources for Raspberry Pi cross-build ===" && \
     cd ../../pi-build && \
     tar xf ../src/qtbase-everywhere-src-6.7.3.tar.xz && \
     tar xf ../src/qtshadertools-everywhere-src-6.7.3.tar.xz && \
+    tar xf ../src/qtserialbus-everywhere-src-6.7.3.tar.xz && \
+    tar xf ../src/qtwayland-everywhere-src-6.7.3.tar.xz && \
     tar xf ../src/qtdeclarative-everywhere-src-6.7.3.tar.xz && \
     \
     echo "=== Building qtbase for Raspberry Pi ===" && \
@@ -233,7 +254,7 @@ RUN { \
         -DQT_FEATURE_wayland_compositor=ON \
         -DQT_FEATURE_egl=ON \
         -DFEATURE_sql_psql=ON \
-        -DFEATURE_shader_tools=OFF \
+        -DFEATURE_shader_tools=OFF \ 
         . && \
     cmake --build . --parallel $(nproc) && \
     cmake --install . && \
@@ -258,6 +279,25 @@ RUN { \
     cmake --build . --parallel $(nproc) && \
     cmake --install . && \
     \
+    echo "=== Building qtserialbus for Raspberry Pi ===" && \
+    cd ../qtserialbus-everywhere-src-6.7.3 && \
+    /build/qt6/host/bin/qt-configure-module . -- \
+        -DQT_HOST_PATH=/build/qt6/host \
+        -DCMAKE_STAGING_PREFIX=/build/qt6/pi \
+        -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake \
+        -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 && \
+    cmake --build . --parallel $(nproc) && \
+    cmake --install . && \
+    \
+    echo "=== Building qtwayland for Raspberry Pi ===" && \
+    cd ../qtwayland-everywhere-src-6.7.3 && \
+    /build/qt6/host/bin/qt-configure-module . -- \
+        -DQT_HOST_PATH=/build/qt6/host \
+        -DCMAKE_STAGING_PREFIX=/build/qt6/pi \
+        -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake \
+        -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 && \
+    cmake --build . --parallel $(nproc) && \
+    cmake --install . && \
     echo "=== Qt 6.7.3 cross-compilation completed successfully ==="; \
 } 2>&1 | tee -a /build.log
 
