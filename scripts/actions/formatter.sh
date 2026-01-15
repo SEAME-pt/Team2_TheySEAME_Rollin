@@ -1,7 +1,9 @@
 #!/bin/bash
 
+CHANGED_FILES=$(git diff --name-only | grep -P '\.(c|cpp|h|hpp)(?!.)')
+
+echo "ChangedFiles: $CHANGED_FILES"
 echo "PWD: $PWD"
-echo "CHANGED: $1"
 
 write_tag() {
 	echo $1 >> $GITHUB_STEP_SUMMARY
@@ -9,8 +11,12 @@ write_tag() {
 }
 
 echo "# Formatter Details" >> $GITHUB_STEP_SUMMARY
-for file in $1; do
+for file in $CHANGED_FILES; do
 	echo "Running Formatter in $file"
+	if [ ! -e "$file" ]; then
+		echo "This $file was deleted"
+		continue
+	fi
 	DIR=$(dirname $file)
 	while [ "$DIR" != "." ] && [ ! -f "$DIR/.clang-format" ]; do
 		DIR=$(dirname $DIR)
