@@ -6,6 +6,10 @@
  * - Verifies encoding and transmission behavior for speed and battery messages
  * - Exercises edge cases (clamping), TX busy path, and timeout/error recovery
  * - Uses fakes to control register reads and system ticks and to capture writes
+ *
+ * ====================== Test Traceability ===========================
+ * [test->dsn~can-telemetry-tx~1]
+ * ==========================================================================
  */
 
 /* Fakes/Helpers declared in test support */

@@ -11,6 +11,11 @@
 #include <string.h>
 #include <stdio.h>
 
+/* Suppress verbose UART debug output in production builds; define MCP2515_DEBUG to enable */
+#ifndef MCP2515_DEBUG
+#define HAL_UART_Transmit(a,b,c,d) ((void)0)
+#endif
+
 /* GPIO Pin Definitions (from STM32CubeMX generated main.h) */
 #define MCP2515_CS_LOW()    HAL_GPIO_WritePin(MCP2515_CS_GPIO_Port, MCP2515_CS_Pin, GPIO_PIN_RESET)
 #define MCP2515_CS_HIGH()   HAL_GPIO_WritePin(MCP2515_CS_GPIO_Port, MCP2515_CS_Pin, GPIO_PIN_SET)
@@ -341,11 +346,16 @@ HAL_StatusTypeDef MCP2515_SendMessage(uint16_t can_id, uint8_t *data, uint8_t le
     return HAL_TIMEOUT;
 }
 
-/** * @brief Send speed data over CAN
+/**
+ * @brief Send speed data over CAN
  * @param speed_ms Vehicle speed in meters per second
  * @return HAL_OK if message sent successfully
  * @note CAN Message Format (4 bytes - float):
  *       Bytes 0-3: Speed as IEEE 754 float (m/s)
+ *
+ * ====================== Requirement Traceability ===========================
+ * [impl->dsn~can-telemetry-tx~1]
+ * ==========================================================================
  */
 HAL_StatusTypeDef MCP2515_SendSpeed(float speed_ms) {
     extern UART_HandleTypeDef huart1;
@@ -450,11 +460,16 @@ HAL_StatusTypeDef MCP2515_SendSpeed(float speed_ms) {
     return HAL_TIMEOUT;
 }
 
-/** * @brief Send battery data over CAN bus
+/**
+ * @brief Send battery data over CAN bus
  * @param percentage Battery percentage (0-100)
  * @return HAL_OK if message sent successfully
  * @note CAN Message Format (1 byte):
  *       Byte 0: Percentage (0-100)
+ *
+ * ====================== Requirement Traceability ===========================
+ * [impl->dsn~can-telemetry-tx~1]
+ * ==========================================================================
  */
 HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage) {
     extern UART_HandleTypeDef huart1;
