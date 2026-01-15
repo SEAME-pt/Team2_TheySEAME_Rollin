@@ -23,8 +23,7 @@ uint32_t HAL_TIM_ReadCapturedValue(TIM_HandleTypeDef *htim, uint32_t Channel) {
 // External reference to delta_ticks global variable for testing
 extern uint32_t delta_ticks;
 
-/* Include SUT implementation directly for unit testing (compiled into test binary) */
-#include "../Src/Sensors/speed.c"
+/* SUT (speed.c) is compiled separately by Ceedling: do not include the .c file in tests. */
 
 void setUp(void) {
   // Initialize before each test
