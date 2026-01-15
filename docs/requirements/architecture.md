@@ -39,7 +39,7 @@ Covers:
 ```
 `arch~communication-mode-handling~1`
 
-Status: proposed
+Status: approved
 
 Shall provide a mechanism to transmit mode selection (Test/Manual/Auto) and fail-safe activation between RPi5 and STM.
 
@@ -136,7 +136,7 @@ Covers:
 ```
 `arch~runtime-logging~1`
 
-Status: proposed
+Status: draft
 
 Shall record on SD card operational and debugging data during system use.
 
@@ -152,7 +152,7 @@ Covers:
 ```
 `arch~display-vehicle-status~1`
 
-Status: approved
+Status: draft
 
 Shall display vehicle speed, battery level, and system state via user interface.
 
@@ -198,7 +198,7 @@ Covers:
 ```
 `arch~auto-ui-boot~1`
 
-Status: approved
+Status: draft
 
 Shall automatically launch the graphical interface at system startup.
 
@@ -244,7 +244,7 @@ Covers:
 ```
 `arch~remote~control~support~1`
 
-Status: draft
+Status: approved
 
 The Remote Module shall communicate with a remote control and transmit it's input to the RASP Data Processing module.
 
@@ -260,7 +260,7 @@ Covers:
 ```
 `arch~process-raw-data-rasp~1`
 
-Status: draft
+Status: approved
 
 The RPi5 shall receive raw input data from the remote and process it in order to send normalized thrust and steering data in degrees and angles to the Rasp Comms module.
 
