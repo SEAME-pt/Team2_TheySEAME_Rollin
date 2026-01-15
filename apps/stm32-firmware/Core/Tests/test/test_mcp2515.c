@@ -30,6 +30,10 @@ void tearDown(void) {
  * Purpose: Verify a normal speed value is converted and written correctly.
  * Setup: Provide register read sequence where TX buffer is free and ticks stable.
  * Assert: Function returns HAL_OK and TXB0DATA was written with the expected dm/s byte (12).
+ *
+ * ====================== Test Traceability ===========================
+ * [test->dsn~can-telemetry-tx~1]
+ * ==========================================================================
  */
 void test_MCP2515_SendSpeed_ValidSpeed_Success(void)
 {
@@ -66,6 +70,10 @@ void test_MCP2515_SendSpeed_ValidSpeed_Success(void)
  * Purpose: Ensure speed conversion clamps to [0,255] when out of range.
  * Setup: Run with negative and very high inputs using controlled reads/ticks.
  * Assert: Negative speed writes 0, large speed writes 255, both return HAL_OK.
+ *
+ * ====================== Test Traceability ===========================
+ * [test->dsn~can-telemetry-tx~1]
+ * ==========================================================================
  */
 void test_MCP2515_SendSpeed_ClampLowAndHigh(void)
 {
@@ -104,6 +112,10 @@ void test_MCP2515_SendSpeed_ClampLowAndHigh(void)
  * Purpose: Verify that SendSpeed detects a busy TX buffer and returns HAL_BUSY.
  * Setup: Simulate MCP2515 TXB0CTRL register with TXREQ bit set on first read.
  * Assert: Function returns HAL_BUSY and abort behavior is exercised.
+ *
+ * ====================== Test Traceability ===========================
+ * [test->dsn~can-telemetry-tx~1]
+ * ==========================================================================
  */
 void test_MCP2515_SendSpeed_TxBufferBusy_ReturnsBusy(void)
 {
@@ -119,6 +131,10 @@ void test_MCP2515_SendSpeed_TxBufferBusy_ReturnsBusy(void)
  * Purpose: Ensure timeout path clears error/interrupt flags and aborts stuck TX.
  * Setup: Simulate TX that never completes (advance ticks past timeout) and set EFLG/CANINTF/TEC/REC values.
  * Assert: Function returns HAL_TIMEOUT and writes were made clearing EFLG and CANINTF.
+ *
+ * ====================== Test Traceability ===========================
+ * [test->dsn~can-error-handling~1]
+ * ==========================================================================
  */
 void test_MCP2515_SendSpeed_Timeout_CleansFlags(void)
 {
@@ -153,6 +169,10 @@ void test_MCP2515_SendSpeed_Timeout_CleansFlags(void)
  * Purpose: Verify battery percentage is written to TX payload correctly.
  * Setup: Provide expected register reads and ticks.
  * Assert: Function returns HAL_OK and TXB0DATA contains the percentage (90).
+ *
+ * ====================== Test Traceability ===========================
+ * [test->dsn~can-telemetry-tx~1]
+ * ==========================================================================
  */
 void test_MCP2515_SendBattery_ValidPercentage_Success(void)
 {

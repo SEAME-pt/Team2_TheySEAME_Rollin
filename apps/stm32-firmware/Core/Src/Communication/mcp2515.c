@@ -155,6 +155,10 @@ HAL_StatusTypeDef MCP2515_SetMode(uint8_t mode) {
  * @brief Initialize MCP2515 CAN controller
  * @param speed CAN bus speed (500kbps, 250kbps, etc.)
  * @return HAL_OK if initialization successful
+ *
+ * ====================== Requirement Traceability ===========================
+ * [impl->dsn~can-init~1]
+ * ==========================================================================
  */
 HAL_StatusTypeDef MCP2515_Init(MCP2515_Speed_t speed) {
     // Initialize CS high
