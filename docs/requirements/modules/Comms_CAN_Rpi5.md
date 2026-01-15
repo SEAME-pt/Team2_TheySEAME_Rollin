@@ -26,12 +26,12 @@ It needs these fields:
 - CRC
 - ACK
 
-Needs: impl, test
+Needs:
 
 Covers:
 - `arch~stm-rpi-can-control~1`
 
-Status: approved
+Status: draft
 ```
 
 ```
