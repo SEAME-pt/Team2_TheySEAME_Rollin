@@ -20,6 +20,7 @@
 #define PCA9685_ADDR_THROTTLE  (0x60 << 1)  // = 0xC0
 
 HAL_StatusTypeDef PCA9685_Init_Device(I2C_HandleTypeDef *hi2c, uint8_t device_addr, const char* device_name);
+HAL_StatusTypeDef PCA9685_Init_Multiple(I2C_HandleTypeDef *hi2c, uint8_t addr1, const char* name1, uint8_t addr2, const char* name2);
 HAL_StatusTypeDef PCA9685_SetPWM(I2C_HandleTypeDef *hi2c, uint8_t device_addr, uint8_t channel, uint16_t on, uint16_t off);
 
 

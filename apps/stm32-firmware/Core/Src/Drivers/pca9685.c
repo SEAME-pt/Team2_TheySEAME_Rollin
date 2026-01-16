@@ -1,12 +1,28 @@
-#include "drivers.h"
 #include "tx_api.h"  // For tx_thread_sleep
 #include <stdio.h>
 #include <stdint.h>
+#include "pca9685.h"
 
 extern char uart_buf[64];
 
-// PCA9685 Software Reset via I2C General Call
-// This unsticks the chip from "zombie" state where only MODE1/PRESCALE work
+/*
+ * @brief
+ *
+ * Description
+ *
+ * ====================== Requirement Traceability ===========================
+ *
+ * ==========================================================================
+ *
+ * @param name         Function
+ *
+ * @return HAL_StatusTypeDef
+ *         - HAL_OK     : Write successful
+ *         - HAL_ERROR  : Transmission failed
+ *         - HAL_BUSY   : I2C peripheral is busy
+ *         - HAL_TIMEOUT: Communication timeout
+ *
+ */
 static HAL_StatusTypeDef PCA9685_SoftwareReset(I2C_HandleTypeDef *hi2c) {
 	/*
 	 * @brief
@@ -33,7 +49,24 @@ static HAL_StatusTypeDef PCA9685_SoftwareReset(I2C_HandleTypeDef *hi2c) {
     return status;
 }
 
-// Helper function to write a register value using raw I2C transmit
+/*
+ * @brief
+ *
+ * Description
+ *
+ * ====================== Requirement Traceability ===========================
+ *
+ * ==========================================================================
+ *
+ * @param name         Function
+ *
+ * @return HAL_StatusTypeDef
+ *         - HAL_OK     : Write successful
+ *         - HAL_ERROR  : Transmission failed
+ *         - HAL_BUSY   : I2C peripheral is busy
+ *         - HAL_TIMEOUT: Communication timeout
+ *
+ */
 static HAL_StatusTypeDef PCA9685_WriteReg(I2C_HandleTypeDef *hi2c, uint8_t device_addr, uint8_t reg, uint8_t val) {
 	/*
 	 * @brief
@@ -67,7 +100,24 @@ static HAL_StatusTypeDef PCA9685_WriteReg(I2C_HandleTypeDef *hi2c, uint8_t devic
     return status;
 }
 
-// Helper to read a register
+/*
+ * @brief
+ *
+ * Description
+ *
+ * ====================== Requirement Traceability ===========================
+ *
+ * ==========================================================================
+ *
+ * @param name         Function
+ *
+ * @return HAL_StatusTypeDef
+ *         - HAL_OK     : Write successful
+ *         - HAL_ERROR  : Transmission failed
+ *         - HAL_BUSY   : I2C peripheral is busy
+ *         - HAL_TIMEOUT: Communication timeout
+ *
+ */
 static HAL_StatusTypeDef PCA9685_ReadReg(I2C_HandleTypeDef *hi2c, uint8_t device_addr, uint8_t reg, uint8_t *val) {
 	/*
 	 * @brief
@@ -98,6 +148,87 @@ static HAL_StatusTypeDef PCA9685_ReadReg(I2C_HandleTypeDef *hi2c, uint8_t device
     }
     
     return status;
+}
+
+// Initialize PCA9685 device without software reset (for multiple devices)
+static HAL_StatusTypeDef PCA9685_Init_Device_NoReset(I2C_HandleTypeDef *hi2c, uint8_t addr, const char* name) {
+    HAL_StatusTypeDef ret;
+    char msg[80];
+    
+    snprintf(msg, sizeof(msg), "Init %s PCA9685 at 0x%02X (no reset)\r\n", name, addr);
+    Debug_Print(msg);
+    
+    // Step 1: Set MODE1 with Sleep + Auto-Increment
+    Debug_Print("  Step 1: MODE1=0x31 (Sleep + AI)...\r\n");
+    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_MODE1, 0x31);
+    if (ret != HAL_OK) {
+        snprintf(msg, sizeof(msg), "  FAILED: %d\r\n", ret);
+        Debug_Print(msg);
+        return ret;
+    }
+    
+    // Step 2: Set prescaler for 50Hz (must be in sleep mode)
+    Debug_Print("  Step 2: PRESCALE=121 (50Hz)...\r\n");
+    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_PRESCALE, 121);
+    if (ret != HAL_OK) {
+        snprintf(msg, sizeof(msg), "  FAILED: %d\r\n", ret);
+        Debug_Print(msg);
+        return ret;
+    }
+    
+    // Step 3: Wake up with Auto-Increment enabled
+    Debug_Print("  Step 3: MODE1=0x21 (Wake + AI)...\r\n");
+    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_MODE1, 0x21);
+    if (ret != HAL_OK) {
+        snprintf(msg, sizeof(msg), "  FAILED: %d\r\n", ret);
+        Debug_Print(msg);
+        return ret;
+    }
+    tx_thread_sleep(5);  // 50ms for oscillator to stabilize after wake
+    
+    // Step 4: Set MODE2
+    Debug_Print("  Step 4: MODE2=0x04...\r\n");
+    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_MODE2, 0x04);
+    if (ret != HAL_OK) {
+        snprintf(msg, sizeof(msg), "  MODE2 write FAILED: %d (continuing anyway)\r\n", ret);
+        Debug_Print(msg);
+        return HAL_OK;  // Continue anyway
+    }
+    
+    Debug_Print("  SUCCESS! Device initialized!\r\n");
+    return HAL_OK;
+}
+
+// Initialize multiple PCA9685 devices with single software reset
+HAL_StatusTypeDef PCA9685_Init_Multiple(I2C_HandleTypeDef *hi2c, uint8_t addr1, const char* name1, uint8_t addr2, const char* name2) {
+    HAL_StatusTypeDef ret;
+    
+    Debug_Print("Initializing multiple PCA9685 devices with single SWRST\r\n");
+    
+    // CRITICAL: Software Reset via General Call to unstick all chips
+    Debug_Print("  Issuing Software Reset (SWRST) for all devices...\r\n");
+    ret = PCA9685_SoftwareReset(hi2c);
+    if (ret != HAL_OK) {
+        Debug_Print("  SWRST failed (continuing anyway)\r\n");
+    } else {
+        Debug_Print("  SWRST OK!\r\n");
+    }
+    tx_thread_sleep(5);  // 50ms for all PCA9685 chips to reset
+    
+    // Initialize first device (without reset)
+    ret = PCA9685_Init_Device_NoReset(hi2c, addr1, name1);
+    if (ret != HAL_OK) {
+        return ret;
+    }
+    
+    // Initialize second device (without reset)
+    ret = PCA9685_Init_Device_NoReset(hi2c, addr2, name2);
+    if (ret != HAL_OK) {
+        return ret;
+    }
+    
+    Debug_Print("Multiple PCA9685 initialization complete!\r\n");
+    return HAL_OK;
 }
 
 // Initialize PCA9685 with Software Reset to clear "zombie" state
@@ -195,7 +326,24 @@ HAL_StatusTypeDef PCA9685_Init_Device(I2C_HandleTypeDef *hi2c, uint8_t addr, con
     return HAL_OK;
 }
 
-// Set PWM - write each byte individually (C++ reference method)
+/*
+ * @brief
+ *
+ * Description
+ *
+ * ====================== Requirement Traceability ===========================
+ *
+ * ==========================================================================
+ *
+ * @param name         Function
+ *
+ * @return HAL_StatusTypeDef
+ *         - HAL_OK     : Write successful
+ *         - HAL_ERROR  : Transmission failed
+ *         - HAL_BUSY   : I2C peripheral is busy
+ *         - HAL_TIMEOUT: Communication timeout
+ *
+ */
 HAL_StatusTypeDef PCA9685_SetPWM(I2C_HandleTypeDef *hi2c, uint8_t device_addr, uint8_t channel, uint16_t on, uint16_t off) {
 	/*
 	 * @brief

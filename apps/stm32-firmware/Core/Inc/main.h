@@ -49,8 +49,10 @@ extern "C" {
 #include "app_threadx.h"
 #include "../Src/utils/utils.h"
 #include "../Src/Control/control.h"
-#include "../Src/Drivers/drivers.h"
+#include "../Src/Drivers/pca9685.h"
+#include "../Src/Drivers/ina219.h"
 #include "../Src/Sensors/sensors.h"
+#include "../Src/Communication/mcp2515.h"
 
 
 /* USER CODE END Includes */
@@ -62,7 +64,7 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+extern char uart_buff[128];
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -72,7 +74,6 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
-void MX_I2C1_Init(void);
 
 /* USER CODE BEGIN EFP */
 extern UART_HandleTypeDef huart1;
@@ -194,6 +195,8 @@ extern I2C_HandleTypeDef hi2c2;
 #define Mems_INT_LPS22HH_GPIO_Port GPIOG
 #define USB_VBUS_SENSE_Pin GPIO_PIN_14
 #define USB_VBUS_SENSE_GPIO_Port GPIOF
+#define SPEED_Pin GPIO_PIN_13
+#define SPEED_GPIO_Port GPIOE
 #define OCTOSPI_R_NCS_Pin GPIO_PIN_11
 #define OCTOSPI_R_NCS_GPIO_Port GPIOB
 #define WRLS_SPI2_NSS_Pin GPIO_PIN_12
@@ -210,7 +213,15 @@ extern I2C_HandleTypeDef hi2c2;
 #define WRLS_WKUP_W_GPIO_Port GPIOF
 
 /* USER CODE BEGIN Private defines */
-
+/* MCP2515 CAN Controller GPIO Pins */
+#define MCP2515_CS_Pin GPIO_PIN_15
+#define MCP2515_CS_GPIO_Port GPIOD
+#define MCP2515_SCK_Pin GPIO_PIN_13
+#define MCP2515_SCK_GPIO_Port GPIOF
+#define MCP2515_MOSI_Pin GPIO_PIN_8
+#define MCP2515_MOSI_GPIO_Port GPIOD
+#define MCP2515_MISO_Pin GPIO_PIN_9
+#define MCP2515_MISO_GPIO_Port GPIOD
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
