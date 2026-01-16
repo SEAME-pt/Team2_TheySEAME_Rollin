@@ -12,10 +12,10 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 | Field | Details |
 |-------|----------|
-| **Sprint Number** | Sprint 4 |
-| **Sprint Goal** | Lay the groundwork to enable the first **Data-Driven Integration Test (DDIT)** of the piRacer car operating using scripted driving data, without remote control or ADAS. |
-| **Sprint Duration** | Nov 24 – Dec 5, 2025 |
-| **Focus Areas** | AGL, ThreadX, CAN, Open Fast Trace |
+| **Sprint Number** | Sprint 6 |
+| **Sprint Goal** | Perform full Integration test with unit tests per software module, requirements traceability, and implement CI/CD workflow for OTA updates. |
+| **Sprint Duration** | Jan 5 – Jan 16, 2025 |
+| **Focus Areas** | Tests, TSF, Automotive Frameworks, OTA updates. |
 
 
 ## 📅 Scrum Team
