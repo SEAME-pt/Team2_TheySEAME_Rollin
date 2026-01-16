@@ -5,10 +5,6 @@ The Cluster module exposes this information to the QML interface for visual repr
 
 ---
 
-### Module Type:
-- [ ] Module
-- [x] Sub-Module
-
 ### Interacts with:
 - CAN bus (via CanManager inside SystemInfo): receives messages from STM32 and other microcontrollers.
 
