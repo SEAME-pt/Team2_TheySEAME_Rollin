@@ -3,10 +3,6 @@
 This module gives and supports CAN communication to the RPI5
 
 ---
-### Module Type:
-- [ ] Module
-- [x] Sub-Module
-
 ### Interacts with:
 What other modules interact with this module?
 - Remote Control
@@ -15,7 +11,9 @@ What other modules interact with this module?
 ## Specification Items (Requirements)
 
 ```
-`dsn~comms-can-rpi-frameformat-standard~1`
+`dsn~comms-can-rpi-frameformat-standard~2`
+
+Status: draft
 
 The Comms CAN RPI5 shall follow the Standard CAN frame format
 
@@ -26,16 +24,16 @@ It needs these fields:
 - CRC
 - ACK
 
-Needs:
+Needs: impl, test
 
 Covers:
 - `arch~stm-rpi-can-control~1`
-
-Status: draft
 ```
 
 ```
 `dsn~comms-can-rpi-frameformat-control~1`
+
+Status: approved
 
 The Comms CAN RPI5 shall follow this frame format for any control commands (RPI->STM) communication
 
@@ -48,12 +46,12 @@ Needs: impl, test
 
 Covers:
 - `arch~stm-rpi-can-control~1`
-
-Status: approved
 ```
 
 ```
 `dsn~comms-can-rpi-interface~1`
+
+Status: approved
 
 The Comms CAN RPI5 shall communicate with a bit rate of 500kbps using standard CAN V2.0B
 
@@ -61,12 +59,12 @@ Needs: impl, test
 
 Covers:
 - `arch~stm-rpi-can-control~1`
-
-Status: approved
 ```
 
 ```
 `dsn~comms-can-rpi-receiveMsg~2`
+
+Status: draft
 
 The Comms CAN RPI5 shall receive CAN frames from the CAN bus
 
@@ -74,12 +72,12 @@ Needs: impl, test
 
 Covers:
 - `arch~stm-rpi-can-control~1`
-
-Status: draft
 ```
 
 ```
 `dsn~comms-can-rpi-sendMsg~1`
+
+Status: approved
 
 The Comms CAN RPI5 shall send a CAN frame whenever any other module wants to send a message via CAN
 
@@ -87,8 +85,6 @@ Needs: impl, test
 
 Covers:
 - `arch~stm-rpi-can-control~1`
-
-Status: approved
 ```
 
 ## Further documentation:
