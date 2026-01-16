@@ -5,7 +5,9 @@ project(RaspTests)
 set(INSTALL_GTEST OFF)
 
 # Build googletest
-add_subdirectory(${CMAKE_SOURCE_DIR}/../../libs/googletest ${CMAKE_BINARY_DIR}/googletest)
+#add_subdirectory(${CMAKE_SOURCE_DIR}/../../libs/googletest ${CMAKE_BINARY_DIR}/googletest)
+find_package(GTest REQUIRED)
+include(GoogleTest)
 
 include_directories(PUBLIC 
 	${CMAKE_SOURCE_DIR}/../../libs/googletest/include
