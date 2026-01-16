@@ -1,0 +1,37 @@
+name: C++ CI with Qt6 and GoogleTest
+
+# Trigger the workflow on pushes or pull requests to your main branch
+# and your specific feature branch
+on:
+  pull_request:
+    branches:
+      - "develop"
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            cmake \
+            g++ \
+            qt6-base-dev \
+            qt6-serialbus-dev \
+            qt6-connectivity-dev \
+            libgtest-dev \
+            xvfb
+
+      - name: Configure CMake
+        run: cmake -S Team2_TheySEAME_Rollin/ -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Run Tests
+        run: xvfb-run ctest --test-dir build --output-on-failure
