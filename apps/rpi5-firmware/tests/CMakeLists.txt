@@ -5,10 +5,10 @@ project(RaspTests)
 set(INSTALL_GTEST OFF)
 
 # Build googletest
-add_subdirectory(${CMAKE_SOURCE_DIR}/../../libs/googletest ${CMAKE_BINARY_DIR}/googletest)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../libs/googletest ${CMAKE_BINARY_DIR}/googletest)
 
 include_directories(PUBLIC 
-	${CMAKE_SOURCE_DIR}/../../libs/googletest/include
+	${CMAKE_CURRENT_SOURCE_DIR}/../../libs/googletest/include
 )
 
 if(CMAKE_CROSSCOMPILING)
