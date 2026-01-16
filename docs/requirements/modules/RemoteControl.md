@@ -10,7 +10,7 @@ The sub-module adds Car control via a remote control
 ```
 `dsn~remote-control-read-inputs~1`
 
-Status: approved
+Status: draft
 
 The Remote Control shall read inputs from the gamepad, updating it's state
 
