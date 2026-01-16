@@ -75,3 +75,4 @@ void TIM1_Init(void) {
           prev_capture = curr_capture;
       }
   }
+```

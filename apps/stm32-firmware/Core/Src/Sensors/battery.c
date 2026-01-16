@@ -1,12 +1,20 @@
 #include "sensors.h"
 #include "../Drivers/ina219.h"
 
-
+/**
+ * @brief Calls INA219 library functions for power, voltage and battery_life (%) readings every 200 ticks (2 seconds)
+ * - Uses the INA219 library.
+ * - Currently interfaces with Communications module via global vars.
+ * 
+ * ====================== Requirement Traceability ===========================
+ * ==========================================================================
+ * 
+ * @param thread_input parameter not used
+ */
 void Battery_Thread_Entry(ULONG thread_input) {
     INA219_t ina219;
     uint16_t power;
-    // float   battery_life;
-    // uint16_t voltage;
+    (void)thread_input;
     char buffer_debug[125];
     VehicleData_t local_data;
 
@@ -18,8 +26,8 @@ void Battery_Thread_Entry(ULONG thread_input) {
         local_data.battery_voltage = INA219_ReadBusVoltage(&ina219);
         local_data.battery_percentage = INA219_GetBatteryLife(&ina219, 12600, 9800);
         local_data.data_valid = 1;
-        snprintf(buffer_debug, sizeof(buffer_debug), "Power: %umW, Voltage: %humV, Battery Life: %f%%\r\n", power, local_data.battery_voltage, local_data.battery_percentage);
-        Debug_Print(buffer_debug);
+        // snprintf(buffer_debug, sizeof(buffer_debug), "Power: %umW, Voltage: %humV, Battery Life: %f%%\r\n", power, local_data.battery_voltage, local_data.battery_percentage);
+        // Debug_Print(buffer_debug);
         if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
             // Write local sensor data to global structure
             g_vehicle_data.battery_voltage = local_data.battery_voltage;

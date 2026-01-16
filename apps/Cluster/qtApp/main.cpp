@@ -5,7 +5,7 @@
 #include <chrono>
 #include <ctime>
 #include "src/generalInfo.hpp"
-
+#include "src/systemInfo.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -13,9 +13,13 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     generalInfo info;
+    systemInfo sysInfo;
+    if (!sysInfo.start("can0")) {
+        std::cerr << "Failed to start CAN bus on can0" << std::endl;
+    }
 
     engine.rootContext()->setContextProperty("generalInfo", &info);
-
+    engine.rootContext()->setContextProperty("systemInfo", &sysInfo);
     engine.addImportPath("qrc:/qml");
     const QUrl url(QStringLiteral("qrc:/qml/Main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

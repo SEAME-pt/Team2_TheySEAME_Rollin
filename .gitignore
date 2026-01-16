@@ -1,4 +1,3 @@
-/apps/stm32-firmware/tests/build/
 libs/googletest/
 build/
 
@@ -9,3 +8,4 @@ build/
 /apps/stm32-firmware/**/build/
 /apps/stm32-firmware/test/build/
 
+reports/*

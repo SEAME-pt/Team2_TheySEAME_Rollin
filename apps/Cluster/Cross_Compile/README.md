@@ -145,7 +145,7 @@ $ ./qtApp
 
 ###  Deployment Script
 
-To simplify testing and deployment on the Raspberry Pi, we use a Bash script `deploy_to_pi.sh`. This script automates building the Docker image, extracting the compiled binary, and copying it to the target device.
+To simplify testing and deployment on the Raspberry Pi, we use a Bash script `cross.sh`. This script automates building the Docker image, extracting the compiled binary, and copying it to the target device.
 
 **Key points of the script:**
 - Accepts the Raspberry Pi IP as an argument.
@@ -156,7 +156,7 @@ To simplify testing and deployment on the Raspberry Pi, we use a Bash script `de
 
 **Usage:**
 ```bash
-./deploy_to_pi.sh <RaspberryPi_IP>
+./cross.sh <RaspberryPi_IP>
 ```
 
 This script ensures that after any changes in the project, you can quickly rebuild and deploy the updated ARM64 application without manually copying files, streamlining the cross-compilation workflow and reducing the chance of errors.
