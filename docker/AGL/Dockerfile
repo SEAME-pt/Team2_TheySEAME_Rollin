@@ -2,7 +2,8 @@ FROM ubuntu:22.04
 
 ENV USER=build
 ENV TZ=Europe/London
-ENV AGL_TOP=/home/$USER/agl/build
+ENV BUILD_DIR=agl
+ENV AGL_TOP=/home/$USER/$BUILD_DIR
 ENV LOCAL_CONF=$AGL_TOP/conf/local.conf
 ENV AGL_FEATURES="agl-app-framework agl-buildstats agl-devel agl-drm-lease agl-ic \
 	agl-netboot agl-package-management agl-pipewire agl-selinux"
@@ -17,10 +18,16 @@ RUN curl https://storage.googleapis.com/git-repo-downloads/repo >> /bin/repo && 
 
 RUN adduser --disabled-password --gecos '' $USER
 USER $USER
-WORKDIR /home/$USER/agl
+WORKDIR /home/$USER/
 
 RUN git config --global user.email "$USER@example.com" && \
 	git config --global user.name "$USER" && \
 	git config --global color.ui false
 
-CMD [ "bash", "AGL_installation.sh" ]
+RUN repo init -b trout -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo && \
+	repo sync
+
+COPY conf .
+COPY layers .
+
+CMD [ "bash", "installAGL.sh" ]
