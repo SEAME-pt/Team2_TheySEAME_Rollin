@@ -14,4 +14,5 @@ enable_testing()
 # Add your scattered directories
 # This will look for a CMakeLists.txt inside these folders
 add_subdirectory(apps/Cluster/tests)
+add_subdirectory(apps/rpi5-firmware)
 # add_subdirectory(apps/OtherModule/tests)

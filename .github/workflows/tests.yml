@@ -25,6 +25,7 @@ jobs:
             qt6-serialbus-dev \
             qt6-connectivity-dev \
             libgtest-dev \
+            libsocketcan-dev \  # <--- Add this for the new firmware
             xvfb
 
       - name: Configure CMake
