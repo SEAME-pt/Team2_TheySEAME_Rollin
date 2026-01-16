@@ -29,11 +29,12 @@ It can send and receive CAN frames in non-blocking mode
 
 ### 5 Compilation
 
-CMake is the tool used to build this module. Don't forget to source the sdk to be in the same enviroment as the rpi5
+CMake is the tool used to build this module.
 The AGL sdk is also used to compile the binary to the correct architecture
 
 ```bash
 mkdir -p build && cd build
+source <sdk-path>
 cmake ..
 make
 scp CAN <user>@<ip-address>:<file-path>
