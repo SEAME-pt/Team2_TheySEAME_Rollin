@@ -3,10 +3,6 @@
 The sub-module adds Car control via a remote control
 
 ---
-### Module Type:
-- [ ] Module
-- [x] Sub-Module
-
 ### Interacts with:
 
 ## Specification Items (Requirements)
