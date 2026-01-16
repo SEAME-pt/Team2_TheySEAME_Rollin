@@ -11,7 +11,7 @@ What other modules interact with this module?
 ## Specification Items (Requirements)
 
 ```
-`dsn~comms-can-rpi-frameformat-standard~1`
+`dsn~comms-can-rpi-frameformat-standard~2`
 
 Status: draft
 
