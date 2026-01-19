@@ -46,19 +46,18 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential cmake libgtest-dev
 
-      - name: Configure and Build
-        # We perform the build inside the project directory as requested
+      - name: Build and Install
         run: |
           cd apps/rpi5-firmware
           mkdir build
           cd build
           cmake .. -DBUILD_TESTS=ON
           make
-          sudo make install
+          make install  # This creates the 'bin' folder inside this 'build' directory
 
       - name: Run Firmware Tests
-        # Executing the binary from the 'bin' folder created by 'make install'
         run: |
-          cd apps/rpi5-firmware/bin
+          # The path is relative to the root of the repo
+          cd apps/rpi5-firmware/build/bin
           chmod +x unit_tests
           ./unit_tests
