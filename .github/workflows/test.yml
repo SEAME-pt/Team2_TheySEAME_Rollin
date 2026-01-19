@@ -79,5 +79,5 @@ jobs:
 
       - name: Run Ceedling Tests
         # Update this path to where your project.yml is located
-        working-directory: apps/stm32-firmware/core/tests
+        working-directory: apps/stm32-firmware/Core/Tests
         run: ceedling test:all
