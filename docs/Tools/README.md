@@ -44,3 +44,5 @@ doxygen <path-to-Doxyfile>
 ```
 
 Then open the **index.html**, inside the **html** directory, with your browser
+
+If you change any configuration inside the **Doxyfile** you need to build the docs again
