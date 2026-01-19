@@ -39,6 +39,8 @@ jobs:
         run: cmake --build build --parallel $(nproc)
 
       - name: Execute Tests
-        # Move into the build directory created in the step above
         working-directory: build
-        run: ctest --output-on-failure
+        run: |
+            # Use chmod to ensure it's executable, then run it directly
+            chmod +x ./qtAppTests
+            ./qtAppTests
