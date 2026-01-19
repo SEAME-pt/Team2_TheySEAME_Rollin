@@ -25,12 +25,11 @@ jobs:
             libgl1-mesa-dev \
             libxkbcommon-dev
 
-      - name: Install Qt6
+      - name: Install Qt6 Components
         run: |
           sudo apt-get install -y \
             qt6-base-dev \
-            qt6-serialbus-dev \
-            qt6-network-auth-dev
+            qt6-serialbus-dev
 
       - name: Configure CMake
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
