@@ -33,7 +33,14 @@ Here is the installation [docs](https://www.graphviz.org/download/) for **Graphv
 
 ### Build documentation
 
-To build the docs, run the doxygen command with the path to the Doxyfile
+Create a **Doxyfile** if you don't have one. If you leave the parameter empty, it will generate a file with the default name (Doxyfile)
+```bash
+doxygen -g <Doxyfile-name>
+```
+
+To build the docs, run the doxygen command with the path to the Doxyfile. It will generate a **html** and **latex** directories
 ```bash
 doxygen <path-to-Doxyfile>
 ```
+
+Then open the **index.html**, inside the **html** directory, with your browser
