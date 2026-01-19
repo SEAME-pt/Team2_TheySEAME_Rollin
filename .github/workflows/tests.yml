@@ -6,6 +6,7 @@ on:
       - "develop"
 
 jobs:
+  # Job 1: Qt-based tests (Requires Xvfb for GUI components)
   cluster-qt-tests:
     runs-on: ubuntu-latest
     steps:
@@ -14,27 +15,22 @@ jobs:
         with:
           submodules: 'true'
 
-      - name: Install build dependencies
+      - name: Install Qt and Build Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            cmake \
-            g++ \
-            qt6-base-dev \
-            qt6-serialbus-dev \
-            qt6-connectivity-dev \
-            libgtest-dev \
-            xvfb
+            cmake g++ libgtest-dev xvfb \
+            qt6-base-dev qt6-serialbus-dev qt6-connectivity-dev
 
-      - name: Configure CMake (Cluster Qt)
-        run: cmake -S apps/Cluster/tests -B build-cluster -DCMAKE_BUILD_TYPE=Release
+      - name: Configure and Build
+        run: |
+          cmake -S apps/Cluster/tests -B build-cluster -DCMAKE_BUILD_TYPE=Release
+          cmake --build build-cluster --config Release
 
-      - name: Build Cluster Qt tests
-        run: cmake --build build-cluster --config Release
-
-      - name: Run Cluster Qt tests
+      - name: Run Tests
         run: xvfb-run ctest --rerun-failed --output-on-failure --test-dir build-cluster
 
+  # Job 2: Raspberry Pi Firmware tests (No Qt dependencies needed)
   rpi5-tests:
     runs-on: ubuntu-latest
     steps:
@@ -43,19 +39,15 @@ jobs:
         with:
           submodules: 'true'
 
-      - name: Install build dependencies
+      - name: Install Build Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            cmake \
-            g++ \
-            libgtest-dev
+          sudo apt-get install -y cmake g++ libgtest-dev
 
-      - name: Configure CMake (Raspberry Pi 5)
-        run: cmake -S apps/rpi5-firmware/tests -B build-rpi5 -DCMAKE_BUILD_TYPE=Release
+      - name: Configure and Build
+        run: |
+          cmake -S apps/rpi5-firmware/tests -B build-rpi5 -DCMAKE_BUILD_TYPE=Release
+          cmake --build build-rpi5 --config Release
 
-      - name: Build Raspberry Pi 5 tests
-        run: cmake --build build-rpi5 --config Release
-
-      - name: Run Raspberry Pi 5 tests
+      - name: Run Tests
         run: ctest --rerun-failed --output-on-failure --test-dir build-rpi5
