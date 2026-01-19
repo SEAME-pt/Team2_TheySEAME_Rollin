@@ -7,40 +7,50 @@ on:
     branches: [ feat/test-workflow ]
 
 jobs:
-  run-all-tests:
-    name: Build and Run Tests
+  # --- JOB 1: Qt Cluster Tests ---
+  qt-tests:
+    name: Qt Cluster Tests
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Code
+      - name: Checkout Code with Submodules
         uses: actions/checkout@v4
+        with:
+          submodules: recursive  # Fetches all nested submodules
 
-      - name: Install System Dependencies
+      - name: Install Qt Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            build-essential \
-            cmake \
-            libgtest-dev \
-            libgl1-mesa-dev \
-            libxkbcommon-dev
+          sudo apt-get install -y build-essential cmake libgtest-dev qt6-base-dev qt6-serialbus-dev
 
-      - name: Install Qt6 Components
+      - name: Configure and Build
         run: |
-          sudo apt-get install -y \
-            qt6-base-dev \
-            qt6-serialbus-dev
+          cmake -S apps/Cluster/tests -B build-qt -DCMAKE_BUILD_TYPE=Release
+          cmake --build build-qt
 
-      - name: Configure CMake
-      # Pointing to the specific path of your CMakeLists.txt
-        run: cmake -S apps/Cluster/tests -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Run Qt Tests
+        working-directory: build-qt
+        run: ./qtAppTests
 
-      - name: Build All Targets
-        run: cmake --build build --parallel $(nproc)
+  # --- JOB 2: RPI Firmware Tests ---
+  firmware-tests:
+    name: RPI5 Firmware Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code with Submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive  # Crucial for 'comms' or 'mode_manager' if they are submodules
 
-      - name: Execute Tests
-        working-directory: build
+      - name: Install Firmware Dependencies
         run: |
-            # Use chmod to ensure it's executable, then run it directly
-            chmod +x ./qtAppTests
-            ./qtAppTests
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake libgtest-dev
+
+      - name: Configure and Build
+        run: |
+          cmake -S apps/rpi5-firmware -B build-firmware -DBUILD_TESTS=ON
+          cmake --build build-firmware
+
+      - name: Run Firmware Tests
+        working-directory: build-firmware
+        run: ctest --output-on-failure
