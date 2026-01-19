@@ -1,10 +1,8 @@
 name: Automated Unit Tests
 
 on:
-  push:
-    branches: [ feat/test-workflow ]
   pull_request:
-    branches: [ feat/test-workflow ]
+    branches: [ develop ]
 
 jobs:
   # --- JOB 1: Qt Cluster Tests ---
