@@ -52,7 +52,7 @@ jobs:
           name: build-artifact
 
       - name: Unpack build
-        run: tar -xzf build.tar.gz
+        run: mkdir -p build && tar -xzf build.tar.gz -C build
 
       - name: Install runtime dependencies (Qt + xvfb)
         run: |
@@ -77,7 +77,7 @@ jobs:
           name: build-artifact
 
       - name: Unpack build
-        run: tar -xzf build.tar.gz
+        run: mkdir -p build && tar -xzf build.tar.gz -C build
 
       - name: Install runtime dependencies
         run: |
