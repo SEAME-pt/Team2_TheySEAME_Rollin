@@ -50,7 +50,6 @@ jobs:
           mkdir build
           cd build
           cmake .. -DBUILD_TESTS=ON
-          make
           make install  # This creates the 'bin' folder inside this 'build' directory
 
       - name: Run Firmware Tests
