@@ -58,3 +58,32 @@ jobs:
           cd apps/rpi5-firmware/build/bin
           chmod +x unit_tests
           ./unit_tests
+
+    # --- JOB 3: STM32 Ceedling Tests ---
+    stm32-tests:
+      name: STM32 Ceedling Tests
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout Code with Submodules
+          uses: actions/checkout@v4
+          with:
+            submodules: recursive
+
+        - name: Set up Ruby
+          uses: ruby/setup-ruby@v1
+          with:
+            ruby-version: '3.2' # Recommended version for Ceedling
+            bundler-cache: true
+
+        - name: Install ARM Toolchain
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y gcc-arm-none-eabi
+
+        - name: Install Ceedling
+          run: gem install ceedling
+
+        - name: Run Ceedling Tests
+          # Update this path to where your project.yml is located
+          working-directory: apps/stm32-project
+          run: ceedling test:all
