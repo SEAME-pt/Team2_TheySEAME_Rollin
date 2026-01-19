@@ -32,11 +32,13 @@ jobs:
             qt6-serialbus-dev
 
       - name: Configure CMake
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      # Pointing to the specific path of your CMakeLists.txt
+        run: cmake -S apps/Cluster/tests -B build -DCMAKE_BUILD_TYPE=Release
 
       - name: Build All Targets
         run: cmake --build build --parallel $(nproc)
 
       - name: Execute Tests
+        # Move into the build directory created in the step above
         working-directory: build
         run: ctest --output-on-failure
