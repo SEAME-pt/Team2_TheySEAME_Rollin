@@ -1,3 +1,7 @@
 libs/googletest/
 build/
 reports/*
+
+# Doxygen
+html/
+latex/
