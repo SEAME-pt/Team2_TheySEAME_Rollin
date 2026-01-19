@@ -37,4 +37,4 @@ jobs:
         run: cmake --build build --config Release
 
       - name: Run Tests
-        run: xvfb-run ctest --test-dir build
+        run: xvfb-run ctest --rerun-failed --output-on-failure --test-dir build
