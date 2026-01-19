@@ -21,4 +21,4 @@ target_link_libraries(qtAppTests
 )
 
 include(GoogleTest)
-gtest_discover_tests(qtAppTests DISCOVERY_LABELS Qt)
+gtest_discover_tests(qtAppTests)

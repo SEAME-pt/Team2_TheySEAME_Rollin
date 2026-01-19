@@ -6,7 +6,7 @@ on:
       - "develop"
 
 jobs:
-  build:
+  cluster-qt-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -24,70 +24,38 @@ jobs:
             qt6-serialbus-dev \
             qt6-connectivity-dev \
             libgtest-dev \
-            libsocketcan-dev
+            xvfb
 
-      - name: Configure CMake
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Configure CMake (Cluster Qt)
+        run: cmake -S apps/Cluster/tests -B build-cluster -DCMAKE_BUILD_TYPE=Release
 
-      - name: Build
-        run: cmake --build build --config Release
+      - name: Build Cluster Qt tests
+        run: cmake --build build-cluster --config Release
 
-      - name: Pack build directory
-        run: |
-          tar -czf build.tar.gz -C build .
+      - name: Run Cluster Qt tests
+        run: xvfb-run ctest --rerun-failed --output-on-failure --test-dir build-cluster
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifact
-          path: build.tar.gz
-
-  qtt-tests:
-    needs: build
+  rpi5-tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          name: build-artifact
+          submodules: 'true'
 
-      - name: Unpack build
-        run: mkdir -p build && tar -xzf build.tar.gz -C build
-
-      - name: Install runtime dependencies (Qt + xvfb)
+      - name: Install build dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            qt6-base-dev \
-            qt6-serialbus-dev \
-            qt6-connectivity-dev \
-            xvfb \
-            cmake
+            cmake \
+            g++ \
+            libgtest-dev
 
-      - name: Run Qt tests only (labelled "Qt")
-        run: xvfb-run ctest --rerun-failed --output-on-failure --test-dir build -L Qt
+      - name: Configure CMake (Raspberry Pi 5)
+        run: cmake -S apps/rpi5-firmware/tests -B build-rpi5 -DCMAKE_BUILD_TYPE=Release
 
-  other-tests:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifact
+      - name: Build Raspberry Pi 5 tests
+        run: cmake --build build-rpi5 --config Release
 
-      - name: Unpack build
-        run: mkdir -p build && tar -xzf build.tar.gz -C build
-
-      - name: Install runtime dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            qt6-base-dev \
-            qt6-serialbus-dev \
-            qt6-connectivity-dev \
-            xvfb \
-            cmake
-
-      - name: Run non-Qt tests (exclude label "Qt")
-        run: ctest --rerun-failed --output-on-failure --test-dir build -LE Qt
+      - name: Run Raspberry Pi 5 tests
+        run: ctest --rerun-failed --output-on-failure --test-dir build-rpi5
