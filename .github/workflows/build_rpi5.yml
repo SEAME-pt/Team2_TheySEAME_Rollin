@@ -28,7 +28,7 @@ jobs:
           submodules: true
           ref: ${{ github.head_ref }}
 
-      - name: Compile rpi5-firmware
+      - name: Compile rpi5-firmware for Host (unit_tests)
         run: |
           cmake -S $RPI_PATH -B $BUILD_HOST
           make install -C $BUILD_HOST
@@ -45,7 +45,7 @@ jobs:
       - name: Run sdk
         run: bash ${{ fromJson(steps.aglSDK.outputs.downloaded_files)[0] }} -yd sdk
 
-      - name: Compile rpi5-firmware
+      - name: Compile rpi5-firmware for Target (RPI5)
         run: |
           source sdk/environment-setup-aarch64-agl-linux
           cmake -S $RPI_PATH -B $BUILD_TARGET
