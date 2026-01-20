@@ -5,3 +5,4 @@ reports/*
 # Doxygen
 html/
 latex/
+apps/.metadata/
