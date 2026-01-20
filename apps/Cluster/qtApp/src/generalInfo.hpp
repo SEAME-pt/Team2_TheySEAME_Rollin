@@ -31,49 +31,50 @@ public:
     * - Weather via HTTP request to Open-Meteo API
     *
     * @param parent Optional parent QObject
-    *=======================Requirements traceability========================
-    * [impl->dsn~design-requirement-cluster-datetime~1] [impl->dsn~design-requirement-cluster-weather~1]
-    *========================================================================
+    *
+    * [impl->dsn~design-requirement-cluster-datetime~1]
+    * [impl->dsn~design-requirement-cluster-weather~1]
+    *
     */
     explicit generalInfo(QObject *parent = nullptr);
 
     /**
     * @brief Returns the current weather icon filename.
+    *
+    * [impl->dsn~design-requirement-cluster-weather~1]
+    *
     * @return QString representing icon (e.g., "sun-256.png")
     *
-    *=======================Requirements traceability========================
-    * [impl->dsn~design-requirement-cluster-weather~1]
-    *========================================================================
     */
     QString getWeatherInfo() const;
 
     /**
     * @brief Returns the current temperature in Celsius.
+    *
+    * [impl->dsn~design-requirement-cluster-weather~1]
+    *
     * @return int temperature
     *
-    *=======================Requirements traceability========================
-    * [impl->dsn~design-requirement-cluster-weather~1]
-    *========================================================================
     */
     int getTemperature() const;
 
     /**
     * @brief Returns the local time in HH:mm format.
+    *
+    * [impl->dsn~design-requirement-cluster-datetime~1]
+    *
     * @return QString current time
     *
-    *=======================Requirements traceability========================
-    * [impl->dsn~design-requirement-cluster-datetime~1]
-    *========================================================================
     */
     QString getLocalTime() const;
 
     /**
     * @brief Returns the current date in dd/MM/yyyy format.
+    *
+    * [impl->dsn~design-requirement-cluster-datetime~1]
+    *
     * @return QString current date
     *
-    *=======================Requirements traceability========================
-    * [impl->dsn~design-requirement-cluster-datetime~1]
-    *========================================================================
     */
     QString getCurrentDate() const;
     
@@ -95,9 +96,8 @@ public slots:
     /**
     * @brief Fetches current weather data from Open-Meteo API.
     *
-    *=======================Requirements traceability========================
     * [impl->dsn~design-requirement-cluster-weather~1]
-    *========================================================================
+    *
     */
     void fetchWeatherData();
 
@@ -105,12 +105,10 @@ public slots:
     * @brief Handles the network reply for weather API.
     * Parses JSON and updates temperature and weather icon.
     * Emits temperatureChanged() and weatherInfoChanged() if necessary.
-    *
     * @param reply QNetworkReply* from QNetworkAccessManager
     *
-    *=======================Requirements traceability========================
     * [impl->dsn~design-requirement-cluster-weather~1]
-    *========================================================================
+    *
     */
     void onWeatherDataReceived(QNetworkReply* reply);
 };
