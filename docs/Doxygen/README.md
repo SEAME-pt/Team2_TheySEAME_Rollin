@@ -1,8 +1,8 @@
-## Doxygen
+# Doxygen
 
 This project uses [Doxygen](https://www.doxygen.nl/manual/index.html) documentation
 
-### Installation
+## Installation
 
 To install **Doxygen** either follow the doxygen [docs](https://www.doxygen.nl/manual/install.html)
 or install it via apt ```sudo apt install doxygen```
@@ -10,7 +10,7 @@ or install it via apt ```sudo apt install doxygen```
 For **Doxygen** to generate diagrams and graphs it is also needed to install **Graphviz**.
 Here is the installation [docs](https://www.graphviz.org/download/) for **Graphviz**
 
-### Integrate Doxygen comment in code
+## Integrate Doxygen comment in code
 
 This is a template for the Doxygen comment to put in the code.
 It's preffered to put this in the header files (.h/.hpp) but it's not mandatory
@@ -36,7 +36,7 @@ Other "@commands" can be used
  */
 ```
 
-### Build documentation
+## Build documentation
 
 Create a **Doxyfile** if you don't have one. If you leave the parameter empty, it will generate a file with the default name (Doxyfile)
 ```bash
