@@ -15,9 +15,13 @@ Here is the installation [docs](https://www.graphviz.org/download/) for **Graphv
 This is a template for the Doxygen comment to put in the code.
 It's preffered to put this in the header files (.h/.hpp) but it's not mandatory
 
-After the description, put the OFT requirements fulfiled by the function
+- A **@brief** command is a small title for the function
+- The **@param** command lists the parameters the function takes
+- Then a description about what the function does and important details that need to be mentioned
+- After the description, put the OFT requirements fulfiled by the function
+- Then the **@return** command lists the possible returns a function has
 
-Other "@commands" can be used
+Other **@commands** can be used if it makes sense, otherwise try to stick to this template
 
 ```c
 /**
