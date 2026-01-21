@@ -101,7 +101,7 @@ HAL_StatusTypeDef MCP2515_Init(MCP2515_Speed_t speed);
  * @param data Pointer to payload bytes to send (maximum 8 bytes)
  * @param length Number of payload bytes (0..8)
  *
- * Requirement traceability:
+ * @par Requirement traceability:
  * [impl->dsn~can-telemetry-tx~1]
  * [impl->dsn~can-error-handling~1]
  * [impl->dsn~can-rate-limit~1]
