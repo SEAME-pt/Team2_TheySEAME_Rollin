@@ -5,13 +5,6 @@ systemInfo::systemInfo(QObject *parent)
 {
 }
 
-/**
- * @brief systemInfo::start
- * Initializes CAN bus device on specified interface.
- * Connects to framesReceived signal to process incoming frames.
- * @param interfaceName CAN interface name (default "can0")
- * @return true if device started successfully, false otherwise
- */
 bool systemInfo::start(const QString &interfaceName)
 {
     device = QCanBus::instance()->createDevice("socketcan", interfaceName);
@@ -29,15 +22,6 @@ bool systemInfo::start(const QString &interfaceName)
     return true;
 }
 
-/**
- * @brief systemInfo::processFrames
- * Reads available CAN frames and emits signals for speed and battery SOC updates.
- * 
- * =======================Requirements traceability========================
- *        [impl->dsn~design-requirement-cluster-speed~1]
- *        [impl->dsn~design-requirement-cluster-battery~1]
- *========================================================================
- */
 void systemInfo::processFrames()
 {
     while (device && device->framesAvailable()) {
