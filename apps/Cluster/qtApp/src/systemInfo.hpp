@@ -11,8 +11,8 @@
 #include <grpcpp/grpcpp.h>
 #include <thread>
 #include <atomic>
-#include "../../../middleware/Kuksa/val/v2/val.grpc.pb.h"
-#include "../../../middleware/Kuksa/val/v2/types.pb.h"
+#include "../../../middleware/kuksa/val/v2/val.grpc.pb.h"
+#include "../../../middleware/kuksa/val/v2/types.pb.h"
 
 
 using kuksa::val::v2::VAL;

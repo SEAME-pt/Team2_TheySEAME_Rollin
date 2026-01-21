@@ -119,6 +119,29 @@ RUN mkdir sysroot sysroot/usr sysroot/opt
 COPY rasp.tar.gz /build/rasp.tar.gz
 RUN tar xvfz /build/rasp.tar.gz -C /build/sysroot
 
+# ---- Install gRPC/Protobuf for target (arm64) and copy into sysroot ----
+RUN set -e && \
+    dpkg --add-architecture arm64 && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        rsync \
+        pkgconf \
+        libgrpc-dev:arm64 libgrpc++-dev:arm64 \
+        libprotobuf-dev:arm64 \
+        zlib1g-dev:arm64 \
+        libc-ares-dev:arm64 \
+        libssl-dev:arm64 \
+        libre2-dev:arm64 \
+    && rm -rf /var/lib/apt/lists/* && \
+    \
+    mkdir -p /build/sysroot/usr/lib/aarch64-linux-gnu && \
+    mkdir -p /build/sysroot/usr/include && \
+    mkdir -p /build/sysroot/usr/share/pkgconfig && \
+    \
+    rsync -a /usr/lib/aarch64-linux-gnu/ /build/sysroot/usr/lib/aarch64-linux-gnu/ && \
+    rsync -a /usr/share/pkgconfig/ /build/sysroot/usr/share/pkgconfig/ 2>/dev/null || true && \
+    rsync -a /usr/include/ /build/sysroot/usr/include/
+
 # Copy the toolchain file
 COPY apps/Cluster/Cross_Compile/opencvToolchain.cmake /build/
 
@@ -314,9 +337,16 @@ RUN tar -czvf qt-pi-binaries.tar.gz -C /build/qt6/pi .
 RUN mkdir /build/project
 COPY     apps/Cluster/qtApp /build/project
 
+RUN     mkdir /middleware
+COPY    apps/middleware/ /middleware
+
 # Build the project using Qt for Raspberry Pi
 RUN { \
+    set -e && \
     cd /build/project && \
+    export PKG_CONFIG_SYSROOT_DIR=/build/sysroot && \
+    export PKG_CONFIG_LIBDIR=/build/sysroot/usr/lib/aarch64-linux-gnu/pkgconfig:/build/sysroot/usr/share/pkgconfig && \
+    export PKG_CONFIG_PATH= && \
     /build/qt6/pi/bin/qt-cmake . && \
     cmake --build .; \
 } 2>&1 | tee -a /build.log
