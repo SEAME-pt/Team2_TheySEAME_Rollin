@@ -67,22 +67,46 @@ typedef enum {
 /**
  * @brief Initialize the MCP2515 CAN controller.
  *
- * Configures the MCP2515 registers for the specified CAN bus bitrate and
- * prepares the device for operation.
+ * Configures the MCP2515 registers for the specified CAN bus bitrate, sets
+ * operating mode to NORMAL and verifies initialization via CANSTAT register
+ * reads.
+ *
+ * Responsibilities:
+ * - Configure CNF registers for the requested bitrate
+ * - Set NORMAL mode
+ * - Verify proper operation by reading CANSTAT
  *
  * @param speed CAN speed selection (see MCP2515_Speed_t)
+ *
+ * Requirement traceability:
+ * [impl->dsn~can-init~1]
+ *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR / other HAL status
  */
 HAL_StatusTypeDef MCP2515_Init(MCP2515_Speed_t speed);
 
 /**
- * @brief Send a generic CAN message.
+ * @brief Send a generic CAN message (transmit).
  *
- * Transmits a CAN frame with the specified CAN identifier and payload.
+ * Transmits a CAN frame with the specified CAN identifier and payload. The
+ * implementation confirms transmission completion via MCP2515 status polling
+ * and follows error handling policies for timeouts and retries.
+ *
+ * Behavior:
+ * - Clamps/validates payload values where applicable
+ * - Confirms TX completion and reports errors
+ * - Honors configured rate-limiting for telemetry
  *
  * @param can_id 11-bit or 29-bit CAN identifier depending on device configuration
  * @param data Pointer to payload bytes to send (maximum 8 bytes)
  * @param length Number of payload bytes (0..8)
+ *
+ * Requirement traceability:
+ * [impl->dsn~can-telemetry-tx~1]
+ * [impl->dsn~can-error-handling~1]
+ * [impl->dsn~can-rate-limit~1]
+ * [impl->dsn~can-logging-policy~1]
+ *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR
  */
 HAL_StatusTypeDef MCP2515_SendMessage(uint16_t can_id, uint8_t *data, uint8_t length);  // Generic CAN send
@@ -91,8 +115,13 @@ HAL_StatusTypeDef MCP2515_SendMessage(uint16_t can_id, uint8_t *data, uint8_t le
  * @brief Send battery percentage over CAN using a predefined message format.
  *
  * Convenience wrapper that constructs a battery status message and sends it.
+ * The message format and CAN ID follow project telemetry specification.
  *
  * @param percentage Battery charge percentage (0..100)
+ *
+ * Requirement traceability:
+ * [impl->dsn~can-telemetry-tx~1]
+ *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR
  */
 HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage);  // Convenience wrapper for battery data
@@ -101,20 +130,30 @@ HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage);  // Convenience wrapp
  * @brief Set MCP2515 operating mode.
  *
  * Switches between normal, sleep, loopback, listen-only and config modes.
+ * This is used during initialization and in diagnostic/test flows.
  *
  * @param mode One of MCP2515_MODE_* values
+ *
+ * Requirement traceability:
+ * [impl->dsn~can-init~1]
+ *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR
  */
 HAL_StatusTypeDef MCP2515_SetMode(uint8_t mode);
 
 /**
- * @brief Try to receive a CAN message from the MCP2515.
+ * @brief Try to receive and parse a CAN message from the MCP2515.
  *
- * Reads a pending message from the device if available.
+ * Reads a pending message from the device if available and parses supported
+ * telemetry IDs (e.g., speed, battery) updating the in-memory state.
  *
  * @param can_id Pointer to variable to receive the CAN identifier
  * @param data Pointer to buffer that receives payload bytes (should be at least 8 bytes)
  * @param length Pointer to variable that will receive the payload length
+ *
+ * Requirement traceability:
+ * [impl->dsn~can-telemetry-rx~1]
+ *
  * @return int Returns 1 if a message was received, 0 if no message is available, negative on error
  */
 int MCP2515_ReceiveMessage(uint16_t *can_id, uint8_t *data, uint8_t *length);  // Returns 1 if message received, 0 otherwise
@@ -122,23 +161,45 @@ int MCP2515_ReceiveMessage(uint16_t *can_id, uint8_t *data, uint8_t *length);  /
 /**
  * @brief Poll and handle received messages.
  *
- * Convenience routine called periodically to check for new messages and
- * process or dispatch them as needed.
+ * Convenience routine called periodically to check for new messages, parse
+ * them and dispatch updates to the rest of the system.
+ *
+ * Requirement traceability:
+ * [impl->dsn~can-telemetry-rx~1]
+ * [impl->dsn~can-error-handling~1]
  */
 void MCP2515_CheckForMessages(void);  // Check and print any received messages
 
 /**
  * @brief Print basic MCP2515 status to debug console.
+ *
+ * Controlled by the communications logging policy macros; disabled in
+ * production builds unless explicitly enabled.
+ *
+ * Requirement traceability:
+ * [impl->dsn~can-logging-policy~1]
  */
 void MCP2515_PrintStatus(void);  // Diagnostic function
 
 /**
  * @brief Print detailed MCP2515 status including RX buffer contents.
+ *
+ * Controlled by the communications logging policy macros; disabled in
+ * production builds unless explicitly enabled.
+ *
+ * Requirement traceability:
+ * [impl->dsn~can-logging-policy~1]
  */
 void MCP2515_PrintDetailedStatus(void);  // Verbose diagnostic with RX buffer check
 
 /**
  * @brief Run self-test to verify SPI connection and basic functionality.
+ *
+ * Useful for manufacturing checks and diagnostics; typically executed in
+ * dedicated test flows.
+ *
+ * Requirement traceability:
+ * [impl->dsn~can-init~1]
  */
 void MCP2515_TestConnection(void);  // Test SPI connection
 
@@ -146,6 +207,11 @@ void MCP2515_TestConnection(void);  // Test SPI connection
 
 /**
  * @brief Reset MCP2515 via the reset SPI command.
+ *
+ * Used during initialization and error recovery to force device reset.
+ *
+ * Requirement traceability:
+ * [impl->dsn~can-init~1]
  */
 void MCP2515_Reset(void);
 

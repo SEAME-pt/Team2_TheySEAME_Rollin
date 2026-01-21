@@ -71,9 +71,6 @@ static uint8_t MCP2515_SPI_Transfer(uint8_t data) {
     return received;
 }
 
-/**
- * @brief Reset MCP2515 via SPI command
- */
 void MCP2515_Reset(void) {
     MCP2515_CS_LOW();
     MCP2515_SPI_Transfer(MCP2515_CMD_RESET);
@@ -81,11 +78,6 @@ void MCP2515_Reset(void) {
     HAL_Delay(10);  // Wait for reset to complete
 }
 
-/**
- * @brief Read a single register from MCP2515
- * @param address Register address
- * @return Register value
- */
 uint8_t MCP2515_ReadRegister(uint8_t address) {
     uint8_t value;
     
@@ -98,11 +90,6 @@ uint8_t MCP2515_ReadRegister(uint8_t address) {
     return value;
 }
 
-/**
- * @brief Write a single register to MCP2515
- * @param address Register address
- * @param value Value to write
- */
 void MCP2515_WriteRegister(uint8_t address, uint8_t value) {
     MCP2515_CS_LOW();
     MCP2515_SPI_Transfer(MCP2515_CMD_WRITE);
@@ -111,12 +98,6 @@ void MCP2515_WriteRegister(uint8_t address, uint8_t value) {
     MCP2515_CS_HIGH();
 }
 
-/**
- * @brief Modify specific bits in a register
- * @param address Register address
- * @param mask Bit mask
- * @param value New value for masked bits
- */
 void MCP2515_BitModify(uint8_t address, uint8_t mask, uint8_t value) {
     MCP2515_CS_LOW();
     MCP2515_SPI_Transfer(MCP2515_CMD_BIT_MODIFY);
@@ -126,11 +107,6 @@ void MCP2515_BitModify(uint8_t address, uint8_t mask, uint8_t value) {
     MCP2515_CS_HIGH();
 }
 
-/**
- * @brief Set MCP2515 operating mode
- * @param mode Operating mode (CONFIG, NORMAL, etc.)
- * @return HAL_OK if mode set successfully
- */
 HAL_StatusTypeDef MCP2515_SetMode(uint8_t mode) {
     MCP2515_BitModify(MCP2515_REG_CANCTRL, 0xE0, mode);
     HAL_Delay(10);
@@ -144,11 +120,6 @@ HAL_StatusTypeDef MCP2515_SetMode(uint8_t mode) {
     return HAL_ERROR;
 }
 
-/**
- * @brief Initialize MCP2515 CAN controller
- * @param speed CAN bus speed (500kbps, 250kbps, etc.)
- * @return HAL_OK if initialization successful
- */
 HAL_StatusTypeDef MCP2515_Init(MCP2515_Speed_t speed) {
     // Initialize CS high
     MCP2515_CS_HIGH();
@@ -221,13 +192,6 @@ HAL_StatusTypeDef MCP2515_Init(MCP2515_Speed_t speed) {
     return HAL_OK;
 }
 
-/**
- * @brief Send a generic CAN message
- * @param can_id CAN identifier (11-bit standard ID)
- * @param data Pointer to data buffer
- * @param length Data length (0-8 bytes)
- * @return HAL_OK if message sent successfully, HAL_ERROR if invalid params, HAL_BUSY if buffer busy, HAL_TIMEOUT if timeout
- */
 HAL_StatusTypeDef MCP2515_SendMessage(uint16_t can_id, uint8_t *data, uint8_t length) {
     extern UART_HandleTypeDef huart1;
     char buffer[200];
@@ -339,13 +303,6 @@ HAL_StatusTypeDef MCP2515_SendMessage(uint16_t can_id, uint8_t *data, uint8_t le
     return HAL_TIMEOUT;
 }
 
-/**
- * @brief Send battery data over CAN bus
- * @param percentage Battery percentage (0-100)
- * @return HAL_OK if message sent successfully
- * @note CAN Message Format (1 byte):
- *       Byte 0: Percentage (0-100)
- */
 HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage) {
     extern UART_HandleTypeDef huart1;
     char buffer[200];
@@ -443,9 +400,6 @@ HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage) {
     return HAL_TIMEOUT;
 }
 
-/**
- * @brief Print MCP2515 status registers for debugging
- */
 void MCP2515_PrintStatus(void) {
     extern UART_HandleTypeDef huart1;
     char buffer[150];
@@ -461,11 +415,7 @@ void MCP2515_PrintStatus(void) {
         "[MCP2515] CANSTAT=0x%02X CANCTRL=0x%02X EFLG=0x%02X TEC=%d REC=%d CANINTF=0x%02X\r\n",
         canstat, canctrl, eflg, tec, rec, canintf);
     HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 1000);
-}
 
-/**
- * @brief Print detailed MCP2515 status with RX buffer check
- */
 void MCP2515_PrintDetailedStatus(void) {
     extern UART_HandleTypeDef huart1;
     char buffer[200];
