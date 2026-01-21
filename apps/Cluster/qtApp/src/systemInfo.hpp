@@ -24,6 +24,7 @@ public:
     * @brief Initializes CAN bus device on specified interface and hooks frame handler.
     * @param interfaceName CAN interface name (default "can0")
     *
+	* Requirement traceability:
     * [impl->dsn~design-requirement-cluster-telemetry~1]
     *
     * @return true if device started successfully, false otherwise
@@ -39,6 +40,7 @@ public slots:
     /**
     * @brief Reads available CAN frames and emits signals for speed and battery SOC updates.
     *
+	* Requirement traceability:
     * [impl->dsn~design-requirement-cluster-speed~1] [impl->dsn~design-requirement-cluster-battery~1]
     *
     */
