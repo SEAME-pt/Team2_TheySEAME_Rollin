@@ -24,6 +24,12 @@ class systemInfo : public QObject
     Q_PROPERTY(int speed READ getSpeed NOTIFY speedUpdated)
 
 public:
+
+    /**
+    * @brief Constructs the systemInfo helper for CAN telemetry.
+    * @param parent Optional QObject parent for ownership.
+    *
+    */
     explicit systemInfo(QObject *parent = nullptr);
     bool start();
     bool valueToInt(const kuksa::val::v2::Value& v, int& out);
