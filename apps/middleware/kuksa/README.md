@@ -1,4 +1,4 @@
-# Kuksa Setup Guide (Databroker + CAN Provider)
+# Kuksa Integration Guide (Databroker + CAN Provider)
 
 This document describes the step-by-step procedure to set up and run the **Kuksa Databroker** together with the **Kuksa CAN Provider**, using SocketCAN and DBC-to-VSS mapping.
 
