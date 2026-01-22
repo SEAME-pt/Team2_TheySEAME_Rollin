@@ -1,4 +1,4 @@
-# Kuksa Setup Guide (Databroker + CAN Provider)
+# Kuksa Integration Guide (Databroker + CAN Provider)
 
 This document describes the step-by-step procedure to set up and run the **Kuksa Databroker** together with the **Kuksa CAN Provider**, using SocketCAN and DBC-to-VSS mapping.
 
@@ -12,7 +12,6 @@ Why use Kuksa in your project?
 - **Decoupled architecture**: producers (e.g., CAN provider) and consumers (e.g., Qt apps) don’t need to know each other—only the broker.
 - **Single source of truth**: Databroker becomes a central place to publish and read signal values.
 - **Easier integration**: multiple apps/services can subscribe to the same datapoints without duplicating CAN decoding logic.
-- **Scales from dev to deployment**: the same interfaces can be used in development, CI, and on-device deployments.
 
 ---
 
@@ -46,16 +45,16 @@ Why use Kuksa in your project?
 
 ## 1  . Run Kuksa Databroker
 
-Start the Databroker in insecure mode (no TLS, no authentication):
+Start the Databroker:
 
 ```bash
-docker run -it --rm --net=host   ghcr.io/eclipse-kuksa/kuksa-databroker:latest
+docker run -it --rm ghcr.io/eclipse-kuksa/kuksa-databroker:latest
 ```
 
 Our configuration:
 
 ```bash
-  --insecure   --address 127.0.0.1   --port 55555   --vss /etc/kuksa/vss.json
+  --insecure   --address 0.0.0.0   --port 55555   --vss /etc/kuksa/vss.json
 ```
 
 Check if is listening:
@@ -75,7 +74,7 @@ We have the VSS and DBC file at:
 Run the CAN provider:
 
 ```bash
-docker run --rm -it --net=host --privileged   -v etc/kuksa/:/cfg   kuksa-can-provider:local
+docker run --rm -it --privileged   -v etc/kuksa/:/cfg   kuksa-can-provider:local
 ```
 
 Our configuration:
@@ -101,14 +100,13 @@ Validate paths using the CLI before running the provider.
 Open a second terminal and run:
 
 ```bash
-docker run -it --rm --net=host   ghcr.io/eclipse-kuksa/kuksa-databroker-cli:latest   --server http://127.0.0.1:55555
+docker run -it --rm ghcr.io/eclipse-kuksa/kuksa-databroker-cli:latest   --server http://0.0.0.0:55555
 ```
 
-Inside the CLI prompt, try:
+Inside the CLI prompt, try(example):
 
 ```text
 get Vehicle.Speed
-get Vehicle.Control.Throttle.Value
 ```
 
 ### Note about VSS paths
@@ -127,7 +125,68 @@ You must either:
 - Update your CAN mapping file (`vss.json`) to use existing VSS paths.
 
 ---
+## 4) Applications Dependencies (gRPC + Protobuf)
 
+If you build an application that communicates with Kuksa over gRPC, you must install the **development packages** for Protobuf and gRPC and ensure the generated `*.pb.cc/*.pb.h` and `*.grpc.pb.cc/*.grpc.pb.h` sources are compiled into your target.
+
+### 4.1 Install required packages
+
+```bash
+sudo apt-get update
+sudo apt-get install -y \
+  pkg-config \
+  protobuf-compiler \
+  libprotobuf-dev \
+  protobuf-compiler-grpc \
+  libgrpc-dev \
+  libgrpc++-dev
+```
+
+Quick sanity checks:
+
+```bash
+protoc --version
+which grpc_cpp_plugin
+pkg-config --modversion protobuf grpc++ grpc
+```
+
+> Note: On Ubuntu 22.04, CMake typically **does not** provide `gRPCConfig.cmake`.
+> Using `pkg-config` (as shown below) is the recommended approach.
+
+### 4.2 Protobuf/gRPC sources in your Qt target
+
+If you already generated the sources and keep them inside your repository (for example under `/apps/middleware/Kuksa/val/v2/`), add them to your library target:
+
+```cmake
+target_sources(qtAppLib PRIVATE
+  ${CMAKE_SOURCE_DIR}/path/to/middleware/Kuksa/val/v2/types.pb.cc
+  ${CMAKE_SOURCE_DIR}/path/to/middleware/Kuksa/val/v2/val.pb.cc
+  ${CMAKE_SOURCE_DIR}/path/to/middleware/Kuksa/val/v2/val.grpc.pb.cc
+)
+```
+
+Make sure the corresponding include directories are available:
+
+```cmake
+target_include_directories(qtAppLib PRIVATE
+  ${CMAKE_SOURCE_DIR}/path/to/middleware/Kuksa
+  ${CMAKE_SOURCE_DIR}/path/to/middleware/Kuksa/val/v2
+)
+```
+
+### 4.3 Link against gRPC and Protobuf using pkg-config (recommended on Ubuntu)
+
+```cmake
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(GRPC REQUIRED IMPORTED_TARGET grpc++ grpc)
+pkg_check_modules(PROTOBUF REQUIRED IMPORTED_TARGET protobuf)
+
+target_link_libraries(qtAppLib PRIVATE
+  PkgConfig::GRPC
+  PkgConfig::PROTOBUF
+)
+```
 ---
 
 ## Troubleshooting
@@ -135,7 +194,7 @@ You must either:
 ### Databroker CLI cannot connect
 
 ```
-Failed to connect to http://127.0.0.1:55555/
+Failed to connect to http://0.0.0.0:55555/
 ```
 
 - Databroker is not running
@@ -159,8 +218,6 @@ ss -ltnp | grep 55555
 ---
 
 ## Notes
-
-- This guide uses `--net=host` for simplicity.
 - For production or containerized deployments, consider using a dedicated Docker network.
 - Kuksa VAL server (legacy) is **not required** when using the Databroker.
 
