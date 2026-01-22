@@ -1,0 +1,79 @@
+{
+  "Vehicle": {
+    "type": "branch",
+    "description": "Root branch for vehicle signals",
+    "children": {
+      "Speed": {
+        "type": "sensor",
+        "datatype": "float",
+        "unit": "hm/h",
+        "description": "Vehicle speed from STM32",
+        "dbc": { "signal": "speed" }
+      },
+      "Powertrain": {
+        "type": "branch",
+        "description": "Powertrain related signals",
+        "children": {
+          "Battery": {
+            "type": "branch",
+            "description": "Battery related signals",
+            "children": {
+              "StateOfCharge": {
+                "type": "sensor",
+                "datatype": "uint8",
+                "unit": "percent",
+                "description": "Battery state of charge",
+                "dbc": { "signal": "StateOfCharge" }
+              }
+            }
+          }
+        }
+      },
+      "Control": {
+        "type": "branch",
+        "description": "Control related signals",
+        "children": {
+          "Throttle": {
+            "type": "branch",
+            "description": "Throttle control signals",
+            "children": {
+              "Value": {
+                "type": "actuator",
+                "datatype": "float",
+                "unit": "percent",
+                "description": "Throttle command",
+                "dbc": { "signal": "throttle" }
+              }
+            }
+          },
+          "Steering": {
+            "type": "branch",
+            "description": "Steering control signals",
+            "children": {
+              "Angle": {
+                "type": "actuator",
+                "datatype": "float",
+                "unit": "deg",
+                "description": "Steering angle command",
+                "dbc": { "signal": "Angle" }
+              }
+            }
+          },
+          "Mode": {
+            "type": "branch",
+            "description": "Driving mode signals",
+            "children": {
+              "DrivingMode": {
+                "type": "actuator",
+                "datatype": "uint8",
+                "description": "Driving mode: 0=MANUAL, 1=AI_ASSIST",
+                "allowed": [0, 1],
+                "dbc": { "signal": "DrivingMode" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

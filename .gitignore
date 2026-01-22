@@ -5,3 +5,6 @@ reports/*
 # Doxygen
 html/
 latex/
+
+#kuksa
+.venv
