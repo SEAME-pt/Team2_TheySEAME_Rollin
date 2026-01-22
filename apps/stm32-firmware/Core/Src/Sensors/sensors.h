@@ -7,40 +7,129 @@
 #define THREAD_SLEEP_TICKS 10
 #define PULSES_PER_REV 20
 
-/* Global Vehicle Data Structure */
+/**
+ * @brief Global vehicle telemetry structure
+ *
+ * Holds the latest sampled vehicle state such as battery and speed. Protected
+ * by `g_vehicle_data_mutex` when updated/read by multiple threads.
+ *
+ * Requirement traceability:
+ * [impl->arch~rpm-battery-sensing~1]
+ */
 typedef struct {
-    uint16_t battery_voltage;      // Battery voltage in volts
-    float battery_percentage; // Battery percentage (0-100%)
-    float battery_current;      // Battery current in mA
-    float vehicle_speed;        // Vehicle speed in km/h or m/s
-    uint8_t data_valid;         // Flag: 1 if data is valid, 0 if not updated yet
+    uint16_t battery_voltage;      /**< Battery voltage in millivolts */
+    float battery_percentage;      /**< Battery percentage (0-100%) */
+    float battery_current;         /**< Battery current in mA */
+    float vehicle_speed;           /**< Vehicle speed in meters per second */
+    uint8_t data_valid;            /**< Flag: 1 if data is valid, 0 if not updated yet */
 } VehicleData_t;
 
-/* Vehicle Command Structure from CAN */
+/**
+ * @brief Vehicle command received from CAN/RPi
+ *
+ * Encodes the control inputs coming from remote/system controller.
+ *
+ * Requirement traceability:
+ * [impl->arch~stm-rpi-can-control~1]
+ */
 typedef struct {
-    uint8_t driving_mode;       // Driving mode (first byte)
-    uint8_t throttle;           // Throttle value 1-100 (second byte)
-    int8_t steering_angle;      // Steering angle -100 to +100 representing -1.0 to +1.0 (third byte as signed)
-    uint8_t command_valid;      // Flag: 1 if command received, 0 otherwise
+    uint8_t driving_mode;       /**< Driving mode (e.g., MANUAL/AUTO) */
+    uint8_t throttle;           /**< Throttle value 0-100 */
+    int8_t steering_angle;      /**< Steering -100..+100 representing -1.0..+1.0 */
+    uint8_t command_valid;      /**< Flag: 1 if command received, 0 otherwise */
 } VehicleCommand_t;
 
-/* Global vehicle data accessible by all threads */
+/**
+ * @brief Global vehicle data accessible by all threads
+ *
+ * Protected by `g_vehicle_data_mutex` when modified.
+ *
+ * Requirement traceability:
+ * [impl->arch~rpm-battery-sensing~1]
+ */
 extern VehicleData_t g_vehicle_data;
 
-/* Mutex for protecting global vehicle data */
+/**
+ * @brief Mutex protecting `g_vehicle_data`
+ */
 extern TX_MUTEX g_vehicle_data_mutex;
 
-/* Global vehicle command received via CAN */
+/**
+ * @brief Global vehicle command received via CAN
+ *
+ * Protected by `g_vehicle_command_mutex`.
+ *
+ * Requirement traceability:
+ * [impl->arch~stm-rpi-can-control~1]
+ */
 extern VehicleCommand_t g_vehicle_command;
 
-/* Mutex for protecting global vehicle command */
+/**
+ * @brief Mutex protecting `g_vehicle_command`
+ */
 extern TX_MUTEX g_vehicle_command_mutex;
 
-/* Speed calculation functions (for testing) */
+/**
+ * @brief Calculate RPM from timer delta ticks
+ *
+ * Converts the measured timer delta between pulses into RPM applying
+ * noise filtering and timer calibration.
+ *
+ * @param delta_ticks Time delta in timer ticks
+ *
+ * Requirement traceability:
+ * [impl->dsn~calculate-rpm~1]
+ * [impl->dsn~rpm-noise-handling~1]
+ *
+ * @return uint32_t Calculated RPM (0 if below noise threshold)
+ */
 uint32_t Speed_CalculateRPM(uint32_t delta_ticks);
+
+/**
+ * @brief Convert RPM to linear speed (m/s)
+ *
+ * Uses configured wheel circumference to convert rotational speed to
+ * linear velocity.
+ *
+ * @param rpm Rotational speed in RPM
+ *
+ * Requirement traceability:
+ * [impl->dsn~rpm-data-interface~1]
+ *
+ * @return float Linear speed in meters per second
+ */
 float Speed_RPMToMetersPerSecond(uint32_t rpm);
+
+/**
+ * @brief Process a delta reading and update running averages
+ *
+ * Adds the incoming RPM sample to the running average and emits a report
+ * every N samples (N=5). On emit, updates `g_vehicle_data.vehicle_speed`.
+ *
+ * @param delta_ticks Time delta in timer ticks
+ * @param average Pointer to running average accumulator (modified)
+ * @param counter Pointer to reading counter (modified)
+ *
+ * Requirement traceability:
+ * [impl->dsn~rpm-data-interface~1]
+ * [impl->dsn~rpm-average~1]
+ *
+ * @return int 1 if output was generated (N readings), 0 otherwise
+ */
 int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter);
 
-/* Speed thread entry point */
+/**
+ * @brief Speed calculation thread entry point
+ *
+ * Reads captured pulse deltas, computes RPM and linear speed, and updates
+ * the global vehicle data structure. Runs periodically under ThreadX.
+ *
+ * @param thread_input Thread parameter passed by ThreadX scheduler (unused)
+ *
+ * Requirement traceability:
+ * [impl->dsn~rpm-read-frequency~1]
+ *
+ * @return void
+ */
 extern void Speed_Thread_Entry(ULONG thread_input);
 #endif
