@@ -14,8 +14,8 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     generalInfo info;
     systemInfo sysInfo;
-    if (!sysInfo.start("can0")) {
-        std::cerr << "Failed to start CAN bus on can0" << std::endl;
+    if (!sysInfo.start()) {
+        std::cerr << "Failed to communicate with kuksa" << std::endl;
     }
 
     engine.rootContext()->setContextProperty("generalInfo", &info);
