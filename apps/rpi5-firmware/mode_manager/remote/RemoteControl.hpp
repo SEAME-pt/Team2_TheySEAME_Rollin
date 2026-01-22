@@ -10,10 +10,10 @@ public:
 	/**
 	 * @brief RemoteControl constructor
 	 *
-	 * @param evdev interface reference
-	 *
 	 * Prepares the unordered map to set and get ABS_Y and ABS_X values
 	 * Also receives an evdev interface
+	 *
+	 * @param evdev interface reference
 	 *
 	 */
 	RemoteControl(IEvdev &ev);
@@ -29,9 +29,9 @@ public:
 	/**
 	 * @brief Get a Gamepad value
 	 *
-	 * @param key keycode
-	 *
 	 * Returns the current key value in the unordered map
+	 *
+	 * @param key keycode
 	 *
 	 * @return Current key value
 	 *
@@ -41,10 +41,10 @@ public:
 	/**
 	 * @brief Set a Gamepad key value
 	 *
+	 * Sets a given key to the given value in the unordered map
+	 *
 	 * @param key keycode
 	 * @param value to set the key to (0|1)
-	 *
-	 * Sets a given key to the given value in the unordered map
 	 *
 	 */
 	void setkey(const uint16_t keycode, const uint8_t value);
