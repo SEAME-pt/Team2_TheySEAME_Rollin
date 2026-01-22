@@ -35,7 +35,7 @@
 #include <google/protobuf/map_entry.h>
 #include <google/protobuf/map_field_inl.h>
 #include <google/protobuf/unknown_field_set.h>
-#include "types.pb.h"
+#include "kuksa/val/v2/types.pb.h"
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
 #define PROTOBUF_INTERNAL_EXPORT_kuksa_2fval_2fv2_2fval_2eproto
@@ -51,7 +51,7 @@ struct TableStruct_kuksa_2fval_2fv2_2fval_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[39]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[40]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -85,6 +85,9 @@ extern GetProviderValueRequestDefaultTypeInternal _GetProviderValueRequest_defau
 class GetProviderValueResponse;
 class GetProviderValueResponseDefaultTypeInternal;
 extern GetProviderValueResponseDefaultTypeInternal _GetProviderValueResponse_default_instance_;
+class GetProviderValueResponse_EntriesEntry_DoNotUse;
+class GetProviderValueResponse_EntriesEntry_DoNotUseDefaultTypeInternal;
+extern GetProviderValueResponse_EntriesEntry_DoNotUseDefaultTypeInternal _GetProviderValueResponse_EntriesEntry_DoNotUse_default_instance_;
 class GetServerInfoRequest;
 class GetServerInfoRequestDefaultTypeInternal;
 extern GetServerInfoRequestDefaultTypeInternal _GetServerInfoRequest_default_instance_;
@@ -190,6 +193,7 @@ template<> ::kuksa::val::v2::BatchActuateStreamRequest* Arena::CreateMaybeMessag
 template<> ::kuksa::val::v2::BatchActuateStreamResponse* Arena::CreateMaybeMessage<::kuksa::val::v2::BatchActuateStreamResponse>(Arena*);
 template<> ::kuksa::val::v2::GetProviderValueRequest* Arena::CreateMaybeMessage<::kuksa::val::v2::GetProviderValueRequest>(Arena*);
 template<> ::kuksa::val::v2::GetProviderValueResponse* Arena::CreateMaybeMessage<::kuksa::val::v2::GetProviderValueResponse>(Arena*);
+template<> ::kuksa::val::v2::GetProviderValueResponse_EntriesEntry_DoNotUse* Arena::CreateMaybeMessage<::kuksa::val::v2::GetProviderValueResponse_EntriesEntry_DoNotUse>(Arena*);
 template<> ::kuksa::val::v2::GetServerInfoRequest* Arena::CreateMaybeMessage<::kuksa::val::v2::GetServerInfoRequest>(Arena*);
 template<> ::kuksa::val::v2::GetServerInfoResponse* Arena::CreateMaybeMessage<::kuksa::val::v2::GetServerInfoResponse>(Arena*);
 template<> ::kuksa::val::v2::GetValueRequest* Arena::CreateMaybeMessage<::kuksa::val::v2::GetValueRequest>(Arena*);
@@ -4578,26 +4582,30 @@ class GetProviderValueRequest PROTOBUF_FINAL :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kRequestFieldNumber = 2,
+    kSignalIdsFieldNumber = 2,
     kRequestIdFieldNumber = 1,
   };
-  // .kuksa.val.v2.GetValueRequest request = 2;
-  bool has_request() const;
+  // repeated int32 signal_ids = 2;
+  int signal_ids_size() const;
   private:
-  bool _internal_has_request() const;
+  int _internal_signal_ids_size() const;
   public:
-  void clear_request();
-  const ::kuksa::val::v2::GetValueRequest& request() const;
-  ::kuksa::val::v2::GetValueRequest* release_request();
-  ::kuksa::val::v2::GetValueRequest* mutable_request();
-  void set_allocated_request(::kuksa::val::v2::GetValueRequest* request);
+  void clear_signal_ids();
   private:
-  const ::kuksa::val::v2::GetValueRequest& _internal_request() const;
-  ::kuksa::val::v2::GetValueRequest* _internal_mutable_request();
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_signal_ids(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
+      _internal_signal_ids() const;
+  void _internal_add_signal_ids(::PROTOBUF_NAMESPACE_ID::int32 value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
+      _internal_mutable_signal_ids();
   public:
-  void unsafe_arena_set_allocated_request(
-      ::kuksa::val::v2::GetValueRequest* request);
-  ::kuksa::val::v2::GetValueRequest* unsafe_arena_release_request();
+  ::PROTOBUF_NAMESPACE_ID::int32 signal_ids(int index) const;
+  void set_signal_ids(int index, ::PROTOBUF_NAMESPACE_ID::int32 value);
+  void add_signal_ids(::PROTOBUF_NAMESPACE_ID::int32 value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
+      signal_ids() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
+      mutable_signal_ids();
 
   // uint32 request_id = 1;
   void clear_request_id();
@@ -4615,11 +4623,42 @@ class GetProviderValueRequest PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::kuksa::val::v2::GetValueRequest* request_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 > signal_ids_;
+  mutable std::atomic<int> _signal_ids_cached_byte_size_;
   ::PROTOBUF_NAMESPACE_ID::uint32 request_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_kuksa_2fval_2fv2_2fval_2eproto;
 };
+// -------------------------------------------------------------------
+
+class GetProviderValueResponse_EntriesEntry_DoNotUse : public ::PROTOBUF_NAMESPACE_ID::internal::MapEntry<GetProviderValueResponse_EntriesEntry_DoNotUse, 
+    ::PROTOBUF_NAMESPACE_ID::int32, ::kuksa::val::v2::Datapoint,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_INT32,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_MESSAGE,
+    0 > {
+public:
+  typedef ::PROTOBUF_NAMESPACE_ID::internal::MapEntry<GetProviderValueResponse_EntriesEntry_DoNotUse, 
+    ::PROTOBUF_NAMESPACE_ID::int32, ::kuksa::val::v2::Datapoint,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_INT32,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_MESSAGE,
+    0 > SuperType;
+  GetProviderValueResponse_EntriesEntry_DoNotUse();
+  GetProviderValueResponse_EntriesEntry_DoNotUse(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  void MergeFrom(const GetProviderValueResponse_EntriesEntry_DoNotUse& other);
+  static const GetProviderValueResponse_EntriesEntry_DoNotUse* internal_default_instance() { return reinterpret_cast<const GetProviderValueResponse_EntriesEntry_DoNotUse*>(&_GetProviderValueResponse_EntriesEntry_DoNotUse_default_instance_); }
+  static bool ValidateKey(void*) { return true; }
+  static bool ValidateValue(void*) { return true; }
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& other) final;
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_kuksa_2fval_2fv2_2fval_2eproto);
+    return ::descriptor_table_kuksa_2fval_2fv2_2fval_2eproto.file_level_metadata[34];
+  }
+
+  public:
+};
+
 // -------------------------------------------------------------------
 
 class GetProviderValueResponse PROTOBUF_FINAL :
@@ -4664,7 +4703,7 @@ class GetProviderValueResponse PROTOBUF_FINAL :
                &_GetProviderValueResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    34;
+    35;
 
   friend void swap(GetProviderValueResponse& a, GetProviderValueResponse& b) {
     a.Swap(&b);
@@ -4732,29 +4771,29 @@ class GetProviderValueResponse PROTOBUF_FINAL :
 
   // nested types ----------------------------------------------------
 
+
   // accessors -------------------------------------------------------
 
   enum : int {
-    kResponseFieldNumber = 2,
+    kEntriesFieldNumber = 2,
     kRequestIdFieldNumber = 1,
   };
-  // .kuksa.val.v2.GetValueResponse response = 2;
-  bool has_response() const;
+  // map<int32, .kuksa.val.v2.Datapoint> entries = 2;
+  int entries_size() const;
   private:
-  bool _internal_has_response() const;
+  int _internal_entries_size() const;
   public:
-  void clear_response();
-  const ::kuksa::val::v2::GetValueResponse& response() const;
-  ::kuksa::val::v2::GetValueResponse* release_response();
-  ::kuksa::val::v2::GetValueResponse* mutable_response();
-  void set_allocated_response(::kuksa::val::v2::GetValueResponse* response);
+  void clear_entries();
   private:
-  const ::kuksa::val::v2::GetValueResponse& _internal_response() const;
-  ::kuksa::val::v2::GetValueResponse* _internal_mutable_response();
+  const ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::int32, ::kuksa::val::v2::Datapoint >&
+      _internal_entries() const;
+  ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::int32, ::kuksa::val::v2::Datapoint >*
+      _internal_mutable_entries();
   public:
-  void unsafe_arena_set_allocated_response(
-      ::kuksa::val::v2::GetValueResponse* response);
-  ::kuksa::val::v2::GetValueResponse* unsafe_arena_release_response();
+  const ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::int32, ::kuksa::val::v2::Datapoint >&
+      entries() const;
+  ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::int32, ::kuksa::val::v2::Datapoint >*
+      mutable_entries();
 
   // uint32 request_id = 1;
   void clear_request_id();
@@ -4772,7 +4811,12 @@ class GetProviderValueResponse PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::kuksa::val::v2::GetValueResponse* response_;
+  ::PROTOBUF_NAMESPACE_ID::internal::MapField<
+      GetProviderValueResponse_EntriesEntry_DoNotUse,
+      ::PROTOBUF_NAMESPACE_ID::int32, ::kuksa::val::v2::Datapoint,
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_INT32,
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_MESSAGE,
+      0 > entries_;
   ::PROTOBUF_NAMESPACE_ID::uint32 request_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_kuksa_2fval_2fv2_2fval_2eproto;
@@ -4832,7 +4876,7 @@ class OpenProviderStreamRequest PROTOBUF_FINAL :
                &_OpenProviderStreamRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    35;
+    36;
 
   friend void swap(OpenProviderStreamRequest& a, OpenProviderStreamRequest& b) {
     a.Swap(&b);
@@ -5125,7 +5169,7 @@ class OpenProviderStreamResponse PROTOBUF_FINAL :
                &_OpenProviderStreamResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    36;
+    37;
 
   friend void swap(OpenProviderStreamResponse& a, OpenProviderStreamResponse& b) {
     a.Swap(&b);
@@ -5387,7 +5431,7 @@ class GetServerInfoRequest PROTOBUF_FINAL :
                &_GetServerInfoRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    37;
+    38;
 
   friend void swap(GetServerInfoRequest& a, GetServerInfoRequest& b) {
     a.Swap(&b);
@@ -5511,7 +5555,7 @@ class GetServerInfoResponse PROTOBUF_FINAL :
                &_GetServerInfoResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    38;
+    39;
 
   friend void swap(GetServerInfoResponse& a, GetServerInfoResponse& b) {
     a.Swap(&b);
@@ -7396,86 +7440,54 @@ inline void GetProviderValueRequest::set_request_id(::PROTOBUF_NAMESPACE_ID::uin
   // @@protoc_insertion_point(field_set:kuksa.val.v2.GetProviderValueRequest.request_id)
 }
 
-// .kuksa.val.v2.GetValueRequest request = 2;
-inline bool GetProviderValueRequest::_internal_has_request() const {
-  return this != internal_default_instance() && request_ != nullptr;
+// repeated int32 signal_ids = 2;
+inline int GetProviderValueRequest::_internal_signal_ids_size() const {
+  return signal_ids_.size();
 }
-inline bool GetProviderValueRequest::has_request() const {
-  return _internal_has_request();
+inline int GetProviderValueRequest::signal_ids_size() const {
+  return _internal_signal_ids_size();
 }
-inline void GetProviderValueRequest::clear_request() {
-  if (GetArena() == nullptr && request_ != nullptr) {
-    delete request_;
-  }
-  request_ = nullptr;
+inline void GetProviderValueRequest::clear_signal_ids() {
+  signal_ids_.Clear();
 }
-inline const ::kuksa::val::v2::GetValueRequest& GetProviderValueRequest::_internal_request() const {
-  const ::kuksa::val::v2::GetValueRequest* p = request_;
-  return p != nullptr ? *p : *reinterpret_cast<const ::kuksa::val::v2::GetValueRequest*>(
-      &::kuksa::val::v2::_GetValueRequest_default_instance_);
+inline ::PROTOBUF_NAMESPACE_ID::int32 GetProviderValueRequest::_internal_signal_ids(int index) const {
+  return signal_ids_.Get(index);
 }
-inline const ::kuksa::val::v2::GetValueRequest& GetProviderValueRequest::request() const {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.GetProviderValueRequest.request)
-  return _internal_request();
+inline ::PROTOBUF_NAMESPACE_ID::int32 GetProviderValueRequest::signal_ids(int index) const {
+  // @@protoc_insertion_point(field_get:kuksa.val.v2.GetProviderValueRequest.signal_ids)
+  return _internal_signal_ids(index);
 }
-inline void GetProviderValueRequest::unsafe_arena_set_allocated_request(
-    ::kuksa::val::v2::GetValueRequest* request) {
-  if (GetArena() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(request_);
-  }
-  request_ = request;
-  if (request) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:kuksa.val.v2.GetProviderValueRequest.request)
+inline void GetProviderValueRequest::set_signal_ids(int index, ::PROTOBUF_NAMESPACE_ID::int32 value) {
+  signal_ids_.Set(index, value);
+  // @@protoc_insertion_point(field_set:kuksa.val.v2.GetProviderValueRequest.signal_ids)
 }
-inline ::kuksa::val::v2::GetValueRequest* GetProviderValueRequest::release_request() {
-  auto temp = unsafe_arena_release_request();
-  if (GetArena() != nullptr) {
-    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  }
-  return temp;
+inline void GetProviderValueRequest::_internal_add_signal_ids(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  signal_ids_.Add(value);
 }
-inline ::kuksa::val::v2::GetValueRequest* GetProviderValueRequest::unsafe_arena_release_request() {
-  // @@protoc_insertion_point(field_release:kuksa.val.v2.GetProviderValueRequest.request)
-  
-  ::kuksa::val::v2::GetValueRequest* temp = request_;
-  request_ = nullptr;
-  return temp;
+inline void GetProviderValueRequest::add_signal_ids(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_add_signal_ids(value);
+  // @@protoc_insertion_point(field_add:kuksa.val.v2.GetProviderValueRequest.signal_ids)
 }
-inline ::kuksa::val::v2::GetValueRequest* GetProviderValueRequest::_internal_mutable_request() {
-  
-  if (request_ == nullptr) {
-    auto* p = CreateMaybeMessage<::kuksa::val::v2::GetValueRequest>(GetArena());
-    request_ = p;
-  }
-  return request_;
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
+GetProviderValueRequest::_internal_signal_ids() const {
+  return signal_ids_;
 }
-inline ::kuksa::val::v2::GetValueRequest* GetProviderValueRequest::mutable_request() {
-  // @@protoc_insertion_point(field_mutable:kuksa.val.v2.GetProviderValueRequest.request)
-  return _internal_mutable_request();
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
+GetProviderValueRequest::signal_ids() const {
+  // @@protoc_insertion_point(field_list:kuksa.val.v2.GetProviderValueRequest.signal_ids)
+  return _internal_signal_ids();
 }
-inline void GetProviderValueRequest::set_allocated_request(::kuksa::val::v2::GetValueRequest* request) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
-  if (message_arena == nullptr) {
-    delete request_;
-  }
-  if (request) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(request);
-    if (message_arena != submessage_arena) {
-      request = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, request, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  request_ = request;
-  // @@protoc_insertion_point(field_set_allocated:kuksa.val.v2.GetProviderValueRequest.request)
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
+GetProviderValueRequest::_internal_mutable_signal_ids() {
+  return &signal_ids_;
 }
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
+GetProviderValueRequest::mutable_signal_ids() {
+  // @@protoc_insertion_point(field_mutable_list:kuksa.val.v2.GetProviderValueRequest.signal_ids)
+  return _internal_mutable_signal_ids();
+}
+
+// -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
 
@@ -7501,85 +7513,30 @@ inline void GetProviderValueResponse::set_request_id(::PROTOBUF_NAMESPACE_ID::ui
   // @@protoc_insertion_point(field_set:kuksa.val.v2.GetProviderValueResponse.request_id)
 }
 
-// .kuksa.val.v2.GetValueResponse response = 2;
-inline bool GetProviderValueResponse::_internal_has_response() const {
-  return this != internal_default_instance() && response_ != nullptr;
+// map<int32, .kuksa.val.v2.Datapoint> entries = 2;
+inline int GetProviderValueResponse::_internal_entries_size() const {
+  return entries_.size();
 }
-inline bool GetProviderValueResponse::has_response() const {
-  return _internal_has_response();
+inline int GetProviderValueResponse::entries_size() const {
+  return _internal_entries_size();
 }
-inline void GetProviderValueResponse::clear_response() {
-  if (GetArena() == nullptr && response_ != nullptr) {
-    delete response_;
-  }
-  response_ = nullptr;
+inline const ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::int32, ::kuksa::val::v2::Datapoint >&
+GetProviderValueResponse::_internal_entries() const {
+  return entries_.GetMap();
 }
-inline const ::kuksa::val::v2::GetValueResponse& GetProviderValueResponse::_internal_response() const {
-  const ::kuksa::val::v2::GetValueResponse* p = response_;
-  return p != nullptr ? *p : *reinterpret_cast<const ::kuksa::val::v2::GetValueResponse*>(
-      &::kuksa::val::v2::_GetValueResponse_default_instance_);
+inline const ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::int32, ::kuksa::val::v2::Datapoint >&
+GetProviderValueResponse::entries() const {
+  // @@protoc_insertion_point(field_map:kuksa.val.v2.GetProviderValueResponse.entries)
+  return _internal_entries();
 }
-inline const ::kuksa::val::v2::GetValueResponse& GetProviderValueResponse::response() const {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.GetProviderValueResponse.response)
-  return _internal_response();
+inline ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::int32, ::kuksa::val::v2::Datapoint >*
+GetProviderValueResponse::_internal_mutable_entries() {
+  return entries_.MutableMap();
 }
-inline void GetProviderValueResponse::unsafe_arena_set_allocated_response(
-    ::kuksa::val::v2::GetValueResponse* response) {
-  if (GetArena() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(response_);
-  }
-  response_ = response;
-  if (response) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:kuksa.val.v2.GetProviderValueResponse.response)
-}
-inline ::kuksa::val::v2::GetValueResponse* GetProviderValueResponse::release_response() {
-  auto temp = unsafe_arena_release_response();
-  if (GetArena() != nullptr) {
-    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  }
-  return temp;
-}
-inline ::kuksa::val::v2::GetValueResponse* GetProviderValueResponse::unsafe_arena_release_response() {
-  // @@protoc_insertion_point(field_release:kuksa.val.v2.GetProviderValueResponse.response)
-  
-  ::kuksa::val::v2::GetValueResponse* temp = response_;
-  response_ = nullptr;
-  return temp;
-}
-inline ::kuksa::val::v2::GetValueResponse* GetProviderValueResponse::_internal_mutable_response() {
-  
-  if (response_ == nullptr) {
-    auto* p = CreateMaybeMessage<::kuksa::val::v2::GetValueResponse>(GetArena());
-    response_ = p;
-  }
-  return response_;
-}
-inline ::kuksa::val::v2::GetValueResponse* GetProviderValueResponse::mutable_response() {
-  // @@protoc_insertion_point(field_mutable:kuksa.val.v2.GetProviderValueResponse.response)
-  return _internal_mutable_response();
-}
-inline void GetProviderValueResponse::set_allocated_response(::kuksa::val::v2::GetValueResponse* response) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
-  if (message_arena == nullptr) {
-    delete response_;
-  }
-  if (response) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(response);
-    if (message_arena != submessage_arena) {
-      response = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, response, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  response_ = response;
-  // @@protoc_insertion_point(field_set_allocated:kuksa.val.v2.GetProviderValueResponse.response)
+inline ::PROTOBUF_NAMESPACE_ID::Map< ::PROTOBUF_NAMESPACE_ID::int32, ::kuksa::val::v2::Datapoint >*
+GetProviderValueResponse::mutable_entries() {
+  // @@protoc_insertion_point(field_mutable_map:kuksa.val.v2.GetProviderValueResponse.entries)
+  return _internal_mutable_entries();
 }
 
 // -------------------------------------------------------------------
@@ -8811,6 +8768,8 @@ inline void GetServerInfoResponse::unsafe_arena_set_allocated_commit_hash(
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

@@ -18,7 +18,7 @@
 #ifndef GRPC_kuksa_2fval_2fv2_2fval_2eproto__INCLUDED
 #define GRPC_kuksa_2fval_2fv2_2fval_2eproto__INCLUDED
 
-#include "val.pb.h"
+#include "kuksa/val/v2/val.pb.h"
 
 #include <functional>
 #include <grpc/impl/codegen/port_platform.h>
@@ -61,7 +61,7 @@ class VAL final {
     //   UNAUTHENTICATED if no credentials provided or credentials has expired
     //   PERMISSION_DENIED if access is denied
     //   INVALID_ARGUMENT if the request is empty or provided path is too long
-    //     - MAX_REQUEST_PATH_LENGTH: usize = 1000;
+    //       - MAX_REQUEST_PATH_LENGTH: usize = 1000;
     //
     virtual ::grpc::Status GetValue(::grpc::ClientContext* context, const ::kuksa::val::v2::GetValueRequest& request, ::kuksa::val::v2::GetValueResponse* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kuksa::val::v2::GetValueResponse>> AsyncGetValue(::grpc::ClientContext* context, const ::kuksa::val::v2::GetValueRequest& request, ::grpc::CompletionQueue* cq) {
@@ -79,7 +79,7 @@ class VAL final {
     //   UNAUTHENTICATED if no credentials provided or credentials has expired
     //   PERMISSION_DENIED if access is denied for any of the requested signals.
     //   INVALID_ARGUMENT if the request is empty or provided path is too long
-    //     - MAX_REQUEST_PATH_LENGTH: usize = 1000;
+    //       - MAX_REQUEST_PATH_LENGTH: usize = 1000;
     //
     virtual ::grpc::Status GetValues(::grpc::ClientContext* context, const ::kuksa::val::v2::GetValuesRequest& request, ::kuksa::val::v2::GetValuesResponse* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kuksa::val::v2::GetValuesResponse>> AsyncGetValues(::grpc::ClientContext* context, const ::kuksa::val::v2::GetValuesRequest& request, ::grpc::CompletionQueue* cq) {
@@ -94,10 +94,10 @@ class VAL final {
     //   UNAUTHENTICATED if no credentials provided or credentials has expired
     //   PERMISSION_DENIED if access is denied for any of the signals.
     //   INVALID_ARGUMENT
-    //     - if the request is empty or provided path is too long
-    //       MAX_REQUEST_PATH_LENGTH: usize = 1000;
-    //     - if buffer_size exceeds the maximum permitted
-    //       MAX_BUFFER_SIZE: usize = 1000;
+    //       - if the request is empty or provided path is too long
+    //             MAX_REQUEST_PATH_LENGTH: usize = 1000;
+    //       - if buffer_size exceeds the maximum permitted
+    //             MAX_BUFFER_SIZE: usize = 1000;
     //
     // When subscribing, Databroker shall immediately return the value for all
     // subscribed entries.
@@ -121,10 +121,10 @@ class VAL final {
     //   UNAUTHENTICATED if no credentials provided or credentials has expired
     //   PERMISSION_DENIED if access is denied for any of the signals.
     //   INVALID_ARGUMENT
-    //     - if the request is empty or provided path is too long
-    //       MAX_REQUEST_PATH_LENGTH: usize = 1000;
-    //     - if buffer_size exceeds the maximum permitted
-    //       MAX_BUFFER_SIZE: usize = 1000;
+    //       - if the request is empty or provided path is too long
+    //             MAX_REQUEST_PATH_LENGTH: usize = 1000;
+    //       - if buffer_size exceeds the maximum permitted
+    //             MAX_BUFFER_SIZE: usize = 1000;
     //
     // When subscribing, Databroker shall immediately return the value for all
     // subscribed entries.
@@ -151,12 +151,12 @@ class VAL final {
     //   UNAVAILABLE if there is no provider currently providing the actuator
     //   DATA_LOSS is there is a internal TransmissionFailure
     //   INVALID_ARGUMENT
-    //     - if the provided path is not an actuator.
-    //     - if the data type used in the request does not match
-    //       the data type of the addressed signal
-    //     - if the requested value is not accepted,
-    //       e.g. if sending an unsupported enum value
-    //     - if the provided value is out of the min/max range specified
+    //       - if the provided path is not an actuator.
+    //       - if the data type used in the request does not match
+    //            the data type of the addressed signal
+    //       - if the requested value is not accepted,
+    //            e.g. if sending an unsupported enum value
+    //       - if the provided value is out of the min/max range specified
     //
     virtual ::grpc::Status Actuate(::grpc::ClientContext* context, const ::kuksa::val::v2::ActuateRequest& request, ::kuksa::val::v2::ActuateResponse* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kuksa::val::v2::ActuateResponse>> AsyncActuate(::grpc::ClientContext* context, const ::kuksa::val::v2::ActuateRequest& request, ::grpc::CompletionQueue* cq) {
@@ -174,12 +174,12 @@ class VAL final {
     //   UNAVAILABLE if there is no provider currently providing the actuator
     //   DATA_LOSS is there is a internal TransmissionFailure
     //   INVALID_ARGUMENT
-    //     - if the provided path is not an actuator.
-    //     - if the data type used in the request does not match
-    //       the data type of the addressed signal
-    //     - if the requested value is not accepted,
-    //       e.g. if sending an unsupported enum value
-    //     - if the provided value is out of the min/max range specified
+    //       - if the provided path is not an actuator.
+    //       - if the data type used in the request does not match
+    //            the data type of the addressed signal
+    //       - if the requested value is not accepted,
+    //            e.g. if sending an unsupported enum value
+    //       - if the provided value is out of the min/max range specified
     //
     std::unique_ptr< ::grpc::ClientWriterInterface< ::kuksa::val::v2::ActuateRequest>> ActuateStream(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response) {
       return std::unique_ptr< ::grpc::ClientWriterInterface< ::kuksa::val::v2::ActuateRequest>>(ActuateStreamRaw(context, response));
@@ -201,12 +201,12 @@ class VAL final {
     //   UNAVAILABLE if there is no provider currently providing an actuator
     //   DATA_LOSS is there is a internal TransmissionFailure
     //   INVALID_ARGUMENT
-    //     - if any of the provided path is not an actuator.
-    //     - if the data type used in the request does not match
-    //       the data type of the addressed signal
-    //     - if the requested value is not accepted,
-    //       e.g. if sending an unsupported enum value
-    //     - if any of the provided actuators values are out of the min/max range specified
+    //       - if any of the provided path is not an actuator.
+    //       - if the data type used in the request does not match
+    //            the data type of the addressed signal
+    //       - if the requested value is not accepted,
+    //            e.g. if sending an unsupported enum value
+    //       - if any of the provided actuators values are out of the min/max range specified
     //
     virtual ::grpc::Status BatchActuate(::grpc::ClientContext* context, const ::kuksa::val::v2::BatchActuateRequest& request, ::kuksa::val::v2::BatchActuateResponse* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kuksa::val::v2::BatchActuateResponse>> AsyncBatchActuate(::grpc::ClientContext* context, const ::kuksa::val::v2::BatchActuateRequest& request, ::grpc::CompletionQueue* cq) {
@@ -234,14 +234,14 @@ class VAL final {
     // Returns (GRPC error code):
     //   NOT_FOUND if any of the signals are non-existant.
     //   PERMISSION_DENIED
-    //     - if access is denied for any of the signals.
+    //       - if access is denied for any of the signals.
     //   UNAUTHENTICATED if no credentials provided or credentials has expired
     //   INVALID_ARGUMENT
-    //     - if the data type used in the request does not match
-    //       the data type of the addressed signal
-    //     - if the published value is not accepted,
-    //       e.g. if sending an unsupported enum value
-    //     - if the published value is out of the min/max range specified
+    //       - if the data type used in the request does not match
+    //            the data type of the addressed signal
+    //       - if the published value is not accepted,
+    //            e.g. if sending an unsupported enum value
+    //       - if the published value is out of the min/max range specified
     //
     virtual ::grpc::Status PublishValue(::grpc::ClientContext* context, const ::kuksa::val::v2::PublishValueRequest& request, ::kuksa::val::v2::PublishValueResponse* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kuksa::val::v2::PublishValueResponse>> AsyncPublishValue(::grpc::ClientContext* context, const ::kuksa::val::v2::PublishValueRequest& request, ::grpc::CompletionQueue* cq) {
@@ -258,35 +258,49 @@ class VAL final {
     // provider and server (where the initiator of a request can vary).
     //
     // Errors:
-    //  - Provider sends ProvideActuationRequest -> Databroker returns ProvideActuationResponse.
-    //    Possible gRPC error codes:
-    //    - NOT_FOUND if any of the signals do not exist.
-    //    - PERMISSION_DENIED if access is denied for any of the signals.
-    //    - UNAUTHENTICATED if no credentials are provided or if they have expired.
-    //    - ALREADY_EXISTS if a provider already claimed ownership of an actuator.
+    //    - Provider sends ProvideActuationRequest -> Databroker returns ProvideActuationResponse
+    //        - strict case
+    //            Returns (GRPC error code) and closes the stream call
+    //              NOT_FOUND if any of the signals are non-existant.
+    //              PERMISSION_DENIED if access is denied for any of the signals.
+    //              UNAUTHENTICATED if no credentials provided or credentials has expired
+    //              ALREADY_EXISTS if a provider already claimed the ownership of an actuator
     //
-    //  - Provider sends PublishValuesRequest -> Databroker returns PublishValuesResponse
-    //    upon error, and nothing upon success. Errors are returned as messages in the
-    //    stream response with signal id `map<int32, Error> status = 2;` (permissive case).
-    //    Possible error codes:
-    //    - NOT_FOUND if a signal does not exist.
-    //    - PERMISSION_DENIED if access is denied for a signal.
-    //    - INVALID_ARGUMENT if:
-    //      - The data type used in the request does not match the signal's data type.
-    //      - The published value is unsupported (e.g., sending an invalid enum value).
-    //      - The published value is out of the specified min/max range.
+    //    - Provider sends PublishValuesRequest -> Databroker returns PublishValuesResponse upon error, and nothing upon success
+    //        - permissive case
+    //            GRPC errors are returned as messages in the stream
+    //            response with the signal id `map<int32, Error> status = 2;`
+    //              NOT_FOUND if a signal is non-existant.
+    //              PERMISSION_DENIED
+    //                  - if access is denied for a signal.
+    //              INVALID_ARGUMENT
+    //                  - if the data type used in the request does not match
+    //                       the data type of the addressed signal
+    //                  - if the published value is not accepted,
+    //                       e.g. if sending an unsupported enum value
+    //                  - if the published value is out of the min/max range specified
+    //        - strict case
+    //            Returns (GRPC error code) and closes the stream call.
+    //              ALREADY_EXISTS if a provider already claimed the ownership of the signals
+    //              ABORTED if provider has not claimed yet the signals
     //
-    //  - Databroker sends BatchActuateStreamRequest -> Provider must return
-    //    BatchActuateStreamResponse for each requested signal to indicate acceptance or rejection.
-    //    It is up to the provider to decide if the stream shall be closed. The databroker
-    //    will not react to the received error message.
+    //    - Databroker sends BatchActuateStreamRequest -> Provider shall return a BatchActuateStreamResponse,
+    //        for every signal requested to indicate if the request was accepted or not.
+    //        It is up to the provider to decide if the stream shall be closed,
+    //        as of today Databroker will not react on the received error message.
     //
-    //  - Provider sends ProvideSignalRequest -> Databroker returns ProvideSignalResponse.
-    //    Possible gRPC error codes:
-    //    - NOT_FOUND if any signals do not exist.
-    //    - PERMISSION_DENIED if access is denied for any of the signals.
-    //    - UNAUTHENTICATED if no credentials are provided or if they have expired.
-    //    - ALREADY_EXISTS if a provider has already claimed ownership of any signal.
+    //    - Provider sends ProvideSignalRequest -> Databroker returns ProvideSignalResponse
+    //        - strict case
+    //            Returns (GRPC error code) and closes the stream call.
+    //              NOT_FOUND if any of the signals are non-existant.
+    //              PERMISSION_DENIED if access is denied for any of the signals.
+    //              UNAUTHENTICATED if no credentials provided or credentials has expired
+    //              ALREADY_EXISTS if a provider already claimed the ownership of any signal.
+    //
+    //    - Provider sends ProviderErrorIndication
+    //        - strict case
+    //            Returns (GRPC error code) and closes the stream call.
+    //              ABORTED if provider has not claimed yet the signals
     //
     std::unique_ptr< ::grpc::ClientReaderWriterInterface< ::kuksa::val::v2::OpenProviderStreamRequest, ::kuksa::val::v2::OpenProviderStreamResponse>> OpenProviderStream(::grpc::ClientContext* context) {
       return std::unique_ptr< ::grpc::ClientReaderWriterInterface< ::kuksa::val::v2::OpenProviderStreamRequest, ::kuksa::val::v2::OpenProviderStreamResponse>>(OpenProviderStreamRaw(context));
@@ -317,7 +331,7 @@ class VAL final {
       //   UNAUTHENTICATED if no credentials provided or credentials has expired
       //   PERMISSION_DENIED if access is denied
       //   INVALID_ARGUMENT if the request is empty or provided path is too long
-      //     - MAX_REQUEST_PATH_LENGTH: usize = 1000;
+      //       - MAX_REQUEST_PATH_LENGTH: usize = 1000;
       //
       virtual void GetValue(::grpc::ClientContext* context, const ::kuksa::val::v2::GetValueRequest* request, ::kuksa::val::v2::GetValueResponse* response, std::function<void(::grpc::Status)>) = 0;
       virtual void GetValue(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::kuksa::val::v2::GetValueResponse* response, std::function<void(::grpc::Status)>) = 0;
@@ -340,7 +354,7 @@ class VAL final {
       //   UNAUTHENTICATED if no credentials provided or credentials has expired
       //   PERMISSION_DENIED if access is denied for any of the requested signals.
       //   INVALID_ARGUMENT if the request is empty or provided path is too long
-      //     - MAX_REQUEST_PATH_LENGTH: usize = 1000;
+      //       - MAX_REQUEST_PATH_LENGTH: usize = 1000;
       //
       virtual void GetValues(::grpc::ClientContext* context, const ::kuksa::val::v2::GetValuesRequest* request, ::kuksa::val::v2::GetValuesResponse* response, std::function<void(::grpc::Status)>) = 0;
       virtual void GetValues(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::kuksa::val::v2::GetValuesResponse* response, std::function<void(::grpc::Status)>) = 0;
@@ -360,10 +374,10 @@ class VAL final {
       //   UNAUTHENTICATED if no credentials provided or credentials has expired
       //   PERMISSION_DENIED if access is denied for any of the signals.
       //   INVALID_ARGUMENT
-      //     - if the request is empty or provided path is too long
-      //       MAX_REQUEST_PATH_LENGTH: usize = 1000;
-      //     - if buffer_size exceeds the maximum permitted
-      //       MAX_BUFFER_SIZE: usize = 1000;
+      //       - if the request is empty or provided path is too long
+      //             MAX_REQUEST_PATH_LENGTH: usize = 1000;
+      //       - if buffer_size exceeds the maximum permitted
+      //             MAX_BUFFER_SIZE: usize = 1000;
       //
       // When subscribing, Databroker shall immediately return the value for all
       // subscribed entries.
@@ -383,10 +397,10 @@ class VAL final {
       //   UNAUTHENTICATED if no credentials provided or credentials has expired
       //   PERMISSION_DENIED if access is denied for any of the signals.
       //   INVALID_ARGUMENT
-      //     - if the request is empty or provided path is too long
-      //       MAX_REQUEST_PATH_LENGTH: usize = 1000;
-      //     - if buffer_size exceeds the maximum permitted
-      //       MAX_BUFFER_SIZE: usize = 1000;
+      //       - if the request is empty or provided path is too long
+      //             MAX_REQUEST_PATH_LENGTH: usize = 1000;
+      //       - if buffer_size exceeds the maximum permitted
+      //             MAX_BUFFER_SIZE: usize = 1000;
       //
       // When subscribing, Databroker shall immediately return the value for all
       // subscribed entries.
@@ -409,12 +423,12 @@ class VAL final {
       //   UNAVAILABLE if there is no provider currently providing the actuator
       //   DATA_LOSS is there is a internal TransmissionFailure
       //   INVALID_ARGUMENT
-      //     - if the provided path is not an actuator.
-      //     - if the data type used in the request does not match
-      //       the data type of the addressed signal
-      //     - if the requested value is not accepted,
-      //       e.g. if sending an unsupported enum value
-      //     - if the provided value is out of the min/max range specified
+      //       - if the provided path is not an actuator.
+      //       - if the data type used in the request does not match
+      //            the data type of the addressed signal
+      //       - if the requested value is not accepted,
+      //            e.g. if sending an unsupported enum value
+      //       - if the provided value is out of the min/max range specified
       //
       virtual void Actuate(::grpc::ClientContext* context, const ::kuksa::val::v2::ActuateRequest* request, ::kuksa::val::v2::ActuateResponse* response, std::function<void(::grpc::Status)>) = 0;
       virtual void Actuate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::kuksa::val::v2::ActuateResponse* response, std::function<void(::grpc::Status)>) = 0;
@@ -437,12 +451,12 @@ class VAL final {
       //   UNAVAILABLE if there is no provider currently providing the actuator
       //   DATA_LOSS is there is a internal TransmissionFailure
       //   INVALID_ARGUMENT
-      //     - if the provided path is not an actuator.
-      //     - if the data type used in the request does not match
-      //       the data type of the addressed signal
-      //     - if the requested value is not accepted,
-      //       e.g. if sending an unsupported enum value
-      //     - if the provided value is out of the min/max range specified
+      //       - if the provided path is not an actuator.
+      //       - if the data type used in the request does not match
+      //            the data type of the addressed signal
+      //       - if the requested value is not accepted,
+      //            e.g. if sending an unsupported enum value
+      //       - if the provided value is out of the min/max range specified
       //
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void ActuateStream(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response, ::grpc::ClientWriteReactor< ::kuksa::val::v2::ActuateRequest>* reactor) = 0;
@@ -460,12 +474,12 @@ class VAL final {
       //   UNAVAILABLE if there is no provider currently providing an actuator
       //   DATA_LOSS is there is a internal TransmissionFailure
       //   INVALID_ARGUMENT
-      //     - if any of the provided path is not an actuator.
-      //     - if the data type used in the request does not match
-      //       the data type of the addressed signal
-      //     - if the requested value is not accepted,
-      //       e.g. if sending an unsupported enum value
-      //     - if any of the provided actuators values are out of the min/max range specified
+      //       - if any of the provided path is not an actuator.
+      //       - if the data type used in the request does not match
+      //            the data type of the addressed signal
+      //       - if the requested value is not accepted,
+      //            e.g. if sending an unsupported enum value
+      //       - if any of the provided actuators values are out of the min/max range specified
       //
       virtual void BatchActuate(::grpc::ClientContext* context, const ::kuksa::val::v2::BatchActuateRequest* request, ::kuksa::val::v2::BatchActuateResponse* response, std::function<void(::grpc::Status)>) = 0;
       virtual void BatchActuate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::kuksa::val::v2::BatchActuateResponse* response, std::function<void(::grpc::Status)>) = 0;
@@ -503,14 +517,14 @@ class VAL final {
       // Returns (GRPC error code):
       //   NOT_FOUND if any of the signals are non-existant.
       //   PERMISSION_DENIED
-      //     - if access is denied for any of the signals.
+      //       - if access is denied for any of the signals.
       //   UNAUTHENTICATED if no credentials provided or credentials has expired
       //   INVALID_ARGUMENT
-      //     - if the data type used in the request does not match
-      //       the data type of the addressed signal
-      //     - if the published value is not accepted,
-      //       e.g. if sending an unsupported enum value
-      //     - if the published value is out of the min/max range specified
+      //       - if the data type used in the request does not match
+      //            the data type of the addressed signal
+      //       - if the published value is not accepted,
+      //            e.g. if sending an unsupported enum value
+      //       - if the published value is out of the min/max range specified
       //
       virtual void PublishValue(::grpc::ClientContext* context, const ::kuksa::val::v2::PublishValueRequest* request, ::kuksa::val::v2::PublishValueResponse* response, std::function<void(::grpc::Status)>) = 0;
       virtual void PublishValue(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::kuksa::val::v2::PublishValueResponse* response, std::function<void(::grpc::Status)>) = 0;
@@ -532,35 +546,49 @@ class VAL final {
       // provider and server (where the initiator of a request can vary).
       //
       // Errors:
-      //  - Provider sends ProvideActuationRequest -> Databroker returns ProvideActuationResponse.
-      //    Possible gRPC error codes:
-      //    - NOT_FOUND if any of the signals do not exist.
-      //    - PERMISSION_DENIED if access is denied for any of the signals.
-      //    - UNAUTHENTICATED if no credentials are provided or if they have expired.
-      //    - ALREADY_EXISTS if a provider already claimed ownership of an actuator.
+      //    - Provider sends ProvideActuationRequest -> Databroker returns ProvideActuationResponse
+      //        - strict case
+      //            Returns (GRPC error code) and closes the stream call
+      //              NOT_FOUND if any of the signals are non-existant.
+      //              PERMISSION_DENIED if access is denied for any of the signals.
+      //              UNAUTHENTICATED if no credentials provided or credentials has expired
+      //              ALREADY_EXISTS if a provider already claimed the ownership of an actuator
       //
-      //  - Provider sends PublishValuesRequest -> Databroker returns PublishValuesResponse
-      //    upon error, and nothing upon success. Errors are returned as messages in the
-      //    stream response with signal id `map<int32, Error> status = 2;` (permissive case).
-      //    Possible error codes:
-      //    - NOT_FOUND if a signal does not exist.
-      //    - PERMISSION_DENIED if access is denied for a signal.
-      //    - INVALID_ARGUMENT if:
-      //      - The data type used in the request does not match the signal's data type.
-      //      - The published value is unsupported (e.g., sending an invalid enum value).
-      //      - The published value is out of the specified min/max range.
+      //    - Provider sends PublishValuesRequest -> Databroker returns PublishValuesResponse upon error, and nothing upon success
+      //        - permissive case
+      //            GRPC errors are returned as messages in the stream
+      //            response with the signal id `map<int32, Error> status = 2;`
+      //              NOT_FOUND if a signal is non-existant.
+      //              PERMISSION_DENIED
+      //                  - if access is denied for a signal.
+      //              INVALID_ARGUMENT
+      //                  - if the data type used in the request does not match
+      //                       the data type of the addressed signal
+      //                  - if the published value is not accepted,
+      //                       e.g. if sending an unsupported enum value
+      //                  - if the published value is out of the min/max range specified
+      //        - strict case
+      //            Returns (GRPC error code) and closes the stream call.
+      //              ALREADY_EXISTS if a provider already claimed the ownership of the signals
+      //              ABORTED if provider has not claimed yet the signals
       //
-      //  - Databroker sends BatchActuateStreamRequest -> Provider must return
-      //    BatchActuateStreamResponse for each requested signal to indicate acceptance or rejection.
-      //    It is up to the provider to decide if the stream shall be closed. The databroker
-      //    will not react to the received error message.
+      //    - Databroker sends BatchActuateStreamRequest -> Provider shall return a BatchActuateStreamResponse,
+      //        for every signal requested to indicate if the request was accepted or not.
+      //        It is up to the provider to decide if the stream shall be closed,
+      //        as of today Databroker will not react on the received error message.
       //
-      //  - Provider sends ProvideSignalRequest -> Databroker returns ProvideSignalResponse.
-      //    Possible gRPC error codes:
-      //    - NOT_FOUND if any signals do not exist.
-      //    - PERMISSION_DENIED if access is denied for any of the signals.
-      //    - UNAUTHENTICATED if no credentials are provided or if they have expired.
-      //    - ALREADY_EXISTS if a provider has already claimed ownership of any signal.
+      //    - Provider sends ProvideSignalRequest -> Databroker returns ProvideSignalResponse
+      //        - strict case
+      //            Returns (GRPC error code) and closes the stream call.
+      //              NOT_FOUND if any of the signals are non-existant.
+      //              PERMISSION_DENIED if access is denied for any of the signals.
+      //              UNAUTHENTICATED if no credentials provided or credentials has expired
+      //              ALREADY_EXISTS if a provider already claimed the ownership of any signal.
+      //
+      //    - Provider sends ProviderErrorIndication
+      //        - strict case
+      //            Returns (GRPC error code) and closes the stream call.
+      //              ABORTED if provider has not claimed yet the signals
       //
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void OpenProviderStream(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::kuksa::val::v2::OpenProviderStreamRequest,::kuksa::val::v2::OpenProviderStreamResponse>* reactor) = 0;
@@ -875,7 +903,7 @@ class VAL final {
     //   UNAUTHENTICATED if no credentials provided or credentials has expired
     //   PERMISSION_DENIED if access is denied
     //   INVALID_ARGUMENT if the request is empty or provided path is too long
-    //     - MAX_REQUEST_PATH_LENGTH: usize = 1000;
+    //       - MAX_REQUEST_PATH_LENGTH: usize = 1000;
     //
     virtual ::grpc::Status GetValue(::grpc::ServerContext* context, const ::kuksa::val::v2::GetValueRequest* request, ::kuksa::val::v2::GetValueResponse* response);
     // Get the latest values of a set of signals.
@@ -887,7 +915,7 @@ class VAL final {
     //   UNAUTHENTICATED if no credentials provided or credentials has expired
     //   PERMISSION_DENIED if access is denied for any of the requested signals.
     //   INVALID_ARGUMENT if the request is empty or provided path is too long
-    //     - MAX_REQUEST_PATH_LENGTH: usize = 1000;
+    //       - MAX_REQUEST_PATH_LENGTH: usize = 1000;
     //
     virtual ::grpc::Status GetValues(::grpc::ServerContext* context, const ::kuksa::val::v2::GetValuesRequest* request, ::kuksa::val::v2::GetValuesResponse* response);
     // Subscribe to a set of signals using string path parameters
@@ -896,10 +924,10 @@ class VAL final {
     //   UNAUTHENTICATED if no credentials provided or credentials has expired
     //   PERMISSION_DENIED if access is denied for any of the signals.
     //   INVALID_ARGUMENT
-    //     - if the request is empty or provided path is too long
-    //       MAX_REQUEST_PATH_LENGTH: usize = 1000;
-    //     - if buffer_size exceeds the maximum permitted
-    //       MAX_BUFFER_SIZE: usize = 1000;
+    //       - if the request is empty or provided path is too long
+    //             MAX_REQUEST_PATH_LENGTH: usize = 1000;
+    //       - if buffer_size exceeds the maximum permitted
+    //             MAX_BUFFER_SIZE: usize = 1000;
     //
     // When subscribing, Databroker shall immediately return the value for all
     // subscribed entries.
@@ -915,10 +943,10 @@ class VAL final {
     //   UNAUTHENTICATED if no credentials provided or credentials has expired
     //   PERMISSION_DENIED if access is denied for any of the signals.
     //   INVALID_ARGUMENT
-    //     - if the request is empty or provided path is too long
-    //       MAX_REQUEST_PATH_LENGTH: usize = 1000;
-    //     - if buffer_size exceeds the maximum permitted
-    //       MAX_BUFFER_SIZE: usize = 1000;
+    //       - if the request is empty or provided path is too long
+    //             MAX_REQUEST_PATH_LENGTH: usize = 1000;
+    //       - if buffer_size exceeds the maximum permitted
+    //             MAX_BUFFER_SIZE: usize = 1000;
     //
     // When subscribing, Databroker shall immediately return the value for all
     // subscribed entries.
@@ -937,12 +965,12 @@ class VAL final {
     //   UNAVAILABLE if there is no provider currently providing the actuator
     //   DATA_LOSS is there is a internal TransmissionFailure
     //   INVALID_ARGUMENT
-    //     - if the provided path is not an actuator.
-    //     - if the data type used in the request does not match
-    //       the data type of the addressed signal
-    //     - if the requested value is not accepted,
-    //       e.g. if sending an unsupported enum value
-    //     - if the provided value is out of the min/max range specified
+    //       - if the provided path is not an actuator.
+    //       - if the data type used in the request does not match
+    //            the data type of the addressed signal
+    //       - if the requested value is not accepted,
+    //            e.g. if sending an unsupported enum value
+    //       - if the provided value is out of the min/max range specified
     //
     virtual ::grpc::Status Actuate(::grpc::ServerContext* context, const ::kuksa::val::v2::ActuateRequest* request, ::kuksa::val::v2::ActuateResponse* response);
     // Actuate a single actuator in a gRPC stream -> Use for low latency and high throughput
@@ -954,12 +982,12 @@ class VAL final {
     //   UNAVAILABLE if there is no provider currently providing the actuator
     //   DATA_LOSS is there is a internal TransmissionFailure
     //   INVALID_ARGUMENT
-    //     - if the provided path is not an actuator.
-    //     - if the data type used in the request does not match
-    //       the data type of the addressed signal
-    //     - if the requested value is not accepted,
-    //       e.g. if sending an unsupported enum value
-    //     - if the provided value is out of the min/max range specified
+    //       - if the provided path is not an actuator.
+    //       - if the data type used in the request does not match
+    //            the data type of the addressed signal
+    //       - if the requested value is not accepted,
+    //            e.g. if sending an unsupported enum value
+    //       - if the provided value is out of the min/max range specified
     //
     virtual ::grpc::Status ActuateStream(::grpc::ServerContext* context, ::grpc::ServerReader< ::kuksa::val::v2::ActuateRequest>* reader, ::kuksa::val::v2::ActuateResponse* response);
     // Actuate simultaneously multiple actuators.
@@ -973,12 +1001,12 @@ class VAL final {
     //   UNAVAILABLE if there is no provider currently providing an actuator
     //   DATA_LOSS is there is a internal TransmissionFailure
     //   INVALID_ARGUMENT
-    //     - if any of the provided path is not an actuator.
-    //     - if the data type used in the request does not match
-    //       the data type of the addressed signal
-    //     - if the requested value is not accepted,
-    //       e.g. if sending an unsupported enum value
-    //     - if any of the provided actuators values are out of the min/max range specified
+    //       - if any of the provided path is not an actuator.
+    //       - if the data type used in the request does not match
+    //            the data type of the addressed signal
+    //       - if the requested value is not accepted,
+    //            e.g. if sending an unsupported enum value
+    //       - if any of the provided actuators values are out of the min/max range specified
     //
     virtual ::grpc::Status BatchActuate(::grpc::ServerContext* context, const ::kuksa::val::v2::BatchActuateRequest* request, ::kuksa::val::v2::BatchActuateResponse* response);
     // List metadata of signals matching the request.
@@ -994,14 +1022,14 @@ class VAL final {
     // Returns (GRPC error code):
     //   NOT_FOUND if any of the signals are non-existant.
     //   PERMISSION_DENIED
-    //     - if access is denied for any of the signals.
+    //       - if access is denied for any of the signals.
     //   UNAUTHENTICATED if no credentials provided or credentials has expired
     //   INVALID_ARGUMENT
-    //     - if the data type used in the request does not match
-    //       the data type of the addressed signal
-    //     - if the published value is not accepted,
-    //       e.g. if sending an unsupported enum value
-    //     - if the published value is out of the min/max range specified
+    //       - if the data type used in the request does not match
+    //            the data type of the addressed signal
+    //       - if the published value is not accepted,
+    //            e.g. if sending an unsupported enum value
+    //       - if the published value is out of the min/max range specified
     //
     virtual ::grpc::Status PublishValue(::grpc::ServerContext* context, const ::kuksa::val::v2::PublishValueRequest* request, ::kuksa::val::v2::PublishValueResponse* response);
     // Open a stream used to provide actuation and/or publishing values using
@@ -1012,35 +1040,49 @@ class VAL final {
     // provider and server (where the initiator of a request can vary).
     //
     // Errors:
-    //  - Provider sends ProvideActuationRequest -> Databroker returns ProvideActuationResponse.
-    //    Possible gRPC error codes:
-    //    - NOT_FOUND if any of the signals do not exist.
-    //    - PERMISSION_DENIED if access is denied for any of the signals.
-    //    - UNAUTHENTICATED if no credentials are provided or if they have expired.
-    //    - ALREADY_EXISTS if a provider already claimed ownership of an actuator.
+    //    - Provider sends ProvideActuationRequest -> Databroker returns ProvideActuationResponse
+    //        - strict case
+    //            Returns (GRPC error code) and closes the stream call
+    //              NOT_FOUND if any of the signals are non-existant.
+    //              PERMISSION_DENIED if access is denied for any of the signals.
+    //              UNAUTHENTICATED if no credentials provided or credentials has expired
+    //              ALREADY_EXISTS if a provider already claimed the ownership of an actuator
     //
-    //  - Provider sends PublishValuesRequest -> Databroker returns PublishValuesResponse
-    //    upon error, and nothing upon success. Errors are returned as messages in the
-    //    stream response with signal id `map<int32, Error> status = 2;` (permissive case).
-    //    Possible error codes:
-    //    - NOT_FOUND if a signal does not exist.
-    //    - PERMISSION_DENIED if access is denied for a signal.
-    //    - INVALID_ARGUMENT if:
-    //      - The data type used in the request does not match the signal's data type.
-    //      - The published value is unsupported (e.g., sending an invalid enum value).
-    //      - The published value is out of the specified min/max range.
+    //    - Provider sends PublishValuesRequest -> Databroker returns PublishValuesResponse upon error, and nothing upon success
+    //        - permissive case
+    //            GRPC errors are returned as messages in the stream
+    //            response with the signal id `map<int32, Error> status = 2;`
+    //              NOT_FOUND if a signal is non-existant.
+    //              PERMISSION_DENIED
+    //                  - if access is denied for a signal.
+    //              INVALID_ARGUMENT
+    //                  - if the data type used in the request does not match
+    //                       the data type of the addressed signal
+    //                  - if the published value is not accepted,
+    //                       e.g. if sending an unsupported enum value
+    //                  - if the published value is out of the min/max range specified
+    //        - strict case
+    //            Returns (GRPC error code) and closes the stream call.
+    //              ALREADY_EXISTS if a provider already claimed the ownership of the signals
+    //              ABORTED if provider has not claimed yet the signals
     //
-    //  - Databroker sends BatchActuateStreamRequest -> Provider must return
-    //    BatchActuateStreamResponse for each requested signal to indicate acceptance or rejection.
-    //    It is up to the provider to decide if the stream shall be closed. The databroker
-    //    will not react to the received error message.
+    //    - Databroker sends BatchActuateStreamRequest -> Provider shall return a BatchActuateStreamResponse,
+    //        for every signal requested to indicate if the request was accepted or not.
+    //        It is up to the provider to decide if the stream shall be closed,
+    //        as of today Databroker will not react on the received error message.
     //
-    //  - Provider sends ProvideSignalRequest -> Databroker returns ProvideSignalResponse.
-    //    Possible gRPC error codes:
-    //    - NOT_FOUND if any signals do not exist.
-    //    - PERMISSION_DENIED if access is denied for any of the signals.
-    //    - UNAUTHENTICATED if no credentials are provided or if they have expired.
-    //    - ALREADY_EXISTS if a provider has already claimed ownership of any signal.
+    //    - Provider sends ProvideSignalRequest -> Databroker returns ProvideSignalResponse
+    //        - strict case
+    //            Returns (GRPC error code) and closes the stream call.
+    //              NOT_FOUND if any of the signals are non-existant.
+    //              PERMISSION_DENIED if access is denied for any of the signals.
+    //              UNAUTHENTICATED if no credentials provided or credentials has expired
+    //              ALREADY_EXISTS if a provider already claimed the ownership of any signal.
+    //
+    //    - Provider sends ProviderErrorIndication
+    //        - strict case
+    //            Returns (GRPC error code) and closes the stream call.
+    //              ABORTED if provider has not claimed yet the signals
     //
     virtual ::grpc::Status OpenProviderStream(::grpc::ServerContext* context, ::grpc::ServerReaderWriter< ::kuksa::val::v2::OpenProviderStreamResponse, ::kuksa::val::v2::OpenProviderStreamRequest>* stream);
     // Get server information

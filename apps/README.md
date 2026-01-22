@@ -6,7 +6,7 @@ This are the apps developed in this project
 
 ```
 ├── Cluster/ # Cluster App
-├── Raspberry_Pi_5/ # Communication between devices and machine learning
-├── Microcontroller/ # Car Controls and Sensors
+├── rpi5-firmware/ # Communication between devices and machine learning
+├── stm32-firmware/ # Car Controls and Sensors
+├── middleware/ # Middleware layer coordinating communication and others
 ```
-

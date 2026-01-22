@@ -2,8 +2,8 @@
 // If you make any local change, they will be lost.
 // source: kuksa/val/v2/val.proto
 
-#include "val.pb.h"
-#include "val.grpc.pb.h"
+#include "kuksa/val/v2/val.pb.h"
+#include "kuksa/val/v2/val.grpc.pb.h"
 
 #include <functional>
 #include <grpcpp/impl/codegen/async_stream.h>

@@ -36,6 +36,8 @@ target_link_libraries(qtAppLib
         Qt6::SerialBus
         Qt6::DBus
         Qt6::Test
+        PkgConfig::GRPC
+        PkgConfig::PROTOBUF
 )
 
 target_sources(qtAppLib PRIVATE
