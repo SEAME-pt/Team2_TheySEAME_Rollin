@@ -19,61 +19,68 @@ class generalInfo : public QObject
     Q_PROPERTY(QString currentDate READ getCurrentDate NOTIFY currentDateChanged)
 public:
     /**
-     * @brief Provides current system information such as:
-     * - Local time
-     * - Current date
-     * - Weather information (temperature + icon)
-     *
-     * Data is updated periodically:
-     * - Time and date every second
-     * - Weather via HTTP request to Open-Meteo API
-     *
-     * @param parent Optional parent QObject
-     *
-     * Requirement traceability:
-     * [impl->dsn~cluster-datetime~1]
-     * [impl->dsn~cluster-weather~1]
-     */
+    * @brief The generalInfo class
+    *
+    * Provides current system information such as:
+    * - Local time
+    * - Current date
+    * - Weather information (temperature + icon)
+    *
+    * Data is updated periodically:
+    * - Time and date every second
+    * - Weather via HTTP request to Open-Meteo API
+    *
+    * @param parent Optional parent QObject
+    *
+	  * Requirement traceability:
+    * [impl->dsn~design-requirement-cluster-datetime~1]
+    * [impl->dsn~design-requirement-cluster-weather~1]
+    *
+    */
     explicit generalInfo(QObject *parent = nullptr);
 
     /**
-     * @brief Returns the current weather icon filename.
-     *
-     * Requirement traceability:
-     * [impl->dsn~cluster-weather~1]
-     *
-     * @return QString representing icon (e.g., "sun-256.png")
-     */
+    * @brief Returns the current weather icon filename.
+    *
+	  * Requirement traceability:
+    * [impl->dsn~design-requirement-cluster-weather~1]
+    *
+    * @return QString representing icon (e.g., "sun-256.png")
+    *
+    */
     QString getWeatherInfo() const;
 
     /**
-     * @brief Returns the current temperature in Celsius.
-     *
-     * Requirement traceability:
-     * [impl->dsn~cluster-weather~1]
-     *
-     * @return int temperature
-     */
+    * @brief Returns the current temperature in Celsius.
+    *
+	  * Requirement traceability:
+    * [impl->dsn~design-requirement-cluster-weather~1]
+    *
+    * @return int temperature
+    *
+    */
     int getTemperature() const;
 
     /**
-     * @brief Returns the local time in HH:mm format.
-     *
-     * Requirement traceability:
-     * [impl->dsn~cluster-datetime~1]
-     *
-     * @return QString current time
-     */
+    * @brief Returns the local time in HH:mm format.
+    *
+	  * Requirement traceability:
+    * [impl->dsn~design-requirement-cluster-datetime~1]
+    *
+    * @return QString current time
+    *
+    */
     QString getLocalTime() const;
 
     /**
-     * @brief Returns the current date in dd/MM/yyyy format.
-     *
-     * Requirement traceability:
-     * [impl->dsn~cluster-datetime~1]
-     *
-     * @return QString current date
-     */
+    * @brief Returns the current date in dd/MM/yyyy format.
+    *
+	  * Requirement traceability:
+    * [impl->dsn~design-requirement-cluster-datetime~1]
+    *
+    * @return QString current date
+    *
+    */
     QString getCurrentDate() const;
     
 private:
@@ -90,6 +97,25 @@ signals:
     void currentDateChanged();
 
 public slots:
+
+    /**
+    * @brief Fetches current weather data from Open-Meteo API.
+    *
+	  * Requirement traceability:
+    * [impl->dsn~design-requirement-cluster-weather~1]
+    *
+    */
     void fetchWeatherData();
+
+    /**
+    * @brief Handles the network reply for weather API.
+    * Parses JSON and updates temperature and weather icon.
+    * Emits temperatureChanged() and weatherInfoChanged() if necessary.
+    * @param reply QNetworkReply* from QNetworkAccessManager
+    *
+	  * Requirement traceability:
+    * [impl->dsn~design-requirement-cluster-weather~1]
+    *
+    */
     void onWeatherDataReceived(QNetworkReply* reply);
 };

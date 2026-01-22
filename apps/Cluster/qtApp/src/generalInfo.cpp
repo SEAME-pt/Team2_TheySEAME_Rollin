@@ -6,6 +6,7 @@
 #include <QJsonObject>
 #include <QDebug>
 
+
 generalInfo::generalInfo(QObject *parent)
     : QObject(parent),
       m_weatherInfo("sun"),

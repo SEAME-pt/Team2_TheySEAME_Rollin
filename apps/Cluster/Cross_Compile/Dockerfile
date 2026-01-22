@@ -63,6 +63,11 @@ RUN { \
     libmpc-dev \
     libpq-dev \
     flex \
+    pkg-config \
+    libgrpc++-dev \
+    libgrpc-dev \
+    libprotobuf-dev \
+    protobuf-compiler \
     gawk \
     texinfo \
     libisl-dev \
