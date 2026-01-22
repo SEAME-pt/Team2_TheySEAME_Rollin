@@ -24,12 +24,79 @@ class systemInfo : public QObject
     Q_PROPERTY(int speed READ getSpeed NOTIFY speedUpdated)
 
 public:
+    /**
+     * @brief Constructs the systemInfo class.
+     * @param parent Optional parent QObject
+     *
+     * Requirement traceability:
+     * [impl->dsn~cluster-battery~1]
+     * [impl->dsn~cluster-speed~1]
+     *
+     */
     explicit systemInfo(QObject *parent = nullptr);
+
+    /**
+     * @brief Initializes the data collection thread and starts listening for updates from Kuksa.
+     *
+     * Requirement traceability:
+     * [impl->dsn~cluster-battery~1]
+     * [impl->dsn~cluster-speed~1]
+     *
+     * @return true if started successfully, false otherwise
+     */
     bool start();
+
+    /**
+     * @brief Converts a Kuksa value to integer.
+     * @param v Kuksa value
+     * @param out Output integer
+     *
+     * Requirement traceability:
+     * [impl->dsn~cluster-battery~1]
+     * [impl->dsn~cluster-speed~1]
+     *
+     * @return true if conversion is successful
+     */
     bool valueToInt(const kuksa::val::v2::Value& v, int& out);
-    void setBattery(int battery);;
+
+    /**
+     * @brief Sets the battery value.
+     * @param battery Battery value
+     *
+     * Requirement traceability:
+     * [impl->dsn~cluster-battery~1]
+     *
+     */
+    void setBattery(int battery);
+
+    /**
+     * @brief Returns the current battery value.
+     *
+     * Requirement traceability:
+     * [impl->dsn~cluster-battery~1]
+     *
+     * @return int battery value
+     */
     int getBattery() const;
-    void setSpeed(int speed);;
+
+    /**
+     * @brief Sets the speed value.
+     * @param speed Speed value
+     *
+     * Requirement traceability:
+     * [impl->dsn~cluster-speed~1]
+     *
+     */
+    void setSpeed(int speed);
+
+    /**
+     * @brief Returns the current speed value.
+     *
+     * Requirement traceability:
+     * [impl->dsn~cluster-speed~1]
+     *
+     * @return int speed value
+     */
     int getSpeed() const;
 signals:
     void speedUpdated(int speed);
