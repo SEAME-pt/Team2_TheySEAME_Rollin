@@ -38,16 +38,24 @@ target_link_libraries(qtAppLib
         Qt6::Test
 )
 
+add_executable(qtAppExec
+    main.cpp
+    qml.qrc
+)
+
+target_include_directories(qtAppLib PRIVATE
+  ${CMAKE_SOURCE_DIR}/../../middleware
+)
+target_include_directories(qtAppExec PRIVATE
+  ${CMAKE_SOURCE_DIR}/../../middleware
+)
 target_sources(qtAppLib PRIVATE
   ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/types.pb.cc
   ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/val.pb.cc
   ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/val.grpc.pb.cc
 )
 
-add_executable(qtAppExec
-    main.cpp
-    qml.qrc
-)
+
 
 target_link_libraries(qtAppExec
     PRIVATE 
