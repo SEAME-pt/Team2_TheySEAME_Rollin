@@ -43,7 +43,6 @@ generalInfo::generalInfo(QObject *parent)
     fetchWeatherData();
 }
 
-
 QString generalInfo::getWeatherInfo() const
 {
     return m_weatherInfo;
