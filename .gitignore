@@ -5,3 +5,5 @@ reports/*
 # Doxygen
 html/
 latex/
+
+.idea/
