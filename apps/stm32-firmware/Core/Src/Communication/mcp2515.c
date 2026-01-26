@@ -284,8 +284,8 @@ HAL_StatusTypeDef MCP2515_SendMessage(uint16_t can_id, uint8_t *data, uint8_t le
             canintf = MCP2515_ReadRegister(MCP2515_REG_CANINTF);
             
             snprintf(buffer, sizeof(buffer), 
-                "[DEBUG] TX complete in %lums (%d polls), EFLG=0x%02X, CANINTF=0x%02X\r\n",
-                elapsed, poll_count, eflg, canintf);
+                "[DEBUG] TX complete in %ums (%d polls), EFLG=0x%02X, CANINTF=0x%02X\r\n",
+                (unsigned int)elapsed, poll_count, eflg, canintf);
             HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
             
             if (eflg != 0) {
@@ -383,8 +383,8 @@ HAL_StatusTypeDef MCP2515_SendSpeed(float speed_ms) {
             uint8_t canintf = MCP2515_ReadRegister(MCP2515_REG_CANINTF);
             
             snprintf(buffer, sizeof(buffer), 
-                "[DEBUG] TX complete in %lums (%d polls), EFLG=0x%02X, CANINTF=0x%02X\r\n",
-                elapsed, poll_count, eflg, canintf);
+                "[DEBUG] TX complete in %ums (%d polls), EFLG=0x%02X, CANINTF=0x%02X\r\n",
+                (unsigned int)elapsed, poll_count, eflg, canintf);
             HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
             
             if (eflg != 0) {
@@ -480,8 +480,8 @@ HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage) {
             uint8_t canintf = MCP2515_ReadRegister(MCP2515_REG_CANINTF);
             
             snprintf(buffer, sizeof(buffer), 
-                "[DEBUG] TX complete in %lums (%d polls), EFLG=0x%02X, CANINTF=0x%02X\r\n",
-                elapsed, poll_count, eflg, canintf);
+                "[DEBUG] TX complete in %ums (%d polls), EFLG=0x%02X, CANINTF=0x%02X\r\n",
+                (unsigned int)elapsed, poll_count, eflg, canintf);
             HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
             
             if (eflg != 0) {
@@ -528,6 +528,7 @@ void MCP2515_PrintStatus(void) {
         "[MCP2515] CANSTAT=0x%02X CANCTRL=0x%02X EFLG=0x%02X TEC=%d REC=%d CANINTF=0x%02X\r\n",
         canstat, canctrl, eflg, tec, rec, canintf);
     HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 1000);
+}
 
 void MCP2515_PrintDetailedStatus(void) {
     extern UART_HandleTypeDef huart1;
@@ -707,7 +708,7 @@ int MCP2515_ReceiveMessage(uint16_t *can_id, uint8_t *data, uint8_t *length) {
     static uint32_t poll_count = 0;
     poll_count++;
     if (poll_count % 50 == 0) {
-        snprintf(debug_buf, sizeof(debug_buf), "[MCP2515_RX] Poll #%lu, CANINTF=0x%02X\r\n", poll_count, canintf);
+        snprintf(debug_buf, sizeof(debug_buf), "[MCP2515_RX] Poll #%u, CANINTF=0x%02X\r\n", (unsigned int)poll_count, canintf);
         HAL_UART_Transmit(&huart1, (uint8_t*)debug_buf, strlen(debug_buf), 100);
     }
     
