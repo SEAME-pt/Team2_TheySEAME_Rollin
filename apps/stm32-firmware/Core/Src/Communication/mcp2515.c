@@ -284,8 +284,8 @@ HAL_StatusTypeDef MCP2515_SendMessage(uint16_t can_id, uint8_t *data, uint8_t le
             canintf = MCP2515_ReadRegister(MCP2515_REG_CANINTF);
             
             snprintf(buffer, sizeof(buffer), 
-                "[DEBUG] TX complete in %ums (%d polls), EFLG=0x%02X, CANINTF=0x%02X\r\n",
-                (unsigned int)elapsed, poll_count, eflg, canintf);
+                "[DEBUG] TX complete in %lums (%d polls), EFLG=0x%02X, CANINTF=0x%02X\r\n",
+                elapsed, poll_count, eflg, canintf);
             HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
             
             if (eflg != 0) {
@@ -383,8 +383,8 @@ HAL_StatusTypeDef MCP2515_SendSpeed(float speed_ms) {
             uint8_t canintf = MCP2515_ReadRegister(MCP2515_REG_CANINTF);
             
             snprintf(buffer, sizeof(buffer), 
-                "[DEBUG] TX complete in %ums (%d polls), EFLG=0x%02X, CANINTF=0x%02X\r\n",
-                (unsigned int)elapsed, poll_count, eflg, canintf);
+                "[DEBUG] TX complete in %lums (%d polls), EFLG=0x%02X, CANINTF=0x%02X\r\n",
+                elapsed, poll_count, eflg, canintf);
             HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
             
             if (eflg != 0) {
@@ -480,8 +480,8 @@ HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage) {
             uint8_t canintf = MCP2515_ReadRegister(MCP2515_REG_CANINTF);
             
             snprintf(buffer, sizeof(buffer), 
-                "[DEBUG] TX complete in %ums (%d polls), EFLG=0x%02X, CANINTF=0x%02X\r\n",
-                (unsigned int)elapsed, poll_count, eflg, canintf);
+                "[DEBUG] TX complete in %lums (%d polls), EFLG=0x%02X, CANINTF=0x%02X\r\n",
+                elapsed, poll_count, eflg, canintf);
             HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
             
             if (eflg != 0) {

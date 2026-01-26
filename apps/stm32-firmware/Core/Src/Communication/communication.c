@@ -15,7 +15,6 @@
 #ifndef COMM_DEBUG
 #define Debug_Print(msg) ((void)0)
 #endif
-
 char comm_uart_buf[128];
 
 void Communication_Thread_Entry(ULONG thread_input) {
