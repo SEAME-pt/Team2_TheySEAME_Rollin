@@ -41,9 +41,9 @@ target_link_libraries(qtAppLib
 )
 
 target_sources(qtAppLib PRIVATE
-  ${CMAKE_SOURCE_DIR}/../../middleware/Kuksa/val/v2/types.pb.cc
-  ${CMAKE_SOURCE_DIR}/../../middleware/Kuksa/val/v2/val.pb.cc
-  ${CMAKE_SOURCE_DIR}/../../middleware/Kuksa/val/v2/val.grpc.pb.cc
+  ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/types.pb.cc
+  ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/val.pb.cc
+  ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/val.grpc.pb.cc
 )
 
 add_executable(qtAppExec
