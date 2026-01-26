@@ -115,17 +115,20 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
       return TX_MUTEX_ERROR;
   }
 
-  #define TEST_MODE 1
-  
-  if (TEST_MODE) {
-    status = tx_thread_create(&test_thread, "Test Routine Thread",
+  /* Disable test thread by default in production builds. Set TEST_MODE=1 for local test runs. */
+  #ifndef TEST_MODE
+  #define TEST_MODE 0
+  #endif
+
+  #if TEST_MODE
+  status = tx_thread_create(&test_thread, "Test Routine Thread",
                                   Test_Thread_Entry, 0,
                                   test_thread_stack, sizeof(test_thread_stack),
                                   10, 10, TX_NO_TIME_SLICE, TX_AUTO_START);
     if (status != TX_SUCCESS) {
       return TX_THREAD_ERROR;
     }
-  }
+  #endif
   
   // Create the battery monitoring thread
   status = tx_thread_create(&battery_thread, "Battery Thread",
