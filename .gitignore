@@ -3,7 +3,7 @@ build/
 
 # Ignore IDE metadata
 .metadata/
-
+.vscode
 
 reports/*
 
