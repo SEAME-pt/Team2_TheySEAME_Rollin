@@ -153,7 +153,7 @@ Needs: arch
 ```
 `feat~remote-control~1`
 
-Status: proposed
+Status: approved
 
 The system shall be controllable via remote control.
 
