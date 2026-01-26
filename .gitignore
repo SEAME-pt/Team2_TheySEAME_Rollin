@@ -9,3 +9,7 @@ build/
 /apps/stm32-firmware/test/build/
 
 reports/*
+
+# Doxygen
+html/
+latex/

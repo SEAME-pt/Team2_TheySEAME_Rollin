@@ -5,10 +5,6 @@ The Cluster module exposes this information to the QML interface for visual repr
 
 ---
 
-### Module Type:
-- [ ] Module
-- [x] Sub-Module
-
 ### Interacts with:
 - CAN bus (via CanManager inside SystemInfo): receives messages from STM32 and other microcontrollers.
 
@@ -19,6 +15,8 @@ The Cluster module exposes this information to the QML interface for visual repr
 ```
 `dsn~design-requirement-cluster-speed~1`
 
+Status: approved
+
 The Cluster Sub-Module shall display the current vehicle speed in real time, refreshing at least 10 times per second.
 It shall obtain this data from SystemInfo, which receives it from STM32 or other microcontrollers via CAN bus.
 
@@ -26,12 +24,12 @@ Needs: impl, test
 
 Covers:
 - `arch~display-vehicle-status~1`
-
-Status: approved
 ```
 
 ```
 `dsn~design-requirement-cluster-battery~1`
+
+Status: approved
 
 The Cluster Sub-Module shall display the battery state-of-charge in real time, updating whenever new data arrives.
 It shall obtain this data from SystemInfo, which receives it from STM32 or other microcontrollers via CAN bus.
@@ -40,12 +38,12 @@ Needs: impl, test
 
 Covers:
 - `arch~display-vehicle-status~1`
-
-Status: approved
 ```
 
 ```
 `dsn~design-requirement-cluster-weather~1`
+
+Status: approved
 
 The Cluster Sub-Module shall display the current weather information obtained from GeneralInfo.
 Updates shall occur whenever weather data arrives.
@@ -54,12 +52,12 @@ Needs: impl, test
 
 Covers:
 - `arch~weather-display~1`
-
-Status: approved
 ```
 
 ```
 `dsn~design-requirement-cluster-datetime~1`
+
+Status: approved
 
 The Cluster Sub-Module shall display the current date and time information obtained from GeneralInfo.
 Updates shall occur at least every second.
@@ -68,8 +66,6 @@ Needs: impl, test
 
 Covers:
 - `arch~time-display~1`
-
-Status: approved
 ```
 ---
 

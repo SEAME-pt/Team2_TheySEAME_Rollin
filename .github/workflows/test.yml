@@ -1,0 +1,83 @@
+name: Automated Unit Tests
+
+on:
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  # --- JOB 1: Qt Cluster Tests ---
+  qt-tests:
+    name: Qt Cluster Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code with Submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install Qt Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake libgtest-dev qt6-base-dev qt6-serialbus-dev
+      - name: Configure and Build
+        run: |
+          cmake -S apps/Cluster/tests -B build-qt -DCMAKE_BUILD_TYPE=Release
+          cmake --build build-qt
+      - name: Run Qt Tests
+        working-directory: build-qt
+        run: ./qtAppTests
+
+  # --- JOB 2: RPI Firmware Tests ---
+  firmware-tests:
+    name: RPI5 Firmware Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code with Submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install Firmware Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake libgtest-dev
+      - name: Build and Install
+        run: |
+          cd apps/rpi5-firmware
+          mkdir -p build
+          cd build
+          cmake .. -DBUILD_TESTS=ON
+          make
+          make install
+      - name: Run Firmware Tests
+        run: |
+          cd apps/rpi5-firmware/build/bin
+          chmod +x unit_tests
+          ./unit_tests
+
+  # --- JOB 3: STM32 Ceedling Tests ---
+  stm32-tests:
+    name: STM32 Ceedling Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code with Submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2' # Recommended version for Ceedling
+          bundler-cache: true
+
+      - name: Install ARM Toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-none-eabi
+
+      - name: Install Ceedling
+        run: gem install ceedling
+
+      - name: Run Ceedling Tests
+        # Update this path to where your project.yml is located
+        working-directory: apps/stm32-firmware/Core/Tests
+        run: ceedling test:all
