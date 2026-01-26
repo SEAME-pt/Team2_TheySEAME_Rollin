@@ -10,8 +10,7 @@ This module is responsible for CAN communication using the MCP2515 controller (s
 
 ## Specification Items (Requirements)
 
-```
-`dsn~can-init~1`
+dsn~can-init~1
 
 Status: approved
 
@@ -21,10 +20,9 @@ Needs: impl, test
 
 Covers:
 - `arch~stm-rpi-can-telemetry~1`
-```
 
-```
-`dsn~can-telemetry-tx~1`
+
+dsn~can-telemetry-tx~1
 
 Status: approved
 
@@ -39,10 +37,9 @@ Needs: impl, test
 Covers:
 - `arch~report-speed-battery~1`
 - `arch~stm-rpi-can-telemetry~1`
-```
 
-```
-`dsn~can-error-handling~1`
+
+dsn~can-error-handling~1
 
 Status: approved
 
@@ -52,10 +49,9 @@ Needs: impl, test
 
 Covers:
 - `feat~failsafe-case-miscommunication~1`
-```
 
-```
-`dsn~can-telemetry-rx~1`
+
+dsn~can-telemetry-rx~1
 
 Status: draft
 
@@ -65,10 +61,9 @@ Needs: impl, test
 
 Covers:
 - `arch~stm-rpi-can-telemetry~1`
-```
 
-```
-`dsn~can-logging-policy~1`
+
+dsn~can-logging-policy~1
 
 Status: approved
 
@@ -78,10 +73,9 @@ Needs: impl, test
 
 Covers:
 - `arch~development-guidelines~1`
-```
 
-```
-`dsn~can-rate-limit~1`
+
+dsn~can-rate-limit~1
 
 Status: draft
 
@@ -91,8 +85,7 @@ Needs: impl, test
 
 Covers:
 - `arch~report-speed-battery~1`
-```
-}]}   }``
+
 ## Mapping to existing tests
 - `Core/Tests/test/test_mcp2515.c` — covers [test->dsn~can-telemetry-tx~1] and [test->dsn~can-error-handling~1].
 

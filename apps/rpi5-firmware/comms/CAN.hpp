@@ -10,11 +10,11 @@ public:
 	/**
 	 * @brief CAN constructor
 	 *
-	 * @param interface name of the CAN interface
-	 *
 	 * Accepts the CAN interface name to use and stops the CAN interface.
 	 * This opens the possibility to configure the CAN interface
 	 * outside the constructor
+	 *
+	 * @param interface name of the CAN interface
 	 *
 	 */
 	CAN(const std::string &interface);
@@ -22,14 +22,14 @@ public:
 	/**
 	 * @brief CAN constructor
 	 *
+	 * Constructs with the given configuration. This configuration is done
+	 * inside the constructor and the CAN socket is open after it
+	 * More about modes in setMode() function
+	 *
 	 * @param interface name of the CAN interface
 	 * @param bitrate bitrate to set the CAN interface
 	 * @param modeToControl modes to control in the CAN
 	 * @param modeToTurnOn mode from modesToControl to be active
-	 *
-	 * Constructs with the given configuration. This configuration is done
-	 * inside the constructor and the CAN socket is open after it
-	 * More about modes in setMode() function
 	 *
 	 */
 	CAN(const std::string &interface, const unsigned int bitrate,

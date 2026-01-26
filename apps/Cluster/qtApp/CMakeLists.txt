@@ -19,6 +19,11 @@ find_package(Qt6 6.7 REQUIRED COMPONENTS Core Gui Qml Quick QuickControls2 DBus 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -Wl,-rpath-link,${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE} -L${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wl,-rpath-link,${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE} -L${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}")
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GRPC REQUIRED IMPORTED_TARGET grpc++ grpc)
+pkg_check_modules(PROTOBUF REQUIRED IMPORTED_TARGET protobuf)
+
+
 add_library(qtAppLib
     src/generalInfo.cpp
     src/systemInfo.cpp
@@ -31,12 +36,34 @@ target_link_libraries(qtAppLib
         Qt6::SerialBus
         Qt6::DBus
         Qt6::Test
+        PkgConfig::GRPC
+        PkgConfig::PROTOBUF
+)
+
+target_sources(qtAppLib PRIVATE
+  ${CMAKE_SOURCE_DIR}/../../middleware/Kuksa/val/v2/types.pb.cc
+  ${CMAKE_SOURCE_DIR}/../../middleware/Kuksa/val/v2/val.pb.cc
+  ${CMAKE_SOURCE_DIR}/../../middleware/Kuksa/val/v2/val.grpc.pb.cc
 )
 
 add_executable(qtAppExec
     main.cpp
     qml.qrc
 )
+
+target_include_directories(qtAppLib PRIVATE
+  ${CMAKE_SOURCE_DIR}/../../middleware
+)
+target_include_directories(qtAppExec PRIVATE
+  ${CMAKE_SOURCE_DIR}/../../middleware
+)
+target_sources(qtAppLib PRIVATE
+  ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/types.pb.cc
+  ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/val.pb.cc
+  ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/val.grpc.pb.cc
+)
+
+
 
 target_link_libraries(qtAppExec
     PRIVATE 
@@ -45,8 +72,11 @@ target_link_libraries(qtAppExec
     Qt6::SerialBus
     Qt6::DBus
     Qt6::Test
+    PkgConfig::GRPC
+    PkgConfig::PROTOBUF
     qtAppLib
 )
+
 
 ######################### Tests #########################
 

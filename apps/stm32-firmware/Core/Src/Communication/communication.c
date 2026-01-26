@@ -18,17 +18,6 @@
 
 char comm_uart_buf[128];
 
-/**
- * @brief  Communication thread entry point
- * @note   Initializes MCP2515, reads global vehicle data, and sends CAN messages
- *
- * ====================== Requirement Traceability ===========================
- * [impl->dsn~can-telemetry-tx~1]
- * ==========================================================================
- *
- * @param  thread_input: Thread input parameter (unused)
- * @retval None
- */
 void Communication_Thread_Entry(ULONG thread_input) {
     (void) thread_input;
     
