@@ -4,9 +4,6 @@ build/
 # Ignore IDE metadata
 .metadata/
 
-# Ignore nested build outputs under apps/stm32-firmware (tests/build, Core/Tests/build etc.)
-/apps/stm32-firmware/**/build/
-/apps/stm32-firmware/test/build/
 
 reports/*
 
