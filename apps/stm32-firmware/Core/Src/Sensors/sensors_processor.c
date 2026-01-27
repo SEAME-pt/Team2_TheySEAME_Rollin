@@ -1,5 +1,5 @@
-#include "sensors_queue.h"
-#include "Sensors/sensors.h"
+#include "../../Inc/sensors_queue.h"
+#include "sensors.h"
 #include "tx_api.h"
 #include <stdio.h>
 

@@ -1,4 +1,4 @@
-#include "control_queue.h"
+#include "../../Inc/control_queue.h"
 #include "tx_api.h"
 #include <string.h>
 
