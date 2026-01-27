@@ -12,5 +12,5 @@ ln -sf $HOME/site.conf $AGL_TOP/conf/.
 
 # Start creating the image and sdk
 #time bitbake agl-image-weston
-time bitbake agl-image-weston -c do_populate_sdk
+#time bitbake agl-image-weston -c do_populate_sdk
 

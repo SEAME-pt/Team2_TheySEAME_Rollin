@@ -19,7 +19,6 @@ RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && locale-gen
 RUN curl https://storage.googleapis.com/git-repo-downloads/repo >> /bin/repo
 RUN chmod a+x /bin/repo
 
-#RUN adduser --disabled-password --gecos '' $USER
 RUN groupadd -g $GID AGL
 RUN useradd -u $UID -g $GID -m -s /bin/bash $USER
 USER $USER
