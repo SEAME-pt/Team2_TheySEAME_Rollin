@@ -9,7 +9,7 @@
 
 void setUp(void) {
     // Ensure queue is initialized and drops counter reset before each test
-    _tx_queue_create_IgnoreAndReturn(TX_SUCCESS);
+    _txe_queue_create_IgnoreAndReturn(TX_SUCCESS);
     SensorsQueue_Init();
 }
 
@@ -17,7 +17,7 @@ void tearDown(void) { }
 
 void test_SensorsQueue_TrySend_Success_NoDrops(void) {
     SensorSample_t s = { .sensor_id = SENSOR_ID_SPEED, .value = 1.23f, .ts = 0 };
-    _tx_queue_send_IgnoreAndReturn(TX_SUCCESS);
+    _txe_queue_send_IgnoreAndReturn(TX_SUCCESS);
 
     int res = SensorsQueue_TrySend(&s);
     TEST_ASSERT_EQUAL_INT(1, res);
@@ -26,7 +26,7 @@ void test_SensorsQueue_TrySend_Success_NoDrops(void) {
 
 void test_SensorsQueue_TrySend_Failure_IncrementsDrop(void) {
     SensorSample_t s = { .sensor_id = SENSOR_ID_SPEED, .value = 2.34f, .ts = 0 };
-    _tx_queue_send_IgnoreAndReturn(1); // non-TX_SUCCESS to simulate full/failure
+    _txe_queue_send_IgnoreAndReturn(1); // non-TX_SUCCESS to simulate full/failure
 
     int res = SensorsQueue_TrySend(&s);
     TEST_ASSERT_EQUAL_INT(0, res);
@@ -35,7 +35,7 @@ void test_SensorsQueue_TrySend_Failure_IncrementsDrop(void) {
 
 void test_SensorsQueue_Send_WaitFailure_IncrementsDrop(void) {
     SensorSample_t s = { .sensor_id = SENSOR_ID_BATTERY, .value = 99.0f, .ts = 0 };
-    _tx_queue_send_IgnoreAndReturn(1); // simulate failure even with wait
+    _txe_queue_send_IgnoreAndReturn(1); // simulate failure even with wait
 
     int res = SensorsQueue_Send(&s, 10);
     TEST_ASSERT_EQUAL_INT(0, res);
