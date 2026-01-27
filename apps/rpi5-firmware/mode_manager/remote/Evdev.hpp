@@ -9,10 +9,10 @@ public:
 	/**
 	 * @brief Evdev constructor
 	 *
-	 * @param evdev device name
-	 *
 	 * Opens the evdev in read only mode
 	 * Also puts the queue count and index to zero
+	 *
+	 * @param evdev device name
 	 *
 	 */
 	Evdev(const char *device);

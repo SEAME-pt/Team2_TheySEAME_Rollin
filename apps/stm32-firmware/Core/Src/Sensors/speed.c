@@ -185,12 +185,37 @@ void Speed_Thread_Entry(ULONG thread_input)
     
     uint32_t average = 0;
     int counter = 0;
+    int no_pulse_counter = 0;  // Track iterations without pulses
+    char uart_buf[128];
+
 
     while(1)
     {
         uint32_t local_delta = Speed_ReadDeltaTicks();
-        Speed_ProcessDelta(local_delta, &average, &counter);
-        
+
+        if (local_delta >= 20) {
+            // Valid pulse - reset no-pulse counter and process
+            no_pulse_counter = 0;
+            Speed_ProcessDelta(local_delta, &average, &counter);
+        } else {
+            // No valid pulse detected in this iteration
+            no_pulse_counter++;
+
+            // Stop after ~0.2s without pulses (THREAD_SLEEP_TICKS is 10 ticks = 0.1s)
+            if (no_pulse_counter >= 2) {
+                if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                    if (g_vehicle_data.vehicle_speed != 0.0f) {
+                        g_vehicle_data.vehicle_speed = 0.0f;
+                        g_vehicle_data.data_valid = 1;
+                        Debug_Print("[SPEED THREAD] No pulses detected - Speed = 0 m/s\r\n");
+                    }
+                    tx_mutex_put(&g_vehicle_data_mutex);
+                }
+                no_pulse_counter = 10;  // Cap to prevent overflow
+                counter = 0;  // Reset averaging counter
+                average = 0;
+            }
+        }
         // TX_TIMER_TICKS_PER_SECOND is defined as 100 ticks/second, so 10 ticks = 0.1s
         tx_thread_sleep(THREAD_SLEEP_TICKS);
     }

@@ -1,8 +1,16 @@
 libs/googletest/
 build/
 
+# Ignore IDE metadata
+.metadata/
+.vscode/
+.idea/
+
+reports/*
+
 # Doxygen
 html/
 latex/
 
-.idea/
+#kuksa
+.venv

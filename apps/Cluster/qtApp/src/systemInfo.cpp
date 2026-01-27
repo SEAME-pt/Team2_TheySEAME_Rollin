@@ -5,55 +5,110 @@ systemInfo::systemInfo(QObject *parent)
 {
 }
 
-/**
- * @brief systemInfo::start
- * Initializes CAN bus device on specified interface.
- * Connects to framesReceived signal to process incoming frames.
- * @param interfaceName CAN interface name (default "can0")
- * @return true if device started successfully, false otherwise
- */
-bool systemInfo::start(const QString &interfaceName)
+void systemInfo::setBattery(int battery)
 {
-    device = QCanBus::instance()->createDevice("socketcan", interfaceName);
-    if (!device) {
-        qWarning() << "CAN not available";
-        return false;
-    }
-    if (!device->connectDevice()) {
-        qWarning() << "Failed to connect CAN device";
-        return false;
-    }
+    if (_battery == battery) return;
+        _battery = battery;
+    emit batteryUpdated(battery);
+}
 
-    connect(device, &QCanBusDevice::framesReceived,
-            this, &systemInfo::processFrames);
+void systemInfo::setSpeed(int speed)
+{
+    if (_speed == speed) return;
+        _speed = speed;
+    emit speedUpdated(speed);
+}
+
+int systemInfo::getBattery() const
+{
+    return _battery;
+}
+
+int systemInfo::getSpeed() const
+{
+    return _speed;
+}
+
+bool systemInfo::start()
+{
+    if (_running) return true;
+    _running = true;
+
+    _thread = std::thread([this]() {
+        this->updateFromKuksa();
+    });
+
+    _thread.detach();
     return true;
 }
 
-/**
- * @brief systemInfo::processFrames
- * Reads available CAN frames and emits signals for speed and battery SOC updates.
- * 
- * =======================Requirements traceability========================
- *        [impl->dsn~design-requirement-cluster-speed~1]
- *        [impl->dsn~design-requirement-cluster-battery~1]
- *========================================================================
- */
-void systemInfo::processFrames()
+bool systemInfo::updateFromKuksa()
 {
-    while (device && device->framesAvailable()) {
-        QCanBusFrame frame = device->readFrame();
-        qint64 id = frame.frameId();
-        QByteArray data = frame.payload();
-        if (id == 66) {
-            speed = static_cast<unsigned char>(data[0]);
-            qDebug() << "Speed updated to:" << speed;
-            emit speedUpdated();
-        }
+    auto channel = grpc::CreateChannel("0.0.0.0:55555", grpc::InsecureChannelCredentials());
+    std::unique_ptr<VAL::Stub> stub = VAL::NewStub(channel);
 
-        if (id == 77) {
-            battery = static_cast<unsigned char>(data[0]);
-            qDebug() << "Battery SOC updated to:" << battery;
-            emit batteryUpdated();
+    kuksa::val::v2::SubscribeRequest req;
+
+    req.add_signal_paths("Vehicle.Speed");
+    req.add_signal_paths("Vehicle.Powertrain.Battery.StateOfCharge");
+
+    grpc::ClientContext ctx;
+    auto stream = stub->Subscribe(&ctx, req);
+
+    kuksa::val::v2::SubscribeResponse resp;
+    while (stream->Read(&resp)) {
+
+        const auto& entries = resp.entries();
+        for (auto it = entries.begin(); it != entries.end(); ++it) {
+            const std::string& path = it->first;
+            const auto& datapoint = it->second;
+
+            if (!datapoint.has_value()) {
+                qDebug() << "[READER]" << QString::fromStdString(path) << "= <no value>";
+                continue;
+            }
+
+            int vInt = 0;
+            if (!valueToInt(datapoint.value(), vInt)) {
+                qWarning() << "[READER]" << QString::fromStdString(path) << "value type not int-compatible";
+                continue;
+            }
+
+            if (path == "Vehicle.Speed") {
+                setSpeed(vInt);
+            } else if (path == "Vehicle.Powertrain.Battery.StateOfCharge") {
+                setBattery(vInt);
+            }
         }
     }
+
+    auto status = stream->Finish();
+    if (!status.ok()) {
+        qWarning() << "gRPC Subscribe failed:" << QString::fromStdString(status.error_message());
+        return false;
+    }
+    return true;
 }
+
+
+bool systemInfo::valueToInt(const kuksa::val::v2::Value& v, int& out)
+{
+    using V = kuksa::val::v2::Value;
+
+    switch (v.typed_value_case()) {
+    case V::kInt32:  out = v.int32(); return true;
+    case V::kInt64:  out = static_cast<int>(v.int64()); return true;
+    case V::kUint32: out = static_cast<int>(v.uint32()); return true;
+    case V::kUint64: out = static_cast<int>(v.uint64()); return true;
+
+    case V::kFloat:  out = static_cast<int>(std::lround(v.float_())); return true;
+    case V::kDouble: out = static_cast<int>(std::lround(v.double_())); return true;
+
+    case V::kBool:   out = v.bool_() ? 1 : 0; return true;
+
+    case V::TYPED_VALUE_NOT_SET:
+    default:
+        return false;
+    }
+}
+

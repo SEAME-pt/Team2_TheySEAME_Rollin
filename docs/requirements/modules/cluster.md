@@ -13,7 +13,7 @@ The Cluster module exposes this information to the QML interface for visual repr
 ## Specification Items (Requirements)
 
 ```
-`dsn~design-requirement-cluster-speed~1`
+`dsn~cluster-speed~1`
 
 Status: approved
 
@@ -27,7 +27,7 @@ Covers:
 ```
 
 ```
-`dsn~design-requirement-cluster-battery~1`
+`dsn~cluster-battery~1`
 
 Status: approved
 
@@ -41,7 +41,7 @@ Covers:
 ```
 
 ```
-`dsn~design-requirement-cluster-weather~1`
+`dsn~cluster-weather~1`
 
 Status: approved
 
@@ -55,7 +55,7 @@ Covers:
 ```
 
 ```
-`dsn~design-requirement-cluster-datetime~1`
+`dsn~cluster-datetime~1`
 
 Status: approved
 

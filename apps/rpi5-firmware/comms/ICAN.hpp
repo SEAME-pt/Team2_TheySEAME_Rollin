@@ -23,14 +23,13 @@ public:
 	/**
 	 * @brief Read a CAN frame from the Bus
 	 *
-	 * @param frame reference to a frame struct
-	 *
 	 * This function reads a CAN frame from the Bus and puts it into the
 	 * the can_frame reference
 	 *
-	 * ====================== Requirement Traceability ===========================
+	 * @param frame reference to a frame struct
+	 *
+	 * Requirement traceability:
 	 * [impl->dsn~comms-can-rpi-receiveMsg~2]
-	 * ==========================================================================
 	 *
 	 * @return 0 if success
 	 * @return -1 if failed
@@ -41,16 +40,15 @@ public:
 	/**
 	 * @brief Sends a CAN frame to the Bus
 	 *
+	 * This function fills the can_frame struct with the id, length and data and
+	 * sends the frame to the Bus
+	 *
 	 * @param id frame CAN id
 	 * @param data data to send (0-8 bytes)
 	 * @param len length of the data (0-8 bytes)
 	 *
-	 * This function fills the can_frame struct with the id, length and data and
-	 * sends the frame to the Bus
-	 *
-	 * ====================== Requirement Traceability ===========================
+	 * Requirement traceability:
 	 * [impl->dsn~comms-can-rpi-sendMsg~1]
-	 * ==========================================================================
 	 *
 	 * @return 0 if success
 	 * @return -1 if failed
@@ -92,13 +90,12 @@ public:
 	/**
 	 * @brief Set CAN bitrate
 	 *
-	 * @param bitrate bitrate to set in kbit/s
-	 *
 	 * This function sets the given bitrate to the CAN interface
 	 *
-	 * ====================== Requirement Traceability ===========================
+	 * @param bitrate bitrate to set in kbit/s
+	 *
+	 * Requirement traceability:
 	 * [impl->dsn~comms-can-rpi-interface~1]
-	 * ==========================================================================
 	 *
 	 * @return 0 if success
 	 * @return -1 if failed
@@ -120,9 +117,6 @@ public:
 	/**
 	 * @brief Set CAN control mode
 	 *
-	 * @param modeToControl Selected modes which you want to control
-	 * @param modeToTurnOn Mode to from the selected ones to turn on
-	 *
 	 * This functions accepts the modes in which the CAN controller can control (modesToControl)
 	 * and the mode to set as active from the modesToControl (modeToTurnOn). The other selected modes
 	 * different than modeToTurnOn will be turned off
@@ -136,6 +130,9 @@ public:
 	 * #define CAN_CTRLMODE_FD                 0x20    // CAN FD mode
 	 * #define CAN_CTRLMODE_PRESUME_ACK        0x40    // Ignore missing CAN ACKs
 	 * @endcode
+	 *
+	 * @param modeToControl Selected modes which you want to control
+	 * @param modeToTurnOn Mode to from the selected ones to turn on
 	 *
 	 * @return 0 if success
 	 * @return -1 if failed

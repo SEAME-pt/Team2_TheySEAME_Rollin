@@ -11,6 +11,11 @@
 #include <string.h>
 #include <stdio.h>
 
+/* Suppress verbose UART debug output in production builds; define MCP2515_DEBUG to enable */
+#ifndef MCP2515_DEBUG
+#define HAL_UART_Transmit(a,b,c,d) ((void)0)
+#endif
+
 /* GPIO Pin Definitions (from STM32CubeMX generated main.h) */
 #define MCP2515_CS_LOW()    HAL_GPIO_WritePin(MCP2515_CS_GPIO_Port, MCP2515_CS_Pin, GPIO_PIN_RESET)
 #define MCP2515_CS_HIGH()   HAL_GPIO_WritePin(MCP2515_CS_GPIO_Port, MCP2515_CS_Pin, GPIO_PIN_SET)
@@ -71,9 +76,6 @@ static uint8_t MCP2515_SPI_Transfer(uint8_t data) {
     return received;
 }
 
-/**
- * @brief Reset MCP2515 via SPI command
- */
 void MCP2515_Reset(void) {
     MCP2515_CS_LOW();
     MCP2515_SPI_Transfer(MCP2515_CMD_RESET);
@@ -81,11 +83,9 @@ void MCP2515_Reset(void) {
     HAL_Delay(10);  // Wait for reset to complete
 }
 
-/**
- * @brief Read a single register from MCP2515
- * @param address Register address
- * @return Register value
- */
+
+#ifndef UNIT_TEST
+
 uint8_t MCP2515_ReadRegister(uint8_t address) {
     uint8_t value;
     
@@ -98,11 +98,6 @@ uint8_t MCP2515_ReadRegister(uint8_t address) {
     return value;
 }
 
-/**
- * @brief Write a single register to MCP2515
- * @param address Register address
- * @param value Value to write
- */
 void MCP2515_WriteRegister(uint8_t address, uint8_t value) {
     MCP2515_CS_LOW();
     MCP2515_SPI_Transfer(MCP2515_CMD_WRITE);
@@ -111,12 +106,6 @@ void MCP2515_WriteRegister(uint8_t address, uint8_t value) {
     MCP2515_CS_HIGH();
 }
 
-/**
- * @brief Modify specific bits in a register
- * @param address Register address
- * @param mask Bit mask
- * @param value New value for masked bits
- */
 void MCP2515_BitModify(uint8_t address, uint8_t mask, uint8_t value) {
     MCP2515_CS_LOW();
     MCP2515_SPI_Transfer(MCP2515_CMD_BIT_MODIFY);
@@ -125,12 +114,8 @@ void MCP2515_BitModify(uint8_t address, uint8_t mask, uint8_t value) {
     MCP2515_SPI_Transfer(value);
     MCP2515_CS_HIGH();
 }
+#endif /* UNIT_TEST */
 
-/**
- * @brief Set MCP2515 operating mode
- * @param mode Operating mode (CONFIG, NORMAL, etc.)
- * @return HAL_OK if mode set successfully
- */
 HAL_StatusTypeDef MCP2515_SetMode(uint8_t mode) {
     MCP2515_BitModify(MCP2515_REG_CANCTRL, 0xE0, mode);
     HAL_Delay(10);
@@ -144,11 +129,6 @@ HAL_StatusTypeDef MCP2515_SetMode(uint8_t mode) {
     return HAL_ERROR;
 }
 
-/**
- * @brief Initialize MCP2515 CAN controller
- * @param speed CAN bus speed (500kbps, 250kbps, etc.)
- * @return HAL_OK if initialization successful
- */
 HAL_StatusTypeDef MCP2515_Init(MCP2515_Speed_t speed) {
     // Initialize CS high
     MCP2515_CS_HIGH();
@@ -221,13 +201,6 @@ HAL_StatusTypeDef MCP2515_Init(MCP2515_Speed_t speed) {
     return HAL_OK;
 }
 
-/**
- * @brief Send a generic CAN message
- * @param can_id CAN identifier (11-bit standard ID)
- * @param data Pointer to data buffer
- * @param length Data length (0-8 bytes)
- * @return HAL_OK if message sent successfully, HAL_ERROR if invalid params, HAL_BUSY if buffer busy, HAL_TIMEOUT if timeout
- */
 HAL_StatusTypeDef MCP2515_SendMessage(uint16_t can_id, uint8_t *data, uint8_t length) {
     extern UART_HandleTypeDef huart1;
     char buffer[200];
@@ -339,13 +312,110 @@ HAL_StatusTypeDef MCP2515_SendMessage(uint16_t can_id, uint8_t *data, uint8_t le
     return HAL_TIMEOUT;
 }
 
-/**
- * @brief Send battery data over CAN bus
- * @param percentage Battery percentage (0-100)
- * @return HAL_OK if message sent successfully
- * @note CAN Message Format (1 byte):
- *       Byte 0: Percentage (0-100)
- */
+
+HAL_StatusTypeDef MCP2515_SendSpeed(float speed_ms) {
+    extern UART_HandleTypeDef huart1;
+    char buffer[200];
+    
+    // CAN ID: 0x42 (66 decimal - Speed status message expected by cluster)
+    uint16_t can_id = 0x42;
+    
+    // Check TX buffer 0 status
+    uint8_t tx_ctrl = MCP2515_ReadRegister(MCP2515_REG_TXB0CTRL);
+    if (tx_ctrl & 0x08) {
+        // TX buffer busy - abort previous transmission
+        snprintf(buffer, sizeof(buffer), "[DEBUG] TX buffer busy (TXCTRL=0x%02X), aborting...\r\n", tx_ctrl);
+        HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
+        MCP2515_BitModify(MCP2515_REG_TXB0CTRL, 0x08, 0x00);  // Clear TXREQ
+        HAL_Delay(1);
+        return HAL_BUSY;
+    }
+    
+    // Set standard ID (11-bit)
+    MCP2515_WriteRegister(MCP2515_REG_TXB0SIDH, (uint8_t)(can_id >> 3));
+    MCP2515_WriteRegister(MCP2515_REG_TXB0SIDL, (uint8_t)(can_id << 5));
+    
+    // Set data length code (1 byte - cluster expects single byte)
+    MCP2515_WriteRegister(MCP2515_REG_TXB0DLC, 0x01);
+    
+    // Convert m/s to dm/s (decimeters per second): 1 m/s = 10 dm/s
+    float speed_dms = speed_ms * 10.0f;
+    
+    // Send speed in dm/s as single byte (0-255), clamp the value
+    uint8_t speed_byte = (uint8_t)(speed_dms > 255.0f ? 255 : (speed_dms < 0 ? 0 : speed_dms));
+    
+    // Write speed data (1 byte only)
+    MCP2515_WriteRegister(MCP2515_REG_TXB0DATA, speed_byte);
+    
+    // Verify what was written
+    uint8_t sidh_readback = MCP2515_ReadRegister(MCP2515_REG_TXB0SIDH);
+    uint8_t sidl_readback = MCP2515_ReadRegister(MCP2515_REG_TXB0SIDL);
+    uint8_t dlc_readback = MCP2515_ReadRegister(MCP2515_REG_TXB0DLC);
+    
+    snprintf(buffer, sizeof(buffer), "[DEBUG] TX Buffer verify: SIDH=0x%02X SIDL=0x%02X DLC=0x%02X\r\n",
+        sidh_readback, sidl_readback, dlc_readback);
+    HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
+    
+    snprintf(buffer, sizeof(buffer), "[DEBUG] Sending CAN ID 0x%03X: Speed=%.2f m/s (%.1f dm/s, byte=%d)\r\n", 
+            can_id, speed_ms, speed_dms, speed_byte);
+    HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
+    
+    // Check mode before transmission
+    uint8_t canstat_pre = MCP2515_ReadRegister(MCP2515_REG_CANSTAT);
+    uint8_t canctrl_pre = MCP2515_ReadRegister(MCP2515_REG_CANCTRL);
+    snprintf(buffer, sizeof(buffer), "[DEBUG] Pre-TX: CANSTAT=0x%02X CANCTRL=0x%02X\r\n", canstat_pre, canctrl_pre);
+    HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
+    
+    // Request transmission
+    MCP2515_BitModify(MCP2515_REG_TXB0CTRL, 0x08, 0x08);
+    
+    // Wait for transmission to complete (with timeout)
+    uint32_t start_tick = HAL_GetTick();
+    int poll_count = 0;
+    while (HAL_GetTick() - start_tick < 100) {
+        tx_ctrl = MCP2515_ReadRegister(MCP2515_REG_TXB0CTRL);
+        poll_count++;
+        
+        if (!(tx_ctrl & 0x08)) {
+            // Transmission complete
+            uint32_t elapsed = HAL_GetTick() - start_tick;
+            uint8_t eflg = MCP2515_ReadRegister(MCP2515_REG_EFLG);
+            uint8_t canintf = MCP2515_ReadRegister(MCP2515_REG_CANINTF);
+            
+            snprintf(buffer, sizeof(buffer), 
+                "[DEBUG] TX complete in %lums (%d polls), EFLG=0x%02X, CANINTF=0x%02X\r\n",
+                elapsed, poll_count, eflg, canintf);
+            HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
+            
+            if (eflg != 0) {
+                MCP2515_WriteRegister(MCP2515_REG_EFLG, 0x00);
+            }
+            return HAL_OK;
+        }
+        HAL_Delay(1);
+    }
+    
+    // Timeout - detailed error reporting
+    uint8_t eflg = MCP2515_ReadRegister(MCP2515_REG_EFLG);
+    uint8_t canintf = MCP2515_ReadRegister(MCP2515_REG_CANINTF);
+    uint8_t tec = MCP2515_ReadRegister(MCP2515_REG_TEC);
+    uint8_t rec = MCP2515_ReadRegister(MCP2515_REG_REC);
+    
+    snprintf(buffer, sizeof(buffer), 
+        "[ERROR] Speed TX timeout after 100ms (%d polls), TXCTRL=0x%02X, EFLG=0x%02X, CANINTF=0x%02X, TEC=%d, REC=%d\r\n",
+        poll_count, tx_ctrl, eflg, canintf, tec, rec);
+    HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
+    
+    // Clear error and interrupt flags
+    MCP2515_WriteRegister(MCP2515_REG_EFLG, 0x00);
+    MCP2515_WriteRegister(MCP2515_REG_CANINTF, 0x00);
+    
+    // Abort the stuck transmission
+    MCP2515_BitModify(MCP2515_REG_TXB0CTRL, 0x08, 0x00);  // Clear TXREQ
+    
+    return HAL_TIMEOUT;
+}
+
 HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage) {
     extern UART_HandleTypeDef huart1;
     char buffer[200];
@@ -443,9 +513,6 @@ HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage) {
     return HAL_TIMEOUT;
 }
 
-/**
- * @brief Print MCP2515 status registers for debugging
- */
 void MCP2515_PrintStatus(void) {
     extern UART_HandleTypeDef huart1;
     char buffer[150];
@@ -463,9 +530,6 @@ void MCP2515_PrintStatus(void) {
     HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 1000);
 }
 
-/**
- * @brief Print detailed MCP2515 status with RX buffer check
- */
 void MCP2515_PrintDetailedStatus(void) {
     extern UART_HandleTypeDef huart1;
     char buffer[200];
@@ -644,7 +708,7 @@ int MCP2515_ReceiveMessage(uint16_t *can_id, uint8_t *data, uint8_t *length) {
     static uint32_t poll_count = 0;
     poll_count++;
     if (poll_count % 50 == 0) {
-        snprintf(debug_buf, sizeof(debug_buf), "[MCP2515_RX] Poll #%lu, CANINTF=0x%02X\r\n", poll_count, canintf);
+        snprintf(debug_buf, sizeof(debug_buf), "[MCP2515_RX] Poll #%u, CANINTF=0x%02X\r\n", (unsigned int)poll_count, canintf);
         HAL_UART_Transmit(&huart1, (uint8_t*)debug_buf, strlen(debug_buf), 100);
     }
     

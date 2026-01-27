@@ -16,12 +16,7 @@ uint16_t ina219_calibrationValue;
 int16_t ina219_currentDivider_mA;
 int16_t ina219_powerMultiplier_mW;
 
-/*
- * @brief:		Read a register from the IN219 sensor.
- * @param:		Pointer to the device object that was made from the struct. EX:  (&ina219)
- * @param:		register address in hexadecimal
- * @retval:		16 bit unsigned integer that represents the register's contents.
- */
+// Read a 16-bit register from INA219 (internal helper)
 uint16_t Read16(INA219_t *ina219, uint8_t Register)
 {
 	uint8_t Value[2];
@@ -54,11 +49,7 @@ HAL_StatusTypeDef Write16(INA219_t *ina219, uint8_t Register, uint16_t Value)
 	return HAL_I2C_Mem_Write(ina219->ina219_i2c, (INA219_ADDRESS<<1), Register, 1, (uint8_t*)addr, 2, 1000);
 }
 
-/*
- * @brief: 		This function will read the battery voltage level being read.
- * @param:		Pointer to the device object that was made from the struct. EX:  (&ina219)
- * @retval:		Returns voltage level in mili-volts
- */
+// Read bus voltage in millivolts
 uint16_t INA219_ReadBusVoltage(INA219_t *ina219)
 {
 	uint16_t result = Read16(ina219, INA219_REG_BUSVOLTAGE);
@@ -67,11 +58,7 @@ uint16_t INA219_ReadBusVoltage(INA219_t *ina219)
 
 }
 
-/*
- *  @brief:	  	Gets the raw current value (16-bit signed integer, so +-32767)
- *  @param:		Pointer to the device object that was made from the struct. EX:  (&ina219)
- *  @retval:	The raw current reading
- */
+// Get raw current register value (signed)
 int16_t INA219_ReadCurrent_raw(INA219_t *ina219)
 {
 	int16_t result = Read16(ina219, INA219_REG_CURRENT);
@@ -79,12 +66,7 @@ int16_t INA219_ReadCurrent_raw(INA219_t *ina219)
 	return (result );
 }
 
-/*
- * @brief:  	Gets the current value in mA, taking into account the
- *          	config settings and current LSB
- * @param:		Pointer to the device object that was made from the struct. EX:  (&ina219)
- * @return: 	The current reading convereted to milliamps
- */
+// Get current in milliamps (scaled)
 int16_t INA219_ReadCurrent(INA219_t *ina219)
 {
 	int16_t result = INA219_ReadCurrent_raw(ina219);
@@ -92,25 +74,14 @@ int16_t INA219_ReadCurrent(INA219_t *ina219)
 	return (result / ina219_currentDivider_mA );
 }
 
-/*
- * @brief: 		This function will read the shunt voltage level.
- * @param:		Pointer to the device object that was made from the struct. EX:  (&ina219)
- * @retval:		Returns voltage level in mili-volts. This value represents the difference
- * 				between the voltage of the power supply and the bus voltage after the shunt
- * 				resistor.
- */
+// Read shunt voltage in millivolts
 uint16_t INA219_ReadShuntVolage(INA219_t *ina219)
 {
 	uint16_t result = Read16(ina219, INA219_REG_SHUNTVOLTAGE);
 
 	return (result * 0.01 );
 }
-/*
- * @brief: 	This reads the power register then multiplies it by the power multiplier.
- * 			Power multiplier is initialize in the calibration function.
- * @param:	Pointer to the device object that was made from the struct. EX:  (&ina219)
- * @retval:	Returns power level in mili-watts
- */
+// Read instantaneous power in milliwatts
 uint16_t INA219_ReadPower(INA219_t *ina219)
 {
 	uint16_t result = Read16(ina219, INA219_REG_POWER );

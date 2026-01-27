@@ -2,7 +2,7 @@ name: Automated Unit Tests
 
 on:
   pull_request:
-    branches: [ develop ]
+    branches: [ main, develop ]
 
 jobs:
   # --- JOB 1: Qt Cluster Tests ---

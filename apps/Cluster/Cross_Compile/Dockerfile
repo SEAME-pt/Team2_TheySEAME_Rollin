@@ -63,6 +63,11 @@ RUN { \
     libmpc-dev \
     libpq-dev \
     flex \
+    pkg-config \
+    libgrpc++-dev \
+    libgrpc-dev \
+    libprotobuf-dev \
+    protobuf-compiler \
     gawk \
     texinfo \
     libisl-dev \
@@ -305,13 +310,60 @@ RUN { \
 RUN tar -czvf qt-host-binaries.tar.gz -C /build/qt6/host .
 RUN tar -czvf qt-pi-binaries.tar.gz -C /build/qt6/pi .
 
+# Kuksa protos (font)
+RUN mkdir -p /middleware/kuksa/proto
+COPY apps/middleware/kuksa/proto/ /middleware/kuksa/proto/
+
+# ---- Install gRPC/Protobuf for target (arm64) and copy into sysroot + generate Kuksa pb/grpc ----
+RUN set -e && \
+    dpkg --add-architecture arm64 && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        rsync \
+        pkgconf \
+        protobuf-compiler \
+        protobuf-compiler-grpc \
+        libgrpc-dev:arm64 libgrpc++-dev:arm64 \
+        libprotobuf-dev:arm64 \
+        zlib1g-dev:arm64 \
+        libc-ares-dev:arm64 \
+        libssl-dev:arm64 \
+        libre2-dev:arm64 && \
+    rm -rf /var/lib/apt/lists/* && \
+    \
+    mkdir -p /build/sysroot/usr/lib/aarch64-linux-gnu && \
+    mkdir -p /build/sysroot/usr/include && \
+    mkdir -p /build/sysroot/usr/share/pkgconfig && \
+    \
+    rsync -a /usr/lib/aarch64-linux-gnu/ /build/sysroot/usr/lib/aarch64-linux-gnu/ && \
+    rsync -a /usr/share/pkgconfig/ /build/sysroot/usr/share/pkgconfig/ 2>/dev/null || true && \
+    rsync -a /usr/include/ /build/sysroot/usr/include/ && \
+    \
+    # -------- generate kuksa VAL v2 C++ sources (into fixed path /middleware/kuksa/val/v2) --------
+    mkdir -p /tmp/kuksa_gen && \
+    protoc -I /middleware/kuksa/proto --cpp_out=/tmp/kuksa_gen \
+      /middleware/kuksa/proto/kuksa/val/v2/types.proto \
+      /middleware/kuksa/proto/kuksa/val/v2/val.proto && \
+    protoc -I /middleware/kuksa/proto --grpc_out=/tmp/kuksa_gen \
+      --plugin=protoc-gen-grpc=/usr/bin/grpc_cpp_plugin \
+      /middleware/kuksa/proto/kuksa/val/v2/val.proto && \
+    mkdir -p /middleware/kuksa/val/v2 && \
+    cp -f /tmp/kuksa_gen/kuksa/val/v2/*.pb.* /middleware/kuksa/val/v2/ && \
+    rm -rf /tmp/kuksa_gen
+
 # Set up project directory
 RUN mkdir /build/project
+
 COPY     apps/Cluster/qtApp /build/project
+
 
 # Build the project using Qt for Raspberry Pi
 RUN { \
+    set -e && \
     cd /build/project && \
+    export PKG_CONFIG_SYSROOT_DIR=/build/sysroot && \
+    export PKG_CONFIG_LIBDIR=/build/sysroot/usr/lib/aarch64-linux-gnu/pkgconfig:/build/sysroot/usr/share/pkgconfig && \
+    export PKG_CONFIG_PATH= && \
     /build/qt6/pi/bin/qt-cmake . && \
     cmake --build .; \
 } 2>&1 | tee -a /build.log

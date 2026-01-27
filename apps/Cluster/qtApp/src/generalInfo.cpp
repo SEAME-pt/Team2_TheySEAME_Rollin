@@ -6,24 +6,7 @@
 #include <QJsonObject>
 #include <QDebug>
 
-/**
- * @brief The generalInfo class
- *
- * Provides current system information such as:
- * - Local time
- * - Current date
- * - Weather information (temperature + icon)
- *
- * Data is updated periodically:
- * - Time and date every second
- * - Weather via HTTP request to Open-Meteo API
- *
- * @param parent Optional parent QObject
- *=======================Requirements traceability========================
- *        [impl->dsn~design-requirement-cluster-datetime~1]
- *        [impl->dsn~design-requirement-cluster-weather~1]
- *========================================================================
- */
+
 generalInfo::generalInfo(QObject *parent)
     : QObject(parent),
       m_weatherInfo("sun"),
@@ -60,82 +43,32 @@ generalInfo::generalInfo(QObject *parent)
     fetchWeatherData();
 }
 
-/**
- * @brief Returns the current weather icon filename.
- * @return QString representing icon (e.g., "sun-256.png")
- *
- *=======================Requirements traceability========================
- *        [impl->dsn~design-requirement-cluster-weather~1]
- *========================================================================
- */
 QString generalInfo::getWeatherInfo() const
 {
     return m_weatherInfo;
 }
 
-/**
- * @brief Returns the current temperature in Celsius.
- * @return int temperature
- *
- *=======================Requirements traceability========================
- *        [impl->dsn~design-requirement-cluster-weather~1]
- *========================================================================
- */
 int generalInfo::getTemperature() const
 {
     return m_temperature;
 }
 
-/**
- * @brief Returns the local time in HH:mm format.
- * @return QString current time
- *
- *=======================Requirements traceability========================
- *        [impl->dsn~design-requirement-cluster-datetime~1]
- *========================================================================
- */
 QString generalInfo::getLocalTime() const
 {
     return m_localTime;
 }
 
-/**
- * @brief Returns the current date in dd/MM/yyyy format.
- * @return QString current date
- *
- *=======================Requirements traceability========================
- *        [impl->dsn~design-requirement-cluster-datetime~1]
- *========================================================================
- */
 QString generalInfo::getCurrentDate() const
 {
     return m_currentDate.toString("dd/MM/yyyy");
 }
 
-/**
- * @brief Fetches current weather data from Open-Meteo API.
- *
- *=======================Requirements traceability========================
- *        [impl->dsn~design-requirement-cluster-weather~1]
- *========================================================================
- */
 void generalInfo::fetchWeatherData()
 {
     QNetworkRequest request(QUrl("https://api.open-meteo.com/v1/forecast?latitude=41.1496&longitude=-8.6109&current_weather=true"));
     m_manager->get(request);
 }
 
-/**
- * @brief Handles the network reply for weather API.
- * Parses JSON and updates temperature and weather icon.
- * Emits temperatureChanged() and weatherInfoChanged() if necessary.
- *
- * @param reply QNetworkReply* from QNetworkAccessManager
- *
- *=======================Requirements traceability========================
- *        [impl->dsn~design-requirement-cluster-weather~1]
- *========================================================================
- */
 void generalInfo::onWeatherDataReceived(QNetworkReply* reply)
 {
     if (reply->error() != QNetworkReply::NoError) {
