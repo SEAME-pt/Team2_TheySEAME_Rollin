@@ -31,8 +31,9 @@ extern "C" {
  *
  * Must be called before any send/receive operations. Resets internal
  * drop counters and creates the underlying ThreadX queue.
- *
- * @return UINT TX_SUCCESS on success, error code otherwise
+ * * Requirement traceability:
+ * [impl->arch~control-queue-init~1]
+ * * @return UINT TX_SUCCESS on success, error code otherwise
  */
 UINT ControlQueue_Init(void);
 
@@ -41,6 +42,9 @@ UINT ControlQueue_Init(void);
  *
  * Intended for use in interrupt or high-priority contexts. If the queue is
  * full the message is dropped and the drop counter is incremented.
+ *
+ * Requirement traceability:
+ * [impl->arch~control-queue-send-nonblocking~1]
  *
  * @param cmd Pointer to `VehicleCommand_t` to enqueue
  * @return int 1 on success, 0 on drop/failure
@@ -53,6 +57,9 @@ int ControlQueue_TrySend(const VehicleCommand_t *cmd);
  * Used from task context when waiting for queue space is acceptable.
  * On failure the drop counter is incremented.
  *
+ * Requirement traceability:
+ * [impl->arch~control-queue-send-blocking~1]
+ *
  * @param cmd Pointer to `VehicleCommand_t` to enqueue
  * @param wait Number of ticks to wait (use TX_WAIT_FOREVER to wait indefinitely)
  * @return int 1 on success, 0 on failure
@@ -63,6 +70,9 @@ int ControlQueue_Send(const VehicleCommand_t *cmd, ULONG wait);
  * @brief Receive a command from the queue
  *
  * Blocks for up to `wait` ticks waiting for a message.
+ *
+ * Requirement traceability:
+ * [impl->arch~control-queue-receive~1]
  *
  * @param cmd Pointer to receive the dequeued `VehicleCommand_t`
  * @param wait Number of ticks to wait (TX_WAIT_FOREVER for indefinite)
@@ -75,6 +85,9 @@ UINT ControlQueue_Receive(VehicleCommand_t *cmd, ULONG wait);
  *
  * Returns the number of times enqueue operations failed due to the queue
  * being full (useful for monitoring and tuning).
+ *
+ * Requirement traceability:
+ * [impl->arch~control-queue-drops~1]
  *
  * @return uint32_t Count of dropped messages since last init
  */

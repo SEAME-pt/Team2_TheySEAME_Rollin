@@ -54,6 +54,9 @@ typedef struct {
  *
  * Creates the underlying ThreadX queue and resets internal drop counter.
  *
+ * Requirement traceability:
+ * [impl->arch~sensors-queue-init~1]
+ *
  * @return UINT TX_SUCCESS on success
  */
 UINT SensorsQueue_Init(void);
@@ -63,6 +66,9 @@ UINT SensorsQueue_Init(void);
  *
  * Intended for use in ISRs or high-priority producers. If the queue is full
  * the sample is dropped and the drop counter is incremented.
+ *
+ * Requirement traceability:
+ * [impl->arch~sensors-queue-send-nonblocking~1]
  *
  * @param samp Pointer to sample to enqueue
  * @return int 1 on success, 0 on drop/failure
@@ -75,6 +81,9 @@ int SensorsQueue_TrySend(const SensorSample_t *samp);
  * Task-context send with a wait option. On failure the drop counter is
  * incremented.
  *
+ * Requirement traceability:
+ * [impl->arch~sensors-queue-send-blocking~1]
+ *
  * @param samp Pointer to sample to enqueue
  * @param wait Number of ticks to wait
  * @return int 1 on success, 0 on failure
@@ -85,6 +94,9 @@ int SensorsQueue_Send(const SensorSample_t *samp, ULONG wait);
  * @brief Receive a sample from the sensors queue
  *
  * Blocks for up to `wait` ticks waiting for a sample.
+ *
+ * Requirement traceability:
+ * [impl->arch~sensors-queue-receive~1]
  *
  * @param samp Pointer to receive the sample
  * @param wait Number of ticks to wait (TX_WAIT_FOREVER for indefinite)
@@ -97,6 +109,9 @@ UINT SensorsQueue_Receive(SensorSample_t *samp, ULONG wait);
  *
  * Returns the number of times enqueue operations failed due to the queue
  * being full (useful for monitoring and tuning).
+ *
+ * Requirement traceability:
+ * [impl->arch~sensors-queue-drops~1]
  *
  * @return uint32_t Count of dropped messages since last init
  */
