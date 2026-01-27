@@ -10,7 +10,7 @@
 #include "mcp2515.h"
 #include "../Sensors/sensors.h"
 #include "main.h"
-#include "../Inc/control_queue.h"
+#include "../Control/control_queue.h"
 #include <stdio.h>
 
 #ifndef COMM_DEBUG

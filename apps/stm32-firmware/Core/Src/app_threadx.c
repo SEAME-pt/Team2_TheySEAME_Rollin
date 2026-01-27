@@ -20,7 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "app_threadx.h"
-#include "../Inc/control_queue.h"
+#include "Control/control_queue.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
