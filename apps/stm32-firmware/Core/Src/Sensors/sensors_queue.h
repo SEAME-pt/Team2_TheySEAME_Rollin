@@ -67,10 +67,11 @@ UINT SensorsQueue_Init(void);
  * Intended for use in ISRs or high-priority producers. If the queue is full
  * the sample is dropped and the drop counter is incremented.
  *
+ * @param samp Pointer to sample to enqueue
+ *
  * Requirement traceability:
  * [impl->arch~sensors-queue-send-nonblocking~1]
  *
- * @param samp Pointer to sample to enqueue
  * @return int 1 on success, 0 on drop/failure
  */
 int SensorsQueue_TrySend(const SensorSample_t *samp);
@@ -81,11 +82,12 @@ int SensorsQueue_TrySend(const SensorSample_t *samp);
  * Task-context send with a wait option. On failure the drop counter is
  * incremented.
  *
+ * @param samp Pointer to sample to enqueue
+ * @param wait Number of ticks to wait
+ *
  * Requirement traceability:
  * [impl->arch~sensors-queue-send-blocking~1]
  *
- * @param samp Pointer to sample to enqueue
- * @param wait Number of ticks to wait
  * @return int 1 on success, 0 on failure
  */
 int SensorsQueue_Send(const SensorSample_t *samp, ULONG wait);
@@ -95,11 +97,12 @@ int SensorsQueue_Send(const SensorSample_t *samp, ULONG wait);
  *
  * Blocks for up to `wait` ticks waiting for a sample.
  *
+ * @param samp Pointer to receive the sample
+ * @param wait Number of ticks to wait (TX_WAIT_FOREVER for indefinite)
+ *
  * Requirement traceability:
  * [impl->arch~sensors-queue-receive~1]
  *
- * @param samp Pointer to receive the sample
- * @param wait Number of ticks to wait (TX_WAIT_FOREVER for indefinite)
  * @return UINT TX_SUCCESS on success
  */
 UINT SensorsQueue_Receive(SensorSample_t *samp, ULONG wait);
