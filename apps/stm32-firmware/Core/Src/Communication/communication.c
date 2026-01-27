@@ -10,6 +10,7 @@
 #include "mcp2515.h"
 #include "../Sensors/sensors.h"
 #include "main.h"
+#include "../Inc/control_queue.h"
 #include <stdio.h>
 
 #ifndef COMM_DEBUG
@@ -125,23 +126,32 @@ void Communication_Thread_Entry(ULONG thread_input) {
                 uint8_t mode = rx_data[0];
                 uint8_t throttle = rx_data[1];
                 int8_t steering_discrete = (int8_t)rx_data[2];  // -1, 0, or 1
-                
+
                 // Convert discrete steering to -100 to +100 range
                 int8_t steering_angle = steering_discrete * 100;
-                
-                // Update global command with mutex protection
+
+                // Create command message
+                VehicleCommand_t cmd;
+                cmd.driving_mode = mode;
+                cmd.throttle = throttle;
+                cmd.steering_angle = steering_angle;
+                cmd.command_valid = 1;
+
+                // Enqueue to control queue (non-blocking)
+                if (!ControlQueue_TrySend(&cmd)) {
+                    Debug_Print("[COMM] Control queue full - command dropped\r\n");
+                }
+
+                // Keep global copy for diagnostics/backwards compatibility
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                    g_vehicle_command.driving_mode = mode;
-                    g_vehicle_command.throttle = throttle;
-                    g_vehicle_command.steering_angle = steering_angle;
-                    g_vehicle_command.command_valid = 1;
+                    g_vehicle_command = cmd;
                     tx_mutex_put(&g_vehicle_command_mutex);
                 }
-                
+
                 // Convert steering to float for display
                 float steering_float = (float)steering_angle / 100.0f;
                 int steering_int = (int)(steering_float * 1000);  // For display: -1000 to +1000
-                
+
                 snprintf(comm_uart_buf, sizeof(comm_uart_buf), 
                         "[CMD] Mode=%d | Throttle=%d%% | Steering=%d.%03d\r\n",
                         mode, throttle, steering_int/1000, abs(steering_int%1000));

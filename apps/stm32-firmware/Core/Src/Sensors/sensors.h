@@ -116,7 +116,7 @@ float Speed_RPMToMetersPerSecond(uint32_t rpm);
  *
  * @return int 1 if output was generated (N readings), 0 otherwise
  */
-int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter);
+int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter, float *out_speed_ms);
 
 /**
  * @brief Speed calculation thread entry point

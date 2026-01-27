@@ -1,6 +1,8 @@
 #include "control.h"
 #include "../Drivers/pca9685.h"
 #include "../Sensors/sensors.h"
+#include "../Inc/control_queue.h"
+#include "../Inc/sensors_queue.h"
 #include <stdio.h>
 
 extern I2C_HandleTypeDef hi2c1;
@@ -85,54 +87,61 @@ void Control_Thread_Entry(ULONG thread_input) {
     uint8_t last_mode = 0xFF;
     uint8_t last_throttle = 0xFF;
     int8_t last_steering = 0x7F;
-    
+
+    const ULONG cmd_wait_ticks = 10; // 100ms wait for command before timeout handling
+    ULONG no_cmd_ticks = 0;
+    const ULONG no_cmd_threshold = 5; // 5 * 100ms = 500ms without command -> stop motors
+
     while(1) {
-        // Read global command with mutex protection
-        if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-            local_cmd = g_vehicle_command;
-            tx_mutex_put(&g_vehicle_command_mutex);
-        }
-        
-        // Process command if valid
-        if (local_cmd.command_valid) {
-//            Debug_Print("\r\n=== CONTROL THREAD STARTED ===\r\n");
-//            Debug_Print("[CONTROL] Reading commands from global structure\r\n");
-//            Debug_Print("[CONTROL] Controlling motors via Driver module\r\n\r\n");
-            // Check if command changed
-            if (local_cmd.driving_mode != last_mode || 
-                local_cmd.throttle != last_throttle || 
-                local_cmd.steering_angle != last_steering) {
-                
-                // Convert steering to normalized float
-                float steering_normalized = (float)local_cmd.steering_angle / 100.0f;
-                
-                // Apply commands
-                Control_SetSteering(steering_normalized);
-                Control_SetThrottle(local_cmd.throttle);
-                
-                // Print status
-                int steering_int = (int)(steering_normalized * 1000);
-                snprintf(control_uart_buf, sizeof(control_uart_buf),
-                        "[CONTROL] Mode=%d | Throttle=%d%% | Steering=%d.%03d\r\n",
-                        local_cmd.driving_mode, local_cmd.throttle, 
-                        steering_int/1000, abs(steering_int%1000));
-                Debug_Print(control_uart_buf);
-                
-                // Update last values
-                last_mode = local_cmd.driving_mode;
-                last_throttle = local_cmd.throttle;
-                last_steering = local_cmd.steering_angle;
+        VehicleCommand_t recv;
+        UINT r = ControlQueue_Receive(&recv, cmd_wait_ticks);
+        if (r == TX_SUCCESS) {
+            // Got a command - reset timeout counter
+            no_cmd_ticks = 0;
+
+            // Update global copy for diagnostics/backwards compatibility
+            if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                g_vehicle_command = recv;
+                tx_mutex_put(&g_vehicle_command_mutex);
+            }
+
+            local_cmd = recv;
+
+            if (local_cmd.command_valid) {
+                // Check if command changed
+                if (local_cmd.driving_mode != last_mode || 
+                    local_cmd.throttle != last_throttle || 
+                    local_cmd.steering_angle != last_steering) {
+
+                    // Convert steering to normalized float
+                    float steering_normalized = (float)local_cmd.steering_angle / 100.0f;
+
+                    // Apply commands
+                    Control_SetSteering(steering_normalized);
+                    Control_SetThrottle(local_cmd.throttle);
+
+                    // Print status
+                    int steering_int = (int)(steering_normalized * 1000);
+                    snprintf(control_uart_buf, sizeof(control_uart_buf),
+                            "[CONTROL] Mode=%d | Throttle=%d%% | Steering=%d.%03d\r\n",
+                            local_cmd.driving_mode, local_cmd.throttle, 
+                            steering_int/1000, abs(steering_int%1000));
+                    Debug_Print(control_uart_buf);
+
+                    // Update last values
+                    last_mode = local_cmd.driving_mode;
+                    last_throttle = local_cmd.throttle;
+                    last_steering = local_cmd.steering_angle;
+                }
             }
         } else {
-            // No valid command - stop motors for safety
-            static uint8_t no_command_warning = 0;
-            if (no_command_warning == 0) {
-                Debug_Print("[CONTROL] SAFETY: No valid command - motors stopped\r\n");
+            // No command received within timeout
+            no_cmd_ticks++;
+            if (no_cmd_ticks >= no_cmd_threshold) {
+                Debug_Print("[CONTROL] SAFETY: No recent command - motors stopped\r\n");
                 Control_StopMotors();
-                no_command_warning = 1;
+                no_cmd_ticks = 0; // report once per threshold
             }
         }
-        
-        tx_thread_sleep(10);  // 100ms - responsive control loop
     }
 }
