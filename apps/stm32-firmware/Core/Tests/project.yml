@@ -117,6 +117,7 @@
   :test: []
   :source:
     - ../Src/Sensors/speed.c
+    - ../Src/Sensors/sensors_queue.c
     - ../Src/Communication/mcp2515.c
 
 # Use explicit inclusion of source files for test builds
