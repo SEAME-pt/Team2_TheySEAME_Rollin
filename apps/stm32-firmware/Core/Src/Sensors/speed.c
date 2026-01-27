@@ -1,5 +1,5 @@
 #include "sensors.h"
-#include "../../Inc/sensors_queue.h"
+#include "sensors_queue.h"
 
 uint32_t delta_ticks = 0;
 

@@ -1,4 +1,4 @@
-#include "../../Inc/sensors_queue.h"
+#include "sensors_queue.h"
 #include "tx_api.h"
 #include <string.h>
 

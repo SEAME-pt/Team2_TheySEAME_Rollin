@@ -1,8 +1,8 @@
 #include "control.h"
 #include "../Drivers/pca9685.h"
 #include "../Sensors/sensors.h"
-#include "../Inc/control_queue.h"
-#include "../Inc/sensors_queue.h"
+#include "control_queue.h"
+#include "../Sensors/sensors_queue.h"
 #include <stdio.h>
 
 extern I2C_HandleTypeDef hi2c1;
