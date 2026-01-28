@@ -46,7 +46,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
     VehicleData_t local_data;
 
     /* Heartbeat state: re-send last command if no new command seen for HEARTBEAT_MS */
-    const uint32_t HEARTBEAT_MS = 200;
+    const uint32_t HEARTBEAT_MS = 1000; /* 1s heartbeat to avoid log flooding */
     VehicleCommand_t last_cmd = {0};
     uint32_t last_cmd_ts = 0;
     int have_last_cmd = 0;
@@ -175,8 +175,8 @@ void Communication_Thread_Entry(ULONG thread_input) {
             }
         }
         
-        // Periodic status: every 1s print queue drops and other info
-        if (count % 100 == 0) {
+        // Periodic status: every 5s print queue drops and other info
+        if (count % 500 == 0) { /* 500 * 10ms = 5s */
             char status_buf[128];
             snprintf(status_buf, sizeof(status_buf), "[COMM] Control drops=%u, Sensors drops=%u\r\n", ControlQueue_GetDrops(), SensorsQueue_GetDrops());
             Debug_Print(status_buf);
@@ -187,6 +187,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
             uint32_t now = HAL_GetTick();
             if ((now - last_cmd_ts) > HEARTBEAT_MS) {
                 if (ControlQueue_TrySend(&last_cmd)) {
+                    /* Log heartbeat at most once per resend (HEARTBEAT_MS) to avoid flooding */
                     Debug_Print("[COMM] Heartbeat: re-sent last command to Control queue\r\n");
                 } else {
                     Debug_Print("[COMM] Heartbeat: Control queue full on re-send\r\n");

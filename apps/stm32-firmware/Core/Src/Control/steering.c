@@ -90,7 +90,11 @@ void Control_Thread_Entry(ULONG thread_input) {
 
     const ULONG cmd_wait_ticks = 10; // 100ms wait for command before timeout handling
     ULONG no_cmd_ticks = 0;
-    const ULONG no_cmd_threshold = 5; // 5 * 100ms = 500ms without command -> stop motors
+    const ULONG no_cmd_threshold = 10; // 10 * 100ms = 1s without command -> stop motors
+
+    /* Rate limit safety prints so operator can read them (ms) */
+    const uint32_t SAFETY_PRINT_MS = 5000; // 5 seconds
+    uint32_t last_safety_print_ts = 0;
 
     while(1) {
         VehicleCommand_t recv;
@@ -138,7 +142,11 @@ void Control_Thread_Entry(ULONG thread_input) {
             // No command received within timeout
             no_cmd_ticks++;
             if (no_cmd_ticks >= no_cmd_threshold) {
-                Debug_Print("[CONTROL] SAFETY: No recent command - motors stopped\r\n");
+                uint32_t now = HAL_GetTick();
+                if ((now - last_safety_print_ts) >= SAFETY_PRINT_MS) {
+                    Debug_Print("[CONTROL] SAFETY: No recent command - motors stopped\r\n");
+                    last_safety_print_ts = now;
+                }
                 Control_StopMotors();
                 no_cmd_ticks = 0; // report once per threshold
             }
