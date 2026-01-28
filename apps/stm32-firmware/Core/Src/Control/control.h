@@ -18,6 +18,10 @@
  * - Convert and clamp control inputs into safe actuator commands
  * - Stop motors on invalid state or failsafe conditions
  *
+ * Note: For short-lived debugging you can disable the automatic safety stop
+ * by defining `DISABLE_CONTROL_SAFETY` (compile-time only). Do NOT enable in
+ * production builds.
+ *
  * @param thread_input RTOS thread input parameter (unused)
  *
  * Requirement traceability:

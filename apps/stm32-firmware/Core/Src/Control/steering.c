@@ -156,10 +156,16 @@ void Control_Thread_Entry(ULONG thread_input) {
             if (no_cmd_ticks >= no_cmd_threshold) {
                 uint32_t now = HAL_GetTick();
                 if ((now - last_safety_print_ts) >= SAFETY_PRINT_MS) {
+#ifdef DISABLE_CONTROL_SAFETY
+                    Debug_Print("[CONTROL] SAFETY: No recent command - motors stopped (DISABLED)\r\n");
+#else
                     Debug_Print("[CONTROL] SAFETY: No recent command - motors stopped\r\n");
+#endif
                     last_safety_print_ts = now;
                 }
+#ifndef DISABLE_CONTROL_SAFETY
                 Control_StopMotors();
+#endif
                 no_cmd_ticks = 0; // report once per threshold
             }
         }
