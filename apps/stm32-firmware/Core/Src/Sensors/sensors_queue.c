@@ -33,3 +33,12 @@ UINT SensorsQueue_Receive(SensorSample_t *samp, ULONG wait) {
 uint32_t SensorsQueue_GetDrops(void) {
     return sensors_q_drops;
 }
+
+UINT SensorsQueue_GetOccupancy(UINT *count) {
+    if (count == NULL) return 1;
+    UINT message_count = 0;
+    UINT status = tx_queue_info_get(&sensors_q, NULL, &message_count, NULL, NULL, NULL, NULL);
+    if (status != TX_SUCCESS) return status;
+    *count = message_count;
+    return TX_SUCCESS;
+}

@@ -98,6 +98,14 @@ UINT ControlQueue_Receive(VehicleCommand_t *cmd, ULONG wait);
  */
 uint32_t ControlQueue_GetDrops(void);
 
+/**
+ * @brief Get number of messages currently queued (occupancy)
+ *
+ * @param count Pointer to UINT to receive current message count
+ * @return UINT TX_SUCCESS on success
+ */
+UINT ControlQueue_GetOccupancy(UINT *count);
+
 #ifdef __cplusplus
 }
 #endif

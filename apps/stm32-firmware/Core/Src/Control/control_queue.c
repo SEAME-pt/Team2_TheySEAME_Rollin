@@ -38,9 +38,20 @@ int ControlQueue_Send(const VehicleCommand_t *cmd, ULONG wait) {
 }
 
 UINT ControlQueue_Receive(VehicleCommand_t *cmd, ULONG wait) {
+    /* Optionally could add diagnostics here */
     return tx_queue_receive(&control_q, (void*)cmd, wait);
 }
 
 uint32_t ControlQueue_GetDrops(void) {
     return control_q_drops;
+}
+
+UINT ControlQueue_GetOccupancy(UINT *count) {
+    /* Returns the current number of messages in the queue via tx_queue_info_get */
+    if (count == NULL) return 1; /* invalid param */
+    UINT created_count = 0;
+    UINT status = tx_queue_info_get(&control_q, NULL, &created_count, NULL, NULL, NULL, NULL);
+    if (status != TX_SUCCESS) return status;
+    *count = created_count;
+    return TX_SUCCESS;
 }

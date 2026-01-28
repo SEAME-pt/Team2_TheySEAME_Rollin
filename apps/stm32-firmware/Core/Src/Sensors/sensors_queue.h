@@ -120,6 +120,14 @@ UINT SensorsQueue_Receive(SensorSample_t *samp, ULONG wait);
  */
 uint32_t SensorsQueue_GetDrops(void);
 
+/**
+ * @brief Get number of messages currently queued (occupancy)
+ *
+ * @param count Pointer to UINT to receive current message count
+ * @return UINT TX_SUCCESS on success
+ */
+UINT SensorsQueue_GetOccupancy(UINT *count);
+
 #ifdef __cplusplus
 }
 #endif

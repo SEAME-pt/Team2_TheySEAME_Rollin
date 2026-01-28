@@ -175,10 +175,14 @@ void Communication_Thread_Entry(ULONG thread_input) {
             }
         }
         
-        // Periodic status: every 5s print queue drops and other info
+        // Periodic status: every 5s print queue drops and other info, plus occupancy
         if (count % 500 == 0) { /* 500 * 10ms = 5s */
             char status_buf[128];
-            snprintf(status_buf, sizeof(status_buf), "[COMM] Control drops=%u, Sensors drops=%u\r\n", ControlQueue_GetDrops(), SensorsQueue_GetDrops());
+            UINT control_occ = 0;
+            UINT sensors_occ = 0;
+            ControlQueue_GetOccupancy(&control_occ);
+            SensorsQueue_GetOccupancy(&sensors_occ);
+            snprintf(status_buf, sizeof(status_buf), "[COMM] Control drops=%u occ=%u, Sensors drops=%u occ=%u\r\n", ControlQueue_GetDrops(), control_occ, SensorsQueue_GetDrops(), sensors_occ);
             Debug_Print(status_buf);
         }
 

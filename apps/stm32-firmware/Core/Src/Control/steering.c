@@ -103,6 +103,18 @@ void Control_Thread_Entry(ULONG thread_input) {
             // Got a command - reset timeout counter
             no_cmd_ticks = 0;
 
+            /* Occasionally print occupancy so we can see how full the queue is */
+            static int occupancy_report_cnt = 0;
+            occupancy_report_cnt++;
+            if ((occupancy_report_cnt % 10) == 0) { /* every ~1s */
+                UINT occ = 0;
+                if (ControlQueue_GetOccupancy(&occ) == TX_SUCCESS) {
+                    char occ_buf[64];
+                    snprintf(occ_buf, sizeof(occ_buf), "[CONTROL] Queue occupancy=%u\r\n", occ);
+                    Debug_Print(occ_buf);
+                }
+            }
+
             // Update global copy for diagnostics/backwards compatibility
             if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
                 g_vehicle_command = recv;
