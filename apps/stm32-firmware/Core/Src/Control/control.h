@@ -4,6 +4,11 @@
 #include "main.h"
 #include "tx_api.h"
 
+/* TEMPORARY: Disable automatic safety stop while debugging to avoid motor lock
+ * During development this is useful; remove this define before any production
+ * or safety-critical testing. */
+#define DISABLE_CONTROL_SAFETY 1
+
 /**
  * @brief Control thread entry and main loop
  *
