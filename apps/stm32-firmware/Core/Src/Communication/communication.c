@@ -47,9 +47,14 @@ void Communication_Thread_Entry(ULONG thread_input) {
 
     /* Heartbeat state: re-send last command if no new command seen for HEARTBEAT_MS */
     const uint32_t HEARTBEAT_MS = 1000; /* 1s heartbeat to avoid log flooding */
-    VehicleCommand_t last_cmd = {0};
-    uint32_t last_cmd_ts = 0;
-    int have_last_cmd = 0;
+    /* Default safe command: throttle=0, steering=0, command_valid=1
+     * This prevents repeated safety stop messages until a real command is received.
+     */
+    VehicleCommand_t last_cmd = { .driving_mode = 0, .throttle = 0, .steering_angle = 0, .command_valid = 1 };
+    uint32_t last_cmd_ts = HAL_GetTick();
+    int have_last_cmd = 1; /* start with default command enabled */
+
+    Debug_Print("[COMM] Heartbeat initialized with default SAFE command\r\n");
 
     while(1) {
         // Send status every 200ms (every 20 loops) for faster response
