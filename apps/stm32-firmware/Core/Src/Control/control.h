@@ -4,11 +4,6 @@
 #include "main.h"
 #include "tx_api.h"
 
-/* TEMPORARY: Disable automatic safety stop while debugging to avoid motor lock
- * During development this is useful; remove this define before any production
- * or safety-critical testing. */
-#define DISABLE_CONTROL_SAFETY 1
-
 /**
  * @brief Control thread entry and main loop
  *
@@ -26,6 +21,18 @@
  * Note: For short-lived debugging you can disable the automatic safety stop
  * by defining `DISABLE_CONTROL_SAFETY` (compile-time only). Do NOT enable in
  * production builds.
+ *
+ * For convenience, in debug or test builds this macro is defined automatically
+ * so you don't need to rebuild with extra flags. Remove this convenience for
+ * production builds or CI by undefining `DEBUG`/`TEST_MODE` or explicitly
+ * undefining `DISABLE_CONTROL_SAFETY`.
+ */
+
+#if defined(DEBUG) || defined(TEST_MODE)
+#ifndef DISABLE_CONTROL_SAFETY
+#define DISABLE_CONTROL_SAFETY
+#endif
+#endif
  *
  * @param thread_input RTOS thread input parameter (unused)
  *

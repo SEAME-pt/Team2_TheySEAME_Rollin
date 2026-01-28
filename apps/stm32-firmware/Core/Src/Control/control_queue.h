@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 /** Maximum number of commands the control queue can hold */
-#define CONTROL_QUEUE_SIZE 8
+#define CONTROL_QUEUE_SIZE 32 /* Increased temporarily for debugging/backpressure testing */
 
 /**
  * @brief Initialize control queue
