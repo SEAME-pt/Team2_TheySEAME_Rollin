@@ -16,7 +16,7 @@
 #define CONTROL_QUEUE_H
 
 #include "tx_api.h"
-#include "Sensors/sensors.h" // for VehicleCommand_t
+#include "../Sensors/sensors.h" // for VehicleCommand_t
 #include <stdint.h>
 
 #ifdef __cplusplus
