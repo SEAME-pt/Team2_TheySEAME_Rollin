@@ -17,6 +17,11 @@ int ControlQueue_TrySend(const VehicleCommand_t *cmd) {
     UINT status = tx_queue_send(&control_q, (void*)cmd, TX_NO_WAIT);
     if (status == TX_SUCCESS) return 1;
     control_q_drops++;
+    {
+        char buf[64];
+        snprintf(buf, sizeof(buf), "[CONTROL_Q] Drop occurred, total=%u\r\n", control_q_drops);
+        Debug_Print(buf);
+    }
     return 0;
 }
 
@@ -24,6 +29,11 @@ int ControlQueue_Send(const VehicleCommand_t *cmd, ULONG wait) {
     UINT status = tx_queue_send(&control_q, (void*)cmd, wait);
     if (status == TX_SUCCESS) return 1;
     control_q_drops++;
+    {
+        char buf[64];
+        snprintf(buf, sizeof(buf), "[CONTROL_Q] Drop occurred on Send, total=%u\r\n", control_q_drops);
+        Debug_Print(buf);
+    }
     return 0;
 }
 

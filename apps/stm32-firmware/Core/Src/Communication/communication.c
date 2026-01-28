@@ -44,7 +44,13 @@ void Communication_Thread_Entry(ULONG thread_input) {
     
     uint32_t count = 0;
     VehicleData_t local_data;
-    
+
+    /* Heartbeat state: re-send last command if no new command seen for HEARTBEAT_MS */
+    const uint32_t HEARTBEAT_MS = 200;
+    VehicleCommand_t last_cmd = {0};
+    uint32_t last_cmd_ts = 0;
+    int have_last_cmd = 0;
+
     while(1) {
         // Send status every 200ms (every 20 loops) for faster response
         if (count % 20 == 0) {
@@ -140,6 +146,8 @@ void Communication_Thread_Entry(ULONG thread_input) {
                 // Enqueue to control queue (non-blocking)
                 if (!ControlQueue_TrySend(&cmd)) {
                     Debug_Print("[COMM] Control queue full - command dropped\r\n");
+                } else {
+                    Debug_Print("[COMM] Command enqueued to Control queue\r\n");
                 }
 
                 // Keep global copy for diagnostics/backwards compatibility
@@ -147,6 +155,11 @@ void Communication_Thread_Entry(ULONG thread_input) {
                     g_vehicle_command = cmd;
                     tx_mutex_put(&g_vehicle_command_mutex);
                 }
+
+                // Update last command for heartbeat
+                last_cmd = cmd;
+                last_cmd_ts = HAL_GetTick();
+                have_last_cmd = 1;
 
                 // Convert steering to float for display
                 float steering_float = (float)steering_angle / 100.0f;
@@ -162,6 +175,26 @@ void Communication_Thread_Entry(ULONG thread_input) {
             }
         }
         
+        // Periodic status: every 1s print queue drops and other info
+        if (count % 100 == 0) {
+            char status_buf[128];
+            snprintf(status_buf, sizeof(status_buf), "[COMM] Control drops=%u, Sensors drops=%u\r\n", ControlQueue_GetDrops(), SensorsQueue_GetDrops());
+            Debug_Print(status_buf);
+        }
+
+        // Heartbeat: re-send last command if we haven't seen a command recently
+        if (have_last_cmd) {
+            uint32_t now = HAL_GetTick();
+            if ((now - last_cmd_ts) > HEARTBEAT_MS) {
+                if (ControlQueue_TrySend(&last_cmd)) {
+                    Debug_Print("[COMM] Heartbeat: re-sent last command to Control queue\r\n");
+                } else {
+                    Debug_Print("[COMM] Heartbeat: Control queue full on re-send\r\n");
+                }
+                last_cmd_ts = now; // update to avoid flooding
+            }
+        }
+
         // Print detailed status every 5000 iterations (50 seconds at 10ms loop)
         if (count % 5000 == 0) {
             Debug_Print("\r\n=== CAN Status Report ===\r\n");
