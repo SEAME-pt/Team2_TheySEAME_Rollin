@@ -33,6 +33,11 @@
 #define DISABLE_CONTROL_SAFETY
 #endif
 #endif
+
+/**
+ * @brief Control thread entry and main loop
+ *
+ * Runs the control subsystem responsible for actuator commands and safety.
  *
  * @param thread_input RTOS thread input parameter (unused)
  *
