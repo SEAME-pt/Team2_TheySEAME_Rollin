@@ -10,7 +10,8 @@ bitbake-layers add-layer ../meta-mylayer
 # Symlink the site.conf
 ln -sf $HOME/site.conf $AGL_TOP/conf/.
 
-# Start creating the image and sdk
-#time bitbake agl-image-weston
-#time bitbake agl-image-weston -c do_populate_sdk
+#bitbake-layers show-recipes -l meta-mylayer
+bitbake rpi-config
+#bitbake weston
+bitbake util-scripts
 
