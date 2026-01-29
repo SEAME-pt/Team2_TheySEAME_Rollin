@@ -8,7 +8,7 @@ The AGL installation is done through a Dockerfile to ensure the enviroment is co
 It will generate the same image described in [here](/docs/architecture/AGL)
 
 ```bash
-docker build -t agl .
-mkdir agl
-docker run -it -u $(id -u):$(id -g) -v $PWD/agl:/home/buidl/agl agl
+docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t agl .
+mkdir agl downloads sstate-cache
+docker run -it -v $PWD/agl:/home/buidl/agl -v $PWD/downloads:/home/build/downloads -v $PWD/sstate-cache:home/build/sstate-cache agl
 ```

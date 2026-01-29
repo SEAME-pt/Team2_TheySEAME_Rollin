@@ -34,4 +34,4 @@ RUN repo init -b trout -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo
 COPY conf .
 COPY layers .
 
-CMD [ "bash", "installAGL.sh" ]
+CMD [ "bash", "buildImage.sh" ]
