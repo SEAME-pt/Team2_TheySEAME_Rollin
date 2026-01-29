@@ -9,7 +9,7 @@
  * `SensorsQueue_Receive` to drain and process samples.
  *
  * Requirement traceability:
- * [impl->arch~sensors-queue~1]
+ * [impl->dsn~sensors-queue~1]
  */
 
 #ifndef SENSORS_QUEUE_H
@@ -55,7 +55,7 @@ typedef struct {
  * Creates the underlying ThreadX queue and resets internal drop counter.
  *
  * Requirement traceability:
- * [impl->arch~sensors-queue-init~1]
+ * [impl->dsn~sensors-queue~1]
  *
  * @return UINT TX_SUCCESS on success
  */
@@ -70,7 +70,7 @@ UINT SensorsQueue_Init(void);
  * @param samp Pointer to sample to enqueue
  *
  * Requirement traceability:
- * [impl->arch~sensors-queue-send-nonblocking~1]
+ * [impl->dsn~sensors-queue~1]
  *
  * @return int 1 on success, 0 on drop/failure
  */
@@ -86,7 +86,7 @@ int SensorsQueue_TrySend(const SensorSample_t *samp);
  * @param wait Number of ticks to wait
  *
  * Requirement traceability:
- * [impl->arch~sensors-queue-send-blocking~1]
+ * [impl->dsn~sensors-queue~1]
  *
  * @return int 1 on success, 0 on failure
  */
@@ -101,7 +101,7 @@ int SensorsQueue_Send(const SensorSample_t *samp, ULONG wait);
  * @param wait Number of ticks to wait (TX_WAIT_FOREVER for indefinite)
  *
  * Requirement traceability:
- * [impl->arch~sensors-queue-receive~1]
+ * [impl->dsn~sensors-queue~1]
  *
  * @return UINT TX_SUCCESS on success
  */
@@ -114,7 +114,7 @@ UINT SensorsQueue_Receive(SensorSample_t *samp, ULONG wait);
  * being full (useful for monitoring and tuning).
  *
  * Requirement traceability:
- * [impl->arch~sensors-queue-drops~1]
+ * [impl->dsn~sensors-queue~1]
  *
  * @return uint32_t Count of dropped messages since last init
  */

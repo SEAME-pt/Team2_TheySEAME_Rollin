@@ -9,7 +9,7 @@
  * that can wait may call `ControlQueue_Send`.
  *
  * Requirement traceability:
- * [impl->arch~control-queue~1]
+ * [impl->dsn~control-queue~1]
  */
 
 #ifndef CONTROL_QUEUE_H
@@ -35,7 +35,7 @@ extern "C" {
  * @return UINT TX_SUCCESS on success, error code otherwise
  *
  * Requirement traceability:
- * [impl->arch~control-queue-init~1]
+ * [impl->dsn~control-queue~1]
  */
 UINT ControlQueue_Init(void);
 
@@ -48,7 +48,7 @@ UINT ControlQueue_Init(void);
  * @param cmd Pointer to `VehicleCommand_t` to enqueue
  *
  * Requirement traceability:
- * [impl->arch~control-queue-send-nonblocking~1]
+ * [impl->dsn~control-queue~1]
  *
  * @return int 1 on success, 0 on drop/failure
  */
@@ -64,7 +64,7 @@ int ControlQueue_TrySend(const VehicleCommand_t *cmd);
  * @param wait Number of ticks to wait (use TX_WAIT_FOREVER to wait indefinitely)
  *
  * Requirement traceability:
- * [impl->arch~control-queue-send-blocking~1]
+ * [impl->dsn~control-queue~1]
  *
  * @return int 1 on success, 0 on failure
  */
@@ -79,7 +79,7 @@ int ControlQueue_Send(const VehicleCommand_t *cmd, ULONG wait);
  * @param wait Number of ticks to wait (TX_WAIT_FOREVER for indefinite)
  *
  * Requirement traceability:
- * [impl->arch~control-queue-receive~1]
+ * [impl->dsn~control-queue~1]
  *
  * @return UINT TX_SUCCESS on success
  */
@@ -92,7 +92,7 @@ UINT ControlQueue_Receive(VehicleCommand_t *cmd, ULONG wait);
  * being full (useful for monitoring and tuning).
  *
  * Requirement traceability:
- * [impl->arch~control-queue-drops~1]
+ * [impl->dsn~control-queue~1]
  *
  * @return uint32_t Count of dropped messages since last init
  */
