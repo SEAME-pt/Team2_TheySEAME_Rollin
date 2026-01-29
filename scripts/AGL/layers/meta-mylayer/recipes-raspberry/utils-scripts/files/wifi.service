@@ -1,0 +1,9 @@
+[Unit]
+Description=wifi on boot
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/root/wifi.sh
+RemainAfterExit=yes
+

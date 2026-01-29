@@ -10,8 +10,5 @@ bitbake-layers add-layer ../meta-mylayer
 # Symlink the site.conf
 ln -sf $HOME/site.conf $AGL_TOP/conf/.
 
-#bitbake-layers show-recipes -l meta-mylayer
-bitbake rpi-config
-#bitbake weston
-bitbake util-scripts
+time bitbake agl-image-weston
 
