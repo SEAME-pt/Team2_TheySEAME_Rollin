@@ -26,7 +26,8 @@ jobs:
             libgrpc++-dev \
             libprotobuf-dev \
             protobuf-compiler-grpc \
-            qt6-positioning-dev
+            qt6-positioning-dev \
+            qt6-location-dev
       - name: Configure and Build
         run: |
           cmake -S apps/Cluster/tests -B build-qt -DCMAKE_BUILD_TYPE=Release
