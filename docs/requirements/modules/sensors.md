@@ -106,3 +106,42 @@ Needs: impl, test
 Covers:
 - `arch~rpm-battery-sensing~1`
 ```
+
+```
+dsn~battery-sensing~1
+
+Status: draft
+
+The Sensors module shall measure battery voltage and current using an INA219 sensor (I2C) and expose battery percentage and current to the Communications layer via the shared telemetry interface. Measurements shall be validated and filtered to avoid spurious spikes.
+
+Needs: impl, test
+
+Covers:
+- arch~rpm-battery-sensing~1
+```
+
+```
+dsn~battery-unit~1
+
+Status: draft
+
+Battery sensor readings shall be reported in millivolts (mV), milliamps (mA), and percentage (0..100) and shall include helper functions to convert raw sensor values to these units including averaged and integrated power metrics.
+
+Needs: impl, test
+
+Covers:
+- arch~battery-unit~1
+```
+
+```
+dsn~sensors-queue~1
+
+Status: draft
+
+The Sensors module shall expose a thread-safe message queue for emitting sensor samples (e.g., speed, battery) which supports both non-blocking producer sends (for ISR/high-priority contexts) and blocking task-context sends. The queue shall provide drop and occupancy metrics for runtime monitoring.
+
+Needs: impl, test
+
+Covers:
+- `arch~rpm-battery-sensing~1`
+```

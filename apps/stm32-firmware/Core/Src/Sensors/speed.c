@@ -1,4 +1,5 @@
 #include "sensors.h"
+#include "sensors_queue.h"
 
 uint32_t delta_ticks = 0;
 
@@ -121,7 +122,7 @@ float Speed_RPMToMetersPerSecond(uint32_t rpm)
  * @param counter Pointer to reading counter (modified)
  * @return 1 if output was generated (5 readings reached), 0 otherwise
  */
-int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter)
+int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter, float *out_speed_ms)
 {
     uint32_t rpm = Speed_CalculateRPM(delta_ticks);
     
@@ -141,12 +142,9 @@ int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter)
         snprintf(uart_buf, sizeof(uart_buf), "[SPEED THREAD] RPM = %lu, Speed (m/s) = %.2f\r\n", *average, speed_ms);
         Debug_Print(uart_buf);
         
-        if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS)
-        {
-            g_vehicle_data.vehicle_speed = speed_ms;
-            tx_mutex_put(&g_vehicle_data_mutex);
-        }
-        
+        // Output speed to caller for enqueueing
+        if (out_speed_ms) *out_speed_ms = speed_ms;
+
         *counter = 0;
         *average = 0;
         return 1;
@@ -196,20 +194,26 @@ void Speed_Thread_Entry(ULONG thread_input)
         if (local_delta >= 20) {
             // Valid pulse - reset no-pulse counter and process
             no_pulse_counter = 0;
-            Speed_ProcessDelta(local_delta, &average, &counter);
+            float speed_ms;
+            if (Speed_ProcessDelta(local_delta, &average, &counter, &speed_ms)) {
+                // Enqueue sensor sample to sensors queue
+                SensorSample_t samp = { .sensor_id = SENSOR_ID_SPEED, .value = speed_ms, .ts = HAL_GetTick() };
+                if (!SensorsQueue_TrySend(&samp)) {
+                    Debug_Print("[SPEED] Sensors queue full - sample dropped\r\n");
+                }
+            }
         } else {
             // No valid pulse detected in this iteration
             no_pulse_counter++;
 
             // Stop after ~0.2s without pulses (THREAD_SLEEP_TICKS is 10 ticks = 0.1s)
             if (no_pulse_counter >= 2) {
-                if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                    if (g_vehicle_data.vehicle_speed != 0.0f) {
-                        g_vehicle_data.vehicle_speed = 0.0f;
-                        g_vehicle_data.data_valid = 1;
-                        Debug_Print("[SPEED THREAD] No pulses detected - Speed = 0 m/s\r\n");
-                    }
-                    tx_mutex_put(&g_vehicle_data_mutex);
+                // Send zero-speed sample
+                SensorSample_t samp = { .sensor_id = SENSOR_ID_SPEED, .value = 0.0f, .ts = HAL_GetTick() };
+                if (!SensorsQueue_TrySend(&samp)) {
+                    Debug_Print("[SPEED] Sensors queue full - zero-speed sample dropped\r\n");
+                } else {
+                    Debug_Print("[SPEED THREAD] No pulses detected - enqueued Speed = 0 m/s\r\n");
                 }
                 no_pulse_counter = 10;  // Cap to prevent overflow
                 counter = 0;  // Reset averaging counter

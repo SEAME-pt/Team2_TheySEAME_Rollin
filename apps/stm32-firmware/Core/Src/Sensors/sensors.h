@@ -14,7 +14,7 @@
  * by `g_vehicle_data_mutex` when updated/read by multiple threads.
  *
  * Requirement traceability:
- * [impl->arch~rpm-battery-sensing~1]
+ * [impl->dsn~rpm-data-interface~1]
  */
 typedef struct {
     uint16_t battery_voltage;      /**< Battery voltage in millivolts */
@@ -30,7 +30,7 @@ typedef struct {
  * Encodes the control inputs coming from remote/system controller.
  *
  * Requirement traceability:
- * [impl->arch~stm-rpi-can-control~1]
+ * [impl->dsn~control-actuation-commands~1]
  */
 typedef struct {
     uint8_t driving_mode;       /**< Driving mode (e.g., MANUAL/AUTO) */
@@ -45,7 +45,7 @@ typedef struct {
  * Protected by `g_vehicle_data_mutex` when modified.
  *
  * Requirement traceability:
- * [impl->arch~rpm-battery-sensing~1]
+ * [impl->dsn~rpm-data-interface~1]
  */
 extern VehicleData_t g_vehicle_data;
 
@@ -60,7 +60,7 @@ extern TX_MUTEX g_vehicle_data_mutex;
  * Protected by `g_vehicle_command_mutex`.
  *
  * Requirement traceability:
- * [impl->arch~stm-rpi-can-control~1]
+ * [impl->dsn~control-actuation-commands~1]
  */
 extern VehicleCommand_t g_vehicle_command;
 
@@ -116,7 +116,7 @@ float Speed_RPMToMetersPerSecond(uint32_t rpm);
  *
  * @return int 1 if output was generated (N readings), 0 otherwise
  */
-int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter);
+int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter, float *out_speed_ms);
 
 /**
  * @brief Speed calculation thread entry point
