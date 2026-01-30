@@ -2,11 +2,11 @@
 <specdocument>
   <specobjects doctype="test">
     <specobject>
-      <id>calculate-rpm-2574410021</id>
+      <id>calculate-rpm-4114908934</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/stm32-firmware/Core/Tests/test/test_speed.c</sourcefile>
-      <sourceline>47</sourceline>
+      <sourceline>54</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -21,11 +21,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>calculate-rpm-4214695819</id>
+      <id>calculate-rpm-1154403608</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/stm32-firmware/Core/Tests/test/test_speed.c</sourcefile>
-      <sourceline>68</sourceline>
+      <sourceline>75</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -40,11 +40,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>calculate-rpm-814045963</id>
+      <id>calculate-rpm-2407313816</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/stm32-firmware/Core/Tests/test/test_speed.c</sourcefile>
-      <sourceline>88</sourceline>
+      <sourceline>95</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -59,11 +59,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>rpm-data-interface-935577854</id>
+      <id>rpm-data-interface-3567617317</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/stm32-firmware/Core/Tests/test/test_speed.c</sourcefile>
-      <sourceline>109</sourceline>
+      <sourceline>116</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -78,11 +78,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>rpm-data-interface-3514747009</id>
+      <id>rpm-data-interface-1665811370</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/stm32-firmware/Core/Tests/test/test_speed.c</sourcefile>
-      <sourceline>131</sourceline>
+      <sourceline>138</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -97,11 +97,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>rpm-data-interface-1831310662</id>
+      <id>rpm-data-interface-3742572141</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/stm32-firmware/Core/Tests/test/test_speed.c</sourcefile>
-      <sourceline>151</sourceline>
+      <sourceline>158</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -116,11 +116,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>rpm-noise-handling-3698179695</id>
+      <id>rpm-noise-handling-2064875051</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/stm32-firmware/Core/Tests/test/test_speed.c</sourcefile>
-      <sourceline>172</sourceline>
+      <sourceline>179</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -135,11 +135,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>rpm-average-3208219368</id>
+      <id>rpm-average-2681037654</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/stm32-firmware/Core/Tests/test/test_speed.c</sourcefile>
-      <sourceline>197</sourceline>
+      <sourceline>204</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -154,11 +154,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>rpm-average-3370065609</id>
+      <id>rpm-average-1646822885</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/stm32-firmware/Core/Tests/test/test_speed.c</sourcefile>
-      <sourceline>222</sourceline>
+      <sourceline>229</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -173,11 +173,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>rpm-timer-settings-949048230</id>
+      <id>rpm-timer-settings-2326124685</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/stm32-firmware/Core/Tests/test/test_speed.c</sourcefile>
-      <sourceline>251</sourceline>
+      <sourceline>258</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -192,11 +192,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>speed-counter-overflow-866433850</id>
+      <id>speed-counter-overflow-2256933378</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/stm32-firmware/Core/Tests/test/test_speed.c</sourcefile>
-      <sourceline>280</sourceline>
+      <sourceline>287</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -211,11 +211,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>rpm-timer-settings-2229097876</id>
+      <id>rpm-timer-settings-1928418080</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/stm32-firmware/Core/Tests/test/test_speed.c</sourcefile>
-      <sourceline>308</sourceline>
+      <sourceline>315</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -230,11 +230,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>rpm-timer-settings-2239624060</id>
+      <id>rpm-timer-settings-927561815</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/stm32-firmware/Core/Tests/test/test_speed.c</sourcefile>
-      <sourceline>331</sourceline>
+      <sourceline>338</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -249,11 +249,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>rpm-timer-settings-330315877</id>
+      <id>rpm-timer-settings-2028433024</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/stm32-firmware/Core/Tests/test/test_speed.c</sourcefile>
-      <sourceline>355</sourceline>
+      <sourceline>362</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -268,11 +268,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>rpm-read-frequency-3327365606</id>
+      <id>rpm-read-frequency-1630359970</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/stm32-firmware/Core/Tests/test/test_speed.c</sourcefile>
-      <sourceline>392</sourceline>
+      <sourceline>399</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -287,11 +287,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>rpm-read-frequency-273265396</id>
+      <id>rpm-read-frequency-818616714</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/stm32-firmware/Core/Tests/test/test_speed.c</sourcefile>
-      <sourceline>437</sourceline>
+      <sourceline>444</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -306,11 +306,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>rpm-read-frequency-2252533546</id>
+      <id>rpm-read-frequency-625460258</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/stm32-firmware/Core/Tests/test/test_speed.c</sourcefile>
-      <sourceline>486</sourceline>
+      <sourceline>493</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -319,6 +319,120 @@
       <covering>
         <coveredType>
           <id>rpm-read-frequency</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-telemetry-tx-2912946495</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Tests/test/test_mcp2515.c</sourcefile>
+      <sourceline>11</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-telemetry-tx</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-telemetry-tx-1421914429</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Tests/test/test_mcp2515.c</sourcefile>
+      <sourceline>35</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-telemetry-tx</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-telemetry-tx-2944269254</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Tests/test/test_mcp2515.c</sourcefile>
+      <sourceline>75</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-telemetry-tx</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-telemetry-tx-2075417264</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Tests/test/test_mcp2515.c</sourcefile>
+      <sourceline>117</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-telemetry-tx</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-error-handling-1669803498</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Tests/test/test_mcp2515.c</sourcefile>
+      <sourceline>136</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-error-handling</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-telemetry-tx-1215405886</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Tests/test/test_mcp2515.c</sourcefile>
+      <sourceline>174</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-telemetry-tx</id>
           <version>1</version>
           <doctype>dsn</doctype>
         </coveredType>
@@ -593,6 +707,1317 @@
   </specobjects>
   <specobjects doctype="impl">
     <specobject>
+      <id>control-actuation-flow-3831251466</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Control/control.h</sourcefile>
+      <sourceline>24</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>control-actuation-flow</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>control-throttle-command-577477338</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Control/control.h</sourcefile>
+      <sourceline>25</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>control-throttle-command</id>
+          <version>1</version>
+          <doctype>dsg</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>control-user-interface-2072785858</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Control/control.h</sourcefile>
+      <sourceline>26</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>control-user-interface</id>
+          <version>1</version>
+          <doctype>dsg</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>control-safety-limits-3737200847</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Control/control.h</sourcefile>
+      <sourceline>27</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>control-safety-limits</id>
+          <version>1</version>
+          <doctype>dsg</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>rtos-control-2527712428</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Control/control.h</sourcefile>
+      <sourceline>28</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>rtos-control</id>
+          <version>1</version>
+          <doctype>feat</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>control-actuation-flow-2903725365</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Control/control.h</sourcefile>
+      <sourceline>44</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>control-actuation-flow</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>control-user-interface-3731824332</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Control/control.h</sourcefile>
+      <sourceline>59</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>control-user-interface</id>
+          <version>1</version>
+          <doctype>dsg</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>control-actuation-flow-2924084068</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Control/control.h</sourcefile>
+      <sourceline>60</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>control-actuation-flow</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>control-throttle-command-3478342117</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Control/control.h</sourcefile>
+      <sourceline>75</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>control-throttle-command</id>
+          <version>1</version>
+          <doctype>dsg</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>control-safety-limits-1881513667</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Control/control.h</sourcefile>
+      <sourceline>76</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>control-safety-limits</id>
+          <version>1</version>
+          <doctype>dsg</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>control-safety-limits-3268164801</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Control/control.h</sourcefile>
+      <sourceline>88</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>control-safety-limits</id>
+          <version>1</version>
+          <doctype>dsg</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>control-actuation-flow-2717586659</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/pca9685.h</sourcefile>
+      <sourceline>33</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>control-actuation-flow</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>control-throttle-command-2998366319</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/pca9685.h</sourcefile>
+      <sourceline>34</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>control-throttle-command</id>
+          <version>1</version>
+          <doctype>dsg</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>control-actuation-flow-3221461483</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/pca9685.h</sourcefile>
+      <sourceline>54</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>control-actuation-flow</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>control-throttle-command-3521650998</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/pca9685.h</sourcefile>
+      <sourceline>73</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>control-throttle-command</id>
+          <version>1</version>
+          <doctype>dsg</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>rpm-battery-sensing-1624720587</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>93</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>rpm-battery-sensing</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>rpm-battery-sensing-2005124081</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>109</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>rpm-battery-sensing</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>report-speed-battery-734248650</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>110</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>report-speed-battery</id>
+          <version>1</version>
+          <doctype>feat</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-3157908169</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>124</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-2618995652</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>138</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-803070287</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>152</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-73156788</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>166</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-970142194</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>180</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-3636875508</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>196</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-3548850105</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>208</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-3626362703</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>220</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-734626546</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>232</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-1558820873</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>246</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-2551107705</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>258</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-209097489</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>271</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-875072044</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>283</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-2921556425</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>296</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-1224002925</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>308</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-1129713051</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>320</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-2965006374</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>332</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-3162820670</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>345</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-536321691</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>360</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>battery-unit-4276289437</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Drivers/ina219.h</sourcefile>
+      <sourceline>376</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>battery-unit</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-logging-policy-143037211</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/utils/utils.h</sourcefile>
+      <sourceline>16</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-logging-policy</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-init-2686971279</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/mcp2515.h</sourcefile>
+      <sourceline>82</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-init</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-telemetry-tx-4045205354</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/mcp2515.h</sourcefile>
+      <sourceline>105</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-telemetry-tx</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-error-handling-1795797049</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/mcp2515.h</sourcefile>
+      <sourceline>106</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-error-handling</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-rate-limit-3710982635</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/mcp2515.h</sourcefile>
+      <sourceline>107</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-rate-limit</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-logging-policy-2828180995</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/mcp2515.h</sourcefile>
+      <sourceline>108</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-logging-policy</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-telemetry-tx-3511130983</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/mcp2515.h</sourcefile>
+      <sourceline>123</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-telemetry-tx</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-telemetry-tx-2632970257</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/mcp2515.h</sourcefile>
+      <sourceline>136</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-telemetry-tx</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-init-2277219385</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/mcp2515.h</sourcefile>
+      <sourceline>152</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-init</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-telemetry-rx-78085873</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/mcp2515.h</sourcefile>
+      <sourceline>169</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-telemetry-rx</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-telemetry-rx-3378779254</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/mcp2515.h</sourcefile>
+      <sourceline>182</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-telemetry-rx</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-error-handling-1677874938</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/mcp2515.h</sourcefile>
+      <sourceline>183</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-error-handling</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-logging-policy-2065819818</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/mcp2515.h</sourcefile>
+      <sourceline>194</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-logging-policy</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-logging-policy-854361297</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/mcp2515.h</sourcefile>
+      <sourceline>205</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-logging-policy</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-init-3389270547</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/mcp2515.h</sourcefile>
+      <sourceline>216</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-init</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-init-3105654588</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/mcp2515.h</sourcefile>
+      <sourceline>228</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-init</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-init-3197903727</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/comm.h</sourcefile>
+      <sourceline>32</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-init</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-telemetry-tx-3975892414</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/comm.h</sourcefile>
+      <sourceline>33</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-telemetry-tx</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-telemetry-rx-4169671957</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/comm.h</sourcefile>
+      <sourceline>34</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-telemetry-rx</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-error-handling-2064408392</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/comm.h</sourcefile>
+      <sourceline>35</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-error-handling</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-rate-limit-254348251</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Communication/comm.h</sourcefile>
+      <sourceline>36</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>can-rate-limit</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>rpm-battery-sensing-1982989332</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Sensors/sensors.h</sourcefile>
+      <sourceline>17</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>rpm-battery-sensing</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>stm-rpi-can-control-3598759052</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Sensors/sensors.h</sourcefile>
+      <sourceline>33</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>stm-rpi-can-control</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>rpm-battery-sensing-1274913882</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Sensors/sensors.h</sourcefile>
+      <sourceline>48</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>rpm-battery-sensing</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>stm-rpi-can-control-3806924665</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Sensors/sensors.h</sourcefile>
+      <sourceline>63</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>stm-rpi-can-control</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>calculate-rpm-284814781</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Sensors/sensors.h</sourcefile>
+      <sourceline>81</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>calculate-rpm</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>rpm-noise-handling-3445487263</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Sensors/sensors.h</sourcefile>
+      <sourceline>82</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>rpm-noise-handling</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>rpm-data-interface-4032638404</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Sensors/sensors.h</sourcefile>
+      <sourceline>97</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>rpm-data-interface</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>rpm-data-interface-659642265</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Sensors/sensors.h</sourcefile>
+      <sourceline>114</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>rpm-data-interface</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>rpm-average-3185160746</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Sensors/sensors.h</sourcefile>
+      <sourceline>115</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>rpm-average</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>rpm-read-frequency-693524840</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/stm32-firmware/Core/Src/Sensors/sensors.h</sourcefile>
+      <sourceline>130</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>rpm-read-frequency</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
       <id>speed-counter-overflow-2690872470</id>
       <version>0</version>
       <status>approved</status>
@@ -726,10 +2151,29 @@
       </covering>
     </specobject>
     <specobject>
-      <id>design-requirement-cluster-speed-3594594269</id>
+      <id>design-requirement-cluster-datetime-1825438678</id>
       <version>0</version>
       <status>approved</status>
-      <sourcefile>src/Cluster/qtApp/src/systemInfo.cpp</sourcefile>
+      <sourcefile>src/Cluster/qtApp/src/generalInfo.hpp</sourcefile>
+      <sourceline>36</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>design-requirement-cluster-datetime</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>design-requirement-cluster-weather-1052732249</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/Cluster/qtApp/src/generalInfo.hpp</sourcefile>
       <sourceline>37</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
@@ -738,56 +2182,18 @@
       </coverage>
       <covering>
         <coveredType>
-          <id>design-requirement-cluster-speed</id>
+          <id>design-requirement-cluster-weather</id>
           <version>1</version>
           <doctype>dsn</doctype>
         </coveredType>
       </covering>
     </specobject>
     <specobject>
-      <id>design-requirement-cluster-battery-3812905929</id>
+      <id>design-requirement-cluster-weather-2441881879</id>
       <version>0</version>
       <status>approved</status>
-      <sourcefile>src/Cluster/qtApp/src/systemInfo.cpp</sourcefile>
-      <sourceline>38</sourceline>
-      <coverage>
-        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
-        <deepCoverageStatus>COVERED</deepCoverageStatus>
-        <coveringSpecObjects></coveringSpecObjects>
-      </coverage>
-      <covering>
-        <coveredType>
-          <id>design-requirement-cluster-battery</id>
-          <version>1</version>
-          <doctype>dsn</doctype>
-        </coveredType>
-      </covering>
-    </specobject>
-    <specobject>
-      <id>design-requirement-cluster-datetime-2154406631</id>
-      <version>0</version>
-      <status>approved</status>
-      <sourcefile>src/Cluster/qtApp/src/generalInfo.cpp</sourcefile>
-      <sourceline>23</sourceline>
-      <coverage>
-        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
-        <deepCoverageStatus>COVERED</deepCoverageStatus>
-        <coveringSpecObjects></coveringSpecObjects>
-      </coverage>
-      <covering>
-        <coveredType>
-          <id>design-requirement-cluster-datetime</id>
-          <version>1</version>
-          <doctype>dsn</doctype>
-        </coveredType>
-      </covering>
-    </specobject>
-    <specobject>
-      <id>design-requirement-cluster-weather-2304993918</id>
-      <version>0</version>
-      <status>approved</status>
-      <sourcefile>src/Cluster/qtApp/src/generalInfo.cpp</sourcefile>
-      <sourceline>24</sourceline>
+      <sourcefile>src/Cluster/qtApp/src/generalInfo.hpp</sourcefile>
+      <sourceline>46</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -802,10 +2208,29 @@
       </covering>
     </specobject>
     <specobject>
-      <id>design-requirement-cluster-weather-2931005983</id>
+      <id>design-requirement-cluster-weather-2007390978</id>
       <version>0</version>
       <status>approved</status>
-      <sourcefile>src/Cluster/qtApp/src/generalInfo.cpp</sourcefile>
+      <sourcefile>src/Cluster/qtApp/src/generalInfo.hpp</sourcefile>
+      <sourceline>57</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>design-requirement-cluster-weather</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>design-requirement-cluster-datetime-4065374076</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/Cluster/qtApp/src/generalInfo.hpp</sourcefile>
       <sourceline>68</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
@@ -814,37 +2239,18 @@
       </coverage>
       <covering>
         <coveredType>
-          <id>design-requirement-cluster-weather</id>
+          <id>design-requirement-cluster-datetime</id>
           <version>1</version>
           <doctype>dsn</doctype>
         </coveredType>
       </covering>
     </specobject>
     <specobject>
-      <id>design-requirement-cluster-weather-436512518</id>
+      <id>design-requirement-cluster-datetime-2674614757</id>
       <version>0</version>
       <status>approved</status>
-      <sourcefile>src/Cluster/qtApp/src/generalInfo.cpp</sourcefile>
-      <sourceline>81</sourceline>
-      <coverage>
-        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
-        <deepCoverageStatus>COVERED</deepCoverageStatus>
-        <coveringSpecObjects></coveringSpecObjects>
-      </coverage>
-      <covering>
-        <coveredType>
-          <id>design-requirement-cluster-weather</id>
-          <version>1</version>
-          <doctype>dsn</doctype>
-        </coveredType>
-      </covering>
-    </specobject>
-    <specobject>
-      <id>design-requirement-cluster-datetime-2049698224</id>
-      <version>0</version>
-      <status>approved</status>
-      <sourcefile>src/Cluster/qtApp/src/generalInfo.cpp</sourcefile>
-      <sourceline>94</sourceline>
+      <sourcefile>src/Cluster/qtApp/src/generalInfo.hpp</sourcefile>
+      <sourceline>79</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -859,30 +2265,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>design-requirement-cluster-datetime-2800054533</id>
+      <id>design-requirement-cluster-weather-3530421214</id>
       <version>0</version>
       <status>approved</status>
-      <sourcefile>src/Cluster/qtApp/src/generalInfo.cpp</sourcefile>
-      <sourceline>107</sourceline>
-      <coverage>
-        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
-        <deepCoverageStatus>COVERED</deepCoverageStatus>
-        <coveringSpecObjects></coveringSpecObjects>
-      </coverage>
-      <covering>
-        <coveredType>
-          <id>design-requirement-cluster-datetime</id>
-          <version>1</version>
-          <doctype>dsn</doctype>
-        </coveredType>
-      </covering>
-    </specobject>
-    <specobject>
-      <id>design-requirement-cluster-weather-858874604</id>
-      <version>0</version>
-      <status>approved</status>
-      <sourcefile>src/Cluster/qtApp/src/generalInfo.cpp</sourcefile>
-      <sourceline>119</sourceline>
+      <sourcefile>src/Cluster/qtApp/src/generalInfo.hpp</sourcefile>
+      <sourceline>105</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -897,11 +2284,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>design-requirement-cluster-weather-1707288997</id>
+      <id>design-requirement-cluster-weather-209455800</id>
       <version>0</version>
       <status>approved</status>
-      <sourcefile>src/Cluster/qtApp/src/generalInfo.cpp</sourcefile>
-      <sourceline>136</sourceline>
+      <sourcefile>src/Cluster/qtApp/src/generalInfo.hpp</sourcefile>
+      <sourceline>117</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -910,6 +2297,196 @@
       <covering>
         <coveredType>
           <id>design-requirement-cluster-weather</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>cluster-battery-1615362827</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/Cluster/qtApp/src/systemInfo.hpp</sourcefile>
+      <sourceline>32</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>cluster-battery</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>cluster-speed-71238215</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/Cluster/qtApp/src/systemInfo.hpp</sourcefile>
+      <sourceline>33</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>cluster-speed</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>cluster-battery-1364216956</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/Cluster/qtApp/src/systemInfo.hpp</sourcefile>
+      <sourceline>42</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>cluster-battery</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>cluster-speed-1642478599</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/Cluster/qtApp/src/systemInfo.hpp</sourcefile>
+      <sourceline>43</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>cluster-speed</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>cluster-battery-2798432757</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/Cluster/qtApp/src/systemInfo.hpp</sourcefile>
+      <sourceline>55</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>cluster-battery</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>cluster-speed-4226670562</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/Cluster/qtApp/src/systemInfo.hpp</sourcefile>
+      <sourceline>56</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>cluster-speed</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>cluster-battery-323275572</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/Cluster/qtApp/src/systemInfo.hpp</sourcefile>
+      <sourceline>67</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>cluster-battery</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>cluster-battery-152192199</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/Cluster/qtApp/src/systemInfo.hpp</sourcefile>
+      <sourceline>76</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>cluster-battery</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>cluster-speed-2533199292</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/Cluster/qtApp/src/systemInfo.hpp</sourcefile>
+      <sourceline>87</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>cluster-speed</id>
+          <version>1</version>
+          <doctype>dsn</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>cluster-speed-504326882</id>
+      <version>0</version>
+      <status>approved</status>
+      <sourcefile>src/Cluster/qtApp/src/systemInfo.hpp</sourcefile>
+      <sourceline>96</sourceline>
+      <coverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>cluster-speed</id>
           <version>1</version>
           <doctype>dsn</doctype>
         </coveredType>
@@ -935,11 +2512,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>comms-can-rpi-sendMsg-2040868158</id>
+      <id>comms-can-rpi-sendMsg-3702343250</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/rpi5-firmware/comms/ICAN.hpp</sourcefile>
-      <sourceline>52</sourceline>
+      <sourceline>51</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -954,11 +2531,11 @@
       </covering>
     </specobject>
     <specobject>
-      <id>comms-can-rpi-interface-3324710454</id>
+      <id>comms-can-rpi-interface-1468322960</id>
       <version>0</version>
       <status>approved</status>
       <sourcefile>src/rpi5-firmware/comms/ICAN.hpp</sourcefile>
-      <sourceline>100</sourceline>
+      <sourceline>98</sourceline>
       <coverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -1037,6 +2614,24 @@
             <deepCoverageStatus>COVERED</deepCoverageStatus>
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
+          <coveringSpecObject>
+            <id>stm-rpi-can-control-3598759052</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>stm-rpi-can-control-3806924665</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
         </coveringSpecObjects>
         <coveredTypes>
           <coveredType>dsn</coveredType>
@@ -1065,12 +2660,40 @@
         <needscoverage>
           <needsobj>dsn</needsobj>
         </needscoverage>
-        <shallowCoverageStatus>UNCOVERED</shallowCoverageStatus>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
         <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
-        <coveringSpecObjects></coveringSpecObjects>
-        <uncoveredTypes>
-          <uncoveredType>dsn</uncoveredType>
-        </uncoveredTypes>
+        <coveringSpecObjects>
+          <coveringSpecObject>
+            <id>can-init</id>
+            <version>1</version>
+            <doctype>dsn</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>UNCOVERED</ownCoverageStatus>
+            <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
+            <coveringStatus>UNCOVERED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-telemetry-tx</id>
+            <version>1</version>
+            <doctype>dsn</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-telemetry-rx</id>
+            <version>1</version>
+            <doctype>dsn</doctype>
+            <status>draft</status>
+            <ownCoverageStatus>UNCOVERED</ownCoverageStatus>
+            <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
+            <coveringStatus>UNCOVERED</coveringStatus>
+          </coveringSpecObject>
+        </coveringSpecObjects>
+        <coveredTypes>
+          <coveredType>dsn</coveredType>
+        </coveredTypes>
       </coverage>
       <covering>
         <coveredType>
@@ -1131,7 +2754,53 @@
         </needscoverage>
         <shallowCoverageStatus>UNCOVERED</shallowCoverageStatus>
         <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
-        <coveringSpecObjects></coveringSpecObjects>
+        <coveringSpecObjects>
+          <coveringSpecObject>
+            <id>control-actuation-flow-3831251466</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>control-actuation-flow-2903725365</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>control-actuation-flow-2924084068</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>control-actuation-flow-2717586659</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>control-actuation-flow-3221461483</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+        </coveringSpecObjects>
         <uncoveredTypes>
           <uncoveredType>dsn</uncoveredType>
         </uncoveredTypes>
@@ -1256,6 +2925,42 @@
             <deepCoverageStatus>COVERED</deepCoverageStatus>
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
+          <coveringSpecObject>
+            <id>rpm-battery-sensing-1624720587</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>rpm-battery-sensing-2005124081</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>rpm-battery-sensing-1982989332</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>rpm-battery-sensing-1274913882</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
         </coveringSpecObjects>
         <coveredTypes>
           <coveredType>dsn</coveredType>
@@ -1352,22 +3057,22 @@
         <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
         <coveringSpecObjects>
           <coveringSpecObject>
-            <id>design-requirement-cluster-speed</id>
+            <id>cluster-speed</id>
             <version>1</version>
             <doctype>dsn</doctype>
             <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
+            <ownCoverageStatus>UNCOVERED</ownCoverageStatus>
+            <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
+            <coveringStatus>UNCOVERED</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
-            <id>design-requirement-cluster-battery</id>
+            <id>cluster-battery</id>
             <version>1</version>
             <doctype>dsn</doctype>
             <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
+            <ownCoverageStatus>UNCOVERED</ownCoverageStatus>
+            <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
+            <coveringStatus>UNCOVERED</coveringStatus>
           </coveringSpecObject>
         </coveringSpecObjects>
         <coveredTypes>
@@ -1402,16 +3107,16 @@
           <needsobj>dsn</needsobj>
         </needscoverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
-        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
         <coveringSpecObjects>
           <coveringSpecObject>
-            <id>design-requirement-cluster-weather</id>
+            <id>cluster-weather</id>
             <version>1</version>
             <doctype>dsn</doctype>
             <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
+            <ownCoverageStatus>UNCOVERED</ownCoverageStatus>
+            <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
+            <coveringStatus>UNCOVERED</coveringStatus>
           </coveringSpecObject>
         </coveringSpecObjects>
         <coveredTypes>
@@ -1441,16 +3146,16 @@
           <needsobj>dsn</needsobj>
         </needscoverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
-        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
         <coveringSpecObjects>
           <coveringSpecObject>
-            <id>design-requirement-cluster-datetime</id>
+            <id>cluster-datetime</id>
             <version>1</version>
             <doctype>dsn</doctype>
             <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
+            <ownCoverageStatus>UNCOVERED</ownCoverageStatus>
+            <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
+            <coveringStatus>UNCOVERED</coveringStatus>
           </coveringSpecObject>
         </coveringSpecObjects>
         <coveredTypes>
@@ -1558,7 +3263,188 @@
         </needscoverage>
         <shallowCoverageStatus>UNCOVERED</shallowCoverageStatus>
         <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
-        <coveringSpecObjects></coveringSpecObjects>
+        <coveringSpecObjects>
+          <coveringSpecObject>
+            <id>battery-unit-3157908169</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-2618995652</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-803070287</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-73156788</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-970142194</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-3636875508</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-3548850105</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-3626362703</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-734626546</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-1558820873</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-2551107705</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-209097489</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-875072044</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-2921556425</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-1224002925</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-1129713051</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-2965006374</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-3162820670</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-536321691</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>battery-unit-4276289437</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+        </coveringSpecObjects>
         <uncoveredTypes>
           <uncoveredType>dsn</uncoveredType>
         </uncoveredTypes>
@@ -1711,7 +3597,7 @@ Tags: Data Processing</description>
             <version>1</version>
             <doctype>arch</doctype>
             <status>approved</status>
-            <ownCoverageStatus>UNCOVERED</ownCoverageStatus>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
             <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
             <coveringStatus>UNCOVERED</coveringStatus>
           </coveringSpecObject>
@@ -1741,6 +3627,15 @@ Tags: Data Processing</description>
             <ownCoverageStatus>UNCOVERED</ownCoverageStatus>
             <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
             <coveringStatus>UNCOVERED</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>report-speed-battery-734248650</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
           </coveringSpecObject>
         </coveringSpecObjects>
         <coveredTypes>
@@ -2141,7 +4036,17 @@ Tags: Data Processing</description>
         </needscoverage>
         <shallowCoverageStatus>UNCOVERED</shallowCoverageStatus>
         <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
-        <coveringSpecObjects></coveringSpecObjects>
+        <coveringSpecObjects>
+          <coveringSpecObject>
+            <id>rtos-control-2527712428</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>UNEXPECTED</coveringStatus>
+          </coveringSpecObject>
+        </coveringSpecObjects>
         <uncoveredTypes>
           <uncoveredType>arch</uncoveredType>
         </uncoveredTypes>
@@ -2160,7 +4065,7 @@ Tags: Data Processing</description>
           <needsobj>arch</needsobj>
         </needscoverage>
         <shallowCoverageStatus>COVERED</shallowCoverageStatus>
-        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
         <coveringSpecObjects>
           <coveringSpecObject>
             <id>weather-display</id>
@@ -2168,8 +4073,8 @@ Tags: Data Processing</description>
             <doctype>arch</doctype>
             <status>approved</status>
             <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
+            <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
+            <coveringStatus>UNCOVERED</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
             <id>time-display</id>
@@ -2177,8 +4082,8 @@ Tags: Data Processing</description>
             <doctype>arch</doctype>
             <status>approved</status>
             <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
+            <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
+            <coveringStatus>UNCOVERED</coveringStatus>
           </coveringSpecObject>
         </coveringSpecObjects>
         <coveredTypes>
@@ -2281,7 +4186,7 @@ Data field:
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
-            <id>comms-can-rpi-interface-3324710454</id>
+            <id>comms-can-rpi-interface-1468322960</id>
             <version>0</version>
             <doctype>impl</doctype>
             <status>approved</status>
@@ -2375,7 +4280,7 @@ Data field:
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
-            <id>comms-can-rpi-sendMsg-2040868158</id>
+            <id>comms-can-rpi-sendMsg-3702343250</id>
             <version>0</version>
             <doctype>impl</doctype>
             <status>approved</status>
@@ -2398,7 +4303,7 @@ Data field:
       </covering>
     </specobject>
     <specobject>
-      <id>design-requirement-cluster-speed</id>
+      <id>cluster-speed</id>
       <version>1</version>
       <status>approved</status>
       <sourcefile>requirements/cluster.md</sourcefile>
@@ -2410,29 +4315,47 @@ It shall obtain this data from SystemInfo, which receives it from STM32 or other
           <needsobj>impl</needsobj>
           <needsobj>test</needsobj>
         </needscoverage>
-        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
-        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <shallowCoverageStatus>UNCOVERED</shallowCoverageStatus>
+        <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
         <coveringSpecObjects>
           <coveringSpecObject>
-            <id>design-requirement-cluster-speed-368677407</id>
+            <id>cluster-speed-71238215</id>
             <version>0</version>
-            <doctype>test</doctype>
+            <doctype>impl</doctype>
             <status>approved</status>
             <ownCoverageStatus>COVERED</ownCoverageStatus>
             <deepCoverageStatus>COVERED</deepCoverageStatus>
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
-            <id>design-requirement-cluster-speed-3415254692</id>
+            <id>cluster-speed-1642478599</id>
             <version>0</version>
-            <doctype>test</doctype>
+            <doctype>impl</doctype>
             <status>approved</status>
             <ownCoverageStatus>COVERED</ownCoverageStatus>
             <deepCoverageStatus>COVERED</deepCoverageStatus>
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
-            <id>design-requirement-cluster-speed-3594594269</id>
+            <id>cluster-speed-4226670562</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>cluster-speed-2533199292</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>cluster-speed-504326882</id>
             <version>0</version>
             <doctype>impl</doctype>
             <status>approved</status>
@@ -2443,8 +4366,10 @@ It shall obtain this data from SystemInfo, which receives it from STM32 or other
         </coveringSpecObjects>
         <coveredTypes>
           <coveredType>impl</coveredType>
-          <coveredType>test</coveredType>
         </coveredTypes>
+        <uncoveredTypes>
+          <uncoveredType>test</uncoveredType>
+        </uncoveredTypes>
       </coverage>
       <covering>
         <coveredType>
@@ -2455,7 +4380,7 @@ It shall obtain this data from SystemInfo, which receives it from STM32 or other
       </covering>
     </specobject>
     <specobject>
-      <id>design-requirement-cluster-battery</id>
+      <id>cluster-battery</id>
       <version>1</version>
       <status>approved</status>
       <sourcefile>requirements/cluster.md</sourcefile>
@@ -2467,29 +4392,47 @@ It shall obtain this data from SystemInfo, which receives it from STM32 or other
           <needsobj>impl</needsobj>
           <needsobj>test</needsobj>
         </needscoverage>
-        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
-        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <shallowCoverageStatus>UNCOVERED</shallowCoverageStatus>
+        <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
         <coveringSpecObjects>
           <coveringSpecObject>
-            <id>design-requirement-cluster-battery-3631169775</id>
+            <id>cluster-battery-1615362827</id>
             <version>0</version>
-            <doctype>test</doctype>
+            <doctype>impl</doctype>
             <status>approved</status>
             <ownCoverageStatus>COVERED</ownCoverageStatus>
             <deepCoverageStatus>COVERED</deepCoverageStatus>
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
-            <id>design-requirement-cluster-battery-1743262429</id>
+            <id>cluster-battery-1364216956</id>
             <version>0</version>
-            <doctype>test</doctype>
+            <doctype>impl</doctype>
             <status>approved</status>
             <ownCoverageStatus>COVERED</ownCoverageStatus>
             <deepCoverageStatus>COVERED</deepCoverageStatus>
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
-            <id>design-requirement-cluster-battery-3812905929</id>
+            <id>cluster-battery-2798432757</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>cluster-battery-323275572</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>cluster-battery-152192199</id>
             <version>0</version>
             <doctype>impl</doctype>
             <status>approved</status>
@@ -2500,8 +4443,10 @@ It shall obtain this data from SystemInfo, which receives it from STM32 or other
         </coveringSpecObjects>
         <coveredTypes>
           <coveredType>impl</coveredType>
-          <coveredType>test</coveredType>
         </coveredTypes>
+        <uncoveredTypes>
+          <uncoveredType>test</uncoveredType>
+        </uncoveredTypes>
       </coverage>
       <covering>
         <coveredType>
@@ -2512,7 +4457,7 @@ It shall obtain this data from SystemInfo, which receives it from STM32 or other
       </covering>
     </specobject>
     <specobject>
-      <id>design-requirement-cluster-weather</id>
+      <id>cluster-weather</id>
       <version>1</version>
       <status>approved</status>
       <sourcefile>requirements/cluster.md</sourcefile>
@@ -2524,95 +4469,13 @@ Updates shall occur whenever weather data arrives.</description>
           <needsobj>impl</needsobj>
           <needsobj>test</needsobj>
         </needscoverage>
-        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
-        <deepCoverageStatus>COVERED</deepCoverageStatus>
-        <coveringSpecObjects>
-          <coveringSpecObject>
-            <id>design-requirement-cluster-weather-2843002150</id>
-            <version>0</version>
-            <doctype>test</doctype>
-            <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
-          </coveringSpecObject>
-          <coveringSpecObject>
-            <id>design-requirement-cluster-weather-815873271</id>
-            <version>0</version>
-            <doctype>test</doctype>
-            <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
-          </coveringSpecObject>
-          <coveringSpecObject>
-            <id>design-requirement-cluster-weather-2983836271</id>
-            <version>0</version>
-            <doctype>test</doctype>
-            <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
-          </coveringSpecObject>
-          <coveringSpecObject>
-            <id>design-requirement-cluster-weather-2293734610</id>
-            <version>0</version>
-            <doctype>test</doctype>
-            <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
-          </coveringSpecObject>
-          <coveringSpecObject>
-            <id>design-requirement-cluster-weather-2304993918</id>
-            <version>0</version>
-            <doctype>impl</doctype>
-            <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
-          </coveringSpecObject>
-          <coveringSpecObject>
-            <id>design-requirement-cluster-weather-2931005983</id>
-            <version>0</version>
-            <doctype>impl</doctype>
-            <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
-          </coveringSpecObject>
-          <coveringSpecObject>
-            <id>design-requirement-cluster-weather-436512518</id>
-            <version>0</version>
-            <doctype>impl</doctype>
-            <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
-          </coveringSpecObject>
-          <coveringSpecObject>
-            <id>design-requirement-cluster-weather-858874604</id>
-            <version>0</version>
-            <doctype>impl</doctype>
-            <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
-          </coveringSpecObject>
-          <coveringSpecObject>
-            <id>design-requirement-cluster-weather-1707288997</id>
-            <version>0</version>
-            <doctype>impl</doctype>
-            <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
-          </coveringSpecObject>
-        </coveringSpecObjects>
-        <coveredTypes>
-          <coveredType>impl</coveredType>
-          <coveredType>test</coveredType>
-        </coveredTypes>
+        <shallowCoverageStatus>UNCOVERED</shallowCoverageStatus>
+        <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+        <uncoveredTypes>
+          <uncoveredType>impl</uncoveredType>
+          <uncoveredType>test</uncoveredType>
+        </uncoveredTypes>
       </coverage>
       <covering>
         <coveredType>
@@ -2623,7 +4486,7 @@ Updates shall occur whenever weather data arrives.</description>
       </covering>
     </specobject>
     <specobject>
-      <id>design-requirement-cluster-datetime</id>
+      <id>cluster-datetime</id>
       <version>1</version>
       <status>approved</status>
       <sourcefile>requirements/cluster.md</sourcefile>
@@ -2635,59 +4498,13 @@ Updates shall occur at least every second.</description>
           <needsobj>impl</needsobj>
           <needsobj>test</needsobj>
         </needscoverage>
-        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
-        <deepCoverageStatus>COVERED</deepCoverageStatus>
-        <coveringSpecObjects>
-          <coveringSpecObject>
-            <id>design-requirement-cluster-datetime-583512355</id>
-            <version>0</version>
-            <doctype>test</doctype>
-            <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
-          </coveringSpecObject>
-          <coveringSpecObject>
-            <id>design-requirement-cluster-datetime-2023556935</id>
-            <version>0</version>
-            <doctype>test</doctype>
-            <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
-          </coveringSpecObject>
-          <coveringSpecObject>
-            <id>design-requirement-cluster-datetime-2154406631</id>
-            <version>0</version>
-            <doctype>impl</doctype>
-            <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
-          </coveringSpecObject>
-          <coveringSpecObject>
-            <id>design-requirement-cluster-datetime-2049698224</id>
-            <version>0</version>
-            <doctype>impl</doctype>
-            <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
-          </coveringSpecObject>
-          <coveringSpecObject>
-            <id>design-requirement-cluster-datetime-2800054533</id>
-            <version>0</version>
-            <doctype>impl</doctype>
-            <status>approved</status>
-            <ownCoverageStatus>COVERED</ownCoverageStatus>
-            <deepCoverageStatus>COVERED</deepCoverageStatus>
-            <coveringStatus>COVERING</coveringStatus>
-          </coveringSpecObject>
-        </coveringSpecObjects>
-        <coveredTypes>
-          <coveredType>impl</coveredType>
-          <coveredType>test</coveredType>
-        </coveredTypes>
+        <shallowCoverageStatus>UNCOVERED</shallowCoverageStatus>
+        <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
+        <coveringSpecObjects></coveringSpecObjects>
+        <uncoveredTypes>
+          <uncoveredType>impl</uncoveredType>
+          <uncoveredType>test</uncoveredType>
+        </uncoveredTypes>
       </coverage>
       <covering>
         <coveredType>
@@ -2715,7 +4532,7 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
         <deepCoverageStatus>COVERED</deepCoverageStatus>
         <coveringSpecObjects>
           <coveringSpecObject>
-            <id>rpm-timer-settings-949048230</id>
+            <id>rpm-timer-settings-2326124685</id>
             <version>0</version>
             <doctype>test</doctype>
             <status>approved</status>
@@ -2724,7 +4541,7 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
-            <id>rpm-timer-settings-2229097876</id>
+            <id>rpm-timer-settings-1928418080</id>
             <version>0</version>
             <doctype>test</doctype>
             <status>approved</status>
@@ -2733,7 +4550,7 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
-            <id>rpm-timer-settings-2239624060</id>
+            <id>rpm-timer-settings-927561815</id>
             <version>0</version>
             <doctype>test</doctype>
             <status>approved</status>
@@ -2742,7 +4559,7 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
-            <id>rpm-timer-settings-330315877</id>
+            <id>rpm-timer-settings-2028433024</id>
             <version>0</version>
             <doctype>test</doctype>
             <status>approved</status>
@@ -2789,7 +4606,7 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
         <deepCoverageStatus>COVERED</deepCoverageStatus>
         <coveringSpecObjects>
           <coveringSpecObject>
-            <id>rpm-data-interface-935577854</id>
+            <id>rpm-data-interface-3567617317</id>
             <version>0</version>
             <doctype>test</doctype>
             <status>approved</status>
@@ -2798,7 +4615,7 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
-            <id>rpm-data-interface-3514747009</id>
+            <id>rpm-data-interface-1665811370</id>
             <version>0</version>
             <doctype>test</doctype>
             <status>approved</status>
@@ -2807,9 +4624,27 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
-            <id>rpm-data-interface-1831310662</id>
+            <id>rpm-data-interface-3742572141</id>
             <version>0</version>
             <doctype>test</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>rpm-data-interface-4032638404</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>rpm-data-interface-659642265</id>
+            <version>0</version>
+            <doctype>impl</doctype>
             <status>approved</status>
             <ownCoverageStatus>COVERED</ownCoverageStatus>
             <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -2854,7 +4689,7 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
         <deepCoverageStatus>COVERED</deepCoverageStatus>
         <coveringSpecObjects>
           <coveringSpecObject>
-            <id>rpm-average-3208219368</id>
+            <id>rpm-average-2681037654</id>
             <version>0</version>
             <doctype>test</doctype>
             <status>approved</status>
@@ -2863,9 +4698,18 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
-            <id>rpm-average-3370065609</id>
+            <id>rpm-average-1646822885</id>
             <version>0</version>
             <doctype>test</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>rpm-average-3185160746</id>
+            <version>0</version>
+            <doctype>impl</doctype>
             <status>approved</status>
             <ownCoverageStatus>COVERED</ownCoverageStatus>
             <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -2910,7 +4754,7 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
         <deepCoverageStatus>COVERED</deepCoverageStatus>
         <coveringSpecObjects>
           <coveringSpecObject>
-            <id>speed-counter-overflow-866433850</id>
+            <id>speed-counter-overflow-2256933378</id>
             <version>0</version>
             <doctype>test</doctype>
             <status>approved</status>
@@ -2957,7 +4801,7 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
         <deepCoverageStatus>COVERED</deepCoverageStatus>
         <coveringSpecObjects>
           <coveringSpecObject>
-            <id>calculate-rpm-2574410021</id>
+            <id>calculate-rpm-4114908934</id>
             <version>0</version>
             <doctype>test</doctype>
             <status>approved</status>
@@ -2966,7 +4810,7 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
-            <id>calculate-rpm-4214695819</id>
+            <id>calculate-rpm-1154403608</id>
             <version>0</version>
             <doctype>test</doctype>
             <status>approved</status>
@@ -2975,9 +4819,18 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
-            <id>calculate-rpm-814045963</id>
+            <id>calculate-rpm-2407313816</id>
             <version>0</version>
             <doctype>test</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>calculate-rpm-284814781</id>
+            <version>0</version>
+            <doctype>impl</doctype>
             <status>approved</status>
             <ownCoverageStatus>COVERED</ownCoverageStatus>
             <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -3022,7 +4875,7 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
         <deepCoverageStatus>COVERED</deepCoverageStatus>
         <coveringSpecObjects>
           <coveringSpecObject>
-            <id>rpm-read-frequency-3327365606</id>
+            <id>rpm-read-frequency-1630359970</id>
             <version>0</version>
             <doctype>test</doctype>
             <status>approved</status>
@@ -3031,7 +4884,7 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
-            <id>rpm-read-frequency-273265396</id>
+            <id>rpm-read-frequency-818616714</id>
             <version>0</version>
             <doctype>test</doctype>
             <status>approved</status>
@@ -3040,9 +4893,18 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
             <coveringStatus>COVERING</coveringStatus>
           </coveringSpecObject>
           <coveringSpecObject>
-            <id>rpm-read-frequency-2252533546</id>
+            <id>rpm-read-frequency-625460258</id>
             <version>0</version>
             <doctype>test</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>rpm-read-frequency-693524840</id>
+            <version>0</version>
+            <doctype>impl</doctype>
             <status>approved</status>
             <ownCoverageStatus>COVERED</ownCoverageStatus>
             <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -3087,9 +4949,18 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
         <deepCoverageStatus>COVERED</deepCoverageStatus>
         <coveringSpecObjects>
           <coveringSpecObject>
-            <id>rpm-noise-handling-3698179695</id>
+            <id>rpm-noise-handling-2064875051</id>
             <version>0</version>
             <doctype>test</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>rpm-noise-handling-3445487263</id>
+            <version>0</version>
+            <doctype>impl</doctype>
             <status>approved</status>
             <ownCoverageStatus>COVERED</ownCoverageStatus>
             <deepCoverageStatus>COVERED</deepCoverageStatus>
@@ -3155,6 +5026,441 @@ Rationale: If a timer is for example 16-bit, it can register up to 65,535 clock 
           <id>support</id>
           <version>1</version>
           <doctype>control</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-init</id>
+      <version>1</version>
+      <shortdesc>Specification Items (Requirements)</shortdesc>
+      <status>approved</status>
+      <sourcefile>requirements/communication.md</sourcefile>
+      <sourceline>13</sourceline>
+      <description>The Communication module shall initialize the MCP2515 CAN controller to the configured bus speed and set NORMAL operating mode during subsystem startup. Initialization shall be verifiable via the CANSTAT register read and return `HAL_OK` on success.</description>
+      <coverage>
+        <needscoverage>
+          <needsobj>impl</needsobj>
+          <needsobj>test</needsobj>
+        </needscoverage>
+        <shallowCoverageStatus>UNCOVERED</shallowCoverageStatus>
+        <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
+        <coveringSpecObjects>
+          <coveringSpecObject>
+            <id>can-init-2686971279</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-init-2277219385</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-init-3389270547</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-init-3105654588</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-init-3197903727</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+        </coveringSpecObjects>
+        <coveredTypes>
+          <coveredType>impl</coveredType>
+        </coveredTypes>
+        <uncoveredTypes>
+          <uncoveredType>test</uncoveredType>
+        </uncoveredTypes>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>stm-rpi-can-telemetry</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-telemetry-tx</id>
+      <version>1</version>
+      <status>approved</status>
+      <sourcefile>requirements/communication.md</sourcefile>
+      <sourceline>25</sourceline>
+      <description>The module shall transmit telemetry messages for vehicle speed and battery using the following formats:
+- Speed: CAN ID `0x042` (11-bit), payload 1 byte, value in decimeters/second (0..255)
+- Battery: CAN ID `0x04D` (11-bit), payload 1 byte, percentage (0..100)
+
+The implementation shall convert and clamp values as required and confirm successful TX via MCP2515 status polling.</description>
+      <coverage>
+        <needscoverage>
+          <needsobj>impl</needsobj>
+          <needsobj>test</needsobj>
+        </needscoverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects>
+          <coveringSpecObject>
+            <id>can-telemetry-tx-2912946495</id>
+            <version>0</version>
+            <doctype>test</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-telemetry-tx-1421914429</id>
+            <version>0</version>
+            <doctype>test</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-telemetry-tx-2944269254</id>
+            <version>0</version>
+            <doctype>test</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-telemetry-tx-2075417264</id>
+            <version>0</version>
+            <doctype>test</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-telemetry-tx-1215405886</id>
+            <version>0</version>
+            <doctype>test</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-telemetry-tx-4045205354</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-telemetry-tx-3511130983</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-telemetry-tx-2632970257</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-telemetry-tx-3975892414</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+        </coveringSpecObjects>
+        <coveredTypes>
+          <coveredType>impl</coveredType>
+          <coveredType>test</coveredType>
+        </coveredTypes>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>report-speed-battery</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+        <coveredType>
+          <id>stm-rpi-can-telemetry</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-error-handling</id>
+      <version>1</version>
+      <status>approved</status>
+      <sourcefile>requirements/communication.md</sourcefile>
+      <sourceline>42</sourceline>
+      <description>The module shall detect transmission timeouts and error conditions, clear `EFLG` and `CANINTF` as appropriate, abort stuck transmissions (clear TXREQ) and report `HAL_TIMEOUT` when TX cannot complete within the configured timeout window.</description>
+      <coverage>
+        <needscoverage>
+          <needsobj>impl</needsobj>
+          <needsobj>test</needsobj>
+        </needscoverage>
+        <shallowCoverageStatus>COVERED</shallowCoverageStatus>
+        <deepCoverageStatus>COVERED</deepCoverageStatus>
+        <coveringSpecObjects>
+          <coveringSpecObject>
+            <id>can-error-handling-1669803498</id>
+            <version>0</version>
+            <doctype>test</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-error-handling-1795797049</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-error-handling-1677874938</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-error-handling-2064408392</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+        </coveringSpecObjects>
+        <coveredTypes>
+          <coveredType>impl</coveredType>
+          <coveredType>test</coveredType>
+        </coveredTypes>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>failsafe-case-miscommunication</id>
+          <version>1</version>
+          <doctype>feat</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-telemetry-rx</id>
+      <version>1</version>
+      <status>draft</status>
+      <sourcefile>requirements/communication.md</sourcefile>
+      <sourceline>54</sourceline>
+      <description>The module shall parse incoming CAN messages for supported IDs (e.g., speed, battery) and update the in-memory vehicle data structure so other modules can consume updated telemetry.</description>
+      <coverage>
+        <needscoverage>
+          <needsobj>impl</needsobj>
+          <needsobj>test</needsobj>
+        </needscoverage>
+        <shallowCoverageStatus>UNCOVERED</shallowCoverageStatus>
+        <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
+        <coveringSpecObjects>
+          <coveringSpecObject>
+            <id>can-telemetry-rx-78085873</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-telemetry-rx-3378779254</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-telemetry-rx-4169671957</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+        </coveringSpecObjects>
+        <coveredTypes>
+          <coveredType>impl</coveredType>
+        </coveredTypes>
+        <uncoveredTypes>
+          <uncoveredType>test</uncoveredType>
+        </uncoveredTypes>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>stm-rpi-can-telemetry</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-logging-policy</id>
+      <version>1</version>
+      <status>approved</status>
+      <sourcefile>requirements/communication.md</sourcefile>
+      <sourceline>66</sourceline>
+      <description>Debug and diagnostic UART prints in the Communications module shall be disabled by default for production/develop builds and only enabled with explicit build macros (e.g., `MCP2515_DEBUG`, `COMM_DEBUG`).</description>
+      <coverage>
+        <needscoverage>
+          <needsobj>impl</needsobj>
+          <needsobj>test</needsobj>
+        </needscoverage>
+        <shallowCoverageStatus>UNCOVERED</shallowCoverageStatus>
+        <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
+        <coveringSpecObjects>
+          <coveringSpecObject>
+            <id>can-logging-policy-143037211</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-logging-policy-2828180995</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-logging-policy-2065819818</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-logging-policy-854361297</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+        </coveringSpecObjects>
+        <coveredTypes>
+          <coveredType>impl</coveredType>
+        </coveredTypes>
+        <uncoveredTypes>
+          <uncoveredType>test</uncoveredType>
+        </uncoveredTypes>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>development-guidelines</id>
+          <version>1</version>
+          <doctype>arch</doctype>
+        </coveredType>
+      </covering>
+    </specobject>
+    <specobject>
+      <id>can-rate-limit</id>
+      <version>1</version>
+      <status>draft</status>
+      <sourcefile>requirements/communication.md</sourcefile>
+      <sourceline>78</sourceline>
+      <description>The Communication module shall rate-limit telemetry transmissions (e.g., speed updates no faster than once per 200 ms) to avoid bus congestion; rate-limiting shall be testable via tick/time fakes.</description>
+      <coverage>
+        <needscoverage>
+          <needsobj>impl</needsobj>
+          <needsobj>test</needsobj>
+        </needscoverage>
+        <shallowCoverageStatus>UNCOVERED</shallowCoverageStatus>
+        <deepCoverageStatus>UNCOVERED</deepCoverageStatus>
+        <coveringSpecObjects>
+          <coveringSpecObject>
+            <id>can-rate-limit-3710982635</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+          <coveringSpecObject>
+            <id>can-rate-limit-254348251</id>
+            <version>0</version>
+            <doctype>impl</doctype>
+            <status>approved</status>
+            <ownCoverageStatus>COVERED</ownCoverageStatus>
+            <deepCoverageStatus>COVERED</deepCoverageStatus>
+            <coveringStatus>COVERING</coveringStatus>
+          </coveringSpecObject>
+        </coveringSpecObjects>
+        <coveredTypes>
+          <coveredType>impl</coveredType>
+        </coveredTypes>
+        <uncoveredTypes>
+          <uncoveredType>test</uncoveredType>
+        </uncoveredTypes>
+      </coverage>
+      <covering>
+        <coveredType>
+          <id>report-speed-battery</id>
+          <version>1</version>
+          <doctype>arch</doctype>
         </coveredType>
       </covering>
     </specobject>
