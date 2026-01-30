@@ -5,6 +5,14 @@ systemInfo::systemInfo(QObject *parent)
 {
 }
 
+systemInfo::~systemInfo()
+{
+    _running = false;
+    if (_thread.joinable()) {
+        _thread.join();
+    }
+}
+
 void systemInfo::setBattery(int battery)
 {
     if (_battery == battery) return;
@@ -44,7 +52,7 @@ bool systemInfo::start()
 
 bool systemInfo::updateFromKuksa()
 {
-    auto channel = grpc::CreateChannel("0.0.0.0:55555", grpc::InsecureChannelCredentials());
+    auto channel = grpc::CreateChannel(_server.toStdString(), grpc::InsecureChannelCredentials());
     std::unique_ptr<VAL::Stub> stub = VAL::NewStub(channel);
 
     kuksa::val::v2::SubscribeRequest req;

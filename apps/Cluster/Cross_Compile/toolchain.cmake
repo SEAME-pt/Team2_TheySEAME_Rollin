@@ -3,7 +3,7 @@ include_guard(GLOBAL)
 
 # Set the system name and processor for cross-compilation
 set(CMAKE_SYSTEM_NAME Linux)
-set(CMAKE_SYSTEM_PROCESSOR arm)
+set(CMAKE_SYSTEM_PROCESSOR aarch64)
 
 # Set the target sysroot and architecture
 set(TARGET_SYSROOT /build/sysroot) ## update this path accordingly

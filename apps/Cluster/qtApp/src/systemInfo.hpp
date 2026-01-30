@@ -36,6 +36,11 @@ public:
     explicit systemInfo(QObject *parent = nullptr);
 
     /**
+     * @brief Destructs the systemInfo class, stops the data collection thread.
+     *
+     */
+    ~systemInfo();
+    /**
      * @brief Initializes the data collection thread and starts listening for updates from Kuksa.
      *
      * Requirement traceability:

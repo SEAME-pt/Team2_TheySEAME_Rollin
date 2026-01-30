@@ -9,6 +9,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <iostream>
+#include <QGeoPositionInfoSource>
 
 class generalInfo : public QObject
 {
@@ -40,9 +41,15 @@ public:
     explicit generalInfo(QObject *parent = nullptr);
 
     /**
+    * @brief Destructs the generalInfo class.
+    *
+    */
+    ~generalInfo();
+
+    /**
     * @brief Returns the current weather icon filename.
     *
-	  * Requirement traceability:
+	* Requirement traceability:
     * [impl->dsn~design-requirement-cluster-weather~1]
     *
     * @return QString representing icon (e.g., "sun-256.png")
@@ -84,11 +91,15 @@ public:
     QString getCurrentDate() const;
     
 private:
-    QString m_weatherInfo;
-    int m_temperature;
-    QString m_localTime;
-    QDate   m_currentDate;
-    QNetworkAccessManager* m_manager;
+    QString _weatherInfo;
+    int _temperature;
+    QString _localTime;
+    QDate   _currentDate;
+    QNetworkAccessManager* _manager = nullptr;
+    QGeoPositionInfoSource* _positionSource = nullptr;
+    double _latitude = 0.0;
+    double _longitude = 0.0;
+    bool _hasLocation = false;
 
 signals:
     void weatherInfoChanged();
