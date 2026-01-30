@@ -19,7 +19,7 @@ The Control module shall process actuation commands for steering, throttle, and 
 Needs: impl, test
 
 Covers:
-- arch~vehicle-actuation~1
+- `arch~control-actuation-flow~1`
 ```
 
 ```
@@ -32,7 +32,7 @@ The Control module shall implement a safety stop mechanism that halts actuation 
 Needs: impl, test
 
 Covers:
-- arch~safety-stop~1
+- `arch~control-failsafe-override~1`
 ```
 
 ```
@@ -45,7 +45,7 @@ The Control module shall monitor heartbeat messages and trigger a safety stop if
 Needs: impl, test
 
 Covers:
-- arch~heartbeat-monitoring~1
+- `arch~control-failsafe-override~1`
 ```
 
 ```
@@ -58,5 +58,5 @@ The Control module shall provide a message queue for incoming `VehicleCommand` m
 Needs: impl, test
 
 Covers:
-- arch~control-queue~1
+- `arch~control-actuation-flow~1`
 ```

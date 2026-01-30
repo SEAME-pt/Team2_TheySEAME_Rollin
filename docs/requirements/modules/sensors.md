@@ -143,5 +143,5 @@ The Sensors module shall expose a thread-safe message queue for emitting sensor 
 Needs: impl, test
 
 Covers:
-- arch~sensors-queue~1
+- `arch~rpm-battery-sensing~1`
 ```
