@@ -247,10 +247,5 @@ dtoverlay=spi-bcm2835
 enable_uart=0
 # Enable VC4 Graphics
 dtoverlay=vc4-kms-v3d
-dtoverlay=vc4-kms-dsi-waveshare-panel,7_9_inch
+dtoverlay=vc4-kms-dsi-waveshare-panel,7_9_inch,dsi0
 
-avoid_warnings=2
-mask_gpu_interrupt0=0x400
-dtoverlay=vc4-kms-v3d-overlay,cma-256
-dtoverlay=rpi-ft5406-overlay
-dtparam=audio=on

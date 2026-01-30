@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-APP_DIR="/home/qtApp"
-BIN_NAME="qtApp"
-BIN_EXEC="qtAppExec"
+APP_DIR="/usr/bin/qtApp"
+BIN_NAME="qtAppRaw"
+BIN_EXEC="qtApp"
 URL="https://github.com/SEAME-pt/Team2_TheySEAME_Rollin/releases/download/cluster/qtApp"
 
 mkdir -p "$APP_DIR"
