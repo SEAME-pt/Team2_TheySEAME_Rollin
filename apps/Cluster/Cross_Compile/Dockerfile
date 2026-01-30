@@ -4,8 +4,6 @@ FROM debian:bookworm
 # Avoid interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-ARG BUILD_OPENCV=FALSE
-
 # Update and install necessary packages
 RUN { \
     set -e && \
@@ -18,7 +16,7 @@ RUN { \
     sed \
     libclang-dev \
     ninja-build \
-    qt6-base-dev qt6-tools-dev qt6-base-dev-tools qt6-serialbus-dev\
+    qt6-base-dev qt6-tools-dev qt6-base-dev-tools qt6-serialbus-dev qt6-positioning-dev \
     gcc \
     bison \
     python3 \
@@ -128,57 +126,6 @@ RUN set -e && \
     chmod +x sysroot-relativelinks.py && \
     python3 sysroot-relativelinks.py /build/sysroot 2>&1 | tee -a /build.log
 
-
-ARG BUILD_OPENCV
-
-# Build Opencv
-RUN if [ "$BUILD_OPENCV" = "ON" ]; then \
-    set -e && \
-    echo "Cross Compile Opencv from source" && \
-    mkdir -p /build/opencvBuild && \
-    git clone --branch 4.9.0 --depth=1 https://github.com/opencv/opencv.git && \
-    git clone --branch 4.9.0 --depth=1 https://github.com/opencv/opencv_contrib.git && \
-    mkdir -p /build/opencv/build && \
-    cd /build/opencv/build && \
-    cmake \
-        -G "Unix Makefiles" \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=/build/opencvBuild \
-        -DCMAKE_TOOLCHAIN_FILE=/build/opencvToolchain.cmake \
-        -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
-        -DCMAKE_C_FLAGS="-march=armv8-a -mtune=cortex-a53 -O2 --sysroot=/build/sysroot" \
-        -DCMAKE_CXX_FLAGS="-march=armv8-a -mtune=cortex-a53 -O2 --sysroot=/build/sysroot" \
-        -DCMAKE_C_FLAGS_RELEASE="-march=armv8-a -mtune=cortex-a53 -O2 --sysroot=/build/sysroot" \
-        -DCMAKE_CXX_FLAGS_RELEASE="-march=armv8-a -mtune=cortex-a53 -O2 --sysroot=/build/sysroot" \
-        -DOPENCV_ENABLE_NONFREE=ON \
-        -DWITH_GSTREAMER=ON \
-        -DWITH_FFMPEG=ON \
-        -DWITH_V4L=ON \
-        -DWITH_OPENGL=ON \
-        -DWITH_GTK=OFF \
-        -DWITH_QT=OFF \
-        -DWITH_X11=ON \
-        -DBUILD_opencv_highgui=ON \
-        -DBUILD_TESTS=OFF \
-        -DBUILD_PERF_TESTS=OFF \
-        -DBUILD_EXAMPLES=OFF \
-        -DOPENCV_ENABLE_CPU_DISPATCH=OFF \
-        -DCPU_BASELINE="NEON" \
-        -DCPU_DISPATCH="" \
-        -DENABLE_NEON=ON \
-        -DENABLE_VFPV3=OFF \
-        -DENABLE_FP16=OFF \
-        -DENABLE_BF16=OFF \
-        -DENABLE_SVE=OFF \
-        -DENABLE_SVE2=OFF \
-        .. && \
-    make -j4 VERBOSE=1 && \
-    cmake --install . && \
-    echo "Cross Compile Opencv completed" && \
-    cd /build && \
-    tar -czvf opencv-binaries.tar.gz -C /build/opencvBuild . \
-; fi 2>&1 | tee -a /build.log
-
 # Copy the toolchain file
 COPY apps/Cluster/Cross_Compile/toolchain.cmake /build/
 
@@ -192,6 +139,7 @@ RUN { \
     wget https://download.qt.io/archive/qt/6.7/6.7.3/submodules/qtserialbus-everywhere-src-6.7.3.tar.xz && \
     wget https://download.qt.io/archive/qt/6.7/6.7.3/submodules/qtshadertools-everywhere-src-6.7.3.tar.xz && \
     wget https://download.qt.io/archive/qt/6.7/6.7.3/submodules/qtdeclarative-everywhere-src-6.7.3.tar.xz && \
+    wget https://download.qt.io/archive/qt/6.7/6.7.3/submodules/qtpositioning-everywhere-src-6.7.3.tar.xz && \
     \
     echo "=== Extracting Qt sources for host build ===" && \
     cd ../host-build && \
@@ -199,6 +147,7 @@ RUN { \
     tar xf ../src/qtshadertools-everywhere-src-6.7.3.tar.xz && \
     tar xf ../src/qtserialbus-everywhere-src-6.7.3.tar.xz && \
     tar xf ../src/qtwayland-everywhere-src-6.7.3.tar.xz && \
+    tar xf ../src/qtpositioning-everywhere-src-6.7.3.tar.xz && \
     tar xf ../src/qtdeclarative-everywhere-src-6.7.3.tar.xz && \
     \
     echo "=== Building qtbase for host ===" && \
@@ -228,6 +177,12 @@ RUN { \
     cmake --build . --parallel $(nproc) && \
     cmake --install . && \
     \
+    echo "=== Building qtpositioning for host ===" && \
+    cd ../qtpositioning-everywhere-src-6.7.3 && \
+    /build/qt6/host/bin/qt-configure-module . && \
+    cmake --build . --parallel $(nproc) && \
+    cmake --install . && \
+    \
     echo "=== Building qtwayland for host ===" && \
     cd ../qtwayland-everywhere-src-6.7.3 && \
     /build/qt6/host/bin/qt-configure-module . && \
@@ -241,6 +196,7 @@ RUN { \
     tar xf ../src/qtserialbus-everywhere-src-6.7.3.tar.xz && \
     tar xf ../src/qtwayland-everywhere-src-6.7.3.tar.xz && \
     tar xf ../src/qtdeclarative-everywhere-src-6.7.3.tar.xz && \
+    tar xf ../src/qtpositioning-everywhere-src-6.7.3.tar.xz && \
     \
     echo "=== Building qtbase for Raspberry Pi ===" && \
     cd qtbase-everywhere-src-6.7.3 && \
@@ -287,6 +243,16 @@ RUN { \
     \
     echo "=== Building qtserialbus for Raspberry Pi ===" && \
     cd ../qtserialbus-everywhere-src-6.7.3 && \
+    /build/qt6/host/bin/qt-configure-module . -- \
+        -DQT_HOST_PATH=/build/qt6/host \
+        -DCMAKE_STAGING_PREFIX=/build/qt6/pi \
+        -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake \
+        -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 && \
+    cmake --build . --parallel $(nproc) && \
+    cmake --install . && \
+    \
+    echo "=== Building qtpositioning for Raspberry Pi ===" && \
+    cd ../qtpositioning-everywhere-src-6.7.3 && \
     /build/qt6/host/bin/qt-configure-module . -- \
         -DQT_HOST_PATH=/build/qt6/host \
         -DCMAKE_STAGING_PREFIX=/build/qt6/pi \
@@ -367,12 +333,3 @@ RUN { \
     /build/qt6/pi/bin/qt-cmake . && \
     cmake --build .; \
 } 2>&1 | tee -a /build.log
-
-ARG BUILD_OPENCV
-# Build the project using Qt and Opencv for Raspberry Pi
-RUN if [ "$BUILD_OPENCV" = "ON" ]; then { \
-    cd /build/QtOpencvExample && \
-    mkdir build && cd build && \
-    cmake -DCMAKE_TOOLCHAIN_FILE=/build/QtOpencvExample/toolchain.cmake .. && \
-    make ; \
-} 2>&1 | tee -a /build.log; fi
