@@ -4,9 +4,6 @@ ARG UID="1000"
 ARG GID="1000"
 ENV USER=build
 ENV TZ=Europe/London
-ENV BUILD_DIR=agl
-ENV AGL_TOP=/home/$USER/$BUILD_DIR
-ENV LOCAL_CONF=$AGL_TOP/conf/local.conf
 ENV AGL_FEATURES="agl-app-framework agl-buildstats agl-devel agl-drm-lease agl-ic \
 	agl-netboot agl-package-management agl-pipewire agl-selinux agl-kuksa-val"
 
