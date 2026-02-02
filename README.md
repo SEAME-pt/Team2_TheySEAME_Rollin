@@ -12,8 +12,8 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 | Field | Details |
 |-------|----------|
-| **Sprint Number** | Sprint 7 |
-| **Sprint Goal** | Perform a driving test and implement a software abastraction layer with Kuksa.  |
+| **Sprint Number** | Sprint 8 |
+| **Sprint Goal** | Full Car assembly and testing via Remote control|
 | **Sprint Duration** | Jan 5 – Jan 16, 2025 |
 | **Focus Areas** | Tests, Kuksa, OFT enhancement, OTA updates. |
 
