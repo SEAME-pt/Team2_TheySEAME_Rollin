@@ -44,8 +44,8 @@ Why use Kuksa in your project?
 | File                                   | Purpose                |
 |----------------------------------------|------------------------|
 | `/etc/kuksa-can-provider/config.ini`   | [Main  config](#main-config)   |
-| `/etc/default/kuksa-can-provider`      | [Extra arguments](#our-can-provider-configuration)        |
-| `/etc/default/kuksa-databroker`        | [Extra arguments](#our-databroker-configuration)        |
+| `/etc/default/kuksa-can-provider`      | [Can Provider extra arguments](#our-can-provider-configuration)        |
+| `/etc/default/kuksa-databroker`        | [Databroker extra arguments](#our-databroker-configuration)        |
 
 ---
 
