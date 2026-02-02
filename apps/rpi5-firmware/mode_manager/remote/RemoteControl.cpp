@@ -3,18 +3,31 @@
 
 RemoteControl::RemoteControl(IEvdev &ev) : _ev(ev) {
 	std::cout << "RemoteControl Constructor" << std::endl;
-	_state.insert({ ABS_X, 0});
-	_state.insert({ ABS_Y, 0});
+	_state.insert({ JoyZ, 0});
+	_state.insert({ JoyY, 0});
+	_state.insert({ Start, 0});
 }
 
 RemoteControl::~RemoteControl() {
 	std::cout << "RemoteControl Destructor" << std::endl;
 }
 
-void RemoteControl::setkey(const uint16_t keycode, const uint8_t value) {
+void RemoteControl::setkey(const uint16_t keycode, const short value) {
 	_state[keycode] = value;
 }
 
-uint8_t RemoteControl::getkey(const uint16_t key) const { return (_state.at(key)); }
+short RemoteControl::getkey(const uint16_t key) const { return (_state.at(key)); }
+
+void RemoteControl::getEvent() {
+	while (_ev.pendingEvent() > 0) {
+		struct input_event &event = _ev.nextEvent();
+		switch (event.type) {
+			case EV_ABS:
+			case EV_KEY:
+				printf("Code %x\n", event.code);
+				setkey(event.code, event.value);
+		}
+	}
+}
 
 const IEvdev &RemoteControl::getEvdev() const { return (_ev); }

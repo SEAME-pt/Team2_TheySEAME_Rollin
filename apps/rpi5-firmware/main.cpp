@@ -13,6 +13,23 @@ void signal_handler(int signal) {
 	run = false;
 }
 
+void carControl(RemoteControl &remote, ICAN &can) {
+	uint8_t data[3];
+	short steering = remote.getkey(Keys::JoyZ);
+	short throttle = remote.getkey(Keys::JoyY);
+	short gear = 0;
+
+	if (throttle > 127) {
+		gear = 1;
+	}
+	data[0] = 0x00;
+	data[1] = ((int)abs((throttle - 127) / 1.27) | (gear << 7));
+	data[2] = (steering - 127 / 127);
+	printf("Throttle %d\n", data[1]);
+	printf("Steering %d\n", data[2]);
+	can.sendFrame(0x100, data, sizeof(data));
+}
+
 int main() {
 	struct pollfd fds[2];
 	CAN can("can0", 500, 0, 0);
@@ -31,23 +48,14 @@ int main() {
 			break;
 		}
 		if (fds[0].revents & POLLIN) {
-			printf("Receiving frame\n");
+			//printf("Receiving frame\n");
 			struct can_frame frame;
 			can.readFrame(frame);
 		}
 		if (fds[1].revents & POLLIN) {
 			evdev.readEvent();
-		}
-		while (evdev.pendingEvent() > 0) {
-			struct input_event &ev = evdev.nextEvent();
-			remote.setkey(ev.code, ev.value);
-			uint8_t data[3];
-			data[0] = 0x00;
-			data[1] = abs((remote.getkey(ABS_Y) - 127) / 1.27);
-			data[2] = (remote.getkey(ABS_X) - 127) / 127;
-			printf("Throttle %d\n", data[1]);
-			printf("Steering %d\n\n", data[2]);
-			can.sendFrame(0x100, data, sizeof(data));
+			remote.getEvent();
+			carControl(remote, can);
 		}
 	}
 	return (0);

@@ -4,6 +4,12 @@
 #include <cstdint>
 #include <unordered_map>
 
+enum Keys {
+	JoyZ = ABS_Z,
+	JoyY = ABS_Y,
+	Start = BTN_START
+};
+
 class RemoteControl {
 public:
 
@@ -36,7 +42,7 @@ public:
 	 * @return Current key value
 	 *
 	 */
-	uint8_t getkey(const uint16_t key) const;
+	short getkey(const uint16_t key) const;
 
 	/**
 	 * @brief Set a Gamepad key value
@@ -47,7 +53,9 @@ public:
 	 * @param value to set the key to (0|1)
 	 *
 	 */
-	void setkey(const uint16_t keycode, const uint8_t value);
+	void setkey(const uint16_t keycode, const short value);
+
+	void getEvent();
 
 	/**
 	 * @brief Get evedev
@@ -61,5 +69,5 @@ public:
 
 private:
 	IEvdev &_ev;
-	std::unordered_map<uint16_t, uint8_t> _state;
+	std::unordered_map<uint16_t, short> _state;
 };
