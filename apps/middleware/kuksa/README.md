@@ -1,4 +1,4 @@
-# Kuksa Integration (Databroker + CAN Provider)
+# Kuksa Integration (Raspberyr pi 5 + AGL)
 
 This document describes the step-by-step procedure to set up and run the **Kuksa Databroker** together with the **Kuksa CAN Provider**, using SocketCAN and DBC-to-VSS mapping.
 
@@ -36,8 +36,6 @@ Why use Kuksa in your project?
   - Located at : `etc/kuksa/CAN.dbc`
 - **Databroker Client**
   - Used to inspect and validate datapoints
-  - Kuksa Databroker Client runs in the background as a systemd service
-
 
 ### Configuration Files
 
@@ -49,7 +47,7 @@ Why use Kuksa in your project?
 
 ---
 
-## Prerequisites (Rasp 5 + AGL)
+## Prerequisites
 - Raspberry Pi 5 with AGL
 - CAN interface available as `can0`
 - Kuksa layer in AGL
