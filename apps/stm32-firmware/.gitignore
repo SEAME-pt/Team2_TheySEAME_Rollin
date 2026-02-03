@@ -1,13 +1,10 @@
-Debug/*.o
-Debug/*.d
+Debug/**/*.o
+Debug/**/*.d
+Debug/**/*.su
 Debug/*.elf
 Debug/*.map
 Debug/*.list
 !Debug/objects.list
-Debug/AZURE_RTOS
-Debug/Core
-Debug/Drivers
-Debug/Middlewares
 .metadata
 .settings
 *.launch
