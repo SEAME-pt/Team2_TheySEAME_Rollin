@@ -36,7 +36,6 @@ jobs:
       - name: Build STM32 firmware
         run: |
           cd $BUILD_DIR
-          make clean
           make all -j$(nproc)
 
       - name: Generate binary and hex files
