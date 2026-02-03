@@ -3,6 +3,7 @@ Debug/*.d
 Debug/*.elf
 Debug/*.map
 Debug/*.list
+!Debug/objects.list
 Debug/AZURE_RTOS
 Debug/Core
 Debug/Drivers
