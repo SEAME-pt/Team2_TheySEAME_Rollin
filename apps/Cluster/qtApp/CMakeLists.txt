@@ -14,10 +14,12 @@ if(NOT DEFINED CMAKE_PREFIX_PATH)
     set(CMAKE_PREFIX_PATH "/build/qt6/pi" CACHE PATH "Qt6 installation path")
 endif()
 
-find_package(Qt6 6.7 REQUIRED COMPONENTS Core Gui Qml Quick QuickControls2 DBus SerialBus Test)
+find_package(Qt6 6.7 REQUIRED COMPONENTS Core Gui Qml Quick QuickControls2 DBus SerialBus Positioning Test)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -Wl,-rpath-link,${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE} -L${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wl,-rpath-link,${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE} -L${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}")
+
+set(PKG_CONFIG_USE_CMAKE_PREFIX_PATH OFF)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GRPC REQUIRED IMPORTED_TARGET grpc++ grpc)
@@ -36,6 +38,7 @@ target_link_libraries(qtAppLib
         Qt6::SerialBus
         Qt6::DBus
         Qt6::Test
+        Qt6::Positioning
         PkgConfig::GRPC
         PkgConfig::PROTOBUF
 )
@@ -72,6 +75,7 @@ target_link_libraries(qtAppExec
     Qt6::SerialBus
     Qt6::DBus
     Qt6::Test
+    Qt6::Positioning
     PkgConfig::GRPC
     PkgConfig::PROTOBUF
     qtAppLib

@@ -30,8 +30,7 @@
  * @param device_name Human-readable device name used in debug prints
  *
  * Requirement traceability:
- * [impl->arch~control-actuation-flow~1]
- * [impl->dsg~control-throttle-command~1]
+ * [impl->dsn~control-actuation-commands~1]
  *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR / other HAL status
  */
@@ -51,7 +50,7 @@ HAL_StatusTypeDef PCA9685_Init_Device(I2C_HandleTypeDef *hi2c, uint8_t device_ad
  * @param name2 Human-readable name for second device
  *
  * Requirement traceability:
- * [impl->arch~control-actuation-flow~1]
+ * [impl->dsn~control-actuation-commands~1]
  *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR / other HAL status
  */
@@ -70,7 +69,7 @@ HAL_StatusTypeDef PCA9685_Init_Multiple(I2C_HandleTypeDef *hi2c, uint8_t addr1, 
  * @param off 12-bit OFF time
  *
  * Requirement traceability:
- * [impl->dsg~control-throttle-command~1]
+ * [impl->dsn~control-actuation-commands~1]
  *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR / other HAL status
  */

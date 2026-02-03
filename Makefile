@@ -30,3 +30,10 @@ oft-shell: oft-build | $(BUILD_DIR)
 		--user $(shell id -u):$(shell id -g) \
 		-v $(PWD)/$(BUILD_DIR):/output \
 		$(OFT_IMAGE) trace src/ requirements/
+
+oft-xml: oft-build | $(BUILD_DIR)
+	docker run --rm \
+		--user $(shell id -u):$(shell id -g) \
+		-v $(PWD)/$(BUILD_DIR):/output \
+		$(OFT_IMAGE) trace -o aspec -f /output/requirements.xml src/ requirements/ \
+		|| echo "Relatório XML gerado com problemas de cobertura - verifique trace_report.xml"

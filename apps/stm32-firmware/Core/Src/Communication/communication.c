@@ -10,6 +10,7 @@
 #include "mcp2515.h"
 #include "../Sensors/sensors.h"
 #include "main.h"
+#include "../Control/control_queue.h"
 #include <stdio.h>
 
 #ifndef COMM_DEBUG
@@ -43,7 +44,18 @@ void Communication_Thread_Entry(ULONG thread_input) {
     
     uint32_t count = 0;
     VehicleData_t local_data;
-    
+
+    /* Heartbeat state: re-send last command if no new command seen for HEARTBEAT_MS */
+    const uint32_t HEARTBEAT_MS = 1000; /* 1s heartbeat to avoid log flooding */
+    /* Default safe command: throttle=0, steering=0, command_valid=1
+     * This prevents repeated safety stop messages until a real command is received.
+     */
+    VehicleCommand_t last_cmd = { .driving_mode = 0, .throttle = 0, .steering_angle = 0, .command_valid = 1 };
+    uint32_t last_cmd_ts = HAL_GetTick();
+    int have_last_cmd = 1; /* start with default command enabled */
+
+    Debug_Print("[COMM] Heartbeat initialized with default SAFE command\r\n");
+
     while(1) {
         // Send status every 200ms (every 20 loops) for faster response
         if (count % 20 == 0) {
@@ -125,23 +137,39 @@ void Communication_Thread_Entry(ULONG thread_input) {
                 uint8_t mode = rx_data[0];
                 uint8_t throttle = rx_data[1];
                 int8_t steering_discrete = (int8_t)rx_data[2];  // -1, 0, or 1
-                
+
                 // Convert discrete steering to -100 to +100 range
                 int8_t steering_angle = steering_discrete * 100;
-                
-                // Update global command with mutex protection
+
+                // Create command message
+                VehicleCommand_t cmd;
+                cmd.driving_mode = mode;
+                cmd.throttle = throttle;
+                cmd.steering_angle = steering_angle;
+                cmd.command_valid = 1;
+
+                // Enqueue to control queue (non-blocking)
+                if (!ControlQueue_TrySend(&cmd)) {
+                    Debug_Print("[COMM] Control queue full - command dropped\r\n");
+                } else {
+                    Debug_Print("[COMM] Command enqueued to Control queue\r\n");
+                }
+
+                // Keep global copy for diagnostics/backwards compatibility
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                    g_vehicle_command.driving_mode = mode;
-                    g_vehicle_command.throttle = throttle;
-                    g_vehicle_command.steering_angle = steering_angle;
-                    g_vehicle_command.command_valid = 1;
+                    g_vehicle_command = cmd;
                     tx_mutex_put(&g_vehicle_command_mutex);
                 }
-                
+
+                // Update last command for heartbeat
+                last_cmd = cmd;
+                last_cmd_ts = HAL_GetTick();
+                have_last_cmd = 1;
+
                 // Convert steering to float for display
                 float steering_float = (float)steering_angle / 100.0f;
                 int steering_int = (int)(steering_float * 1000);  // For display: -1000 to +1000
-                
+
                 snprintf(comm_uart_buf, sizeof(comm_uart_buf), 
                         "[CMD] Mode=%d | Throttle=%d%% | Steering=%d.%03d\r\n",
                         mode, throttle, steering_int/1000, abs(steering_int%1000));
@@ -152,6 +180,31 @@ void Communication_Thread_Entry(ULONG thread_input) {
             }
         }
         
+        // Periodic status: every 5s print queue drops and other info, plus occupancy
+        if (count % 500 == 0) { /* 500 * 10ms = 5s */
+            char status_buf[128];
+            UINT control_occ = 0;
+            UINT sensors_occ = 0;
+            ControlQueue_GetOccupancy(&control_occ);
+            SensorsQueue_GetOccupancy(&sensors_occ);
+            snprintf(status_buf, sizeof(status_buf), "[COMM] Control drops=%u occ=%u, Sensors drops=%u occ=%u\r\n", ControlQueue_GetDrops(), control_occ, SensorsQueue_GetDrops(), sensors_occ);
+            Debug_Print(status_buf);
+        }
+
+        // Heartbeat: re-send last command if we haven't seen a command recently
+        if (have_last_cmd) {
+            uint32_t now = HAL_GetTick();
+            if ((now - last_cmd_ts) > HEARTBEAT_MS) {
+                if (ControlQueue_TrySend(&last_cmd)) {
+                    /* Log heartbeat at most once per resend (HEARTBEAT_MS) to avoid flooding */
+                    Debug_Print("[COMM] Heartbeat: re-sent last command to Control queue\r\n");
+                } else {
+                    Debug_Print("[COMM] Heartbeat: Control queue full on re-send\r\n");
+                }
+                last_cmd_ts = now; // update to avoid flooding
+            }
+        }
+
         // Print detailed status every 5000 iterations (50 seconds at 10ms loop)
         if (count % 5000 == 0) {
             Debug_Print("\r\n=== CAN Status Report ===\r\n");
