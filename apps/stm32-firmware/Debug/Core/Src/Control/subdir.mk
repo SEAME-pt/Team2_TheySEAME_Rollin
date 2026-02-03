@@ -5,15 +5,12 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Core/Src/Control/control_queue.c \
 ../Core/Src/Control/steering.c 
 
 OBJS += \
-./Core/Src/Control/control_queue.o \
 ./Core/Src/Control/steering.o 
 
 C_DEPS += \
-./Core/Src/Control/control_queue.d \
 ./Core/Src/Control/steering.d 
 
 
@@ -24,7 +21,7 @@ Core/Src/Control/%.o Core/Src/Control/%.su Core/Src/Control/%.cyclo: ../Core/Src
 clean: clean-Core-2f-Src-2f-Control
 
 clean-Core-2f-Src-2f-Control:
-	-$(RM) ./Core/Src/Control/control_queue.cyclo ./Core/Src/Control/control_queue.d ./Core/Src/Control/control_queue.o ./Core/Src/Control/control_queue.su ./Core/Src/Control/steering.cyclo ./Core/Src/Control/steering.d ./Core/Src/Control/steering.o ./Core/Src/Control/steering.su
+	-$(RM) ./Core/Src/Control/steering.cyclo ./Core/Src/Control/steering.d ./Core/Src/Control/steering.o ./Core/Src/Control/steering.su
 
 .PHONY: clean-Core-2f-Src-2f-Control
 
