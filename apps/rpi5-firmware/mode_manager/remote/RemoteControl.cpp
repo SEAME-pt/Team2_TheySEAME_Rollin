@@ -24,7 +24,6 @@ void RemoteControl::getEvent() {
 		switch (event.type) {
 			case EV_ABS:
 			case EV_KEY:
-				printf("Code %x\n", event.code);
 				setkey(event.code, event.value);
 		}
 	}

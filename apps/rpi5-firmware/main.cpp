@@ -1,5 +1,6 @@
 #include "CAN.hpp"
 #include "Evdev.hpp"
+#include "Car.hpp"
 #include "RemoteControl.hpp"
 #include <stdio.h>
 #include <unistd.h>
@@ -13,27 +14,19 @@ void signal_handler(int signal) {
 	run = false;
 }
 
-void carControl(RemoteControl &remote, ICAN &can) {
+void carControl(RemoteControl &remote, ICar &car) {
 	uint8_t data[3];
-	short steering = remote.getkey(Keys::JoyZ);
-	short throttle = remote.getkey(Keys::JoyY);
-	short gear = 0;
 
-	if (throttle > 127) {
-		gear = 1;
-	}
-	data[0] = 0x00;
-	data[1] = ((int)abs((throttle - 127) / 1.27) | (gear << 7));
-	data[2] = (steering - 127 / 127);
-	printf("Throttle %d\n", data[1]);
-	printf("Steering %d\n", data[2]);
-	can.sendFrame(0x100, data, sizeof(data));
+	car.setThrottle(remote.getkey(Keys::JoyY));
+	car.setSteering(remote.getkey(Keys::JoyZ));
+	car.control();
 }
 
 int main() {
 	struct pollfd fds[2];
 	CAN can("can0", 500, 0, 0);
 	Evdev evdev("/dev/input/event6");
+	Car car(can);
 	RemoteControl remote(evdev);
 
 	std::signal(SIGINT, signal_handler);
@@ -55,7 +48,7 @@ int main() {
 		if (fds[1].revents & POLLIN) {
 			evdev.readEvent();
 			remote.getEvent();
-			carControl(remote, can);
+			carControl(remote, car);
 		}
 	}
 	return (0);
