@@ -14,22 +14,15 @@ void signal_handler(int signal) {
 	run = false;
 }
 
-void carControl(RemoteControl &remote, ICar &car) {
-	uint8_t data[3];
-
-	car.setThrottle(remote.getkey(Keys::JoyY));
-	car.setSteering(remote.getkey(Keys::JoyZ));
-	car.control();
-}
-
 int main() {
 	struct pollfd fds[2];
 	CAN can("can0", 500, 0, 0);
 	Evdev evdev("/dev/input/event6");
-	Car car(can);
 	RemoteControl remote(evdev);
+	Car car(can, remote);
 
 	std::signal(SIGINT, signal_handler);
+	remote.attach(&car);
 
 	fds[0].fd = can.getSocketFd();
 	fds[0].events = POLLIN;
@@ -48,7 +41,6 @@ int main() {
 		if (fds[1].revents & POLLIN) {
 			evdev.readEvent();
 			remote.getEvent();
-			carControl(remote, car);
 		}
 	}
 	return (0);

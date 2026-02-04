@@ -2,7 +2,7 @@
 #include <iostream>
 #include <stdio.h>
 
-Car::Car(ICAN &can) : _can(can) {
+Car::Car(ICAN &can, RemoteControl &remote) : _can(can), _subject(remote) {
 	std::cout << "Car constructor" << std::endl;
 	_throttle = 0;
 	_steering = 0;
@@ -49,9 +49,29 @@ void Car::setThrottle(const int throttle) {
 
 void Car::setSteering(const int steering) {
 	_steering = (steering - 127) / 127;
-	//std::clamp(_steering, -30, 30);
 }
 
 void Car::setGear(const short gear) {
 	_gear = gear;
+}
+
+void Car::update(Events event) {
+	std::cout << "Receiving notifies " << event << std::endl;
+	switch (event) {
+		case Events::CAR_THROTTLE:
+			setThrottle(_subject.getkey(Keys::JoyY));
+			control();
+			break;
+		case Events::CAR_STEERING:
+			setSteering(_subject.getkey(Keys::JoyZ));
+			control();
+			break;
+		//case Events::CAR_START:
+		//	startNstop(_subject.getkey(Keys::Start));
+		//	break;
+
+		default:
+			std::cout << "No event" << std::endl;
+			break;
+	}
 }

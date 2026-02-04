@@ -3,6 +3,7 @@
 #include "IEvdev.hpp"
 #include <cstdint>
 #include <unordered_map>
+#include "Subject.hpp"
 
 enum Keys {
 	JoyZ = ABS_Z,
@@ -10,7 +11,7 @@ enum Keys {
 	Start = BTN_START
 };
 
-class RemoteControl {
+class RemoteControl : public Subject {
 public:
 
 	/**
