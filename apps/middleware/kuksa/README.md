@@ -228,11 +228,11 @@ target_link_libraries(qtAppLib PRIVATE
 
 | Message         | ID   | Signal           | Range         | Unit   | Description                                 |
 |-----------------|------|------------------|--------------|--------|---------------------------------------------|
-| SpeedMsg        | 256  | speed            | 0–200         | km/h   | Current vehicle speed                       |
+| SpeedMsg        | 256  | speed            | 0–200         | hm/h   | Current vehicle speed                       |
 | BatteryMsg      | 257  | StateOfCharge    | 0–100         | %      | Battery charge level                        |
 | ThrottleMsg     | 258  | throttle         | 0–100         | %      | Throttle position (acceleration)            |
-| AngleMsg        | 259  | Angle            | -450–450      | deg    | Steering wheel angle                        |
-| DrivingModeMsg  | 260  | DrivingMode      | 0–2           |        | 0 = MANUAL, 1 = AI_ASSIST                   |
+| AngleMsg        | 259  | Angle            | -30-30      | deg    | Steering wheel angle                        |
+| DrivingModeMsg  | 260  | DrivingMode      | 0–1           |        | 0 = MANUAL, 1 = AI_ASSIST                   |
 
 This architecture makes it simple to add new features or connect other systems, since all important vehicle data is sent in a clear, standard format.
 
@@ -242,18 +242,11 @@ This architecture makes it simple to add new features or connect other systems, 
 
 | VSS Path                        | Type      | Data Type | Unit     | Description                        | CAN Signal      |
 |----------------------------------|-----------|-----------|----------|------------------------------------|-----------------|
-| Vehicle.Speed                    | sensor    | float     | km/h     | Vehicle speed from STM32           | speed           |
+| Vehicle.Speed                    | sensor    | float     | hm/h     | Vehicle speed from STM32           | speed           |
 | Vehicle.Powertrain.Battery.StateOfCharge | sensor    | uint8     | percent   | Battery state of charge            | StateOfCharge   |
 | Vehicle.Control.Throttle.Value   | actuator  | float     | percent  | Throttle command                   | throttle        |
 | Vehicle.Control.Steering.Angle   | actuator  | float     | deg      | Steering angle command             | Angle           |
 | Vehicle.Control.Mode.DrivingMode | actuator  | uint8     |          | Driving mode: 0=MANUAL, 1=AI_ASSIST| DrivingMode     |
-
----
-## Notes
-- Always validate your VSS and DBC files before deploying updates to avoid signal mapping errors.
-- Use the Databroker Client to quickly check available signals and debug integration issues.
-- Monitor system resources (CPU, memory) if running multiple services on the same device.
-- Document any custom signals or changes to the VSS/DBC files for future maintainers.
 
 ---
 
