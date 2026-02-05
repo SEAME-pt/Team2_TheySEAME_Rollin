@@ -110,6 +110,7 @@ systemctl status kuksa-can-provider.service
   --mapping /etc/kuksa/vss.json \ 
   --use-socketcan \
   --dbc2val \
+  --val2dbc \
 "
 ```
 ### Main Config
