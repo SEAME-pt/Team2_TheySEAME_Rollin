@@ -34,6 +34,8 @@ void RemoteControl::getEvent() {
 				setkey(event.code, event.value);
 				if (event.code == Start) {
 					notify(Events::CAR_START);
+				} else if (event.code == L2) {
+					notify(Events::CAR_BRAKE);
 				}
 				break;
 		}

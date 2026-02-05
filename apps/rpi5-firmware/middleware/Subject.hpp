@@ -13,5 +13,7 @@ public:
 	void notify(Events event);
 
 private:
-	Observer *_obs;
+	static const int size = 10;
+	int _obsNbr;
+	Observer *_obs[size];
 };

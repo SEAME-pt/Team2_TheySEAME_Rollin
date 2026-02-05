@@ -69,6 +69,9 @@ void Car::update(Events event) {
 		//case Events::CAR_START:
 		//	startNstop(_subject.getkey(Keys::Start));
 		//	break;
+		case Events::CAR_BRAKE:
+			std::cout << "L2 Pressed" << std::endl;
+			break;
 
 		default:
 			std::cout << "No event" << std::endl;

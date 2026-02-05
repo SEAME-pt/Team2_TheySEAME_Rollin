@@ -8,7 +8,8 @@
 enum Keys {
 	JoyZ = ABS_Z,
 	JoyY = ABS_Y,
-	Start = BTN_START
+	Start = BTN_START,
+	L2 = BTN_TL2,
 };
 
 class RemoteControl : public Subject {

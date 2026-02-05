@@ -1,9 +1,10 @@
 #include "Subject.hpp"
 #include <iostream>
+#include <cstring>
 
 Subject::Subject() {
 	std::cout << "Subject constructor" << std::endl;
-	_obs = NULL;
+	std::memset(_obs, 0, size * sizeof(Observer *));
 }
 
 Subject::~Subject() {
@@ -11,16 +12,26 @@ Subject::~Subject() {
 }
 
 void Subject::attach(Observer *o) {
-	_obs = o;
+	if (_obsNbr >= size) {
+		std::cout << "Observer Array is full" << std::endl;
+		return;
+	}
+	_obs[_obsNbr++] = o;
 }
 
 void Subject::detach(Observer *o) {
-	_obs = NULL;
+	for (int i = 0; i < size; i++) {
+		if (o == _obs[i]) {
+			_obs[i] = NULL;
+		}
+	}
 }
 
 void Subject::notify(Events event) {
-	if (_obs == NULL) {
-		return;
+	for (int i = 0; i < size; i++) {
+		if (_obs[i] == NULL) {
+			continue;
+		}
+		_obs[i]->update(event);
 	}
-	_obs->update(event);
 }
