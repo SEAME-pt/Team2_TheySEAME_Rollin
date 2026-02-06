@@ -227,13 +227,15 @@ target_link_libraries(qtAppLib PRIVATE
 ---
 # CAN Frame Architecture
 
-| Message         | ID   | Signal           | Range         | Unit   | Description                                 |
-|-----------------|------|------------------|--------------|--------|---------------------------------------------|
-| SpeedMsg        | 256  | speed            | 0–200         | hm/h   | Current vehicle speed                       |
-| BatteryMsg      | 257  | StateOfCharge    | 0–100         | %      | Battery charge level                        |
-| ThrottleMsg     | 258  | throttle         | 0–100         | %      | Throttle position (acceleration)            |
-| AngleMsg        | 259  | Angle            | -30-30      | deg    | Steering wheel angle                        |
-| DrivingModeMsg  | 260  | DrivingMode      | 0–1           |        | 0 = MANUAL, 1 = AI_ASSIST                   |
+| Message         | ID     | Signal           | Range         | Unit   | Description                                 |
+|-----------------|--------|------------------|--------------|--------|---------------------------------------------|
+| SpeedMsg        | 0x200   | speed           | 0–200         | hm/h   | Current vehicle speed                       |
+| BatteryMsg      | 0x201   | StateOfCharge   | 0–100         | %      | Battery charge level                        |
+| ThrottleMsg     | 0x100  | throttle         | 0–100         | %      | Throttle position (acceleration)            |
+| Gear            | 0x101  | gear             | 0–3           | enum   | Current Gear(Parking(P),Neutral(N), Reverse(R), Drive(D) |
+| AngleMsg        | 0x102  | Angle            | -30-30        | deg    | Steering wheel angle                        |
+| Break           | 0x103  | break            | 0–1           | enum   | 0 = DRIVE, 1 = BREAK                        |
+| DrivingModeMsg  | 0x104  | DrivingMode      | 0–1           | enum   | 0 = MANUAL, 1 = AI_ASSIST                   |
 
 This architecture makes it simple to add new features or connect other systems, since all important vehicle data is sent in a clear, standard format.
 
@@ -246,8 +248,10 @@ This architecture makes it simple to add new features or connect other systems, 
 | Vehicle.Speed                    | sensor    | float     | hm/h     | Vehicle speed from STM32           | speed           |
 | Vehicle.Powertrain.Battery.StateOfCharge | sensor    | uint8     | percent   | Battery state of charge            | StateOfCharge   |
 | Vehicle.Control.Throttle.Value   | actuator  | float     | percent  | Throttle command                   | throttle        |
+| Vehicle.Control.Gear.Value       | actuator  | uint8     | enum     | Current Gear(Parking(P),Neutral(N), Reverse(R), Drive(D) | gear    |
 | Vehicle.Control.Steering.Angle   | actuator  | float     | deg      | Steering angle command             | Angle           |
-| Vehicle.Control.Mode.DrivingMode | actuator  | uint8     |          | Driving mode: 0=MANUAL, 1=AI_ASSIST| DrivingMode     |
+| Vehicle.Control.Mode.Break       | actuator  | uint8     | enum     | Break: 0 = DRIVE, 1 = BREAK        | Break           |
+| Vehicle.Control.Mode.DrivingMode | actuator  | uint8     | enum     | Driving mode: 0=MANUAL, 1=AI_ASSIST| DrivingMode     |
 
 ---
 
