@@ -8,7 +8,7 @@ set(SOURCES
 )
 
 add_executable(unit_tests ${SOURCES})
-target_include_directories(unit_tests PUBLIC ../../middleware)
+target_include_directories(unit_tests PUBLIC)
 target_link_libraries(unit_tests
 	PRIVATE
 	gtest
