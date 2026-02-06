@@ -12,8 +12,9 @@ public:
 	void detach(Observer *o);
 	void notify(Events event);
 
-private:
 	static const int size = 10;
+
+private:
 	int _obsNbr;
 	Observer *_obs[size];
 };

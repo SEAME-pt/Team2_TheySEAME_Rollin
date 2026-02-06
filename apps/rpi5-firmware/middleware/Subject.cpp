@@ -5,6 +5,7 @@
 Subject::Subject() {
 	std::cout << "Subject constructor" << std::endl;
 	std::memset(_obs, 0, size * sizeof(Observer *));
+	_obsNbr = 0;
 }
 
 Subject::~Subject() {
@@ -16,14 +17,24 @@ void Subject::attach(Observer *o) {
 		std::cout << "Observer Array is full" << std::endl;
 		return;
 	}
-	_obs[_obsNbr++] = o;
+	for (int i = 0; i < size; i++) {
+		if (_obs[i] != NULL) {
+			continue;
+		}
+		_obs[i] = o;
+		_obsNbr++;
+		break;
+	}
 }
 
 void Subject::detach(Observer *o) {
 	for (int i = 0; i < size; i++) {
-		if (o == _obs[i]) {
-			_obs[i] = NULL;
+		if (o != _obs[i]) {
+			continue;
 		}
+		_obs[i] = NULL;
+		_obsNbr--;
+		break;
 	}
 }
 
