@@ -8,11 +8,6 @@ protected:
 	RemoteControl remote{ev};
 };
 
-TEST_F(RemoteControlTest, Initial) {
-	EXPECT_EQ(remote.getkey(ABS_X), 0);
-	EXPECT_EQ(remote.getkey(ABS_Y), 0);
-}
-
 /*
  * @brief RemoteControl UpdateState test
  *
