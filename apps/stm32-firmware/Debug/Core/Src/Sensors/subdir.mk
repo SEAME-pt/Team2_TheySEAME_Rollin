@@ -6,14 +6,20 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Core/Src/Sensors/battery.c \
+../Core/Src/Sensors/sensors_processor.c \
+../Core/Src/Sensors/sensors_queue.c \
 ../Core/Src/Sensors/speed.c 
 
 OBJS += \
 ./Core/Src/Sensors/battery.o \
+./Core/Src/Sensors/sensors_processor.o \
+./Core/Src/Sensors/sensors_queue.o \
 ./Core/Src/Sensors/speed.o 
 
 C_DEPS += \
 ./Core/Src/Sensors/battery.d \
+./Core/Src/Sensors/sensors_processor.d \
+./Core/Src/Sensors/sensors_queue.d \
 ./Core/Src/Sensors/speed.d 
 
 
@@ -24,7 +30,7 @@ Core/Src/Sensors/%.o Core/Src/Sensors/%.su Core/Src/Sensors/%.cyclo: ../Core/Src
 clean: clean-Core-2f-Src-2f-Sensors
 
 clean-Core-2f-Src-2f-Sensors:
-	-$(RM) ./Core/Src/Sensors/battery.cyclo ./Core/Src/Sensors/battery.d ./Core/Src/Sensors/battery.o ./Core/Src/Sensors/battery.su ./Core/Src/Sensors/speed.cyclo ./Core/Src/Sensors/speed.d ./Core/Src/Sensors/speed.o ./Core/Src/Sensors/speed.su
+	-$(RM) ./Core/Src/Sensors/battery.cyclo ./Core/Src/Sensors/battery.d ./Core/Src/Sensors/battery.o ./Core/Src/Sensors/battery.su ./Core/Src/Sensors/sensors_processor.cyclo ./Core/Src/Sensors/sensors_processor.d ./Core/Src/Sensors/sensors_processor.o ./Core/Src/Sensors/sensors_processor.su ./Core/Src/Sensors/sensors_queue.cyclo ./Core/Src/Sensors/sensors_queue.d ./Core/Src/Sensors/sensors_queue.o ./Core/Src/Sensors/sensors_queue.su ./Core/Src/Sensors/speed.cyclo ./Core/Src/Sensors/speed.d ./Core/Src/Sensors/speed.o ./Core/Src/Sensors/speed.su
 
 .PHONY: clean-Core-2f-Src-2f-Sensors
 
