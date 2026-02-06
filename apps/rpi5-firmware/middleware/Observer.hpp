@@ -3,7 +3,7 @@
 #include "Events.hpp"
 
 /**
- * @class Observer
+ * @interface Observer
  * @brief Observer interface
  *
  * The Observer interface defines the contract to receive events from a Subject

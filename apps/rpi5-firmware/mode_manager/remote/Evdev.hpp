@@ -3,6 +3,10 @@
 #include <cstdint>
 #include "IEvdev.hpp"
 
+/**
+ * @class Evdev class
+ * @brief Evdev constructor
+ */
 class Evdev : public IEvdev {
 public:
 
@@ -13,7 +17,6 @@ public:
 	 * Also puts the queue count and index to zero
 	 *
 	 * @param evdev device name
-	 *
 	 */
 	Evdev(const char *device);
 
@@ -21,7 +24,6 @@ public:
 	 * @brief Evdev destructor
 	 *
 	 * Closes the evdev fd
-	 *
 	 */
 	~Evdev();
 

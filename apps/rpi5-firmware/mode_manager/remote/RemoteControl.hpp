@@ -12,6 +12,13 @@ enum Keys {
 	L2 = BTN_TL2,
 };
 
+/**
+ * @class RemoteControl
+ * @brief RemoteControl class
+ *
+ * The RemoteControl takes input from the linux evdev interface and notifies
+ * actions on input
+ */
 class RemoteControl : public Subject {
 public:
 
@@ -22,7 +29,6 @@ public:
 	 * Also receives an evdev interface
 	 *
 	 * @param evdev interface reference
-	 *
 	 */
 	RemoteControl(IEvdev &ev);
 
@@ -30,7 +36,6 @@ public:
 	 * @brief RemoteControl destructor
 	 *
 	 * Destructs the RemoteControl
-	 *
 	 */
 	~RemoteControl();
 
@@ -42,7 +47,6 @@ public:
 	 * @param key keycode
 	 *
 	 * @return Current key value
-	 *
 	 */
 	short getkey(const uint16_t key) const;
 
@@ -53,10 +57,16 @@ public:
 	 *
 	 * @param key keycode
 	 * @param value to set the key to (0|1)
-	 *
 	 */
 	void setkey(const uint16_t keycode, const short value);
 
+
+	/**
+	 * @brief Get gamepad input
+	 *
+	 * This functions loops through the event queue in Evdev and
+	 * notifies whenever the right input is pressed
+	 */
 	void getEvent();
 
 	/**
@@ -65,7 +75,6 @@ public:
 	 * Returns the evdev used to poll events
 	 *
 	 * @return reference to evdev interface
-	 *
 	 */
 	const IEvdev &getEvdev() const;
 

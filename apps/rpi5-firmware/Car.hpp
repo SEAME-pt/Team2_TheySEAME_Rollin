@@ -10,6 +10,13 @@ enum Signals {
 	STOP = 1
 };
 
+/**
+ * @class Car
+ * @brief Car class
+ *
+ * The Car encapsulates the communication between software and hardware
+ * It implements the Observer and ICar interface
+ */
 class Car : public ICar, public Observer {
 public:
 
@@ -25,6 +32,11 @@ public:
 	int getSteering() const;
 	short getGear() const;
 
+	/**
+	 * Implmentation of interface Observer
+	 *
+	 * \copydoc Observer::update
+	 */
 	void update(Events event);
 
 private:

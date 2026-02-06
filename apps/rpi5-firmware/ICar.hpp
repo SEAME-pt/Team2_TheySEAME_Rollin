@@ -1,5 +1,12 @@
 #pragma once
 
+/**
+ * @interface ICar
+ * @brief ICar interface
+ *
+ * The ICar interface defines the contract to create a middleware 
+ * between software and hardware 
+ */
 class ICar {
 public:
 
