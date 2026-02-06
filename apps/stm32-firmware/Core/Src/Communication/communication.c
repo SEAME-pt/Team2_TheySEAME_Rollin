@@ -175,7 +175,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
                         mode, throttle, steering_int/1000, abs(steering_int%1000));
                 Debug_Print(comm_uart_buf);
             } else {
-                // Unknown message ID!
+                // Unknown message ID! 
                 Debug_Print("[RX] Unknown message ID (expecting 0x100 or 0x200)\r\n");
             }
         }
