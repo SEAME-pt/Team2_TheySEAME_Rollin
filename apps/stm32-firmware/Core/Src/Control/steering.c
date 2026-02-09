@@ -31,26 +31,33 @@ void Control_SetSteering(float steering_normalized) {
     PCA9685_SetServoAngle(0, angle);  // Channel 0 for steering servo
 }
 
-void Control_SetThrottle(uint8_t throttle_percent) {
+void Control_SetThrottle(uint8_t throttle_percent, uint8_t gear) {
     // Clamp throttle to 0-100%
     if (throttle_percent > 100) throttle_percent = 100;
     
     // Convert percentage to PWM value (0-4095)
     uint16_t speed_pwm = (uint16_t)((throttle_percent * 4095) / 100);
-    uint16_t dir_high = 4095;
-    uint16_t dir_low = 0;
+    uint16_t dir_high = 0;      // Swapped base values to match motor wiring
+    uint16_t dir_low = 4095;
     
-    if (throttle_percent > 0) {
-        // Motor 1 forward (channels 0,1,2,3)
+    // Reverse direction if gear is 2 (R=Reverse)
+    if (gear == 2) {
+        uint16_t temp = dir_high;
+        dir_high = dir_low;
+        dir_low = temp;
+    }
+    
+    if (throttle_percent > 0 && gear != 0 && gear != 1) { // Don't move if P or N
+        // Motor 1 (channels 0,1,2,3)
         PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 0, 0, speed_pwm);  // M1 speed
-        PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 1, 0, dir_high);   // M1 DIR1 (forward)
-        PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 2, 0, dir_low);    // M1 DIR2 (reverse)
+        PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 1, 0, dir_high);   // M1 DIR1
+        PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 2, 0, dir_low);    // M1 DIR2
         PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 3, 0, 0);          // Unused
         
-        // Motor 2 forward (channels 4,5,6,7)
+        // Motor 2 (channels 4,5,6,7)
         PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 4, 0, speed_pwm);  // M2 speed
-        PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 5, 0, dir_low);    // M2 DIR2 (reverse)
-        PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 6, 0, dir_high);   // M2 DIR1 (forward)
+        PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 5, 0, dir_low);    // M2 DIR2
+        PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 6, 0, dir_high);   // M2 DIR1
         PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 7, 0, speed_pwm);  // M2 speed
     } else {
         Control_StopMotors();
@@ -85,6 +92,7 @@ void Control_Thread_Entry(ULONG thread_input) {
     
     VehicleCommand_t local_cmd;
     uint8_t last_mode = 0xFF;
+    uint8_t last_gear = 0xFF;
     uint8_t last_throttle = 0xFF;
     int8_t last_steering = 0x7F;
 
@@ -126,6 +134,7 @@ void Control_Thread_Entry(ULONG thread_input) {
             if (local_cmd.command_valid) {
                 // Check if command changed
                 if (local_cmd.driving_mode != last_mode || 
+                    local_cmd.gear != last_gear ||
                     local_cmd.throttle != last_throttle || 
                     local_cmd.steering_angle != last_steering) {
 
@@ -134,18 +143,22 @@ void Control_Thread_Entry(ULONG thread_input) {
 
                     // Apply commands
                     Control_SetSteering(steering_normalized);
-                    Control_SetThrottle(local_cmd.throttle);
+                    Control_SetThrottle(local_cmd.throttle, local_cmd.gear);
 
                     // Print status
+                    const char* gear_names[] = {"P", "N", "R", "D"};
                     int steering_int = (int)(steering_normalized * 1000);
                     snprintf(control_uart_buf, sizeof(control_uart_buf),
-                            "[CONTROL] Mode=%d | Throttle=%d%% | Steering=%d.%03d\r\n",
-                            local_cmd.driving_mode, local_cmd.throttle, 
+                            "[CONTROL] Mode=%d Gear=%s | Throttle=%d%% | Steering=%d.%03d\r\n",
+                            local_cmd.driving_mode, 
+                            local_cmd.gear <= 3 ? gear_names[local_cmd.gear] : "?",
+                            local_cmd.throttle, 
                             steering_int/1000, abs(steering_int%1000));
                     Debug_Print(control_uart_buf);
 
                     // Update last values
                     last_mode = local_cmd.driving_mode;
+                    last_gear = local_cmd.gear;
                     last_throttle = local_cmd.throttle;
                     last_steering = local_cmd.steering_angle;
                 }

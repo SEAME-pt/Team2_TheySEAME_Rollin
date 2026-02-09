@@ -86,8 +86,10 @@ void Control_SetSteering(float steering_normalized);  // -1.0 to +1.0
  *
  * Clamps the throttle percentage (0..100), converts it to PWM and
  * commands the throttle PCA9685 outputs. Passing 0 will stop motors.
+ * Motor direction is controlled by gear (2=Reverse swaps DIR pins).
  *
  * @param throttle_percent Throttle percentage (0..100)
+ * @param gear Gear selection (0=P, 1=N, 2=R, 3=D)
  *
  * Requirement traceability:
  * [impl->dsn~control-actuation-commands~1]
@@ -95,7 +97,7 @@ void Control_SetSteering(float steering_normalized);  // -1.0 to +1.0
  *
  * @return void
  */
-void Control_SetThrottle(uint8_t throttle_percent);   // 0-100%
+void Control_SetThrottle(uint8_t throttle_percent, uint8_t gear);   // 0-100%
 
 /**
  * @brief Emergency stop — stop all motors immediately

@@ -141,6 +141,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
 
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
                     g_vehicle_command.driving_mode = mode;
+                    g_vehicle_command.gear = 3;  // Controller doesn't send gear, default to Drive
                     g_vehicle_command.throttle = throttle;
                     g_vehicle_command.steering_angle = steering;
                     g_vehicle_command.command_valid = 1;
@@ -168,9 +169,18 @@ void Communication_Thread_Entry(ULONG thread_input) {
                 Debug_Print(comm_uart_buf);
             }
             else if (rx_can_id == 0x101 && rx_length >= 1) {
-                // Gear: 0=P, 1=N, 2=R, 3=D (logged only, no struct field)
+                // Gear: 0=P, 1=N, 2=R, 3=D
+                uint8_t gear = rx_data[0];
+                if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                    g_vehicle_command.gear = gear;
+                    g_vehicle_command.command_valid = 1;
+                    tx_mutex_put(&g_vehicle_command_mutex);
+                }
+                cmd_updated = 1;
+
+                const char* gear_names[] = {"P", "N", "R", "D"};
                 snprintf(comm_uart_buf, sizeof(comm_uart_buf),
-                        "[CMD] Gear=%d\r\n", rx_data[0]);
+                        "[CMD] Gear=%s\r\n", gear <= 3 ? gear_names[gear] : "?");
                 Debug_Print(comm_uart_buf);
             }
             else if (rx_can_id == 0x102 && rx_length == 1) {

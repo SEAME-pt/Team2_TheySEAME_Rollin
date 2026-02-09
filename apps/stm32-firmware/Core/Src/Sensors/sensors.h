@@ -34,6 +34,7 @@ typedef struct {
  */
 typedef struct {
     uint8_t driving_mode;       /**< Driving mode: 0=MANUAL, 1=AI_ASSIST */
+    uint8_t gear;               /**< Gear: 0=P, 1=N, 2=R, 3=D */
     uint8_t throttle;           /**< Throttle value 0-100 */
     int8_t steering_angle;      /**< Steering -100..+100 representing -1.0..+1.0 */
     uint8_t command_valid;      /**< Flag: 1 if command received, 0 otherwise */
