@@ -1,0 +1,3 @@
+../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_bus.h:845:22:LL_AHB2_GRP1_EnableClock	1
+../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_bus.h:1895:22:LL_APB1_GRP2_EnableClock	1
+../Core/Src/ucpd.c:28:6:MX_UCPD1_Init	1

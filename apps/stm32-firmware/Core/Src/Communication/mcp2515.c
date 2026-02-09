@@ -702,7 +702,7 @@ void MCP2515_TestConnection(void) {
  * @param  length: Pointer to store received data length
  * @retval 1 if message received, 0 if no message available
  */
-int MCP2515_ReceiveMessage(uint16_t *can_id, uint8_t *data, uint8_t *length) {
+int MCP2515_ReceiveMessage(uint32_t *can_id, uint8_t *data, uint8_t *length) {
     extern UART_HandleTypeDef huart1;
     char debug_buf[80];
     
@@ -724,7 +724,20 @@ int MCP2515_ReceiveMessage(uint16_t *can_id, uint8_t *data, uint8_t *length) {
         uint8_t sidl = MCP2515_ReadRegister(MCP2515_REG_RXB0SIDL);
         uint8_t dlc = MCP2515_ReadRegister(MCP2515_REG_RXB0DLC);
         
-        *can_id = (sidh << 3) | (sidl >> 5);
+        // Check EXIDE bit (SIDL bit 3) to determine standard vs extended frame
+        if (sidl & 0x08) {
+            // Extended frame (29-bit ID)
+            uint8_t eid8 = MCP2515_ReadRegister(MCP2515_REG_RXB0EID8);
+            uint8_t eid0 = MCP2515_ReadRegister(MCP2515_REG_RXB0EID0);
+            *can_id = ((uint32_t)sidh << 21)
+                    | ((uint32_t)(sidl & 0xE0) << 13)
+                    | ((uint32_t)(sidl & 0x03) << 16)
+                    | ((uint32_t)eid8 << 8)
+                    | (uint32_t)eid0;
+        } else {
+            // Standard frame (11-bit ID)
+            *can_id = ((uint32_t)sidh << 3) | ((uint32_t)(sidl >> 5));
+        }
         *length = dlc & 0x0F;
         
         // Read data bytes
@@ -745,7 +758,20 @@ int MCP2515_ReceiveMessage(uint16_t *can_id, uint8_t *data, uint8_t *length) {
         uint8_t sidl = MCP2515_ReadRegister(MCP2515_REG_RXB1SIDL);
         uint8_t dlc = MCP2515_ReadRegister(MCP2515_REG_RXB1DLC);
         
-        *can_id = (sidh << 3) | (sidl >> 5);
+        // Check EXIDE bit (SIDL bit 3) to determine standard vs extended frame
+        if (sidl & 0x08) {
+            // Extended frame (29-bit ID)
+            uint8_t eid8 = MCP2515_ReadRegister(MCP2515_REG_RXB1EID8);
+            uint8_t eid0 = MCP2515_ReadRegister(MCP2515_REG_RXB1EID0);
+            *can_id = ((uint32_t)sidh << 21)
+                    | ((uint32_t)(sidl & 0xE0) << 13)
+                    | ((uint32_t)(sidl & 0x03) << 16)
+                    | ((uint32_t)eid8 << 8)
+                    | (uint32_t)eid0;
+        } else {
+            // Standard frame (11-bit ID)
+            *can_id = ((uint32_t)sidh << 3) | ((uint32_t)(sidl >> 5));
+        }
         *length = dlc & 0x0F;
         
         // Read data bytes
@@ -766,13 +792,13 @@ void MCP2515_CheckForMessages(void) {
     extern UART_HandleTypeDef huart1;
     char buffer[150];
     
-    uint16_t can_id;
+    uint32_t can_id;
     uint8_t data[8];
     uint8_t length;
     
     if (MCP2515_ReceiveMessage(&can_id, data, &length)) {
-        snprintf(buffer, sizeof(buffer), "[RX] Message received! ID=0x%03X, DLC=%d, Data: ", 
-            can_id, length);
+        snprintf(buffer, sizeof(buffer), "[RX] Message received! ID=0x%08lX, DLC=%d, Data: ", 
+            (unsigned long)can_id, length);
         HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
         
         // Print data bytes

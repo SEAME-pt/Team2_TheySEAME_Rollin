@@ -1,0 +1,4 @@
+../Core/Src/octospi.c:31:6:MX_OCTOSPI1_Init	4
+../Core/Src/octospi.c:85:6:MX_OCTOSPI2_Init	4
+../Core/Src/octospi.c:141:6:HAL_OSPI_MspInit	7
+../Core/Src/octospi.c:307:6:HAL_OSPI_MspDeInit	5

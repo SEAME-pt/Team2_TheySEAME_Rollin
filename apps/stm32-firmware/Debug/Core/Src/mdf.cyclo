@@ -1,0 +1,3 @@
+../Core/Src/mdf.c:31:6:MX_ADF1_Init	2
+../Core/Src/mdf.c:80:6:HAL_MDF_MspInit	3
+../Core/Src/mdf.c:121:6:HAL_MDF_MspDeInit	2

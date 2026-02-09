@@ -1,0 +1,15 @@
+../Core/Src/Communication/mcp2515.c:51:16:MCP2515_SPI_Transfer	7
+../Core/Src/Communication/mcp2515.c:79:6:MCP2515_Reset	1
+../Core/Src/Communication/mcp2515.c:89:9:MCP2515_ReadRegister	1
+../Core/Src/Communication/mcp2515.c:101:6:MCP2515_WriteRegister	1
+../Core/Src/Communication/mcp2515.c:109:6:MCP2515_BitModify	1
+../Core/Src/Communication/mcp2515.c:119:19:MCP2515_SetMode	2
+../Core/Src/Communication/mcp2515.c:132:19:MCP2515_Init	7
+../Core/Src/Communication/mcp2515.c:204:19:MCP2515_SendMessage	9
+../Core/Src/Communication/mcp2515.c:316:19:MCP2515_SendSpeed	8
+../Core/Src/Communication/mcp2515.c:424:19:MCP2515_SendBattery	5
+../Core/Src/Communication/mcp2515.c:521:6:MCP2515_PrintStatus	1
+../Core/Src/Communication/mcp2515.c:538:6:MCP2515_PrintDetailedStatus	11
+../Core/Src/Communication/mcp2515.c:628:6:MCP2515_TestConnection	4
+../Core/Src/Communication/mcp2515.c:705:5:MCP2515_ReceiveMessage	8
+../Core/Src/Communication/mcp2515.c:791:6:MCP2515_CheckForMessages	3
