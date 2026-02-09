@@ -1,7 +1,0 @@
-../Core/Src/Drivers/pca9685.c:9:26:PCA9685_SoftwareReset	1
-../Core/Src/Drivers/pca9685.c:18:26:PCA9685_WriteReg	2
-../Core/Src/Drivers/pca9685.c:34:26:PCA9685_ReadReg	3
-../Core/Src/Drivers/pca9685.c:49:26:PCA9685_Init_Device_NoReset	5
-../Core/Src/Drivers/pca9685.c:98:19:PCA9685_Init_Multiple	4
-../Core/Src/Drivers/pca9685.c:131:19:PCA9685_Init_Device	7
-../Core/Src/Drivers/pca9685.c:225:19:PCA9685_SetPWM	4

@@ -1,5 +1,0 @@
-../Core/Src/Control/steering.c:11:6:PCA9685_SetServoAngle	3
-../Core/Src/Control/steering.c:28:6:Control_SetSteering	1
-../Core/Src/Control/steering.c:34:6:Control_SetThrottle	6
-../Core/Src/Control/steering.c:67:6:Control_StopMotors	2
-../Core/Src/Control/steering.c:74:6:Control_Thread_Entry	14

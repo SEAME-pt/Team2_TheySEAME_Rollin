@@ -1,4 +1,0 @@
-../Core/Src/usart.c:31:6:MX_UART4_Init	5
-../Core/Src/usart.c:75:6:MX_USART1_UART_Init	5
-../Core/Src/usart.c:118:6:HAL_UART_MspInit	5
-../Core/Src/usart.c:193:6:HAL_UART_MspDeInit	3
