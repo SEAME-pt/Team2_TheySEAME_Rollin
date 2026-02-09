@@ -317,8 +317,8 @@ HAL_StatusTypeDef MCP2515_SendSpeed(float speed_ms) {
     extern UART_HandleTypeDef huart1;
     char buffer[200];
     
-    // CAN ID: 0x42 (66 decimal - Speed status message expected by cluster)
-    uint16_t can_id = 0x42;
+    // CAN ID: 0x200 (SpeedMsg - matches DBC/VSS spec)
+    uint16_t can_id = 0x200;
     
     // Check TX buffer 0 status
     uint8_t tx_ctrl = MCP2515_ReadRegister(MCP2515_REG_TXB0CTRL);
@@ -335,17 +335,22 @@ HAL_StatusTypeDef MCP2515_SendSpeed(float speed_ms) {
     MCP2515_WriteRegister(MCP2515_REG_TXB0SIDH, (uint8_t)(can_id >> 3));
     MCP2515_WriteRegister(MCP2515_REG_TXB0SIDL, (uint8_t)(can_id << 5));
     
-    // Set data length code (1 byte - cluster expects single byte)
-    MCP2515_WriteRegister(MCP2515_REG_TXB0DLC, 0x01);
+    // Set data length code (8 bytes - standard CAN frame matching DBC)
+    MCP2515_WriteRegister(MCP2515_REG_TXB0DLC, 0x08);
     
-    // Convert m/s to dm/s (decimeters per second): 1 m/s = 10 dm/s
-    float speed_dms = speed_ms * 10.0f;
+    // Convert m/s to hm/h (hectometers per hour): 1 m/s = 36 hm/h
+    float speed_hmh = speed_ms * 36.0f;
     
-    // Send speed in dm/s as single byte (0-255), clamp the value
-    uint8_t speed_byte = (uint8_t)(speed_dms > 255.0f ? 255 : (speed_dms < 0 ? 0 : speed_dms));
+    // Clamp to 0-200 range (DBC spec)
+    uint16_t speed_val = (uint16_t)(speed_hmh > 200.0f ? 200 : (speed_hmh < 0 ? 0 : speed_hmh));
     
-    // Write speed data (1 byte only)
-    MCP2515_WriteRegister(MCP2515_REG_TXB0DATA, speed_byte);
+    // Write speed data as 16-bit unsigned little-endian (DBC: 0|16@1+)
+    MCP2515_WriteRegister(MCP2515_REG_TXB0DATA, (uint8_t)(speed_val & 0xFF));
+    MCP2515_WriteRegister(MCP2515_REG_TXB0DATA + 1, (uint8_t)((speed_val >> 8) & 0xFF));
+    // Zero remaining bytes
+    for (int i = 2; i < 8; i++) {
+        MCP2515_WriteRegister(MCP2515_REG_TXB0DATA + i, 0x00);
+    }
     
     // Verify what was written
     uint8_t sidh_readback = MCP2515_ReadRegister(MCP2515_REG_TXB0SIDH);
@@ -356,8 +361,8 @@ HAL_StatusTypeDef MCP2515_SendSpeed(float speed_ms) {
         sidh_readback, sidl_readback, dlc_readback);
     HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
     
-    snprintf(buffer, sizeof(buffer), "[DEBUG] Sending CAN ID 0x%03X: Speed=%.2f m/s (%.1f dm/s, byte=%d)\r\n", 
-            can_id, speed_ms, speed_dms, speed_byte);
+    snprintf(buffer, sizeof(buffer), "[DEBUG] Sending CAN ID 0x%03X: Speed=%.2f m/s (%u hm/h)\r\n", 
+            can_id, speed_ms, speed_val);
     HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
     
     // Check mode before transmission
@@ -420,8 +425,8 @@ HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage) {
     extern UART_HandleTypeDef huart1;
     char buffer[200];
     
-    // CAN ID: 0x4D (Battery status message)
-    uint16_t can_id = 0x4d;
+    // CAN ID: 0x201 (BatteryMsg - matches DBC/VSS spec)
+    uint16_t can_id = 0x201;
     
     // Check TX buffer 0 status
     uint8_t tx_ctrl = MCP2515_ReadRegister(MCP2515_REG_TXB0CTRL);

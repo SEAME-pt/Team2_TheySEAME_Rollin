@@ -68,7 +68,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
             
             // Check if data is valid before sending
             if (1) {
-                // Send battery percentage over CAN (ID: 0x4D)
+                // Send battery percentage over CAN (ID: 0x201)
                 uint8_t battery = (uint8_t)local_data.battery_percentage;
                 HAL_StatusTypeDef status = MCP2515_SendBattery(battery);
                 // HAL_StatusTypeDef status = MCP2515_SendBattery(90);
@@ -85,15 +85,15 @@ void Communication_Thread_Entry(ULONG thread_input) {
                         voltage_int, voltage_frac, battery, status_str);
                 Debug_Print(comm_uart_buf);
                 
-                // Send speed over CAN (ID: 66/0x42 - expected by cluster)
+                // Send speed over CAN (ID: 0x200 - SpeedMsg)
                 HAL_StatusTypeDef speed_status = MCP2515_SendSpeed(local_data.vehicle_speed);
                 const char* speed_status_str = (speed_status == HAL_OK) ? "OK" : 
                                                (speed_status == HAL_BUSY) ? "BUSY" : 
                                                (speed_status == HAL_TIMEOUT) ? "TIMEOUT" : "ERROR";
                 
                 snprintf(comm_uart_buf, sizeof(comm_uart_buf), 
-                        "[CAN_TX] Speed: %.2f m/s (%.1f dm/s) | %s\r\n",
-                        local_data.vehicle_speed, local_data.vehicle_speed * 10.0f, speed_status_str);
+                        "[CAN_TX] Speed: %.2f m/s (%.0f hm/h) | %s\r\n",
+                        local_data.vehicle_speed, local_data.vehicle_speed * 36.0f, speed_status_str);
                 Debug_Print(comm_uart_buf);
                 
                 // If bus-off detected, try to recover
@@ -131,52 +131,98 @@ void Communication_Thread_Entry(ULONG thread_input) {
             }
             Debug_Print("\r\n");
             
-            // Process command message (accept both 0x100 and 0x200)
-            if ((rx_can_id == 0x100 || rx_can_id == 0x200) && rx_length >= 3) {
-                // Parse command: byte0=always 0, byte1=throttle (0-100), byte2=steering (-1, 0, 1)
-                uint8_t mode = rx_data[0];
-                uint8_t throttle = rx_data[1];
-                int8_t steering_discrete = (int8_t)rx_data[2];  // -1, 0, or 1
+            // Process received CAN messages by individual IDs (matching DBC/VSS spec)
+            // ThrottleMsg (0x100): 16-bit unsigned throttle percentage
+            if (rx_can_id == 0x100 && rx_length >= 2) {
+                uint16_t throttle_raw = (uint16_t)(rx_data[0] | (rx_data[1] << 8));
+                uint8_t throttle = (uint8_t)(throttle_raw > 100 ? 100 : throttle_raw);
 
-                // Convert discrete steering to -100 to +100 range
-                int8_t steering_angle = steering_discrete * 100;
-
-                // Create command message
-                VehicleCommand_t cmd;
-                cmd.driving_mode = mode;
-                cmd.throttle = throttle;
-                cmd.steering_angle = steering_angle;
-                cmd.command_valid = 1;
-
-                // Enqueue to control queue (non-blocking)
-                if (!ControlQueue_TrySend(&cmd)) {
-                    Debug_Print("[COMM] Control queue full - command dropped\r\n");
-                } else {
-                    Debug_Print("[COMM] Command enqueued to Control queue\r\n");
-                }
-
-                // Keep global copy for diagnostics/backwards compatibility
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                    g_vehicle_command = cmd;
+                    g_vehicle_command.throttle = throttle;
+                    g_vehicle_command.command_valid = 1;
                     tx_mutex_put(&g_vehicle_command_mutex);
                 }
 
-                // Update last command for heartbeat
+                VehicleCommand_t cmd;
+                if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                    cmd = g_vehicle_command;
+                    tx_mutex_put(&g_vehicle_command_mutex);
+                }
+                if (!ControlQueue_TrySend(&cmd)) {
+                    Debug_Print("[COMM] Control queue full - throttle command dropped\r\n");
+                }
+
                 last_cmd = cmd;
                 last_cmd_ts = HAL_GetTick();
                 have_last_cmd = 1;
 
-                // Convert steering to float for display
-                float steering_float = (float)steering_angle / 100.0f;
-                int steering_int = (int)(steering_float * 1000);  // For display: -1000 to +1000
+                snprintf(comm_uart_buf, sizeof(comm_uart_buf),
+                        "[CMD] ThrottleMsg(0x100): Throttle=%d%%\r\n", throttle);
+                Debug_Print(comm_uart_buf);
+            }
+            // AngleMsg (0x102): 16-bit signed steering angle in degrees (-30..30)
+            else if (rx_can_id == 0x102 && rx_length >= 2) {
+                int16_t angle = (int16_t)(rx_data[0] | (rx_data[1] << 8));
+                // Clamp to -30..30 degrees
+                if (angle < -30) angle = -30;
+                if (angle > 30) angle = 30;
+                // Convert degrees to -100..+100 range used by control thread
+                int8_t steering = (int8_t)((angle * 100) / 30);
 
-                snprintf(comm_uart_buf, sizeof(comm_uart_buf), 
-                        "[CMD] Mode=%d | Throttle=%d%% | Steering=%d.%03d\r\n",
-                        mode, throttle, steering_int/1000, abs(steering_int%1000));
+                if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                    g_vehicle_command.steering_angle = steering;
+                    g_vehicle_command.command_valid = 1;
+                    tx_mutex_put(&g_vehicle_command_mutex);
+                }
+
+                VehicleCommand_t cmd;
+                if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                    cmd = g_vehicle_command;
+                    tx_mutex_put(&g_vehicle_command_mutex);
+                }
+                if (!ControlQueue_TrySend(&cmd)) {
+                    Debug_Print("[COMM] Control queue full - angle command dropped\r\n");
+                }
+
+                last_cmd = cmd;
+                last_cmd_ts = HAL_GetTick();
+                have_last_cmd = 1;
+
+                snprintf(comm_uart_buf, sizeof(comm_uart_buf),
+                        "[CMD] AngleMsg(0x102): Angle=%d deg (steering=%d)\r\n", angle, steering);
+                Debug_Print(comm_uart_buf);
+            }
+            // DrivingModeMsg (0x104): 8-bit driving mode (0=MANUAL, 1=AI_ASSIST)
+            else if (rx_can_id == 0x104 && rx_length >= 1) {
+                uint8_t mode = rx_data[0] > 0 ? 1 : 0;
+
+                if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                    g_vehicle_command.driving_mode = mode;
+                    g_vehicle_command.command_valid = 1;
+                    tx_mutex_put(&g_vehicle_command_mutex);
+                }
+
+                VehicleCommand_t cmd;
+                if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                    cmd = g_vehicle_command;
+                    tx_mutex_put(&g_vehicle_command_mutex);
+                }
+                if (!ControlQueue_TrySend(&cmd)) {
+                    Debug_Print("[COMM] Control queue full - mode command dropped\r\n");
+                }
+
+                last_cmd = cmd;
+                last_cmd_ts = HAL_GetTick();
+                have_last_cmd = 1;
+
+                snprintf(comm_uart_buf, sizeof(comm_uart_buf),
+                        "[CMD] DrivingMode(0x104): Mode=%s\r\n", mode ? "AI_ASSIST" : "MANUAL");
                 Debug_Print(comm_uart_buf);
             } else {
-                // Unknown message ID! 
-                Debug_Print("[RX] Unknown message ID (expecting 0x100 or 0x200)\r\n");
+                // Unhandled message ID (0x101 Gear, 0x103 Break not yet implemented)
+                snprintf(comm_uart_buf, sizeof(comm_uart_buf),
+                        "[RX] Unhandled CAN ID 0x%03X\r\n", rx_can_id);
+                Debug_Print(comm_uart_buf);
             }
         }
         
