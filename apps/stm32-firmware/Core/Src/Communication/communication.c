@@ -131,7 +131,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
             // Kuksa: Individual IDs per README spec
             int cmd_updated = 0;
 
-            if (rx_can_id == 0x100 && rx_length >= 3) {
+            if (rx_can_id == 0x100 && rx_length == 3) {
                 // Controller combined frame: [mode, throttle, steering]
                 uint8_t mode = rx_data[0] > 0 ? 1 : 0;
                 uint8_t throttle = rx_data[1] > 100 ? 100 : rx_data[1];
@@ -154,7 +154,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
                 Debug_Print(comm_uart_buf);
             }
             else if (rx_can_id == 0x100 && rx_length >= 1) {
-                // Kuksa ThrottleMsg: first byte is throttle 0-100%
+                // Kuksa ThrottleMsg: DLC=8, first byte is throttle 0-100%
                 uint8_t throttle = rx_data[0] > 100 ? 100 : rx_data[0];
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
                     g_vehicle_command.throttle = throttle;
