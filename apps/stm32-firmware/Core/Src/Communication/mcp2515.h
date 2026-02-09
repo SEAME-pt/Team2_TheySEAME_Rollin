@@ -127,6 +127,20 @@ HAL_StatusTypeDef MCP2515_SendMessage(uint16_t can_id, uint8_t *data, uint8_t le
 HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage);  // Convenience wrapper for battery data
 
 /**
+ * @brief Send speed data over CAN
+ *
+ * Convenience wrapper that converts a float speed (m/s) to the single-byte
+ * telemetry format (decimeters/second) and transmits using the MCP2515.
+ *
+ * Requirement traceability:
+ * [impl->dsn~can-telemetry-tx~1]
+ *
+ * @param speed_ms Vehicle speed in meters per second
+ * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR
+ */
+HAL_StatusTypeDef MCP2515_SendSpeed(float speed_ms);  // Convenience wrapper for speed data
+
+/**
  * @brief Set MCP2515 operating mode.
  *
  * Switches between normal, sleep, loopback, listen-only and config modes.

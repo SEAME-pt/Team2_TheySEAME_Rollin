@@ -23,7 +23,14 @@ uint32_t HAL_TIM_ReadCapturedValue(TIM_HandleTypeDef *htim, uint32_t Channel) {
 // External reference to delta_ticks global variable for testing
 extern uint32_t delta_ticks;
 
-/* Include SUT implementation directly for unit testing (compiled into test binary) */
+/* Note: Including the SUT .c file is usually an anti-pattern because it
+ * couples the test to the implementation compilation unit. This was the
+ * previous behavior and is restored here to ensure the test binary contains
+ * the speed implementation while we adjust Ceedling project settings to
+ * compile SUT sources per-test. Once project.yml is configured so SUT
+ * sources are compiled into the test executable, remove this include and
+ * rely on the build system instead.
+ */
 #include "../Src/Sensors/speed.c"
 
 void setUp(void) {
@@ -179,7 +186,7 @@ void test_Speed_ProcessDelta_NoiseFiltered_ReturnsZero(void) {
     uint32_t delta_ticks = 10; // Below noise threshold
     
     // When: Process delta
-    int result = Speed_ProcessDelta(delta_ticks, &average, &counter);
+    int result = Speed_ProcessDelta(delta_ticks, &average, &counter, NULL);
     
     // Then: Should return 0 (no output), average and counter unchanged
     TEST_ASSERT_EQUAL_INT(0, result);
@@ -204,7 +211,7 @@ void test_Speed_ProcessDelta_AccumulatingReadings_ReturnsZero(void) {
     uint32_t delta_ticks = 2000; // Valid delta (30 RPM)
     
     // When: Process first delta
-    int result = Speed_ProcessDelta(delta_ticks, &average, &counter);
+    int result = Speed_ProcessDelta(delta_ticks, &average, &counter, NULL);
     
     // Then: Should return 0 (still accumulating), average and counter updated
     TEST_ASSERT_EQUAL_INT(0, result);
@@ -233,7 +240,7 @@ void test_Speed_ProcessDelta_FifthReading_ReturnsOne(void) {
     _txe_mutex_put_IgnoreAndReturn(TX_SUCCESS);
 
     // When: Process fifth delta
-    int result = Speed_ProcessDelta(delta_ticks, &average, &counter);
+    int result = Speed_ProcessDelta(delta_ticks, &average, &counter, NULL);
     
     // Then: Should return 1 (output generated), counters reset, average calculated
     TEST_ASSERT_EQUAL_INT(1, result);
@@ -410,7 +417,7 @@ void test_SpeedThreadEntry_MeasureWriteSpeed_500ms(void) {
     for (int cycle = 0; cycle < 2; cycle++) {
         for (int i = 0; i < 5; i++) {
             current_tick += 10; // Simulate 0.1s thread sleep (THREAD_SLEEP_TICKS)
-            int result = Speed_ProcessDelta(2000, &average, &counter);
+            int result = Speed_ProcessDelta(2000, &average, &counter, NULL);
             
             if (result == 1) { // Write occurred
                 if (write_count > 0) {
@@ -455,7 +462,7 @@ void test_SpeedThreadEntry_WritePerformance_Timing(void) {
         for (int i = 0; i < 5; i++) {
             start_ticks = 100; // Simulate timing measurement start
             
-            int result = Speed_ProcessDelta(2000, &average, &counter);
+            int result = Speed_ProcessDelta(2000, &average, &counter, NULL);
             
             if (result == 1) { // Write operation occurred
                 uint32_t end_ticks = start_ticks + 1; // Simulate minimal processing time
@@ -504,7 +511,7 @@ void test_SpeedThreadEntry_RapidSensorUpdates_ConsistentWrites(void) {
     for (int reading = 0; reading < 25; reading++) {
         simulation_time += 10; // Each iteration = 100ms
         
-        int result = Speed_ProcessDelta(2000, &average, &counter);
+        int result = Speed_ProcessDelta(2000, &average, &counter, NULL);
         
         if (result == 1) {
             if (write_count > 0) {

@@ -18,14 +18,33 @@
  * - Convert and clamp control inputs into safe actuator commands
  * - Stop motors on invalid state or failsafe conditions
  *
+ * Note: For short-lived debugging you can disable the automatic safety stop
+ * by defining `DISABLE_CONTROL_SAFETY` (compile-time only). Do NOT enable in
+ * production builds.
+ *
+ * For convenience, in debug or test builds this macro is defined automatically
+ * so you don't need to rebuild with extra flags. Remove this convenience for
+ * production builds or CI by undefining `DEBUG`/`TEST_MODE` or explicitly
+ * undefining `DISABLE_CONTROL_SAFETY`.
+ */
+
+#if defined(DEBUG) || defined(TEST_MODE)
+#ifndef DISABLE_CONTROL_SAFETY
+#define DISABLE_CONTROL_SAFETY
+#endif
+#endif
+
+/**
+ * @brief Control thread entry and main loop
+ *
+ * Runs the control subsystem responsible for actuator commands and safety.
+ *
  * @param thread_input RTOS thread input parameter (unused)
  *
  * Requirement traceability:
- * [impl->arch~control-actuation-flow~1]
- * [impl->dsg~control-throttle-command~1]
- * [impl->dsg~control-user-interface~1]
- * [impl->dsg~control-safety-limits~1]
- * [impl->feat~rtos-control~1]
+ * [impl->dsn~control-actuation-commands~1]
+ * [impl->dsn~control-safety-stop~1]
+ * [impl->dsn~control-heartbeat-monitor~1]
  *
  * @return void
  */
@@ -41,7 +60,7 @@ void Control_Thread_Entry(ULONG thread_input);
  * @param angle Target servo angle in degrees (-30..+30)
  *
  * Requirement traceability:
- * [impl->arch~control-actuation-flow~1]
+ * [impl->dsn~control-actuation-commands~1]
  *
  * @return void
  */
@@ -56,8 +75,7 @@ void PCA9685_SetServoAngle(uint8_t channel, float angle);
  * @param steering_normalized Normalized steering value in range -1.0..+1.0
  *
  * Requirement traceability:
- * [impl->dsg~control-user-interface~1]
- * [impl->arch~control-actuation-flow~1]
+ * [impl->dsn~control-actuation-commands~1]
  *
  * @return void
  */
@@ -72,8 +90,8 @@ void Control_SetSteering(float steering_normalized);  // -1.0 to +1.0
  * @param throttle_percent Throttle percentage (0..100)
  *
  * Requirement traceability:
- * [impl->dsg~control-throttle-command~1]
- * [impl->dsg~control-safety-limits~1]
+ * [impl->dsn~control-actuation-commands~1]
+ * [impl->dsn~control-safety-stop~1]
  *
  * @return void
  */
@@ -85,7 +103,7 @@ void Control_SetThrottle(uint8_t throttle_percent);   // 0-100%
  * Sets all motor PWM outputs to zero to ensure no motion.
  *
  * Requirement traceability:
- * [impl->dsg~control-safety-limits~1]
+ * [impl->dsn~control-safety-stop~1]
  *
  * @return void
  */

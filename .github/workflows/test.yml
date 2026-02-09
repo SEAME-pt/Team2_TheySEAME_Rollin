@@ -2,7 +2,7 @@ name: Automated Unit Tests
 
 on:
   pull_request:
-    branches: [ develop ]
+    branches: [ main, develop ]
 
 jobs:
   # --- JOB 1: Qt Cluster Tests ---
@@ -17,7 +17,16 @@ jobs:
       - name: Install Qt Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake libgtest-dev qt6-base-dev qt6-serialbus-dev
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            libgtest-dev \
+            qt6-base-dev \
+            qt6-serialbus-dev \
+            libgrpc++-dev \
+            libprotobuf-dev \
+            protobuf-compiler-grpc \
+            qt6-positioning-dev
       - name: Configure and Build
         run: |
           cmake -S apps/Cluster/tests -B build-qt -DCMAKE_BUILD_TYPE=Release

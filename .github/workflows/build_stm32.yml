@@ -1,0 +1,79 @@
+name: Build_STM32
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'apps/stm32-firmware/**'
+  push:
+    branches:
+      - 'feature/stm32**'
+      - 'fix/stm32**'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    env:
+      STM32_PATH: apps/stm32-firmware
+      BUILD_DIR: apps/stm32-firmware/Debug
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          submodules: true
+          ref: ${{ github.head_ref }}
+
+      - name: Install ARM GNU Toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi
+
+      - name: Remove unsupported compiler flags
+        run: |
+          cd $BUILD_DIR
+          find . -name "*.mk" -type f -exec sed -i 's/-fcyclomatic-complexity//g' {} +
+
+      - name: Build STM32 firmware
+        run: |
+          cd $BUILD_DIR
+          make all -j$(nproc)
+
+      - name: Generate binary and hex files
+        run: |
+          cd $BUILD_DIR
+          arm-none-eabi-objcopy -O binary STM32.elf STM32.bin
+          arm-none-eabi-objcopy -O ihex STM32.elf STM32.hex
+
+      - name: Display firmware size
+        run: |
+          cd $BUILD_DIR
+          arm-none-eabi-size STM32.elf
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: stm32-firmware-${{ github.sha }}
+          path: |
+            ${{ env.BUILD_DIR }}/STM32.elf
+            ${{ env.BUILD_DIR }}/STM32.bin
+            ${{ env.BUILD_DIR }}/STM32.hex
+            ${{ env.BUILD_DIR }}/STM32.map
+          retention-days: 30
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: stm32
+          name: STM32_Firmware
+          files: |
+            ${{ env.BUILD_DIR }}/STM32.elf
+            ${{ env.BUILD_DIR }}/STM32.bin
+            ${{ env.BUILD_DIR }}/STM32.hex
+            ${{ env.BUILD_DIR }}/STM32.map
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
