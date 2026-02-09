@@ -4,7 +4,7 @@
 
 using namespace testing;
 
-class SubjectTest : public testing::Test {
+class SubjectTest : public Test {
 protected:
 	Subject subject;
 };

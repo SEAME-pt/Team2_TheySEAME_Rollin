@@ -2,7 +2,9 @@
 #include "RemoteControl.hpp"
 #include "Mocks.h"
 
-class RemoteControlTest : public testing::Test {
+using namespace testing;
+
+class RemoteControlTest : public Test {
 protected:
 	MockEvdev ev;
 	RemoteControl remote{ev};
