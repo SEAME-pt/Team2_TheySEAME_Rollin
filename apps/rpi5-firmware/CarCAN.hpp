@@ -5,9 +5,19 @@
 #include "ICAN.hpp"
 #include "Observer.hpp"
 
-enum Signals {
-	START = 0,
-	STOP = 1
+enum Gear {
+	PARKING,
+	NEUTRAL,
+	REVERSE,
+	DRIVE
+};
+
+enum CAN_ID {
+	THROTTLE = 0x100,
+	GEAR = 0x101,
+	STEERING = 0x102,
+	BRAKE = 0x103,
+	DRIVING_MODE = 0x104,
 };
 
 /**
@@ -17,19 +27,17 @@ enum Signals {
  * The Car encapsulates the communication between software and hardware
  * It implements the Observer and ICar interface
  */
-class Car : public ICar, public Observer {
+class CarCAN : public ICar, public Observer {
 public:
 
-	Car(ICAN &can, RemoteControl &remote);
-	~Car();
+	CarCAN(ICAN &can, RemoteControl &remote);
+	~CarCAN();
 
 	void startNstop(const bool signal);
-	int control();
 	void setThrottle(const int throttle);
 	void setSteering(const int steering);
 	void setGear(const short gear);
-	int getThrottle() const;
-	int getSteering() const;
+	void brake();
 	short getGear() const;
 
 	/**
@@ -40,9 +48,9 @@ public:
 	void update(Events event);
 
 private:
+	int processThrottle(const int rawThrottle);
+	int processSteering(const int rawSteering);
 	ICAN &_can;
 	RemoteControl &_subject;
-	int _throttle;
-	int _steering;
 	short _gear;
 };

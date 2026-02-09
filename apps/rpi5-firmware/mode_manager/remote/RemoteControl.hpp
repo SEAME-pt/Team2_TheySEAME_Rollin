@@ -10,6 +10,10 @@ enum Keys {
 	JoyY = ABS_Y,
 	Start = BTN_START,
 	L2 = BTN_TL2,
+	X = BTN_X,
+	B = BTN_B,
+	Y = BTN_Y,
+	A = BTN_A,
 };
 
 /**

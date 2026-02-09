@@ -5,4 +5,5 @@ enum Events {
 	CAR_STEERING,
 	CAR_START,
 	CAR_BRAKE,
+	CAR_GEAR
 };

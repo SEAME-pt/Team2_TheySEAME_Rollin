@@ -6,6 +6,11 @@ RemoteControl::RemoteControl(IEvdev &ev) : _ev(ev) {
 	_state.insert({ JoyY, 0 });
 	_state.insert({ JoyZ, 0 });
 	_state.insert({ Start, 0 });
+	_state.insert({ L2, 0 });
+	_state.insert({ A, 0 });
+	_state.insert({ Y, 0 });
+	_state.insert({ X, 0 });
+	_state.insert({ B, 0 });
 }
 
 RemoteControl::~RemoteControl() {
@@ -36,6 +41,9 @@ void RemoteControl::getEvent() {
 					notify(Events::CAR_START);
 				} else if (event.code == L2) {
 					notify(Events::CAR_BRAKE);
+				} else if (event.code == B || event.code == X
+					|| event.code == A || event.code == Y) {
+					notify(Events::CAR_GEAR);
 				}
 				break;
 		}

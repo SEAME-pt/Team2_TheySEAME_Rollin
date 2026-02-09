@@ -5,7 +5,7 @@ project(CarControl)
 set(BUILD_TESTS ON)
 set(RPI_BIN_DIR ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(SOURCES main.cpp ICar.hpp Car.hpp Car.cpp)
+set(SOURCES main.cpp ICar.hpp CarCAN.hpp CarCAN.cpp)
 
 include_directories(PUBLIC comms mode_manager/remote middleware)
 

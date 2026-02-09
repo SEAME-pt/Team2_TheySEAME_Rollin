@@ -1,6 +1,6 @@
 #include "CAN.hpp"
 #include "Evdev.hpp"
-#include "Car.hpp"
+#include "CarCAN.hpp"
 #include "RemoteControl.hpp"
 #include <stdio.h>
 #include <unistd.h>
@@ -19,7 +19,7 @@ int main() {
 	CAN can("can0", 500, 0, 0);
 	Evdev evdev("/dev/input/event6");
 	RemoteControl remote(evdev);
-	Car car(can, remote);
+	CarCAN car(can, remote);
 
 	std::signal(SIGINT, signal_handler);
 	remote.attach(&car);
