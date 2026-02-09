@@ -1,8 +1,12 @@
-Debug
+Debug/**/*.o
+Debug/**/*.d
+Debug/**/*.su
+Debug/*.elf
+Debug/*.map
+Debug/*.list
+!Debug/objects.list
 .metadata
 .settings
 *.launch
-*.o
-*.d
 Core/Tests/build/*
 tests/build/
