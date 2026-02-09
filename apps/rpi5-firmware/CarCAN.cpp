@@ -18,13 +18,6 @@ int CarCAN::processSteering(const int rawSteering) {
 	return ((rawSteering - 127) / 127);
 }
 
-void CarCAN::startNstop(const bool signal) {
-	uint8_t data[1];
-
-	data[0] = signal;
-	_can.sendFrame(0x00, data, sizeof(data));
-}
-
 void CarCAN::setGear(const short gear) {
 	uint8_t data[1];
 

@@ -37,9 +37,7 @@ void RemoteControl::getEvent() {
 				break;
 			case EV_KEY:
 				setkey(event.code, event.value);
-				if (event.code == Start) {
-					notify(Events::CAR_START);
-				} else if (event.code == L2) {
+				if (event.code == L2) {
 					notify(Events::CAR_BRAKE);
 				} else if (event.code == B || event.code == X
 					|| event.code == A || event.code == Y) {

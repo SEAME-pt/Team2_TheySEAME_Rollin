@@ -13,8 +13,8 @@ TEST_F(SubjectTest, AddAndNotifyObserver) {
 	MockObserver obs;
 
 	subject.attach(&obs);
-	EXPECT_CALL(obs, update(Events::CAR_START)).Times(1);
-	subject.notify(Events::CAR_START);
+	EXPECT_CALL(obs, update(Events::CAR_THROTTLE)).Times(1);
+	subject.notify(Events::CAR_THROTTLE);
 }
 
 TEST_F(SubjectTest, RemoveAndNotifyObserver) {
@@ -22,8 +22,8 @@ TEST_F(SubjectTest, RemoveAndNotifyObserver) {
 
 	subject.attach(&obs);
 	subject.detach(&obs);
-	EXPECT_CALL(obs, update(Events::CAR_START)).Times(0);
-	subject.notify(Events::CAR_START);
+	EXPECT_CALL(obs, update(Events::CAR_THROTTLE)).Times(0);
+	subject.notify(Events::CAR_THROTTLE);
 }
 
 TEST_F(SubjectTest, AddAndNotifyMoreThanOneObserver) {
@@ -32,9 +32,9 @@ TEST_F(SubjectTest, AddAndNotifyMoreThanOneObserver) {
 
 	subject.attach(&obs1);
 	subject.attach(&obs2);
-	EXPECT_CALL(obs1, update(Events::CAR_START)).Times(1);
-	EXPECT_CALL(obs2, update(Events::CAR_START)).Times(1);
-	subject.notify(Events::CAR_START);
+	EXPECT_CALL(obs1, update(Events::CAR_THROTTLE)).Times(1);
+	EXPECT_CALL(obs2, update(Events::CAR_THROTTLE)).Times(1);
+	subject.notify(Events::CAR_THROTTLE);
 }
 
 TEST_F(SubjectTest, RemovingMoreThanOneObserver) {
@@ -45,9 +45,9 @@ TEST_F(SubjectTest, RemovingMoreThanOneObserver) {
 	subject.attach(&obs2);
 	subject.detach(&obs1);
 	subject.detach(&obs2);
-	EXPECT_CALL(obs1, update(Events::CAR_START)).Times(0);
-	EXPECT_CALL(obs2, update(Events::CAR_START)).Times(0);
-	subject.notify(Events::CAR_START);
+	EXPECT_CALL(obs1, update(Events::CAR_THROTTLE)).Times(0);
+	EXPECT_CALL(obs2, update(Events::CAR_THROTTLE)).Times(0);
+	subject.notify(Events::CAR_THROTTLE);
 }
 
 TEST_F(SubjectTest, ObserverArrayLimit) {
@@ -58,7 +58,7 @@ TEST_F(SubjectTest, ObserverArrayLimit) {
 		subject.attach(&obs);
 	}
 	subject.attach(&postLimitObs);
-	EXPECT_CALL(obs, update(Events::CAR_START)).Times(subject.size);
-	EXPECT_CALL(postLimitObs, update(Events::CAR_START)).Times(0);
-	subject.notify(Events::CAR_START);
+	EXPECT_CALL(obs, update(Events::CAR_THROTTLE)).Times(subject.size);
+	EXPECT_CALL(postLimitObs, update(Events::CAR_THROTTLE)).Times(0);
+	subject.notify(Events::CAR_THROTTLE);
 }

@@ -5,13 +5,7 @@
 #include "ICAN.hpp"
 #include "Observer.hpp"
 
-enum Gear {
-	PARKING,
-	NEUTRAL,
-	REVERSE,
-	DRIVE
-};
-
+/// ID for the different CAN frames
 enum CAN_ID {
 	THROTTLE = 0x100,
 	GEAR = 0x101,
@@ -21,10 +15,10 @@ enum CAN_ID {
 };
 
 /**
- * @class Car
- * @brief Car class
+ * @class CarCAN
+ * @brief CarCAN class
  *
- * The Car encapsulates the communication between software and hardware
+ * The CarCAN encapsulates the CAN communication between software and hardware
  * It implements the Observer and ICar interface
  */
 class CarCAN : public ICar, public Observer {
