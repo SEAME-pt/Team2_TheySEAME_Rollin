@@ -73,7 +73,7 @@ Needs: impl, itest
 ```
 
 ```
-`dsn~current-weather-display~1`
+`dsn~current-time-display~1`
 
 Status: proposed
 
