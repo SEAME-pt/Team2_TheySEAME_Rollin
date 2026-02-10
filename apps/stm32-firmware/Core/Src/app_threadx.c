@@ -50,6 +50,7 @@ TX_THREAD speed_thread;
 TX_THREAD sensors_proc_thread;
 TX_THREAD test_thread;
 TX_THREAD control_thread;
+TX_THREAD distance_thread;
 
 UCHAR sensors_proc_thread_stack[2048];
 UCHAR test_thread_stack[2048];
@@ -57,6 +58,7 @@ UCHAR speed_thread_stack[2048];
 UCHAR battery_thread_stack[2048];
 UCHAR communication_thread_stack[2048];
 UCHAR control_thread_stack[2048];
+UCHAR distance_thread_stack[2048];
 
 extern void Battery_Thread_Entry(ULONG thread_input);
 extern void Communication_Thread_Entry(ULONG thread_input);
@@ -64,7 +66,7 @@ extern void Control_Thread_Entry(ULONG thread_input);
 extern void Test_Thread_Entry(ULONG thread_input);
 extern void Speed_Thread_Entry(ULONG thread_input);
 extern void SensorsProcessor_Thread_Entry(ULONG thread_input);
-
+extern void Distance_Thread_Entry(ULONG thread_input);
 
 /* Global vehicle data and mutex */
 VehicleData_t g_vehicle_data;
@@ -179,6 +181,14 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   status = tx_thread_create(&speed_thread, "Speed Thread",
                                   Speed_Thread_Entry, 0,
                                   speed_thread_stack, sizeof(speed_thread_stack),
+                                  14, 14, TX_NO_TIME_SLICE, TX_AUTO_START);
+  if (status != TX_SUCCESS) {
+      return TX_THREAD_ERROR;
+  }
+
+  status = tx_thread_create(&distance_thread, "Distance Thread",
+                                  Distance_Thread_Entry, 0,
+                                  distance_thread_stack, sizeof(distance_thread_stack),
                                   14, 14, TX_NO_TIME_SLICE, TX_AUTO_START);
   if (status != TX_SUCCESS) {
       return TX_THREAD_ERROR;
