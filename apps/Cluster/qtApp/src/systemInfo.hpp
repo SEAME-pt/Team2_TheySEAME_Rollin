@@ -29,8 +29,6 @@ public:
      * @param parent Optional parent QObject
      *
      * Requirement traceability:
-     * [impl->dsn~cluster-battery~1]
-     * [impl->dsn~cluster-speed~1]
      *
      */
     explicit systemInfo(QObject *parent = nullptr);
@@ -44,8 +42,6 @@ public:
      * @brief Initializes the data collection thread and starts listening for updates from Kuksa.
      *
      * Requirement traceability:
-     * [impl->dsn~cluster-battery~1]
-     * [impl->dsn~cluster-speed~1]
      *
      * @return true if started successfully, false otherwise
      */
@@ -57,8 +53,6 @@ public:
      * @param out Output integer
      *
      * Requirement traceability:
-     * [impl->dsn~cluster-battery~1]
-     * [impl->dsn~cluster-speed~1]
      *
      * @return true if conversion is successful
      */
@@ -69,7 +63,6 @@ public:
      * @param battery Battery value
      *
      * Requirement traceability:
-     * [impl->dsn~cluster-battery~1]
      *
      */
     void setBattery(int battery);
@@ -78,7 +71,6 @@ public:
      * @brief Returns the current battery value.
      *
      * Requirement traceability:
-     * [impl->dsn~cluster-battery~1]
      *
      * @return int battery value
      */
@@ -89,7 +81,6 @@ public:
      * @param speed Speed value
      *
      * Requirement traceability:
-     * [impl->dsn~cluster-speed~1]
      *
      */
     void setSpeed(int speed);
@@ -98,7 +89,6 @@ public:
      * @brief Returns the current speed value.
      *
      * Requirement traceability:
-     * [impl->dsn~cluster-speed~1]
      *
      * @return int speed value
      */

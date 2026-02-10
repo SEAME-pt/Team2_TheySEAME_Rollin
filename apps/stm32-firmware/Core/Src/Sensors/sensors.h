@@ -14,7 +14,6 @@
  * by `g_vehicle_data_mutex` when updated/read by multiple threads.
  *
  * Requirement traceability:
- * [impl->dsn~rpm-data-interface~1]
  */
 typedef struct {
     uint16_t battery_voltage;      /**< Battery voltage in millivolts */
@@ -30,7 +29,6 @@ typedef struct {
  * Encodes the control inputs coming from remote/system controller.
  *
  * Requirement traceability:
- * [impl->dsn~control-actuation-commands~1]
  */
 typedef struct {
     uint8_t driving_mode;       /**< Driving mode (e.g., MANUAL/AUTO) */
@@ -45,7 +43,6 @@ typedef struct {
  * Protected by `g_vehicle_data_mutex` when modified.
  *
  * Requirement traceability:
- * [impl->dsn~rpm-data-interface~1]
  */
 extern VehicleData_t g_vehicle_data;
 
@@ -60,7 +57,6 @@ extern TX_MUTEX g_vehicle_data_mutex;
  * Protected by `g_vehicle_command_mutex`.
  *
  * Requirement traceability:
- * [impl->dsn~control-actuation-commands~1]
  */
 extern VehicleCommand_t g_vehicle_command;
 
@@ -78,8 +74,6 @@ extern TX_MUTEX g_vehicle_command_mutex;
  * @param delta_ticks Time delta in timer ticks
  *
  * Requirement traceability:
- * [impl->dsn~calculate-rpm~1]
- * [impl->dsn~rpm-noise-handling~1]
  *
  * @return uint32_t Calculated RPM (0 if below noise threshold)
  */
@@ -94,7 +88,6 @@ uint32_t Speed_CalculateRPM(uint32_t delta_ticks);
  * @param rpm Rotational speed in RPM
  *
  * Requirement traceability:
- * [impl->dsn~rpm-data-interface~1]
  *
  * @return float Linear speed in meters per second
  */
@@ -111,8 +104,6 @@ float Speed_RPMToMetersPerSecond(uint32_t rpm);
  * @param counter Pointer to reading counter (modified)
  *
  * Requirement traceability:
- * [impl->dsn~rpm-data-interface~1]
- * [impl->dsn~rpm-average~1]
  *
  * @return int 1 if output was generated (N readings), 0 otherwise
  */
@@ -127,7 +118,6 @@ int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter, fl
  * @param thread_input Thread parameter passed by ThreadX scheduler (unused)
  *
  * Requirement traceability:
- * [impl->dsn~rpm-read-frequency~1]
  *
  * @return void
  */

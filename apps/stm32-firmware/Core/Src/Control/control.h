@@ -42,9 +42,6 @@
  * @param thread_input RTOS thread input parameter (unused)
  *
  * Requirement traceability:
- * [impl->dsn~control-actuation-commands~1]
- * [impl->dsn~control-safety-stop~1]
- * [impl->dsn~control-heartbeat-monitor~1]
  *
  * @return void
  */
@@ -60,7 +57,6 @@ void Control_Thread_Entry(ULONG thread_input);
  * @param angle Target servo angle in degrees (-30..+30)
  *
  * Requirement traceability:
- * [impl->dsn~control-actuation-commands~1]
  *
  * @return void
  */
@@ -75,7 +71,6 @@ void PCA9685_SetServoAngle(uint8_t channel, float angle);
  * @param steering_normalized Normalized steering value in range -1.0..+1.0
  *
  * Requirement traceability:
- * [impl->dsn~control-actuation-commands~1]
  *
  * @return void
  */
@@ -90,8 +85,6 @@ void Control_SetSteering(float steering_normalized);  // -1.0 to +1.0
  * @param throttle_percent Throttle percentage (0..100)
  *
  * Requirement traceability:
- * [impl->dsn~control-actuation-commands~1]
- * [impl->dsn~control-safety-stop~1]
  *
  * @return void
  */
@@ -103,7 +96,6 @@ void Control_SetThrottle(uint8_t throttle_percent);   // 0-100%
  * Sets all motor PWM outputs to zero to ensure no motion.
  *
  * Requirement traceability:
- * [impl->dsn~control-safety-stop~1]
  *
  * @return void
  */

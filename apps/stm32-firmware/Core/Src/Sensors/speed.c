@@ -12,8 +12,6 @@ uint32_t delta_ticks = 0;
  * stored globally for processing by the Speed_Thread_Entry function.
  *
  * ====================== Requirement Traceability ===========================
- * [impl->dsn~speed-counter-overflow~1]
- * [impl->dsn~rpm-timer-settings~1]
  * ==========================================================================
  *
  * @param htim Pointer to TIM_HandleTypeDef structure containing timer configuration
@@ -70,8 +68,6 @@ static uint32_t Speed_ReadDeltaTicks(void)
  * - Minimum valid period: 20 ticks (1ms) for noise filtering
  * 
  * ====================== Requirement Traceability ===========================
- * [impl->dsn~calculate-rpm~1]
- * [impl->dsn~rpm-noise-handling~1]
  * ==========================================================================
  * 
  * @param delta_ticks Time delta in timer ticks
@@ -113,8 +109,6 @@ float Speed_RPMToMetersPerSecond(uint32_t rpm)
  * core logic extracted from the thread loop for testability.
  *
   * ====================== Requirement Traceability ===========================
- * [impl->dsn~rpm-data-interface~1]
- * [impl->dsn~rpm-average~1]
  * ==========================================================================
 
  * @param delta_ticks Time delta in timer ticks
@@ -169,7 +163,6 @@ int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter, fl
  * - Thread sleep: 0.1s between iterations (based on ThreadX timer)
  *
  * ====================== Requirement Traceability ===========================
- * [impl->dsn~rpm-read-frequency~1]
  * ==========================================================================
  *
  * @param thread_input Thread parameter passed by ThreadX scheduler (unused in this implementation)
