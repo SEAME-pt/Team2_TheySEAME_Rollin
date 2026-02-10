@@ -7,6 +7,7 @@
  * - Currently interfaces with Communications module via global vars.
  * 
  * ====================== Requirement Traceability ===========================
+ * [impl->dsn~battery-measure-device~1]
  * ==========================================================================
  * 
  * @param thread_input parameter not used

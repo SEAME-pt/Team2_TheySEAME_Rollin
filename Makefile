@@ -37,3 +37,7 @@ oft-xml: oft-build | $(BUILD_DIR)
 		-v $(PWD)/$(BUILD_DIR):/output \
 		$(OFT_IMAGE) trace -o aspec -f /output/requirements.xml src/ requirements/ \
 		|| echo "Relatório XML gerado com problemas de cobertura - verifique trace_report.xml"
+
+view: oft-xml
+	@echo "Starting server at http://localhost:8000"
+	@cd $(BUILD_DIR) && python3 -m http.server 8000
