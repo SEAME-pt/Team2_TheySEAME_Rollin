@@ -1,6 +1,7 @@
 Debug/**/*.o
 Debug/**/*.d
 Debug/**/*.su
+Debug/**/*.cyclo
 Debug/*.elf
 Debug/*.map
 Debug/*.list
