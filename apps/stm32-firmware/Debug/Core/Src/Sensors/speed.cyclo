@@ -1,0 +1,6 @@
+../Core/Src/Sensors/speed.c:25:6:HAL_TIM_IC_CaptureCallback	4
+../Core/Src/Sensors/speed.c:52:17:Speed_ReadDeltaTicks	1
+../Core/Src/Sensors/speed.c:80:10:Speed_CalculateRPM	2
+../Core/Src/Sensors/speed.c:103:7:Speed_RPMToMetersPerSecond	1
+../Core/Src/Sensors/speed.c:125:5:Speed_ProcessDelta	4
+../Core/Src/Sensors/speed.c:180:6:Speed_Thread_Entry	6
