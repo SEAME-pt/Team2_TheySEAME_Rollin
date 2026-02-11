@@ -168,7 +168,7 @@ RUN mkdir -p /build/project
 COPY apps/Cluster/qtApp /build/project/
 
 # Use the cross-build CMake entrypoint.
-COPY apps/Cluster/qtApp/cross-CMakeLists.txt /build/project/CMakeLists.txt
+COPY apps/Cluster/Cross_Compile/cross-CMakeLists.txt /build/project/CMakeLists.txt
 
 # Configure and build the project.
 RUN set -e && \
