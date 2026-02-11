@@ -96,6 +96,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   /* USER CODE BEGIN App_ThreadX_Init */
     // Initialize global command structure
     g_vehicle_command.driving_mode = 0;
+    g_vehicle_command.gear = 3;  // Default to Drive
     g_vehicle_command.throttle = 0;
     g_vehicle_command.steering_angle = 0;
     g_vehicle_command.command_valid = 0;
