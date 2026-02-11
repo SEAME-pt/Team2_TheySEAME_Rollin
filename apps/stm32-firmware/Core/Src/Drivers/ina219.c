@@ -330,6 +330,37 @@ void INA219_setCalibration_16V_3A(INA219_t *ina219)
     INA219_setConfig(ina219, config);
 }
 
+void INA219_setCalibration_custom(INA219_t *ina219)
+{
+    uint16_t config = INA219_CONFIG_BVOLTAGERANGE_16V |
+                      INA219_CONFIG_GAIN_8_320MV	 |
+                      INA219_CONFIG_BADCRES_12BIT |
+                      INA219_CONFIG_SADCRES_12BIT_1S_532US |
+                      INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
+
+    // Correct parameters for your hardware
+    float max_expected_current_A = 5.0f;  
+    float R_shunt = 0.1f;
+    
+    // Calculate Current LSB in Amperes
+    float current_LSB = max_expected_current_A / 32768.0f;  // ≈ 152.6 µA
+    
+    // Calculate calibration value
+    ina219_calibrationValue = (uint16_t)(0.04096f / (current_LSB * R_shunt));
+    
+    // FIXED: Current divider should be 1/(Current_LSB in mA)
+    // If Current_LSB = 0.1526 mA, then divider = 1/0.1526 ≈ 6.55
+    float current_LSB_mA = current_LSB * 1000.0f;  // Convert to mA
+    ina219_currentDivider_mA = (int16_t)(1.0f / current_LSB_mA);  // ≈ 7
+    
+    // Calculate power multiplier (for mW conversion)
+    float power_LSB = 20.0f * current_LSB;
+    ina219_powerMultiplier_mW = (int16_t)(power_LSB * 1000.0f);
+
+    INA219_setCalibration(ina219, ina219_calibrationValue);
+    INA219_setConfig(ina219, config);
+}
+
 void INA219_setPowerMode(INA219_t *ina219, uint8_t Mode)
 {
 	uint16_t config = INA219_getConfig(ina219);
@@ -374,9 +405,9 @@ uint8_t INA219_Init(INA219_t *ina219, I2C_HandleTypeDef *i2c, uint8_t Address)
 		//The numbers 0.0f and 1.0f is just to call the healthcheck function.
 		//Feel free to change this if you want. This function should be called in your main function to be polled.
 		batteryState = Battery_START; // go to starting position.
-		INA219_HealthCheck(ina219,0.0f,1.0f );
+		INA219_HealthCheck(ina219,0.0f,1.0f);
 		INA219_Reset(ina219);
-		INA219_setCalibration_16V_3A(ina219);
+		INA219_setCalibration_custom(ina219);
 
 		return 1;
 	}

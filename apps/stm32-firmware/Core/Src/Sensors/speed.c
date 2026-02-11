@@ -213,7 +213,7 @@ void Speed_Thread_Entry(ULONG thread_input)
                 if (!SensorsQueue_TrySend(&samp)) {
                     Debug_Print("[SPEED] Sensors queue full - zero-speed sample dropped\r\n");
                 } else {
-                    Debug_Print("[SPEED THREAD] No pulses detected - enqueued Speed = 0 m/s\r\n");
+                    // Debug_Print("[SPEED THREAD] No pulses detected - enqueued Speed = 0 m/s\r\n");
                 }
                 counter = 0;  // Reset averaging counter
                 average = 0;

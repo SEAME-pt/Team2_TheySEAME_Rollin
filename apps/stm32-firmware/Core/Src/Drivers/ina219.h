@@ -33,7 +33,7 @@
 
 #define	INA219_CONFIG_GAIN_1_40MV				(0x0000)  // Gain 1, 40mV Range
 #define	INA219_CONFIG_GAIN_2_80MV				(0x0800)  // Gain 2, 80mV Range
-#define	NA219_CONFIG_GAIN_4_160MV				(0x1000) // Gain 4, 160mV Range
+#define	INA219_CONFIG_GAIN_4_160MV				(0x1000) // Gain 4, 160mV Range
 #define	INA219_CONFIG_GAIN_8_320MV				(0x1800) // Gain 8, 320mV Range
 
 #define	INA219_CONFIG_BADCRES_9BIT				(0x0000)  // 9-bit bus res = 0..511
