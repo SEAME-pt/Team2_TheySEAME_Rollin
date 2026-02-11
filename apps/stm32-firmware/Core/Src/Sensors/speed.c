@@ -218,8 +218,8 @@ void Speed_Thread_Entry(ULONG thread_input)
                 counter = 0;  // Reset averaging counter
                 average = 0;
             }
-            if (no_pulse_counter < 255) {
-                no_pulse_counter++;  // Keep incrementing to stay past threshold, cap to prevent overflow
+            if (no_pulse_counter > 255) {
+                no_pulse_counter = 0;  // Keep incrementing to stay past threshold, cap to prevent overflow
             }
         }
         // TX_TIMER_TICKS_PER_SECOND is defined as 100 ticks/second, so 10 ticks = 0.1s
