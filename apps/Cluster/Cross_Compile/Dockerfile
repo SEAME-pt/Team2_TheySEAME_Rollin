@@ -1,335 +1,176 @@
-# Use Debian 12 (Bookworm) as the base image
 FROM debian:bookworm
 
-# Avoid interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Update and install necessary packages
-RUN { \
-    set -e && \
-    apt-get update && apt-get install -y \
-    wget \
-    git \
-    build-essential \
-    make \
-    rsync \
-    sed \
-    libclang-dev \
-    ninja-build \
-    qt6-base-dev qt6-tools-dev qt6-base-dev-tools qt6-serialbus-dev qt6-positioning-dev \
-    gcc \
-    bison \
-    python3 \
-    gperf \
-    pkg-config \
-    libfontconfig1-dev \
-    libfreetype6-dev \
-    libx11-6 \
-    libxext6  libxrender1 libxfixes3 libxrandr2 \
-    libx11-dev \
-    libwayland-dev libwayland-client0 libwayland-egl1-mesa \
-    libxkbcommon-dev \
-    libx11-xcb-dev \
-    libxext-dev \
-    libxfixes-dev \
-    libxi-dev \
-    libxrender-dev \
-    libxcb1-dev \
-    libxcb-glx0-dev \
-    libxcb-keysyms1-dev \
-    libglvnd0 libgl1-mesa-glx libegl1-mesa \
-    libxcb-image0-dev \
-    libxcb-shm0-dev \
-    libxcb-icccm4-dev \
-    libxcb-sync-dev \
-    libxcb-xfixes0-dev \
-    libxcb-shape0-dev \
-    libxcb-randr0-dev \
-    libxcb-render-util0-dev \
-    libxcb-util-dev \
-    libxcb-xinerama0-dev \
-    libxcb-xkb-dev \
-    libxkbcommon-dev \
-    libxkbcommon-x11-dev \
-    libatspi2.0-dev \
-    libgl1-mesa-dev \
-    libglu1-mesa-dev \
-    freeglut3-dev \
-    libssl-dev \
-    libgmp-dev \
-    libmpfr-dev \
-    libmpc-dev \
-    libpq-dev \
-    flex \
-    pkg-config \
-    libgrpc++-dev \
-    libgrpc-dev \
-    libprotobuf-dev \
-    protobuf-compiler \
-    gawk \
-    texinfo \
-    libisl-dev \
-    zlib1g-dev \
-    libtool \
-    autoconf \
-    automake \
-    libgdbm-dev \
-    libdb-dev \
-    libbz2-dev \
-    libreadline-dev \
-    libexpat1-dev \
-    liblzma-dev \
-    libffi-dev \
-    libsqlite3-dev \
-    libbsd-dev \
-    perl \
-    patch \
-    m4 \
-    libncurses5-dev \
-    gettext  \
-    gcc-12-aarch64-linux-gnu \
-    g++-12-aarch64-linux-gnu \
-    binutils-aarch64-linux-gnu \
-    libc6-arm64-cross \
-    libc6-dev-arm64-cross \
-    glibc-source; \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*; \
-} 2>&1 | tee -a /build.log
+RUN apt update && apt install -y \
+    bash sudo xz-utils cpio file git wget tar python3 \
+    qemu-user-static locales build-essential cmake ninja-build \
+    libgl1-mesa-dev libglu1-mesa-dev libxkbcommon-dev libxkbcommon-x11-dev \
+    libwayland-dev libwayland-egl1-mesa wayland-protocols \
+    libxcb1-dev libxcb-glx0-dev libxcb-icccm4-dev libxcb-image0-dev \
+    libxcb-keysyms1-dev libxcb-randr0-dev libxcb-render-util0-dev \
+    libxcb-shape0-dev libxcb-shm0-dev libxcb-sync-dev libxcb-util-dev \
+    libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-xkb-dev libx11-xcb-dev \
+    libfontconfig1-dev libfreetype6-dev libdbus-1-dev libegl1-mesa-dev \
+    libinput-dev libssl-dev libgbm-dev unzip
 
-# Set the working directory to /build
 WORKDIR /build
+RUN wget https://download.qt.io/archive/qt/6.7/6.7.3/single/qt-everywhere-src-6.7.3.tar.xz && \
+    tar -xf qt-everywhere-src-6.7.3.tar.xz && rm qt-everywhere-src-6.7.3.tar.xz
 
-# Build and install CMake from source
-RUN ( \
-    echo "Building CMake from source" && \
-    mkdir cmakeBuild && cd cmakeBuild && \
-    git clone https://github.com/Kitware/CMake.git && \
-    cd CMake && \
-    ./bootstrap && make -j$(nproc) && make install && \
-    echo "CMake build completed"; \
- ) 2>&1 | tee -a /build.log
+WORKDIR /build/agl-sysroot-sdk
 
-# Create sysroot directory
-RUN mkdir sysroot sysroot/usr sysroot/opt
+COPY scripts/AGL/agl-sysroot-sdk.sh /build/agl-sysroot-sdk/agl-sysroot-sdk.sh
 
-#  Raspberry Pi sysroot tarball (if available)
-COPY rasp.tar.gz /build/rasp.tar.gz
-RUN tar xvfz /build/rasp.tar.gz -C /build/sysroot
+RUN chmod +x agl-sysroot-sdk.sh && ./agl-sysroot-sdk.sh -y -d /build/agl-sysroot-sdk
 
-# Copy the toolchain file
-COPY apps/Cluster/Cross_Compile/opencvToolchain.cmake /build/
+RUN printf '%s\n' \
+    '#!/bin/bash' \
+    '. /build/agl-sysroot-sdk/environment-setup-aarch64-agl-linux' \
+    'exec "$@"' \
+    > /build/agl-sysroot-sdk/env.sh && chmod +x /build/agl-sysroot-sdk/env.sh
 
-RUN set -e && \
-    echo "Fix symbolic link" && \
-    wget https://raw.githubusercontent.com/riscv/riscv-poky/master/scripts/sysroot-relativelinks.py && \
-    chmod +x sysroot-relativelinks.py && \
-    python3 sysroot-relativelinks.py /build/sysroot 2>&1 | tee -a /build.log
+RUN rm -rf /build/agl-sysroot-sdk/sysroots/aarch64-agl-linux/usr/lib/cmake/utf8_range && \
+rm -rf /build/agl-sysroot-sdk/sysroots/aarch64-agl-linux/usr/lib/cmake/protobuf && \
+rm -rf /build/agl-sysroot-sdk/sysroots/aarch64-agl-linux/usr/lib/cmake/grpc
 
-# Copy the toolchain file
-COPY apps/Cluster/Cross_Compile/toolchain.cmake /build/
-
-RUN { \
-    set -e && \
-    mkdir -p qt6 qt6/host qt6/pi qt6/host-build qt6/pi-build qt6/src && \
-    cd qt6/src && \
-    echo "=== Downloading Qt 6.7.3 submodules ===" && \
-    wget https://download.qt.io/archive/qt/6.7/6.7.3/submodules/qtbase-everywhere-src-6.7.3.tar.xz && \
-    wget https://download.qt.io/archive/qt/6.7/6.7.3/submodules/qtwayland-everywhere-src-6.7.3.tar.xz && \
-    wget https://download.qt.io/archive/qt/6.7/6.7.3/submodules/qtserialbus-everywhere-src-6.7.3.tar.xz && \
-    wget https://download.qt.io/archive/qt/6.7/6.7.3/submodules/qtshadertools-everywhere-src-6.7.3.tar.xz && \
-    wget https://download.qt.io/archive/qt/6.7/6.7.3/submodules/qtdeclarative-everywhere-src-6.7.3.tar.xz && \
-    wget https://download.qt.io/archive/qt/6.7/6.7.3/submodules/qtpositioning-everywhere-src-6.7.3.tar.xz && \
-    \
-    echo "=== Extracting Qt sources for host build ===" && \
-    cd ../host-build && \
-    tar xf ../src/qtbase-everywhere-src-6.7.3.tar.xz && \
-    tar xf ../src/qtshadertools-everywhere-src-6.7.3.tar.xz && \
-    tar xf ../src/qtserialbus-everywhere-src-6.7.3.tar.xz && \
-    tar xf ../src/qtwayland-everywhere-src-6.7.3.tar.xz && \
-    tar xf ../src/qtpositioning-everywhere-src-6.7.3.tar.xz && \
-    tar xf ../src/qtdeclarative-everywhere-src-6.7.3.tar.xz && \
-    \
-    echo "=== Building qtbase for host ===" && \
-    cd qtbase-everywhere-src-6.7.3 && \
-    cmake -GNinja -DCMAKE_BUILD_TYPE=Release \
-        -DQT_BUILD_EXAMPLES=OFF \
-        -DQT_BUILD_TESTS=OFF \
-        -DCMAKE_INSTALL_PREFIX=/build/qt6/host && \
-    cmake --build . --parallel $(nproc) && \
-    cmake --install . && \
-    \
-    echo "=== Building qtshadertools for host ===" && \
-    cd ../qtshadertools-everywhere-src-6.7.3 && \
-    /build/qt6/host/bin/qt-configure-module . && \
-    cmake --build . --parallel $(nproc) && \
-    cmake --install . && \
-    \
-    echo "=== Building qtdeclarative for host ===" && \
-    cd ../qtdeclarative-everywhere-src-6.7.3 && \
-    /build/qt6/host/bin/qt-configure-module . && \
-    cmake --build . --parallel $(nproc) && \
-    cmake --install . && \
-    \
-    echo "=== Building qtserialbus for host ===" && \
-    cd ../qtserialbus-everywhere-src-6.7.3 && \
-    /build/qt6/host/bin/qt-configure-module . && \
-    cmake --build . --parallel $(nproc) && \
-    cmake --install . && \
-    \
-    echo "=== Building qtpositioning for host ===" && \
-    cd ../qtpositioning-everywhere-src-6.7.3 && \
-    /build/qt6/host/bin/qt-configure-module . && \
-    cmake --build . --parallel $(nproc) && \
-    cmake --install . && \
-    \
-    echo "=== Building qtwayland for host ===" && \
-    cd ../qtwayland-everywhere-src-6.7.3 && \
-    /build/qt6/host/bin/qt-configure-module . && \
-    cmake --build . --parallel && \
-    cmake --install . && \
-    \
-    echo "=== Extracting Qt sources for Raspberry Pi cross-build ===" && \
-    cd ../../pi-build && \
-    tar xf ../src/qtbase-everywhere-src-6.7.3.tar.xz && \
-    tar xf ../src/qtshadertools-everywhere-src-6.7.3.tar.xz && \
-    tar xf ../src/qtserialbus-everywhere-src-6.7.3.tar.xz && \
-    tar xf ../src/qtwayland-everywhere-src-6.7.3.tar.xz && \
-    tar xf ../src/qtdeclarative-everywhere-src-6.7.3.tar.xz && \
-    tar xf ../src/qtpositioning-everywhere-src-6.7.3.tar.xz && \
-    \
-    echo "=== Building qtbase for Raspberry Pi ===" && \
-    cd qtbase-everywhere-src-6.7.3 && \
-    /build/qt6/host/bin/qt-cmake \
-        -GNinja \
-        -DDBUS_IS_SHARED=ON \
+WORKDIR /tmp
+RUN git clone -b v25.1 --recurse-submodules --depth 1 https://github.com/protocolbuffers/protobuf.git \
+    && cd protobuf \
+    && mkdir build && cd build \
+    && cmake .. \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
         -DCMAKE_BUILD_TYPE=Release \
-        -DQT_BUILD_EXAMPLES=OFF \
-        -DQT_BUILD_TESTS=OFF \
-        -DQT_HOST_PATH=/build/qt6/host \
-        -DCMAKE_STAGING_PREFIX=/build/qt6/pi \
-        -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 \
-        -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake \
-        -DQT_FEATURE_xcb=OFF \
-        -DQT_FEATURE_xlib=OFF \
-        -DQT_FEATURE_wayland=ON \
-        -DQT_FEATURE_wayland_compositor=ON \
-        -DQT_FEATURE_egl=ON \
-        -DFEATURE_sql_psql=ON \
-        -DFEATURE_shader_tools=OFF \ 
-        . && \
-    cmake --build . --parallel $(nproc) && \
-    cmake --install . && \
-    \
-    echo "=== Building qtshadertools for Raspberry Pi ===" && \
-    cd ../qtshadertools-everywhere-src-6.7.3 && \
-    /build/qt6/host/bin/qt-configure-module . -- \
-        -DQT_HOST_PATH=/build/qt6/host \
-        -DCMAKE_STAGING_PREFIX=/build/qt6/pi \
-        -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake \
-        -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 && \
-    cmake --build . --parallel $(nproc) && \
-    cmake --install . && \
-    \
-    echo "=== Building qtdeclarative for Raspberry Pi (QML + Quick + Controls2) ===" && \
-    cd ../qtdeclarative-everywhere-src-6.7.3 && \
-    /build/qt6/host/bin/qt-configure-module . -- \
-        -DQT_HOST_PATH=/build/qt6/host \
-        -DCMAKE_STAGING_PREFIX=/build/qt6/pi \
-        -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake \
-        -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 && \
-    cmake --build . --parallel $(nproc) && \
-    cmake --install . && \
-    \
-    echo "=== Building qtserialbus for Raspberry Pi ===" && \
-    cd ../qtserialbus-everywhere-src-6.7.3 && \
-    /build/qt6/host/bin/qt-configure-module . -- \
-        -DQT_HOST_PATH=/build/qt6/host \
-        -DCMAKE_STAGING_PREFIX=/build/qt6/pi \
-        -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake \
-        -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 && \
-    cmake --build . --parallel $(nproc) && \
-    cmake --install . && \
-    \
-    echo "=== Building qtpositioning for Raspberry Pi ===" && \
-    cd ../qtpositioning-everywhere-src-6.7.3 && \
-    /build/qt6/host/bin/qt-configure-module . -- \
-        -DQT_HOST_PATH=/build/qt6/host \
-        -DCMAKE_STAGING_PREFIX=/build/qt6/pi \
-        -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake \
-        -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 && \
-    cmake --build . --parallel $(nproc) && \
-    cmake --install . && \
-    \
-    echo "=== Building qtwayland for Raspberry Pi ===" && \
-    cd ../qtwayland-everywhere-src-6.7.3 && \
-    /build/qt6/host/bin/qt-configure-module . -- \
-        -DQT_HOST_PATH=/build/qt6/host \
-        -DCMAKE_STAGING_PREFIX=/build/qt6/pi \
-        -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake \
-        -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 && \
-    cmake --build . --parallel $(nproc) && \
-    cmake --install . && \
-    echo "=== Qt 6.7.3 cross-compilation completed successfully ==="; \
-} 2>&1 | tee -a /build.log
+        -Dprotobuf_BUILD_TESTS=OFF \
+    && make -j 16 \
+    && make install \
+    && ldconfig
 
-RUN tar -czvf qt-host-binaries.tar.gz -C /build/qt6/host .
-RUN tar -czvf qt-pi-binaries.tar.gz -C /build/qt6/pi .
+WORKDIR /tmp
+RUN git clone -b v1.62.0 --recurse-submodules --depth 1 https://github.com/grpc/grpc \
+    && cd grpc \
+    && mkdir build && cd build \
+    && cmake .. \
+       -DgRPC_INSTALL=ON \
+       -DgRPC_BUILD_TESTS=OFF \
+       -DCMAKE_BUILD_TYPE=Release \
+       -DgRPC_ABSL_PROVIDER=package \
+       -DgRPC_PROTOBUF_PROVIDER=package \
+       -DgRPC_SSL_PROVIDER=package \
+       -DgRPC_ZLIB_PROVIDER=package \
+    && make -j 16 \
+    && make install \
+    && ldconfig
 
-# Kuksa protos (font)
+WORKDIR /tmp/protobuf
+RUN rm -rf build_arm && mkdir build_arm && cd build_arm \
+    && /build/agl-sysroot-sdk/env.sh cmake .. -DCMAKE_INSTALL_PREFIX=/build/qt-cross-build \
+    -DCMAKE_BUILD_TYPE=Release \
+    -Dprotobuf_BUILD_TESTS=OFF \
+    -Dprotobuf_BUILD_PROTOC_BINARIES=OFF \
+    -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+    && make -j 16 \
+    && make install
+
+WORKDIR /tmp/grpc
+RUN mkdir -p build_arm && cd build_arm \
+    && /build/agl-sysroot-sdk/env.sh cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/build/qt-cross-build \
+    -DCMAKE_PREFIX_PATH="/build/qt-cross-build" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DgRPC_INSTALL=ON \
+    -DgRPC_BUILD_TESTS=OFF \
+    -DgRPC_BUILD_GRPC_CSHARP_PLUGIN=OFF \
+    -DgRPC_BUILD_GRPC_NODE_PLUGIN=OFF \
+    -DgRPC_BUILD_GRPC_OBJECTIVE_C_PLUGIN=OFF \
+    -DgRPC_BUILD_GRPC_PHP_PLUGIN=OFF \
+    -DgRPC_BUILD_GRPC_PYTHON_PLUGIN=OFF \
+    -DgRPC_BUILD_GRPC_RUBY_PLUGIN=OFF \
+    -DCMAKE_CXX_FLAGS="-Wno-error=deprecated-declarations -Wno-deprecated-declarations" \
+    -DCMAKE_C_FLAGS="-Wno-error=deprecated-declarations -Wno-deprecated-declarations" \
+    -DProtobuf_DIR=/build/qt-cross-build/lib/cmake/protobuf \
+    -Dabsl_DIR=/build/qt-cross-build/lib/cmake/absl \
+    -Dutf8_range_DIR=/build/qt-cross-build/lib/cmake/utf8_range \
+    -DgRPC_ABSL_PROVIDER=package \
+    -DgRPC_PROTOBUF_PROVIDER=package \
+    -DgRPC_SSL_PROVIDER=package \
+    -DgRPC_ZLIB_PROVIDER=package \
+    -DgRPC_RE2_PROVIDER=module \
+    -DgRPC_CPP_PLUGIN_EXECUTABLE=/usr/local/bin/grpc_cpp_plugin \
+    && make -j 16 grpc++ grpc gpr address_sorting re2 upb_mem_lib upb_message_lib upb_textformat_lib upb_json_lib upb_base_lib utf8_range_lib || true \
+    && mkdir -p /build/qt-cross-build/lib \
+    && mkdir -p /build/qt-cross-build/include \
+    && find . -name "*.a" -exec cp -v {} /build/qt-cross-build/lib/ \; \
+    && cp -r ../include/* /build/qt-cross-build/include/
+
 RUN mkdir -p /middleware/kuksa/proto
 COPY apps/middleware/kuksa/proto/ /middleware/kuksa/proto/
 
-# ---- Install gRPC/Protobuf for target (arm64) and copy into sysroot + generate Kuksa pb/grpc ----
 RUN set -e && \
-    dpkg --add-architecture arm64 && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-        rsync \
-        pkgconf \
-        protobuf-compiler \
-        protobuf-compiler-grpc \
-        libgrpc-dev:arm64 libgrpc++-dev:arm64 \
-        libprotobuf-dev:arm64 \
-        zlib1g-dev:arm64 \
-        libc-ares-dev:arm64 \
-        libssl-dev:arm64 \
-        libre2-dev:arm64 && \
-    rm -rf /var/lib/apt/lists/* && \
-    \
-    mkdir -p /build/sysroot/usr/lib/aarch64-linux-gnu && \
-    mkdir -p /build/sysroot/usr/include && \
-    mkdir -p /build/sysroot/usr/share/pkgconfig && \
-    \
-    rsync -a /usr/lib/aarch64-linux-gnu/ /build/sysroot/usr/lib/aarch64-linux-gnu/ && \
-    rsync -a /usr/share/pkgconfig/ /build/sysroot/usr/share/pkgconfig/ 2>/dev/null || true && \
-    rsync -a /usr/include/ /build/sysroot/usr/include/ && \
-    \
-    # -------- generate kuksa VAL v2 C++ sources (into fixed path /middleware/kuksa/val/v2) --------
     mkdir -p /tmp/kuksa_gen && \
     protoc -I /middleware/kuksa/proto --cpp_out=/tmp/kuksa_gen \
       /middleware/kuksa/proto/kuksa/val/v2/types.proto \
       /middleware/kuksa/proto/kuksa/val/v2/val.proto && \
     protoc -I /middleware/kuksa/proto --grpc_out=/tmp/kuksa_gen \
-      --plugin=protoc-gen-grpc=/usr/bin/grpc_cpp_plugin \
+      --plugin=protoc-gen-grpc=/usr/local/bin/grpc_cpp_plugin \
       /middleware/kuksa/proto/kuksa/val/v2/val.proto && \
     mkdir -p /middleware/kuksa/val/v2 && \
     cp -f /tmp/kuksa_gen/kuksa/val/v2/*.pb.* /middleware/kuksa/val/v2/ && \
     rm -rf /tmp/kuksa_gen
+    
+WORKDIR /build/qt-host-build
+RUN cmake /build/qt-everywhere-src-6.7.3 -G Ninja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/build/qt-host-build \
+    -DQT_BUILD_EXAMPLES=OFF \
+    -DQT_BUILD_TESTS=OFF \
+    -DFEATURE_system_protobuf=ON \
+    -DFEATURE_system_grpc=ON
+    
+RUN ninja -j 16 && ninja install
 
-# Set up project directory
-RUN mkdir /build/project
+RUN mkdir -p /toolchain/
+COPY apps/Cluster/Cross_Compile/toolchain.cmake /toolchain/
 
-COPY     apps/Cluster/qtApp /build/project
+RUN set -e && \
+    cd /build/qt-cross-build && \
+    /build/agl-sysroot-sdk/env.sh cmake /build/qt-everywhere-src-6.7.3 -GNinja \
+    -DCMAKE_TOOLCHAIN_FILE=/toolchain/toolchain.cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/build/qt-cross-build \
+    -DQT_HOST_PATH=/build/qt-host-build \
+    -DQT_BUILD_EXAMPLES=OFF \
+    -DQT_BUILD_TESTS=OFF \
+    -DFEATURE_wayland=ON \
+    -DFEATURE_eglfs=ON \
+    -DSKIP_qtwebengine=ON \
+    -DBUILD_qtnetwork=ON \
+    -DBUILD_qtnetworkauth=ON \
+    -DBUILD_qtpositioning=ON \
+    -DFEATURE_system_protobuf=ON \
+    -DFEATURE_system_grpc=ON \
+ && /build/agl-sysroot-sdk/env.sh ninja -j 16 \
+ && ninja install
 
+RUN mkdir -p /build/project
 
-# Build the project using Qt for Raspberry Pi
-RUN { \
-    set -e && \
+COPY apps/Cluster/qtApp /build/project/
+
+COPY apps/Cluster/qtApp/cross-CMakeLists.txt /build/project/CMakeLists.txt
+
+RUN set -e && \
     cd /build/project && \
-    export PKG_CONFIG_SYSROOT_DIR=/build/sysroot && \
-    export PKG_CONFIG_LIBDIR=/build/sysroot/usr/lib/aarch64-linux-gnu/pkgconfig:/build/sysroot/usr/share/pkgconfig && \
-    export PKG_CONFIG_PATH= && \
-    /build/qt6/pi/bin/qt-cmake . && \
-    cmake --build .; \
-} 2>&1 | tee -a /build.log
+    /build/agl-sysroot-sdk/env.sh cmake -S /build/project -GNinja \
+    -DCMAKE_TOOLCHAIN_FILE=/toolchain/toolchain.cmake \
+    -DQT_HOST_PATH=/build/qt-host-build \
+    -DQt6_DIR=/build/qt-cross-build/lib/cmake/Qt6 \
+    -DCMAKE_PREFIX_PATH=/build/qt-cross-build \
+    -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH \
+    -DProtobuf_DIR=/build/qt-cross-build/lib/cmake/protobuf \
+    -Dabsl_DIR=/build/qt-cross-build/lib/cmake/absl \
+    -Dutf8_range_DIR=/build/qt-cross-build/lib/cmake/utf8_range \
+    -DLIB_GRPC_CPP=/build/qt-cross-build/lib/libgrpc++.a\
+    -DLIB_GRPC=/build/qt-cross-build/lib/libgrpc.a \
+    -DLIB_GPR=/build/qt-cross-build/lib/libgpr.a\
+    -DLIB_ADDR_SORTING=/build/qt-cross-build/lib/libaddress_sorting.a \
+    && ninja -j $(nproc)

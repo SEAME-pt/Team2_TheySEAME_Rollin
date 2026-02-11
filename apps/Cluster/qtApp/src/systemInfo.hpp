@@ -1,7 +1,5 @@
 #pragma once
 #include <QObject>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
 #include <QDebug>
 #include <iostream>
 #include <QJsonDocument>
