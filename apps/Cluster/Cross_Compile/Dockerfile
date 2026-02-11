@@ -2,6 +2,7 @@ FROM debian:bookworm
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Install build and runtime dependencies.
 RUN apt update && apt install -y \
     bash sudo xz-utils cpio file git wget tar python3 \
     qemu-user-static locales build-essential cmake ninja-build \
@@ -14,26 +15,25 @@ RUN apt update && apt install -y \
     libfontconfig1-dev libfreetype6-dev libdbus-1-dev libegl1-mesa-dev \
     libinput-dev libssl-dev libgbm-dev unzip
 
+# Download Qt sources.
 WORKDIR /build
 RUN wget https://download.qt.io/archive/qt/6.7/6.7.3/single/qt-everywhere-src-6.7.3.tar.xz && \
     tar -xf qt-everywhere-src-6.7.3.tar.xz && rm qt-everywhere-src-6.7.3.tar.xz
 
+# Prepare AGL sysroot SDK.
 WORKDIR /build/agl-sysroot-sdk
 
 COPY scripts/AGL/agl-sysroot-sdk.sh /build/agl-sysroot-sdk/agl-sysroot-sdk.sh
 
+# Install the AGL SDK into the build folder.
 RUN chmod +x agl-sysroot-sdk.sh && ./agl-sysroot-sdk.sh -y -d /build/agl-sysroot-sdk
 
-RUN printf '%s\n' \
-    '#!/bin/bash' \
-    '. /build/agl-sysroot-sdk/environment-setup-aarch64-agl-linux' \
-    'exec "$@"' \
-    > /build/agl-sysroot-sdk/env.sh && chmod +x /build/agl-sysroot-sdk/env.sh
-
+# Remove conflicting CMake packages from the sysroot.
 RUN rm -rf /build/agl-sysroot-sdk/sysroots/aarch64-agl-linux/usr/lib/cmake/utf8_range && \
 rm -rf /build/agl-sysroot-sdk/sysroots/aarch64-agl-linux/usr/lib/cmake/protobuf && \
 rm -rf /build/agl-sysroot-sdk/sysroots/aarch64-agl-linux/usr/lib/cmake/grpc
 
+# Build and install host protobuf.
 WORKDIR /tmp
 RUN git clone -b v25.1 --recurse-submodules --depth 1 https://github.com/protocolbuffers/protobuf.git \
     && cd protobuf \
@@ -46,6 +46,7 @@ RUN git clone -b v25.1 --recurse-submodules --depth 1 https://github.com/protoco
     && make install \
     && ldconfig
 
+# Build and install host gRPC.
 WORKDIR /tmp
 RUN git clone -b v1.62.0 --recurse-submodules --depth 1 https://github.com/grpc/grpc \
     && cd grpc \
@@ -62,9 +63,10 @@ RUN git clone -b v1.62.0 --recurse-submodules --depth 1 https://github.com/grpc/
     && make install \
     && ldconfig
 
+# Cross-compile protobuf for the target sysroot.
 WORKDIR /tmp/protobuf
 RUN rm -rf build_arm && mkdir build_arm && cd build_arm \
-    && /build/agl-sysroot-sdk/env.sh cmake .. -DCMAKE_INSTALL_PREFIX=/build/qt-cross-build \
+    && . /build/agl-sysroot-sdk/environment-setup-aarch64-agl-linux && cmake .. -DCMAKE_INSTALL_PREFIX=/build/qt-cross-build \
     -DCMAKE_BUILD_TYPE=Release \
     -Dprotobuf_BUILD_TESTS=OFF \
     -Dprotobuf_BUILD_PROTOC_BINARIES=OFF \
@@ -72,9 +74,10 @@ RUN rm -rf build_arm && mkdir build_arm && cd build_arm \
     && make -j 16 \
     && make install
 
+# Cross-compile gRPC for the target sysroot.
 WORKDIR /tmp/grpc
 RUN mkdir -p build_arm && cd build_arm \
-    && /build/agl-sysroot-sdk/env.sh cmake .. \
+    && . /build/agl-sysroot-sdk/environment-setup-aarch64-agl-linux && cmake .. \
     -DCMAKE_INSTALL_PREFIX=/build/qt-cross-build \
     -DCMAKE_PREFIX_PATH="/build/qt-cross-build" \
     -DCMAKE_BUILD_TYPE=Release \
@@ -103,9 +106,11 @@ RUN mkdir -p build_arm && cd build_arm \
     && find . -name "*.a" -exec cp -v {} /build/qt-cross-build/lib/ \; \
     && cp -r ../include/* /build/qt-cross-build/include/
 
+# Copy KUKSA protobuf definitions.
 RUN mkdir -p /middleware/kuksa/proto
 COPY apps/middleware/kuksa/proto/ /middleware/kuksa/proto/
 
+# Generate KUKSA protobuf and gRPC sources.
 RUN set -e && \
     mkdir -p /tmp/kuksa_gen && \
     protoc -I /middleware/kuksa/proto --cpp_out=/tmp/kuksa_gen \
@@ -118,6 +123,7 @@ RUN set -e && \
     cp -f /tmp/kuksa_gen/kuksa/val/v2/*.pb.* /middleware/kuksa/val/v2/ && \
     rm -rf /tmp/kuksa_gen
     
+# Configure Qt host build.
 WORKDIR /build/qt-host-build
 RUN cmake /build/qt-everywhere-src-6.7.3 -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
@@ -127,14 +133,17 @@ RUN cmake /build/qt-everywhere-src-6.7.3 -G Ninja \
     -DFEATURE_system_protobuf=ON \
     -DFEATURE_system_grpc=ON
     
+# Build and install Qt host tools.
 RUN ninja -j 16 && ninja install
 
+# Add the cross toolchain file.
 RUN mkdir -p /toolchain/
 COPY apps/Cluster/Cross_Compile/toolchain.cmake /toolchain/
 
+# Configure and build Qt for the target.
 RUN set -e && \
     cd /build/qt-cross-build && \
-    /build/agl-sysroot-sdk/env.sh cmake /build/qt-everywhere-src-6.7.3 -GNinja \
+    . /build/agl-sysroot-sdk/environment-setup-aarch64-agl-linux && cmake /build/qt-everywhere-src-6.7.3 -GNinja \
     -DCMAKE_TOOLCHAIN_FILE=/toolchain/toolchain.cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/build/qt-cross-build \
@@ -149,18 +158,22 @@ RUN set -e && \
     -DBUILD_qtpositioning=ON \
     -DFEATURE_system_protobuf=ON \
     -DFEATURE_system_grpc=ON \
- && /build/agl-sysroot-sdk/env.sh ninja -j 16 \
+ && . /build/agl-sysroot-sdk/environment-setup-aarch64-agl-linux && ninja -j 16 \
  && ninja install
 
+# Prepare project build directory.
 RUN mkdir -p /build/project
 
+# Copy project sources.
 COPY apps/Cluster/qtApp /build/project/
 
+# Use the cross-build CMake entrypoint.
 COPY apps/Cluster/qtApp/cross-CMakeLists.txt /build/project/CMakeLists.txt
 
+# Configure and build the project.
 RUN set -e && \
     cd /build/project && \
-    /build/agl-sysroot-sdk/env.sh cmake -S /build/project -GNinja \
+    . /build/agl-sysroot-sdk/environment-setup-aarch64-agl-linux && cmake -S /build/project -GNinja \
     -DCMAKE_TOOLCHAIN_FILE=/toolchain/toolchain.cmake \
     -DQT_HOST_PATH=/build/qt-host-build \
     -DQt6_DIR=/build/qt-cross-build/lib/cmake/Qt6 \
