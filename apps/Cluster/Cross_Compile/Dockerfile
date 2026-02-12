@@ -23,7 +23,7 @@ RUN wget https://download.qt.io/archive/qt/6.7/6.7.3/single/qt-everywhere-src-6.
 # Prepare AGL sysroot SDK.
 WORKDIR /build/agl-sysroot-sdk
 
-ADD https://github.com/SEAME-pt/Team2_TheySEAME_Rollin/releases/download/SDK/aglSDK.sh /build/agl-sysroot-sdk/agl-sysroot-sdk.sh
+ADD https://github.com/SEAME-pt/Team2_TheySEAME_Rollin/releases/download/v1.0.0-SDK/sdk.sh /build/agl-sysroot-sdk/agl-sysroot-sdk.sh
 
 # Install the AGL SDK into the build folder.
 RUN chmod +x agl-sysroot-sdk.sh && ./agl-sysroot-sdk.sh -y -d /build/agl-sysroot-sdk
