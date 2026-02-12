@@ -3,6 +3,7 @@ FROM ubuntu:22.04
 ARG UID="1000"
 ARG GID="1000"
 ENV USER=build
+ENV BUILD_DIR=agl
 ENV TZ=Europe/London
 ENV AGL_FEATURES="agl-app-framework agl-buildstats agl-devel agl-drm-lease agl-ic \
 	agl-netboot agl-package-management agl-pipewire agl-selinux agl-kuksa-val"
