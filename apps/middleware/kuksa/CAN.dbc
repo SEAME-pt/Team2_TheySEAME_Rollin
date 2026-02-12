@@ -40,11 +40,11 @@ BO_ 512 SpeedMsg: 8 RASPI
 BO_ 513 BatteryMsg: 8 RASPI
  SG_ StateOfCharge : 0|8@1+ (1,0) [0|100] "%" STM32
 
-BO_ 258 ThrottleMsg: 8 RASPI
+BO_ 256 ThrottleMsg: 8 RASPI
  SG_ throttle : 0|16@1+ (1,0) [0|100] "%" STM32
 
-BO_ 259 AngleMsg: 8 RASPI
- SG_ Angle : 0|16@1- (1,0) [-450|450] "deg" STM32
+BO_ 258 AngleMsg: 8 RASPI
+ SG_ Angle : 0|16@1- (1,0) [-30|30] "deg" STM32
 
 
 BO_ 261 GearMsg: 8 RASPI
@@ -64,7 +64,7 @@ VAL_ 262 break
  1 "BREAK";
 
 BO_ 260 DrivingModeMsg: 8 RASPI
- SG_ DrivingMode : 0|8@1+ (1,0) [0|2] "" STM32
+ SG_ DrivingMode : 0|8@1+ (1,0) [0|1] "" STM32
 
 VAL_ 260 DrivingMode
  0 "MANUAL"

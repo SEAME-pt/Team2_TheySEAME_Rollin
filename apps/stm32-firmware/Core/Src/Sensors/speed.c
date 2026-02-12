@@ -207,17 +207,19 @@ void Speed_Thread_Entry(ULONG thread_input)
             no_pulse_counter++;
 
             // Stop after ~0.2s without pulses (THREAD_SLEEP_TICKS is 10 ticks = 0.1s)
-            if (no_pulse_counter >= 2) {
-                // Send zero-speed sample
+            if (no_pulse_counter == 2) {
+                // Send zero-speed sample (only once)
                 SensorSample_t samp = { .sensor_id = SENSOR_ID_SPEED, .value = 0.0f, .ts = HAL_GetTick() };
                 if (!SensorsQueue_TrySend(&samp)) {
                     Debug_Print("[SPEED] Sensors queue full - zero-speed sample dropped\r\n");
                 } else {
                     Debug_Print("[SPEED THREAD] No pulses detected - enqueued Speed = 0 m/s\r\n");
                 }
-                no_pulse_counter = 10;  // Cap to prevent overflow
                 counter = 0;  // Reset averaging counter
                 average = 0;
+            }
+            if (no_pulse_counter > 255) {
+                no_pulse_counter = 0;  // Keep incrementing to stay past threshold, cap to prevent overflow
             }
         }
         // TX_TIMER_TICKS_PER_SECOND is defined as 100 ticks/second, so 10 ticks = 0.1s
