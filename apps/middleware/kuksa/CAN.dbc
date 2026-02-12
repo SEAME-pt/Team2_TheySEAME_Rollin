@@ -34,11 +34,11 @@ BS_:
 
 BU_: STM32 RASPI
 
-BO_ 512 SpeedMsg: 8 RASPI
- SG_ speed : 0|16@1+ (1,0) [0|200] "hm/h" STM32
+BO_ 512 SpeedMsg: 8 STM32
+ SG_ speed : 0|16@1+ (1,0) [0|200] "hm/h" RASPI
 
-BO_ 513 BatteryMsg: 8 RASPI
- SG_ StateOfCharge : 0|8@1+ (1,0) [0|100] "%" STM32
+BO_ 513 BatteryMsg: 8 STM32
+ SG_ StateOfCharge : 0|8@1+ (1,0) [0|100] "%" RASPI
 
 BO_ 256 ThrottleMsg: 8 RASPI
  SG_ throttle : 0|16@1+ (1,0) [0|100] "%" STM32
