@@ -2,6 +2,13 @@
 
 #include <linux/input.h>
 
+/**
+ * @interface IEvdev
+ * @brief IEvdev interface
+ *
+ * The IEvdev interface defines the contract to receive events
+ * in the linux evdev interface
+ */
 class IEvdev {
 public:
 
@@ -13,7 +20,6 @@ public:
 	 * Returns the Evdev fd
 	 *
 	 * @return evdev fd
-	 *
 	 */
 	virtual int getfd() const = 0;
 
@@ -23,7 +29,6 @@ public:
 	 * Returns the Evdev name
 	 *
 	 * @return evdev name
-	 *
 	 */
 	virtual const char *getDevice() const = 0;
 
@@ -32,7 +37,6 @@ public:
 	 *
 	 * Read an evdev event. EV_KEY and EV_ABS events go into
 	 * the event queue and the queue count is incremented
-	 *
 	 */
 	virtual void readEvent() = 0;
 
@@ -44,7 +48,6 @@ public:
 	 * If the queue has no more events the queue index is reseted to zero
 	 *
 	 * @return reference to the event popped from the queue
-	 *
 	 */
 	virtual struct input_event &nextEvent() = 0;
 
@@ -54,7 +57,6 @@ public:
 	 * Returns the current event count in the queue
 	 *
 	 * @return queue count
-	 *
 	 */
 	virtual int pendingEvent() const = 0;
 };
