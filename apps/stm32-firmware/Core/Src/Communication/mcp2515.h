@@ -39,11 +39,15 @@
 #define MCP2515_REG_RXB0CTRL    0x60
 #define MCP2515_REG_RXB0SIDH    0x61
 #define MCP2515_REG_RXB0SIDL    0x62
+#define MCP2515_REG_RXB0EID8    0x63
+#define MCP2515_REG_RXB0EID0    0x64
 #define MCP2515_REG_RXB0DLC     0x65
 #define MCP2515_REG_RXB0DATA    0x66
 #define MCP2515_REG_RXB1CTRL    0x70  // RX Buffer 1 Control
 #define MCP2515_REG_RXB1SIDH    0x71
 #define MCP2515_REG_RXB1SIDL    0x72
+#define MCP2515_REG_RXB1EID8    0x73
+#define MCP2515_REG_RXB1EID0    0x74
 #define MCP2515_REG_RXB1DLC     0x75
 #define MCP2515_REG_RXB1DATA    0x76
 
@@ -161,7 +165,7 @@ HAL_StatusTypeDef MCP2515_SetMode(uint8_t mode);
  *
  * @return int Returns 1 if a message was received, 0 if no message is available, negative on error
  */
-int MCP2515_ReceiveMessage(uint16_t *can_id, uint8_t *data, uint8_t *length);  // Returns 1 if message received, 0 otherwise
+int MCP2515_ReceiveMessage(uint32_t *can_id, uint8_t *data, uint8_t *length);  // Returns 1 if message received, 0 otherwise
 
 /**
  * @brief Poll and handle received messages.

@@ -4,6 +4,13 @@
 #include <stdint.h>
 #include <string>
 
+/**
+ * @interface ICAN
+ * @brief ICAN interface
+ *
+ * The ICAN interface defines the contract to receive/write CAN frames
+ * via socketCAN
+ */
 class ICAN {
 public:
 
@@ -16,7 +23,6 @@ public:
 	 *
 	 * @return 0 if success
 	 * @return -1 if failed
-	 *
 	 */
 	virtual int openSocket() = 0;
 
@@ -32,7 +38,6 @@ public:
 	 *
 	 * @return 0 if success
 	 * @return -1 if failed
-	 *
 	 */
 	virtual int readFrame(struct can_frame &frame) = 0;
 
@@ -50,7 +55,6 @@ public:
 	 *
 	 * @return 0 if success
 	 * @return -1 if failed
-	 *
 	 */
 	virtual int sendFrame(const canid_t id, const uint8_t *data, const uint8_t len) = 0;
 
@@ -60,7 +64,6 @@ public:
 	 * Returns the CAN socket fd
 	 *
 	 * @return CAN socket fd
-	 *
 	 */
 	virtual int getSocketFd() const = 0;
 
@@ -70,7 +73,6 @@ public:
 	 * Returns the CAN interface name. e.g: "can0"
 	 *
 	 * @return CAN interface name
-	 *
 	 */
 	virtual std::string getInterface() const = 0;
 
@@ -81,7 +83,6 @@ public:
 	 * It makes a netlink request to get the current bitrate
 	 *
 	 * @return bitrate
-	 *
 	 */
 	virtual unsigned int getBitrate() const = 0;
 
@@ -96,7 +97,6 @@ public:
 	 *
 	 * @return 0 if success
 	 * @return -1 if failed
-	 *
 	 */
 	virtual int setBitrate(unsigned int bitrate) = 0;
 
@@ -107,7 +107,6 @@ public:
 	 * This is the current active mode
 	 *
 	 * @return CAN active mode
-	 *
 	 */
 	virtual unsigned int getActiveMode() const = 0;
 
@@ -133,7 +132,6 @@ public:
 	 *
 	 * @return 0 if success
 	 * @return -1 if failed
-	 *
 	 */
 	virtual int setMode(unsigned int modeToControl, unsigned int modeToTurnOn) = 0;
 
@@ -145,7 +143,6 @@ public:
 	 *
 	 * @return true if CAN is UP
 	 * @return false if CAN is DOWN
-	 *
 	 */
 	virtual bool isUp() const = 0;
 };

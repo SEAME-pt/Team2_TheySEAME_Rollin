@@ -42,7 +42,23 @@
                 "datatype": "float",
                 "unit": "percent",
                 "description": "Throttle command",
-                "dbc": { "signal": "throttle" }
+                "dbc": { "signal": "throttle" },
+                "vss2dbc": { "signal": "throttle" }
+              }
+            }
+          },
+          "Gear": {
+            "type": "branch",
+            "description": "Gear control signals",
+            "children": {
+              "Value": {
+                "type": "actuator",
+                "datatype": "uint8",
+                "unit": "enum",
+                "description": "Current Gear: 0=P, 1=N, 2=R, 3=D",
+                "allowed": [0, 1, 2, 3],
+                "dbc": { "signal": "gear" },
+                "vss2dbc": { "signal": "gear" }
               }
             }
           },
@@ -55,7 +71,8 @@
                 "datatype": "float",
                 "unit": "deg",
                 "description": "Steering angle command",
-                "dbc": { "signal": "Angle" }
+                "dbc": { "signal": "Angle" },
+                "vss2dbc": { "signal": "Angle" }
               }
             }
           },
@@ -63,12 +80,23 @@
             "type": "branch",
             "description": "Driving mode signals",
             "children": {
+              "Break": {
+                "type": "actuator",
+                "datatype": "uint8",
+                "unit": "enum",
+                "description": "Break: 0=DRIVE, 1=BREAK",
+                "allowed": [0, 1],
+                "dbc": { "signal": "Break" },
+                "vss2dbc": { "signal": "Break" }
+              },
               "DrivingMode": {
                 "type": "actuator",
                 "datatype": "uint8",
+                "unit": "enum",
                 "description": "Driving mode: 0=MANUAL, 1=AI_ASSIST",
                 "allowed": [0, 1],
-                "dbc": { "signal": "DrivingMode" }
+                "dbc": { "signal": "DrivingMode" },
+                "vss2dbc": { "signal": "DrivingMode" }
               }
             }
           }

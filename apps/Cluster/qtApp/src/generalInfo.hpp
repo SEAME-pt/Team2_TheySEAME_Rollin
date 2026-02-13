@@ -2,9 +2,7 @@
 #include <QObject>
 #include <QString>
 #include <QTimer>
-#include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QNetworkRequest>
 #include <QDateTime>
 #include <QJsonDocument>
 #include <QJsonObject>

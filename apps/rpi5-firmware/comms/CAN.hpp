@@ -4,6 +4,12 @@
 #include <net/if.h>
 #include <libsocketcan.h>
 
+/**
+ * @class CAN
+ * @brief CAN class
+ *
+ * The CAN class implements the ICAN interface
+ */
 class CAN : public ICAN {
 public:
 
@@ -15,7 +21,6 @@ public:
 	 * outside the constructor
 	 *
 	 * @param interface name of the CAN interface
-	 *
 	 */
 	CAN(const std::string &interface);
 
@@ -30,7 +35,6 @@ public:
 	 * @param bitrate bitrate to set the CAN interface
 	 * @param modeToControl modes to control in the CAN
 	 * @param modeToTurnOn mode from modesToControl to be active
-	 *
 	 */
 	CAN(const std::string &interface, const unsigned int bitrate,
 		unsigned int modeToControl, unsigned int modeToTurnOn);
@@ -39,7 +43,6 @@ public:
 	 * @brief CAN destructor
 	 *
 	 * This CAN destructor closes the CAN socket fd and stops the CAN interface
-	 *
 	 */
 	~CAN();
 

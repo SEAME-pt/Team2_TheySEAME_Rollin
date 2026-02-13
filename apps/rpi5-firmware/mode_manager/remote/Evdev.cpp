@@ -38,16 +38,8 @@ void Evdev::readEvent() {
 	if (nbytes < 0) {
 		std::perror("Error in read");
 	}
-	switch (ev.type) {
-		case EV_KEY:
-		case EV_ABS:
-			_q[_qCount] = ev;
-			_qCount++;
-			break;
-
-		default:
-			break;
-	}
+	_q[_qCount] = ev;
+	_qCount++;
 }
 
 int Evdev::pendingEvent() const { return (_qCount); }

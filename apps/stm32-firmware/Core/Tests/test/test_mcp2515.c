@@ -56,12 +56,12 @@ void test_MCP2515_SendSpeed_ValidSpeed_Success(void)
     uint8_t addrs[16]; uint8_t vals[16]; int count = 0;
     fake_mcp2515_get_writes(addrs, vals, &count);
 
-    /* Expect there is a write to TXB0DATA with byte 12 */
-    int found = 0;
+    /* Expect 16-bit little-endian: 1.23 m/s * 36 = 44.28 → 44 (0x2C) → low=0x2C, high=0x00 */
+    int found_low = 0;
     for (int i = 0; i < count; i++) {
-        if (addrs[i] == MCP2515_REG_TXB0DATA && vals[i] == 12) found = 1;
+        if (addrs[i] == MCP2515_REG_TXB0DATA && vals[i] == 0x2C) found_low = 1;
     }
-    TEST_ASSERT_TRUE_MESSAGE(found, "Expected TXB0DATA write with byte 12");
+    TEST_ASSERT_TRUE_MESSAGE(found_low, "Expected TXB0DATA write with byte 0x2C (44 hm/h low byte)");
 }
 
 /* test_MCP2515_SendSpeed_ClampLowAndHigh
@@ -74,7 +74,7 @@ void test_MCP2515_SendSpeed_ValidSpeed_Success(void)
  */
 void test_MCP2515_SendSpeed_ClampLowAndHigh(void)
 {
-    /* Arrange: negative -> byte 0 */
+    /* Arrange: negative -> clamps to 0 (16-bit: 0x00 0x00) */
     const uint8_t reads1[] = {0x00, 0x08,0x40,0x01, 0x00,0x00, 0x00,0x00,0x00};
     fake_mcp2515_set_read_sequence(reads1, sizeof(reads1));
     const uint32_t ticks1[] = {0,0};
@@ -87,9 +87,9 @@ void test_MCP2515_SendSpeed_ClampLowAndHigh(void)
     fake_mcp2515_get_writes(addrs, vals, &count);
     int found0 = 0;
     for (int i = 0; i < count; i++) if (addrs[i] == MCP2515_REG_TXB0DATA && vals[i] == 0) found0 = 1;
-    TEST_ASSERT_TRUE(found0);
+    TEST_ASSERT_TRUE_MESSAGE(found0, "Expected TXB0DATA write with 0x00 for negative speed");
 
-    /* Arrange: very high -> clamp to 255 */
+    /* Arrange: very high (100 m/s * 36 = 3600 hm/h) -> clamps to 200 (0xC8 0x00) */
     fake_mcp2515_reset_state();
     const uint8_t reads2[] = {0x00, 0x08,0x40,0x01, 0x00,0x00, 0x00,0x00,0x00};
     fake_mcp2515_set_read_sequence(reads2, sizeof(reads2));
@@ -100,9 +100,9 @@ void test_MCP2515_SendSpeed_ClampLowAndHigh(void)
     TEST_ASSERT_EQUAL(HAL_OK, rc2);
 
     fake_mcp2515_get_writes(addrs, vals, &count);
-    int found255 = 0;
-    for (int i = 0; i < count; i++) if (addrs[i] == MCP2515_REG_TXB0DATA && vals[i] == 255) found255 = 1;
-    TEST_ASSERT_TRUE(found255);
+    int found200 = 0;
+    for (int i = 0; i < count; i++) if (addrs[i] == MCP2515_REG_TXB0DATA && vals[i] == 0xC8) found200 = 1;
+    TEST_ASSERT_TRUE_MESSAGE(found200, "Expected TXB0DATA write with 0xC8 (200 hm/h clamped)");
 }
 
 /* test_MCP2515_SendSpeed_TxBufferBusy_ReturnsBusy
