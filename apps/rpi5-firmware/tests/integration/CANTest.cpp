@@ -25,7 +25,6 @@ protected:
  * @brief Verify the CAN Interface in agreement to the requirements
  *
  * ====================== Requirement Traceability ===========================
- * [test->dsn~comms-can-rpi-interface~1]
  * ==========================================================================
  */
 TEST_F(CANTest, CANInterface) {
@@ -41,8 +40,6 @@ TEST_F(CANTest, CANInterface) {
  * @brief Test CAN in loopback mode
  *
  * ====================== Requirement Traceability ===========================
- * [test->dsn~comms-can-rpi-receiveMsg~2]
- * [test->dsn~comms-can-rpi-sendMsg~1]
  * ==========================================================================
  */
 TEST_F(CANTest, SendAndReadFrame) {

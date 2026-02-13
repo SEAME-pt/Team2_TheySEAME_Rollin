@@ -163,8 +163,7 @@ int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter, fl
  * - Thread sleep: 0.1s between iterations (based on ThreadX timer)
  *
  * ====================== Requirement Traceability ===========================
- * [impl->dsn~speed-measure-device~1]
- * ==========================================================================
++++++++++++++++++++ * ==========================================================================
  *
  * @param thread_input Thread parameter passed by ThreadX scheduler (unused in this implementation)
  *

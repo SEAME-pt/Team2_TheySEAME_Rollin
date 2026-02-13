@@ -1,4 +1,8 @@
-# Integration Tests
+# Integration Testing Report
+
+| Date Completed | Time Completed | Author(s) | Team | Testing Type |
+|-------|-------| -------|-------|-------|
+| DD/MM/YYY | HH:MM |  | Team 2 - They SEA:ME Rolling | Integration Testing |
 
 ## Test Case 1 - Comprehensive Cluster System Test
 

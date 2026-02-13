@@ -6,7 +6,7 @@
 
 Status: proposed
 
-The QT App (cluster) shall display the battery state of the vehicle in real time in percentage (%), as measured, and communicated via CAN, from the STM32 Sensor's module, with a refresh rate of at least, 0.1 Hz.
+The QT App (cluster) shall display the battery state of the vehicle in real time in percentage (%), as measured, and communicated via CAN, from the STM32 Sensor's module, with a maximum refresh rate of, 0.1 Hz.
 
 Rationale: 0.1 Hz equals 1 time every ten seconds. It was considered that the timescale of changes for this value is smaller than other variables, for instance, the speed measurement.
 
@@ -21,7 +21,7 @@ Needs: impl, itest
 
 Status: proposed
 
-The QT App (cluster) shall display the vehicle's ground speed in real time in hectometer per hour (hm/h), as measured, and communicated via CAN, from the STM32 Sensor's module, with a refresh rate of at least, 10 Hz.
+The QT App (cluster) shall display the vehicle's ground speed in real time in hectometer per hour (hm/h), as measured, and communicated via CAN, from the STM32 Sensor's module, with a maximum refresh rate of, 10 Hz.
 
 Rationale: If the driver accelerates from 0 to 5 hm/s in 1 second, we would see increments of about 0.5 hm/s in speed, which is a reasonable refresh rate, that also prevents blocking or taking priority over other essential CAN frames.
 
@@ -36,7 +36,7 @@ Needs: impl, itest
 
 Status: draft
 
-The Cluster shall display crucial information with a font and size ...
+The Cluster shall display crucial information with a font and size...
 
 Covers:
 - `feat~friendly-gui~1`
@@ -172,29 +172,6 @@ Needs: impl, itest
 ```
 
 ```
-`dsn~can-message-definitions~1`
-
-Status: draft
-
-The Communications module shall transmit and receive CAN messages according to the following CAN ID assignments and transmission periods:
-- 0x10...: Throttle
-- 0x10...: Steering
-- 0x10...: Brake
-- 0x10...: Gear (xx period)
-- 0x10...: Driving Mode (xx period)
-- 0x20...: Speed (xx period)
-- 0x20...: Battery (xx period)
-- 0x20...: IMU data (xx period)
-- 0x20...: Heartbeat (xx period)
-
-Rationale: Specific IDs and periods ensure predictable bus timing and prevent conflicts.
-
-Covers: `feat~failsafe-if-no-heartbeat~1`
-
-Needs: impl, itest
-```
-
-```
 `dsn~can-bus-load~1`
 
 Status: proposed
@@ -213,7 +190,7 @@ Needs: impl, itest
 
 Status: draft
 
-The Rasp Communications module shall transmit a Heartbeat CAN message to the STM32 every X ms ± xms.
+The Rasp Communications module shall transmit a periodic Heartbeat CAN message to the STM32, at a maximum interval of X ms.
 
 Rationale: Regular heartbeat allows receiving modules to detect communication failures.
 
@@ -229,7 +206,7 @@ Needs: impl, itest
 
 Status: proposed
 
-The Sensors module shall update the speed value at a frequency of 10 Hz.
+The Sensors module shall update the speed value in the QT display.
 
 Covers: `feat~report-speed-battery~1`
 
@@ -241,7 +218,7 @@ Needs: impl, itest
 
 Status: proposed
 
-The Sensors module shall update the battery value at least once every two seconds.
+The Sensors module shall update the battery value in the QT display.
 
 Covers: `feat~report-speed-battery~1`
 

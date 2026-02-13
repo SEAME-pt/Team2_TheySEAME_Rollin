@@ -17,7 +17,6 @@ TEST_F(RemoteControlTest, Initial) {
  * @brief RemoteControl UpdateState test
  *
  * ====================== Requirement Traceability ===========================
- * [test->dsn~remote-control-read-inputs~1]
  * ==========================================================================
  */
 TEST_F(RemoteControlTest, UpdateState) {
