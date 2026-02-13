@@ -51,7 +51,6 @@ void tearDown(void) {
  * Expected RPM = (60 * 20000) / (delta_ticks * 10)7
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~calculate-rpm~1]
  * ==========================================================================
  */
 void test_Speed_CalculateRPM_ValidInput_ReturnsCorrectRPM(void) {
@@ -72,7 +71,6 @@ void test_Speed_CalculateRPM_ValidInput_ReturnsCorrectRPM(void) {
  * delta values below the threshold (20 ticks).
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~calculate-rpm~1]
  * ==========================================================================
  */
 void test_Speed_CalculateRPM_NoiseFiltering_ReturnsZero(void) {
@@ -92,7 +90,6 @@ void test_Speed_CalculateRPM_NoiseFiltering_ReturnsZero(void) {
  * Tests the function behavior at the noise filtering threshold boundary.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~calculate-rpm~1]
  * ==========================================================================
  */
 void test_Speed_CalculateRPM_MinimumValidInput_ReturnsRPM(void) {
@@ -113,7 +110,6 @@ void test_Speed_CalculateRPM_MinimumValidInput_ReturnsRPM(void) {
  * Tests conversion of zero RPM to meters per second.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-data-interface~1]
  * ==========================================================================
  */
 void test_Speed_RPMToMetersPerSecond_ZeroRPM_ReturnsZero(void) {
@@ -135,7 +131,6 @@ void test_Speed_RPMToMetersPerSecond_ZeroRPM_ReturnsZero(void) {
  * Formula: m/s = RPM * 0.21 / 60
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-data-interface~1]
  * ==========================================================================
  */
 void test_Speed_RPMToMetersPerSecond_TypicalRPM_ReturnsCorrectSpeed(void) {
@@ -155,7 +150,6 @@ void test_Speed_RPMToMetersPerSecond_TypicalRPM_ReturnsCorrectSpeed(void) {
  * Tests conversion with a higher RPM value to ensure accuracy.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-data-interface~1]
  * ==========================================================================
  */
 void test_Speed_RPMToMetersPerSecond_HighRPM_ReturnsCorrectSpeed(void) {
@@ -176,7 +170,6 @@ void test_Speed_RPMToMetersPerSecond_HighRPM_ReturnsCorrectSpeed(void) {
  * (when Speed_CalculateRPM returns 0).
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-noise-handling~1]
  * ==========================================================================
  */
 void test_Speed_ProcessDelta_NoiseFiltered_ReturnsZero(void) {
@@ -201,7 +194,6 @@ void test_Speed_ProcessDelta_NoiseFiltered_ReturnsZero(void) {
  * without generating output until 5 readings are collected.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-average~1]
  * ==========================================================================
  */
 void test_Speed_ProcessDelta_AccumulatingReadings_ReturnsZero(void) {
@@ -226,7 +218,6 @@ void test_Speed_ProcessDelta_AccumulatingReadings_ReturnsZero(void) {
  * after accumulating 5 valid readings.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-average~1]
  * ==========================================================================
  */
 void test_Speed_ProcessDelta_FifthReading_ReturnsOne(void) {
@@ -255,7 +246,6 @@ void test_Speed_ProcessDelta_FifthReading_ReturnsOne(void) {
  * Tests normal operation where current capture >= previous capture.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-timer-settings~1]
  * ==========================================================================
  */
 void test_HAL_TIM_IC_CaptureCallback_CorrectTimerChannel_UpdatesDelta(void) {
@@ -284,7 +274,6 @@ void test_HAL_TIM_IC_CaptureCallback_CorrectTimerChannel_UpdatesDelta(void) {
  * (current capture < previous capture).
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~speed-counter-overflow~1]
  * ==========================================================================
  */
 void test_HAL_TIM_IC_CaptureCallback_TimerOverflow_HandlesCorrectly(void) {
@@ -312,7 +301,6 @@ void test_HAL_TIM_IC_CaptureCallback_TimerOverflow_HandlesCorrectly(void) {
  * Tests that the callback function ignores calls from wrong timer instances.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-timer-settings~1]
  * ==========================================================================
  */
 void test_HAL_TIM_IC_CaptureCallback_WrongTimer_IgnoresCall(void) {
@@ -335,7 +323,6 @@ void test_HAL_TIM_IC_CaptureCallback_WrongTimer_IgnoresCall(void) {
  * Tests that the callback function ignores calls from wrong channels.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-timer-settings~1]
  * ==========================================================================
  */
 void test_HAL_TIM_IC_CaptureCallback_WrongChannel_IgnoresCall(void) {
@@ -359,7 +346,6 @@ void test_HAL_TIM_IC_CaptureCallback_WrongChannel_IgnoresCall(void) {
  * and proper delta calculation between captures.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-timer-settings~1]
  * ==========================================================================
  */
 void test_HAL_TIM_IC_CaptureCallback_ConsecutiveCalls_UpdatesCorrectly(void) {
@@ -396,7 +382,6 @@ void test_HAL_TIM_IC_CaptureCallback_ConsecutiveCalls_UpdatesCorrectly(void) {
  * Tests the time interval between consecutive writes to vehicle_speed
  * to verify the 0.5 second (500ms) update interval.
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-read-frequency~1]
  * ==========================================================================
  */
 void test_SpeedThreadEntry_MeasureWriteSpeed_500ms(void) {
@@ -441,7 +426,6 @@ void test_SpeedThreadEntry_MeasureWriteSpeed_500ms(void) {
  * Measures the computational overhead and timing consistency
  * of the speed calculation and global variable write operations.
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-read-frequency~1]
  * ==========================================================================
  */
 void test_SpeedThreadEntry_WritePerformance_Timing(void) {
@@ -490,7 +474,6 @@ void test_SpeedThreadEntry_WritePerformance_Timing(void) {
  * Tests how the thread handles rapid sensor updates and ensures
  * consistent write frequency regardless of sensor input rate.
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-read-frequency~1]
  * ==========================================================================
  */
 void test_SpeedThreadEntry_RapidSensorUpdates_ConsistentWrites(void) {

@@ -7,6 +7,7 @@
  * - Currently interfaces with Communications module via global vars.
  * 
  * ====================== Requirement Traceability ===========================
+ * [impl->dsn~battery-measure-device~1]
  * ==========================================================================
  * 
  * @param thread_input parameter not used
@@ -35,6 +36,7 @@ void Battery_Thread_Entry(ULONG thread_input) {
             g_vehicle_data.data_valid = local_data.data_valid;
             tx_mutex_put(&g_vehicle_data_mutex);
         }
+        // TX_TIMER_TICKS_PER_SECOND is defined as 100 ticks/second, so 200 ticks = 2s
         tx_thread_sleep(200);
     }
 }

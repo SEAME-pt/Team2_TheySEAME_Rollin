@@ -32,8 +32,6 @@ public:
     * @param parent Optional parent QObject
     *
 	  * Requirement traceability:
-    * [impl->dsn~design-requirement-cluster-datetime~1]
-    * [impl->dsn~design-requirement-cluster-weather~1]
     *
     */
     explicit generalInfo(QObject *parent = nullptr);
@@ -48,7 +46,6 @@ public:
     * @brief Returns the current weather icon filename.
     *
 	* Requirement traceability:
-    * [impl->dsn~design-requirement-cluster-weather~1]
     *
     * @return QString representing icon (e.g., "sun-256.png")
     *
@@ -59,7 +56,6 @@ public:
     * @brief Returns the current temperature in Celsius.
     *
 	  * Requirement traceability:
-    * [impl->dsn~design-requirement-cluster-weather~1]
     *
     * @return int temperature
     *
@@ -70,7 +66,6 @@ public:
     * @brief Returns the local time in HH:mm format.
     *
 	  * Requirement traceability:
-    * [impl->dsn~design-requirement-cluster-datetime~1]
     *
     * @return QString current time
     *
@@ -81,7 +76,6 @@ public:
     * @brief Returns the current date in dd/MM/yyyy format.
     *
 	  * Requirement traceability:
-    * [impl->dsn~design-requirement-cluster-datetime~1]
     *
     * @return QString current date
     *
@@ -111,7 +105,6 @@ public slots:
     * @brief Fetches current weather data from Open-Meteo API.
     *
 	  * Requirement traceability:
-    * [impl->dsn~design-requirement-cluster-weather~1]
     *
     */
     void fetchWeatherData();
@@ -123,7 +116,6 @@ public slots:
     * @param reply QNetworkReply* from QNetworkAccessManager
     *
 	  * Requirement traceability:
-    * [impl->dsn~design-requirement-cluster-weather~1]
     *
     */
     void onWeatherDataReceived(QNetworkReply* reply);
