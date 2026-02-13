@@ -267,11 +267,6 @@
 
 /* USER CODE BEGIN 2 */
 
-/* Enable execution change notification for SEGGER SystemView thread profiling.
-   This causes ThreadX to call _tx_execution_thread_enter/_exit and
-   _tx_execution_isr_enter/_exit on every context switch and ISR. */
-#define TX_ENABLE_EXECUTION_CHANGE_NOTIFY
-
 /* USER CODE END 2 */
 
 #endif

@@ -15,6 +15,8 @@ protected:
  * @brief Tests initialization of systemInfo object.
  * 
  * =======================Requirements traceability========================
+ *        [test->dsn~design-requirement-cluster-speed~1]
+ *        [test->dsn~design-requirement-cluster-battery~1]
  * =======================================================================
  */
 TEST_F(SystemInfoTest, Initialization) {
@@ -26,6 +28,8 @@ TEST_F(SystemInfoTest, Initialization) {
  * @brief Tests processFrames method for safe execution.
  * 
  * =======================Requirements traceability========================
+ *        [test->dsn~design-requirement-cluster-speed~1]
+ *        [test->dsn~design-requirement-cluster-battery~1]
  * =======================================================================
  */
 TEST_F(SystemInfoTest, ProcessFramesSafe) {
@@ -48,6 +52,8 @@ protected:
  * @brief Tests initialization of generalInfo object.
  * 
  * =======================Requirements traceability========================
+ *        [test->dsn~design-requirement-cluster-datetime~1]
+ *        [test->dsn~design-requirement-cluster-weather~1]
  * =======================================================================
  */
 TEST_F(GeneralInfoTest, Initialization) {
@@ -63,6 +69,7 @@ TEST_F(GeneralInfoTest, Initialization) {
  * @brief Tests time and date retrieval and signal emissions.
  * 
  * =======================Requirements traceability========================
+ *        [test->dsn~design-requirement-cluster-datetime~1]
  * =======================================================================
  */
 TEST_F(GeneralInfoTest, TimeDateSignals) {
@@ -97,6 +104,7 @@ private:
  * @brief Tests weather data parsing and signal emissions.
  * 
  * =======================Requirements traceability========================
+ *        [test->dsn~design-requirement-cluster-weather~1]
  * =======================================================================
  */
 TEST_F(GeneralInfoTest, WeatherSignals) {
@@ -121,6 +129,7 @@ TEST_F(GeneralInfoTest, WeatherSignals) {
 * @brief Tests weather update with unknown weather code.
 *
 * =======================Requirements traceability========================
+*        [test->dsn~design-requirement-cluster-weather~1]
 * ========================================================================
 */
 TEST_F(GeneralInfoTest, WeatherUpdateUnknownCode) {
@@ -142,6 +151,7 @@ TEST_F(GeneralInfoTest, WeatherUpdateUnknownCode) {
  * @brief Tests multiple weather updates to ensure signals are emitted correctly.
  * 
  * =======================Requirements traceability========================
+ *        [test->dsn~design-requirement-cluster-weather~1]
  * ========================================================================
  */
 TEST_F(GeneralInfoTest, MultipleWeatherUpdates) {

@@ -31,9 +31,6 @@ Core/Src \
 Core/Src/utils \
 Core/Startup \
 Drivers/STM32U5xx_HAL_Driver/Src \
-Middlewares/SEGGER/Config \
-Middlewares/SEGGER/RTT \
-Middlewares/SEGGER/SystemView \
 Middlewares/ST/threadx/common/src \
 Middlewares/ST/threadx/ports/cortex_m33/gnu/src \
 

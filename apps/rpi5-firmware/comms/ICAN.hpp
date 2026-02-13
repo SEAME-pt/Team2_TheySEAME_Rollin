@@ -35,6 +35,7 @@ public:
 	 * @param frame reference to a frame struct
 	 *
 	 * Requirement traceability:
+	 * [impl->dsn~comms-can-rpi-receiveMsg~2]
 	 *
 	 * @return 0 if success
 	 * @return -1 if failed
@@ -52,6 +53,7 @@ public:
 	 * @param len length of the data (0-8 bytes)
 	 *
 	 * Requirement traceability:
+	 * [impl->dsn~comms-can-rpi-sendMsg~1]
 	 *
 	 * @return 0 if success
 	 * @return -1 if failed
@@ -94,6 +96,7 @@ public:
 	 * @param bitrate bitrate to set in kbit/s
 	 *
 	 * Requirement traceability:
+	 * [impl->dsn~comms-can-rpi-interface~1]
 	 *
 	 * @return 0 if success
 	 * @return -1 if failed

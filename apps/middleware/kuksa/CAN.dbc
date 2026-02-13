@@ -1,4 +1,4 @@
-VERSION "1.1"
+VERSION "1.0"
 
 NS_ :
     NS_DESC_
@@ -34,19 +34,18 @@ BS_:
 
 BU_: STM32 RASPI
 
-CM_ "DBC generated from updated VSS including ADAS-related signals.";
-
 BO_ 512 SpeedMsg: 8 STM32
- SG_ speed : 0|16@1+ (0.1,0) [0|250] "hm/h" RASPI
+ SG_ speed : 0|16@1+ (1,0) [0|200] "hm/h" RASPI
 
 BO_ 513 BatteryMsg: 8 STM32
  SG_ StateOfCharge : 0|8@1+ (1,0) [0|100] "%" RASPI
 
 BO_ 256 ThrottleMsg: 8 RASPI
- SG_ throttle : 0|16@1+ (0.1,0) [0|100] "%" STM32
+ SG_ throttle : 0|16@1+ (1,0) [0|100] "%" STM32
 
 BO_ 258 AngleMsg: 8 RASPI
- SG_ angle : 0|16@1- (0.1,0) [-30|30] "deg" STM32
+ SG_ Angle : 0|16@1- (1,0) [-30|30] "deg" STM32
+
 
 BO_ 261 GearMsg: 8 RASPI
  SG_ gear : 0|8@1+ (1,0) [0|3] "" STM32
@@ -57,80 +56,17 @@ VAL_ 261 gear
  2 "REVERSE"
  3 "DRIVE";
 
-BO_ 257 BrakeMsg: 8 RASPI
- SG_ brake : 0|8@1+ (1,0) [0|1] "" STM32
+BO_ 262 BreakMsg: 8 RASPI
+ SG_ break : 0|8@1+ (1,0) [0|1] "" STM32
 
-VAL_ 257 brake
- 0 "OFF"
- 1 "ON";
+VAL_ 262 break
+ 0 "DRIVE"
+ 1 "BREAK";
 
 BO_ 260 DrivingModeMsg: 8 RASPI
- SG_ DrivingMode : 0|8@1+ (1,0) [0|2] "" STM32
+ SG_ DrivingMode : 0|8@1+ (1,0) [0|1] "" STM32
 
 VAL_ 260 DrivingMode
  0 "MANUAL"
- 1 "AI_ASSIST"
- 2 "AUTONOMOUS";
+ 1 "AI_ASSIST";
 
-BO_ 520 LaneKeepAssistCmdMsg: 8 RASPI
- SG_ LKA_Enabled : 0|1@1+ (1,0) [0|1] "" STM32
- SG_ LKA_TargetSteeringAngle : 8|16@1- (0.1,0) [-45|45] "deg" STM32
-
-BO_ 521 LaneKeepAssistStatusMsg: 8 STM32
- SG_ LKA_Active : 0|1@1+ (1,0) [0|1] "" RASPI
- SG_ LKA_LaneOffset : 8|16@1- (0.01,0) [-10|10] "m" RASPI
-
-BO_ 522 LaneDepartureWarningMsg: 8 STM32
- SG_ LDW_Enabled : 0|1@1+ (1,0) [0|1] "" RASPI
- SG_ LDW_Warning : 1|1@1+ (1,0) [0|1] "" RASPI
-
-BO_ 530 CruiseControlCmdMsg: 8 RASPI
- SG_ CC_Enabled : 0|1@1+ (1,0) [0|1] "" STM32
- SG_ CC_TargetSpeed : 8|16@1+ (0.1,0) [0|250] "hm/h" STM32
-
-BO_ 531 CruiseControlStatusMsg: 8 STM32
- SG_ CC_Active : 0|1@1+ (1,0) [0|1] "" RASPI
-
-BO_ 532 ACCCmdMsg: 8 RASPI
- SG_ ACC_Enabled : 0|1@1+ (1,0) [0|1] "" STM32
- SG_ ACC_TargetSpeed : 8|16@1+ (0.1,0) [0|250] "hm/h" STM32
- SG_ ACC_TimeGap : 24|8@1+ (0.1,0) [0|10] "s" STM32
-
-BO_ 533 ACCStatusMsg: 8 STM32
- SG_ ACC_Active : 0|1@1+ (1,0) [0|1] "" RASPI
- SG_ ACC_LeadVehicleDistance : 8|16@1+ (0.1,0) [0|300] "m" RASPI
-
-BO_ 540 BlindSpotDetectionMsg: 8 STM32
- SG_ BSD_Enabled : 0|1@1+ (1,0) [0|1] "" RASPI
- SG_ BSD_LeftOccupied : 1|1@1+ (1,0) [0|1] "" RASPI
- SG_ BSD_RightOccupied : 2|1@1+ (1,0) [0|1] "" RASPI
- SG_ BSD_Warning : 3|1@1+ (1,0) [0|1] "" RASPI
-
-BO_ 550 TrafficSignRecognitionMsg: 8 STM32
- SG_ TSR_Enabled : 0|1@1+ (1,0) [0|1] "" RASPI
- SG_ TSR_DetectedSpeedLimit : 8|16@1+ (0.1,0) [0|250] "hm/h" RASPI
- SG_ TSR_DetectedSignType : 24|8@1+ (1,0) [0|15] "" RASPI
-
-VAL_ 550 TSR_DetectedSignType
- 0 "UNKNOWN"
- 1 "STOP"
- 2 "SPEED_LIMIT_30"
- 3 "SPEED_LIMIT_50"
- 4 "SPEED_LIMIT_80"
- 5 "SPEED_LIMIT_100"
- 6 "SPEED_LIMIT_120"
- 7 "YIELD"
- 8 "NO_ENTRY"
- 9 "TURN_LEFT"
- 10 "TURN_RIGHT"
- 11 "PEDESTRIAN"
- 12 "TRAFFIC_LIGHT"
- 13 "ONE_WAY"
- 14 "NO_PARKING"
- 15 "NO_OVERTAKING";
-
-BO_ 560 ParkingAssistMsg: 8 STM32
- SG_ PA_Enabled : 0|1@1+ (1,0) [0|1] "" RASPI
- SG_ PA_Active : 1|1@1+ (1,0) [0|1] "" RASPI
- SG_ PA_ObstacleDistanceFront : 8|16@1+ (0.01,0) [0|20] "m" RASPI
- SG_ PA_ObstacleDistanceRear : 24|16@1+ (0.01,0) [0|20] "m" RASPI

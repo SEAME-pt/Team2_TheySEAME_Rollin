@@ -11,7 +11,11 @@
 #include <atomic>
 #include "../../../middleware/kuksa/val/v2/val.grpc.pb.h"
 #include "../../../middleware/kuksa/val/v2/types.pb.h"
+<<<<<<< HEAD
 #include "../middleware/kuksa/val/v2/KuksaLib.hpp"
+=======
+
+>>>>>>> 92140775 (Release/1.0.0 (#335))
 
 using kuksa::val::v2::VAL;
 
@@ -27,6 +31,11 @@ public:
      * @param parent Optional parent QObject
      *
      * Requirement traceability:
+<<<<<<< HEAD
+=======
+     * [impl->dsn~cluster-battery~1]
+     * [impl->dsn~cluster-speed~1]
+>>>>>>> 92140775 (Release/1.0.0 (#335))
      *
      */
     explicit systemInfo(QObject *parent = nullptr);
@@ -40,6 +49,11 @@ public:
      * @brief Initializes the data collection thread and starts listening for updates from Kuksa.
      *
      * Requirement traceability:
+<<<<<<< HEAD
+=======
+     * [impl->dsn~cluster-battery~1]
+     * [impl->dsn~cluster-speed~1]
+>>>>>>> 92140775 (Release/1.0.0 (#335))
      *
      * @return true if started successfully, false otherwise
      */
@@ -51,6 +65,11 @@ public:
      * @param out Output integer
      *
      * Requirement traceability:
+<<<<<<< HEAD
+=======
+     * [impl->dsn~cluster-battery~1]
+     * [impl->dsn~cluster-speed~1]
+>>>>>>> 92140775 (Release/1.0.0 (#335))
      *
      * @return true if conversion is successful
      */
@@ -61,6 +80,10 @@ public:
      * @param battery Battery value
      *
      * Requirement traceability:
+<<<<<<< HEAD
+=======
+     * [impl->dsn~cluster-battery~1]
+>>>>>>> 92140775 (Release/1.0.0 (#335))
      *
      */
     void setBattery(int battery);
@@ -69,6 +92,10 @@ public:
      * @brief Returns the current battery value.
      *
      * Requirement traceability:
+<<<<<<< HEAD
+=======
+     * [impl->dsn~cluster-battery~1]
+>>>>>>> 92140775 (Release/1.0.0 (#335))
      *
      * @return int battery value
      */
@@ -79,6 +106,10 @@ public:
      * @param speed Speed value
      *
      * Requirement traceability:
+<<<<<<< HEAD
+=======
+     * [impl->dsn~cluster-speed~1]
+>>>>>>> 92140775 (Release/1.0.0 (#335))
      *
      */
     void setSpeed(int speed);
@@ -87,6 +118,10 @@ public:
      * @brief Returns the current speed value.
      *
      * Requirement traceability:
+<<<<<<< HEAD
+=======
+     * [impl->dsn~cluster-speed~1]
+>>>>>>> 92140775 (Release/1.0.0 (#335))
      *
      * @return int speed value
      */
@@ -95,10 +130,20 @@ signals:
     void speedUpdated(int speed);
     void batteryUpdated(int battery);
 
+<<<<<<< HEAD
 private:
     std::atomic<int> _battery{0};
     std::atomic<int> _speed{0};
     kuksaLib _kuksa;
+=======
+public slots:
+    bool updateFromKuksa();
+
+private:
+    QString _server = "0.0.0.0:55555";
+    int _battery = -0;
+    int _speed = 0;
+>>>>>>> 92140775 (Release/1.0.0 (#335))
     std::thread _thread;
     std::atomic_bool _running{false};
 };

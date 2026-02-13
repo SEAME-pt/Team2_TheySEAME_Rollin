@@ -32,6 +32,11 @@ public:
     * @param parent Optional parent QObject
     *
 	  * Requirement traceability:
+<<<<<<< HEAD
+=======
+    * [impl->dsn~design-requirement-cluster-datetime~1]
+    * [impl->dsn~design-requirement-cluster-weather~1]
+>>>>>>> 92140775 (Release/1.0.0 (#335))
     *
     */
     explicit generalInfo(QObject *parent = nullptr);
@@ -46,6 +51,10 @@ public:
     * @brief Returns the current weather icon filename.
     *
 	* Requirement traceability:
+<<<<<<< HEAD
+=======
+    * [impl->dsn~design-requirement-cluster-weather~1]
+>>>>>>> 92140775 (Release/1.0.0 (#335))
     *
     * @return QString representing icon (e.g., "sun-256.png")
     *
@@ -56,6 +65,10 @@ public:
     * @brief Returns the current temperature in Celsius.
     *
 	  * Requirement traceability:
+<<<<<<< HEAD
+=======
+    * [impl->dsn~design-requirement-cluster-weather~1]
+>>>>>>> 92140775 (Release/1.0.0 (#335))
     *
     * @return int temperature
     *
@@ -66,6 +79,10 @@ public:
     * @brief Returns the local time in HH:mm format.
     *
 	  * Requirement traceability:
+<<<<<<< HEAD
+=======
+    * [impl->dsn~design-requirement-cluster-datetime~1]
+>>>>>>> 92140775 (Release/1.0.0 (#335))
     *
     * @return QString current time
     *
@@ -76,6 +93,10 @@ public:
     * @brief Returns the current date in dd/MM/yyyy format.
     *
 	  * Requirement traceability:
+<<<<<<< HEAD
+=======
+    * [impl->dsn~design-requirement-cluster-datetime~1]
+>>>>>>> 92140775 (Release/1.0.0 (#335))
     *
     * @return QString current date
     *
@@ -105,6 +126,10 @@ public slots:
     * @brief Fetches current weather data from Open-Meteo API.
     *
 	  * Requirement traceability:
+<<<<<<< HEAD
+=======
+    * [impl->dsn~design-requirement-cluster-weather~1]
+>>>>>>> 92140775 (Release/1.0.0 (#335))
     *
     */
     void fetchWeatherData();
@@ -116,6 +141,10 @@ public slots:
     * @param reply QNetworkReply* from QNetworkAccessManager
     *
 	  * Requirement traceability:
+<<<<<<< HEAD
+=======
+    * [impl->dsn~design-requirement-cluster-weather~1]
+>>>>>>> 92140775 (Release/1.0.0 (#335))
     *
     */
     void onWeatherDataReceived(QNetworkReply* reply);

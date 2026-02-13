@@ -3,31 +3,65 @@
 ```
 `feat~navigate-track-autonomously~1`
 
+<<<<<<< HEAD
 Status: approved
 
 The vehicle shall autonomously follow a designated track without human intervention.
 
 Needs: dsn
+=======
+Status: proposed
+
+The vehicle shall autonomously follow a designated track without human intervention.
+
+Needs: arch
+>>>>>>> 92140775 (Release/1.0.0 (#335))
 ```
 
 ```
 `feat~detect-traffic-signs~1`
 
+<<<<<<< HEAD
 Status: approved
 
 The vehicle shall be able to detect relevant traffic control elements (e.g., stop signs, traffic lights, pedestrian crossings).
 
 Needs: dsn
+=======
+Status: proposed
+
+The vehicle shall be able to detect relevant traffic control elements (e.g., stop signs, traffic lights, pedestrian crossings).
+
+Needs: arch
+```
+
+```
+`feat~detect-obstacles~1`
+
+Status: proposed
+
+The vehicle shall be able to detect obstacles of any kind.
+
+Needs: arch
+>>>>>>> 92140775 (Release/1.0.0 (#335))
 ```
 
 ```
 `feat~stop-before-obstacles~1`
 
+<<<<<<< HEAD
 Status: approved
 
 The vehicle shall autonomously take decisions to stop or avoid unsafe interaction with obstacles or pedestrians.
 
 Needs: dsn
+=======
+Status: proposed
+
+The vehicle shall stop or avoid unsafe interaction with obstacles or pedestrians.
+
+Needs: arch
+>>>>>>> 92140775 (Release/1.0.0 (#335))
 ```
 
 ```
@@ -35,24 +69,49 @@ Needs: dsn
 
 Status: approved
 
+<<<<<<< HEAD
 The vehicle shall determine and report it's ground speed and remaining battery percentage.
 
 Needs: dsn
+=======
+The vehicle shall determine and report its ground speed and remaining battery percentage.
+
+Needs: arch
+>>>>>>> 92140775 (Release/1.0.0 (#335))
 ```
 
 ```
 `feat~software-updates~1`
 
+<<<<<<< HEAD
 Status: approved
 
 The vehicle software shall be updateable over-the-air, while implementing safety strategies to ensure the right permissions for such updates.
 
 Needs: dsn
+=======
+Status: proposed
+
+The vehicle software shall be updateable remotely, with the car turned on, through authorized individuals.
+
+Needs: arch
+```
+
+```
+`feat~maximum-speed~1`
+
+Status: proposed
+
+The vehicle shall not exceed a maximum speed of 5 m/s.
+
+Needs: arch
+>>>>>>> 92140775 (Release/1.0.0 (#335))
 ```
 
 ```
 `feat~perception-using-camera~1`
 
+<<<<<<< HEAD
 Status: approved
 
 The vehicle shall use a vision based perception system (camera) as a primary means to detect obstacles, traffic signs, and road contours.
@@ -68,6 +127,13 @@ Status: approved
 The system shall have a backup perception system independent from the primary perception system, that overrides it if it predicts a collision course.
 
 Needs: dsn
+=======
+Status: proposed
+
+The vehicle shall use a vision based perception system (camera).
+
+Needs: arch
+>>>>>>> 92140775 (Release/1.0.0 (#335))
 ```
 
 ```
@@ -75,19 +141,33 @@ Needs: dsn
 
 Status: approved
 
+<<<<<<< HEAD
 The vehicle shall have four operation modes: TEST, for RPI5 pre-defined control sequence, MANUAL, for remote control, and AUTO, for AI-based perception and decision-making system, and FAILSAFE, for an immediate emergency brake.
 
 Needs: dsn
+=======
+The vehicle shall have four operation modes: TEST, for RPI5 pre-defined control sequence, MANUAL, for remote control, and AUTO, for AI-based perception and decision-making system, and FAILSAFE, for an entire emergency vehicle shutdown.
+
+Needs: arch
+>>>>>>> 92140775 (Release/1.0.0 (#335))
 ```
 
 ```
 `feat~show-signs-obstacles~1`
 
+<<<<<<< HEAD
 Status: approved
 
 The vehicle shall display informative traffic signs and road elements on its instrument cluster.
 
 Needs: dsn
+=======
+Status: proposed
+
+The vehicle shall display traffic signs and road elements on its instrument cluster.
+
+Needs: arch
+>>>>>>> 92140775 (Release/1.0.0 (#335))
 ```
 
 ```
@@ -95,6 +175,7 @@ Needs: dsn
 
 Status: approved
 
+<<<<<<< HEAD
 The vehicle shall have a friendly user-interface, automatically displaying it when the car turns on.
 
 Needs: dsn
@@ -108,26 +189,47 @@ Status: approved
 On startup, the vehicle shall display the Manufacturer's logo on the Instrument Cluster.
 
 Needs: dsn
+=======
+The vehicle shall have a friendly user-interface, automatically displaying the user interface when the car turns on.
+
+Needs: arch
+>>>>>>> 92140775 (Release/1.0.0 (#335))
 ```
 
 ```
 `feat~recover-from-non-critical-errors~1`
 
+<<<<<<< HEAD
 Status: approved
 
 The system shall recover gracefully from non-critical errors without human intervention.
 
 Needs: dsn
+=======
+Status: proposed
+
+The system shall recover gracefully from non-critical errors without human intervention.
+
+Needs: arch
+>>>>>>> 92140775 (Release/1.0.0 (#335))
 ```
 
 ```
 `feat~store-conf-data~1`
 
+<<<<<<< HEAD
 Status: approved
 
 The software shall store configuration data (e.g., speed limit, calibration data, ...)
 
 Needs: dsn
+=======
+Status: proposed
+
+The software shall store configuration data (e.g., speed limit, calibration data, ...)
+
+Needs: arch
+>>>>>>> 92140775 (Release/1.0.0 (#335))
 ```
 
 ```
@@ -137,6 +239,7 @@ Status: approved
 
 The system shall record  operation logs for debugging.
 
+<<<<<<< HEAD
 Needs: dsn
 ```
 
@@ -148,11 +251,25 @@ Status: approved
 The Control Unit of the car shall enter FAILSAFE mode if it stops receiving periodic information (heartbeat) from the Raspberry Pi.
 
 Needs: dsn
+=======
+Needs: arch
+```
+
+```
+`feat~fail-safe-mode~1`
+
+Status: proposed
+
+The Control Unit of the car shall enter FAILSAFE mode if it stops receiving periodic information (heartbeat) from the Raspberry Pi.
+
+Needs: arch
+>>>>>>> 92140775 (Release/1.0.0 (#335))
 ```
 
 ```
 `feat~remote-control~1`
 
+<<<<<<< HEAD
 Status: approved
 
 The system shall be controllable via remote control.
@@ -162,14 +279,41 @@ Needs: dsn
 
 
 <!-- ```
+=======
+Status: proposed
+
+The system shall be controllable via remote control.
+
+Needs: arch
+```
+
+```
+`feat~test-control-instructions~1`
+
+Status: approved
+
+The system shall be controllable via pre-defined control instructions sent over a file/script.
+
+Needs: arch
+```
+
+```
+>>>>>>> 92140775 (Release/1.0.0 (#335))
 `feat~rtos-control~1`
 
 Status: approved
 
+<<<<<<< HEAD
 The control system shall be deterministic, applying RTOS behaviour.
 
 Needs: dsn
 ``` -->
+=======
+The control system shall be implemented in a RTOS, deterministic, environment.
+
+Needs: arch
+```
+>>>>>>> 92140775 (Release/1.0.0 (#335))
 
 ```
 `feat~weather-time-info~1`
@@ -178,6 +322,7 @@ Status: approved
 
 The system shall display time and weather information on the UI.
 
+<<<<<<< HEAD
 Needs: dsn
 ```
 
@@ -204,3 +349,7 @@ Needs: dsn
 
 ## Notes: 
 Safety Critical messages shall be prioritized over other types of CAN messages.
+=======
+Needs: arch
+```
+>>>>>>> 92140775 (Release/1.0.0 (#335))

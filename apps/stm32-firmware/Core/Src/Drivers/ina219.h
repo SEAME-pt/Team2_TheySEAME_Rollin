@@ -33,7 +33,7 @@
 
 #define	INA219_CONFIG_GAIN_1_40MV				(0x0000)  // Gain 1, 40mV Range
 #define	INA219_CONFIG_GAIN_2_80MV				(0x0800)  // Gain 2, 80mV Range
-#define	INA219_CONFIG_GAIN_4_160MV				(0x1000) // Gain 4, 160mV Range
+#define	NA219_CONFIG_GAIN_4_160MV				(0x1000) // Gain 4, 160mV Range
 #define	INA219_CONFIG_GAIN_8_320MV				(0x1800) // Gain 8, 320mV Range
 
 #define	INA219_CONFIG_BADCRES_9BIT				(0x0000)  // 9-bit bus res = 0..511
@@ -90,6 +90,7 @@ extern int16_t ina219_powerMultiplier_mW;
  * computations can integrate over time.
  *
  * Requirement traceability:
+ * [impl->dsn~battery-sensing~1]
  *
  * @return int Delta time in ms
  */
@@ -105,6 +106,8 @@ int INA219_GetDeltaTime_ms();
  * @param Address 7-bit I2C address of the INA219 device
  *
  * Requirement traceability:
+ * [impl->dsn~battery-sensing~1]
+ * [impl->dsn~can-telemetry-tx~1]
  *
  * @return uint8_t 1 on success, 0 on failure
  */
@@ -118,6 +121,7 @@ uint8_t INA219_Init(INA219_t *ina219, I2C_HandleTypeDef *i2c, uint8_t Address);
  * @param ina219 Pointer to INA219 instance
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return uint16_t Bus voltage in millivolts
  */
@@ -131,6 +135,7 @@ uint16_t INA219_ReadBusVoltage(INA219_t *ina219);
  * @param ina219 Pointer to INA219 instance
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return int16_t Current in mA
  */
@@ -144,6 +149,7 @@ int16_t INA219_ReadCurrent(INA219_t *ina219);
  * @param ina219 Pointer to INA219 instance
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return int16_t Raw current register value
  */
@@ -157,6 +163,7 @@ int16_t INA219_ReadCurrent_raw(INA219_t *ina219);
  * @param ina219 Pointer to INA219 instance
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return uint16_t Shunt voltage in millivolts
  */
@@ -170,6 +177,7 @@ uint16_t INA219_ReadShuntVolage(INA219_t *ina219);
  * @param ina219 Pointer to INA219 instance
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return uint16_t Power in milliwatts
  */
@@ -185,6 +193,7 @@ uint16_t INA219_ReadPower(INA219_t *ina219);
  * @param batteryMin Minimum expected battery voltage (mV)
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return float Battery life percentage (0..100)
  */
@@ -196,6 +205,7 @@ float INA219_GetBatteryLife(INA219_t *ina219,float batteryMax, float batteryMin)
  * @param ina219 Pointer to INA219 instance
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return float Average milliwatts
  */
@@ -207,6 +217,7 @@ float INA219_GetAVGMiliWatt(INA219_t *ina219);
  * @param ina219 Pointer to INA219 instance
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return float Energy sample in mW·s
  */
@@ -218,6 +229,7 @@ float INA219_GetMiliWattsDeltaTime(INA219_t *ina219);
  * @param ina219 Pointer to INA219 instance
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return float Total energy (mW·s)
  */
@@ -231,6 +243,7 @@ float INA219_GetTotalPowerUsed(INA219_t *ina219);
  * @param batteryPercentage Current battery percentage
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return enum BatteryState Current battery state
  */
@@ -242,6 +255,7 @@ enum BatteryState INA219_HealthCheck(INA219_t *ina219,float batteryPercentageThr
  * @param ina219 Pointer to INA219 instance
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return void
  */
@@ -254,6 +268,7 @@ void INA219_Reset(INA219_t *ina219);
  * @param CalibrationData Calibration value to write
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return void
  */
@@ -265,6 +280,7 @@ void INA219_setCalibration(INA219_t *ina219, uint16_t CalibrationData);
  * @param ina219 Pointer to INA219 instance
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return uint16_t Config register value
  */
@@ -277,6 +293,7 @@ uint16_t INA219_getConfig(INA219_t *ina219);
  * @param Config Config value to write
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return void
  */
@@ -288,6 +305,7 @@ void INA219_setConfig(INA219_t *ina219, uint16_t Config);
  * @param ina219 Pointer to INA219 instance
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return void
  */
@@ -299,6 +317,7 @@ void INA219_setCalibration_32V_2A(INA219_t *ina219);
  * @param ina219 Pointer to INA219 instance
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return void
  */
@@ -310,6 +329,7 @@ void INA219_setCalibration_32V_1A(INA219_t *ina219);
  * @param ina219 Pointer to INA219 instance
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return void
  */
@@ -322,20 +342,10 @@ void INA219_setCalibration_16V_400mA(INA219_t *ina219);
  * @param Mode One of INA219_CONFIG_MODE_* values
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return void
  */
-/**
- * @brief Convenience calibration: 16V, 3A profile
- *
- * @param ina219 Pointer to INA219 instance
- *
- * Requirement traceability:
- *
- * @return void
- */
-void INA219_setCalibration_16V_3A(INA219_t *ina219);
-
 void INA219_setPowerMode(INA219_t *ina219, uint8_t Mode);
 
 /**
@@ -347,6 +357,7 @@ void INA219_setPowerMode(INA219_t *ina219, uint8_t Mode);
  * @param Register Register address to read
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return uint16_t Register value
  */
@@ -362,6 +373,7 @@ uint16_t Read16(INA219_t *ina219, uint8_t Register);
  * @param Value 16-bit value to write
  *
  * Requirement traceability:
+ * [impl->dsn~battery-unit~1]
  *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR / other HAL status
  */

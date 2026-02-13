@@ -13,6 +13,7 @@
  * @param msg NUL-terminated message string to transmit
  *
  * Requirement traceability:
+ * [impl->dsn~can-logging-policy~1]
  *
  * @return void
  */

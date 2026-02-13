@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Requirements & OpenFAST Trace Viewer</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    body { font-family: 'Roboto', sans-serif; background: #f4f6f8; margin: 0; padding: 0; }
+    header { background: #263238; color: #fff; padding: 1.5rem 2rem; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .container { max-width: 1200px; margin: 2rem auto; background: #fff; border-radius: 14px; box-shadow: 0 4px 24px rgba(0,0,0,0.10); padding: 2.5rem 2rem; }
+    h1 { margin: 0 0 0.5rem 0; font-size: 2.5rem; font-weight: 700; letter-spacing: 0.02em; }
+    header p { margin: 0; font-size: 1.15rem; color: #b0bec5; }
+    .search-bar { margin-bottom: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+    .search-bar label { font-weight: 600; color: #263238; }
+    .search-bar input[type="file"] {
+      padding: 0.4rem 0.6rem; border-radius: 4px; border: 1px solid #b0bec5; background: #f4f6f8; font-size: 1rem;
+    }
+    .search-bar input[type="text"], .search-bar select {
+      padding: 0.5rem 0.8rem; border-radius: 4px; border: 1px solid #b0bec5; background: #f4f6f8; font-size: 1rem;
+      transition: border 0.2s;
+    }
+    .search-bar input[type="text"]:focus, .search-bar select:focus {
+      border: 1.5px solid #1976d2;
+      outline: none;
+    }
+    .doctype-section { margin-bottom: 2.5rem; border-radius: 10px; box-shadow: 0 1px 6px rgba(0,0,0,0.04); background: #fafbfc; }
+    .doctype-title { font-size: 1.25rem; color: #37474f; margin-bottom: 0.7rem; font-weight: 700; padding: 1rem 1.2rem; border-radius: 10px 10px 0 0; background: #eceff1; display: flex; align-items: center; cursor: pointer; }
+    .doctype-title:focus { outline: 2px solid #1976d2; }
+    .requirements-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 1rem; border-radius: 0 0 10px 10px; overflow: hidden; }
+    .requirements-table th, .requirements-table td { padding: 0.7rem 0.6rem; border-bottom: 1px solid #ececec; text-align: left; }
+    .requirements-table th { background: #eceff1; color: #263238; font-weight: 700; }
+    .requirements-table tr:nth-child(even) { background: #f7fafd; }
+    .requirements-table tr:nth-child(odd) { background: #fff; }
+    .requirement-row { cursor: pointer; transition: background 0.2s; }
+    .requirement-row:hover, .requirement-row:focus { background: #e3f2fd !important; }
+    .details { display: none; background: #f9fbe7; padding: 1rem; border-radius: 0 0 10px 10px; margin-top: 0.5rem; }
+    .show { display: table-row; }
+    #dashboard {
+      background: linear-gradient(90deg, #e3ffe8 0%, #e3f2fd 50%, #ffe0f7 100%);
+      border-radius: 18px;
+      box-shadow: 0 6px 32px rgba(25, 118, 210, 0.10);
+      padding: 1.2rem 0.7rem 1rem 0.7rem; /* reduced padding */
+      margin-bottom: 3.5rem; /* increased gap below cards */
+      position: sticky; /* sticky for always-on-top */
+      top: 80px; /* adjust as needed for header height */
+      z-index: 99;
+      overflow-x: auto;
+    }
+    #dashboard-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      align-items: stretch;
+      margin-left: 0;
+      min-height: 120px;
+      position: relative;
+      overflow: visible;
+      z-index: 10;
+    }
+    .dashboard-metric {
+      position: relative;
+      transition: box-shadow 0.25s, transform 0.25s, z-index 0.2s, background 0.3s;
+      min-width: 140px;
+      min-height: 90px;
+      font-size: 0.95rem;
+      padding: 0.7rem;
+      margin-left: 0;
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(180,180,255,0.13);
+      box-shadow: 0 2px 12px rgba(25, 118, 210, 0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      animation: fadeInUp 0.7s cubic-bezier(.23,1.01,.32,1) both;
+      overflow: visible;
+      z-index: 1;
+    }
+    .dashboard-metric:hover, .dashboard-metric:focus-within {
+      z-index: 1000;
+    }
+    .dashboard-metric .metric-desc {
+      display: none;
+      position: absolute;
+      left: 50%;
+      top: 100%;
+      transform: translateX(-50%);
+      min-width: 260px;
+      max-width: 350px;
+      background: #fffbe7;
+      color: #37474f;
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(25, 118, 210, 0.25);
+      padding: 1em 1.2em;
+      font-size: 1em;
+      z-index: 2000;
+      margin-top: 0.5em;
+      pointer-events: none;
+      opacity: 0.98;
+      white-space: normal;
+      word-break: break-word;
+    }
+    .dashboard-metric:hover .metric-desc, .dashboard-metric:focus-within .metric-desc {
+      display: block;
+      pointer-events: auto;
+    }
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(40px) scale(0.95); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    @media (max-width: 800px) {
+      #dashboard-cards {
+        flex-direction: column;
+        margin-left: 0;
+        min-height: unset;
+        gap: 0.7rem;
+      }
+      .dashboard-metric {
+        margin-left: 0;
+        margin-top: 0;
+        min-width: 0;
+        min-height: 70px;
+        font-size: 0.9rem;
+      }
+      .dashboard-metric:first-child {
+        margin-top: 0;
+      }
+      .dashboard-metric .metric-desc {
+        left: 10vw;
+        right: 10vw;
+        transform: none;
+        min-width: 180px;
+        max-width: 98vw;
+      }
+    }
+    @media (max-width: 500px) {
+      .container { padding: 0.5rem; }
+      h1 { font-size: 1.3rem; }
+      .dashboard-metric { font-size: 0.95rem; }
+    }
+    footer { background: #263238; color: #b0bec5; font-size: 1rem; text-align: center; padding: 1.2rem 0 1.2rem 0; margin-top: 2.5rem; border-radius: 0 0 14px 14px; box-shadow: 0 -2px 8px rgba(0,0,0,0.04); }
+    footer a { color: #90caf9; text-decoration: none; margin-left: 0.5em; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Requirements & OpenFAST Trace Viewer</h1>
+    <p>Browse and explore requirements and traceability information in a modern UI</p>
+  </header>
+  <div class="container">
+    <div class="search-bar">
+      <label for="xmlFileInput">Load requirements.xml:</label>
+      <input type="file" id="xmlFileInput" accept=".xml">
+      <select id="groupFilter" disabled>
+        <option value="">-- Filter by group --</option>
+      </select>
+      <input type="text" id="searchInput" placeholder="Search by ID, status, or doctype..." disabled>
+      <label style="display:flex;align-items:center;gap:0.3em;font-weight:400;">
+        <input type="checkbox" id="notCoveredOnly" style="margin:0;"> Show only Not Covered
+      </label>
+    </div>
+    <div id="dashboard" style="margin-bottom:2.5rem;"></div>
+    <div id="dashboard-description" style="min-height:3.5em; font-size:1.08em; color:#37474f; background:#fffbe7; border-radius:8px; box-shadow:0 2px 12px rgba(25,118,210,0.08); padding:1em 1.2em; margin-bottom:2em; display:none;"></div>
+    <div id="groupSummary" style="margin-bottom:1.5rem;"></div>
+    <div id="requirementsContent">
+      <!-- Dynamic content will be inserted here -->
+    </div>
+  </div>
+  <footer>
+    <span>Powered by <a href="https://github.com/OpenFAST" target="_blank">OpenFAST Trace</a> | Team2_TheySEAME_Rollin</span>
+  </footer>
+  <script>
+    // Utility: Extract requirements grouped by doctype
+    function extractRequirements(xmlDoc) {
+      const doctypeGroups = {};
+      const allRequirements = [];
+      const groupSet = new Set();
+      const specobjects = xmlDoc.querySelectorAll('specobjects');
+      specobjects.forEach(group => {
+        const doctype = group.getAttribute('doctype') || 'unknown';
+        doctypeGroups[doctype] = [];
+        group.querySelectorAll('specobject').forEach(obj => {
+          // Extract all coveredType ids for group filtering
+          const coveredTypes = Array.from(obj.querySelectorAll('covering > coveredType')).map(ct => ({
+            id: ct.querySelector('id')?.textContent || '',
+            version: ct.querySelector('version')?.textContent || '',
+            doctype: ct.querySelector('doctype')?.textContent || ''
+          }));
+          coveredTypes.forEach(ct => { if (ct.id) groupSet.add(ct.id); });
+          // Extract coveringSpecObjects (for traceability completeness)
+          const coveringSpecObjects = Array.from(obj.querySelectorAll('coveringSpecObjects > coveringSpecObject')).map(cso => ({
+            id: cso.querySelector('id')?.textContent || '',
+            version: cso.querySelector('version')?.textContent || '',
+            doctype: cso.querySelector('doctype')?.textContent || ''
+          }));
+          const req = {
+            id: obj.querySelector('id')?.textContent || '',
+            version: obj.querySelector('version')?.textContent || '',
+            status: obj.querySelector('status')?.textContent || '',
+            sourcefile: obj.querySelector('sourcefile')?.textContent || '',
+            sourceline: obj.querySelector('sourceline')?.textContent || '',
+            shallowCoverage: obj.querySelector('shallowCoverageStatus')?.textContent || '',
+            deepCoverage: obj.querySelector('deepCoverageStatus')?.textContent || '',
+            coveredTypes,
+            coveringSpecObjects, // <-- add this line
+            doctype
+          };
+          doctypeGroups[doctype].push(req);
+          allRequirements.push(req);
+        });
+      });
+      return { doctypeGroups, allRequirements, groupList: Array.from(groupSet).sort() };
+    }
+
+    // Utility: Calculate dashboard metrics
+    function calculateDashboardMetrics(allRequirements) {
+      // Exclude Draft/Proposed for most metrics
+      const nonDraftProposed = allRequirements.filter(r => r.status.toLowerCase() !== 'draft' && r.status.toLowerCase() !== 'proposed');
+      const totalChains = nonDraftProposed.length;
+      // Deep Coverage: deeply covered chains / total chains
+      const deepCovered = nonDraftProposed.filter(r => r.deepCoverage.toLowerCase() === 'covered').length;
+      const deepCoveragePct = totalChains ? (100 * deepCovered / totalChains) : 0;
+      // Shallow Coverage: shallowly covered chains / total chains
+      const shallowCovered = nonDraftProposed.filter(r => r.shallowCoverage.toLowerCase() === 'covered').length;
+      const shallowCoveragePct = totalChains ? (100 * shallowCovered / totalChains) : 0;
+      // Traceability Completeness: reqs with both upstream + downstream links / total non-draft/proposed
+      // Upstream: has coveringSpecObjects; Downstream: has coveredTypes
+      const traceComplete = nonDraftProposed.filter(r => {
+        const hasUp = r.coveringSpecObjects && r.coveringSpecObjects.length > 0;
+        const hasDown = r.coveredTypes && r.coveredTypes.length > 0;
+        return hasUp && hasDown;
+      }).length;
+      const traceabilityPct = totalChains ? (100 * traceComplete / totalChains) : 0;
+      // Test Coverage: reqs linked to tests (sourcefile includes 'test')
+      const testCovered = nonDraftProposed.filter(r => r.sourcefile && r.sourcefile.toLowerCase().includes('test')).length;
+      const testCoveragePct = totalChains ? (100 * testCovered / totalChains) : 0;
+      // Total Spec Items
+      const totalSpecItems = allRequirements.length;
+      // Draft/Proposed counts
+      const draftCount = allRequirements.filter(r => r.status.toLowerCase() === 'draft').length;
+      const proposedCount = allRequirements.filter(r => r.status.toLowerCase() === 'proposed').length;
+      return {
+        deepCoveragePct,
+        shallowCoveragePct,
+        traceabilityPct,
+        testCoveragePct,
+        totalSpecItems,
+        draftCount,
+        proposedCount
+      };
+    }
+
+    // Render dashboard metrics
+    function renderDashboard(metrics) {
+      const dashboard = document.getElementById('dashboard');
+      const descArea = document.getElementById('dashboard-description');
+      const metricDescriptions = [
+        `<strong>Deep Coverage</strong> is the percentage of requirements (excluding Draft/Proposed) that are fully covered by both shallow and deep coverage criteria. A requirement is considered deeply covered if it is marked as <b>deepCoverage = 'covered'</b>.<br><em>Formula:</em> (Number of deeply covered requirements) / (Total non-Draft/Proposed requirements) × 100`,
+        `<strong>Shallow Coverage</strong> is the percentage of requirements (excluding Draft/Proposed) that are at least partially covered. A requirement is considered shallowly covered if it is marked as <b>shallowCoverage = 'covered'</b>.<br><em>Formula:</em> (Number of shallowly covered requirements) / (Total non-Draft/Proposed requirements) × 100`,
+        `<strong>Traceability Completeness</strong> is the percentage of requirements (excluding Draft/Proposed) that have both upstream and downstream traceability links. This means the requirement has at least one <b>coveringSpecObject</b> (upstream) and at least one <b>coveredType</b> (downstream).<br><em>Formula:</em> (Number of requirements with both upstream and downstream links) / (Total non-Draft/Proposed requirements) × 100`,
+        `<strong>Test Coverage</strong> is the percentage of requirements (excluding Draft/Proposed) that are linked to a test. A requirement is considered test-covered if its <b>sourcefile</b> field contains the word 'test'.<br><em>Formula:</em> (Number of requirements linked to tests) / (Total non-Draft/Proposed requirements) × 100`,
+        `<strong>Total Specification Items</strong> is the total number of requirements in the system, including those with Draft or Proposed status.`,
+        `<strong>Draft Requirements</strong> is the count of requirements currently marked as <b>Draft</b> status.`,
+        `<strong>Proposed Requirements</strong> is the count of requirements currently marked as <b>Proposed</b> status.`
+      ];
+      dashboard.innerHTML = `
+        <div id="dashboard-cards">
+          <div class="dashboard-metric" tabindex="0" data-desc-idx="0" style="flex:1 1 220px; background:#e3f2fd; border-radius:8px; padding:1rem;">
+            <b><i class="fa-solid fa-layer-group"></i> Deep Coverage (%)</b><br>
+            <span style='font-size:1.5rem;'>${metrics.deepCoveragePct.toFixed(1)}%</span>
+          </div>
+          <div class="dashboard-metric" tabindex="0" data-desc-idx="1" style="flex:1 1 220px; background:#f1f8e9; border-radius:8px; padding:1rem;">
+            <b><i class="fa-solid fa-water"></i> Shallow Coverage (%)</b><br>
+            <span style='font-size:1.5rem;'>${metrics.shallowCoveragePct.toFixed(1)}%</span>
+          </div>
+          <div class="dashboard-metric" tabindex="0" data-desc-idx="2" style="flex:1 1 220px; background:#fff3e0; border-radius:8px; padding:1rem;">
+            <b><i class="fa-solid fa-link"></i> Traceability Completeness (%)</b><br>
+            <span style='font-size:1.5rem;'>${metrics.traceabilityPct.toFixed(1)}%</span>
+          </div>
+          <div class="dashboard-metric" tabindex="0" data-desc-idx="3" style="flex:1 1 220px; background:#ede7f6; border-radius:8px; padding:1rem;">
+            <b><i class="fa-solid fa-vial"></i> Test Coverage (%)</b><br>
+            <span style='font-size:1.5rem;'>${metrics.testCoveragePct.toFixed(1)}%</span>
+          </div>
+          <div class="dashboard-metric" tabindex="0" data-desc-idx="4" style="flex:1 1 220px; background:#f5f5f5; border-radius:8px; padding:1rem;">
+            <b><i class="fa-solid fa-list-ol"></i> Total Specification Items</b><br>
+            <span style='font-size:1.5rem;'>${metrics.totalSpecItems}</span>
+          </div>
+          <div class="dashboard-metric" tabindex="0" data-desc-idx="5" style="flex:1 1 220px; background:#fffde7; border-radius:8px; padding:1rem;">
+            <b><i class="fa-solid fa-pen"></i> Draft Requirements</b><br>
+            <span style='font-size:1.5rem;'>${metrics.draftCount}</span>
+          </div>
+          <div class="dashboard-metric" tabindex="0" data-desc-idx="6" style="flex:1 1 220px; background:#e0f2f1; border-radius:8px; padding:1rem;">
+            <b><i class="fa-solid fa-lightbulb"></i> Proposed Requirements</b><br>
+            <span style='font-size:1.5rem;'>${metrics.proposedCount}</span>
+          </div>
+        </div>
+      `;
+      // Add hover/focus logic for description area
+      const cards = dashboard.querySelectorAll('.dashboard-metric');
+      cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          const idx = this.getAttribute('data-desc-idx');
+          descArea.innerHTML = metricDescriptions[idx];
+          descArea.style.display = 'block';
+        });
+        card.addEventListener('focus', function() {
+          const idx = this.getAttribute('data-desc-idx');
+          descArea.innerHTML = metricDescriptions[idx];
+          descArea.style.display = 'block';
+        });
+        card.addEventListener('mouseleave', function() {
+          descArea.innerHTML = '';
+          descArea.style.display = 'none';
+        });
+        card.addEventListener('blur', function() {
+          descArea.innerHTML = '';
+          descArea.style.display = 'none';
+        });
+      });
+    }
+
+    // Render requirements to the UI (with group filter)
+    function renderRequirements(doctypeGroups, filter = '', group = '', allRequirements = [], notCoveredOnly = false) {
+      const content = document.getElementById('requirementsContent');
+      const groupSummary = document.getElementById('groupSummary');
+      content.innerHTML = '';
+      groupSummary.innerHTML = '';
+      let reqsToShow = [];
+      if (group) {
+        // Show only requirements referencing the selected group in coveredTypes
+        reqsToShow = allRequirements.filter(r => r.coveredTypes.some(ct => ct.id === group));
+        // Group by doctype for display
+        doctypeGroups = {};
+        reqsToShow.forEach(r => {
+          if (!doctypeGroups[r.doctype]) doctypeGroups[r.doctype] = [];
+          doctypeGroups[r.doctype].push(r);
+        });
+        // Show summary and not-done list
+        const notDone = reqsToShow.filter(r => r.status.toLowerCase() !== 'approved' && r.status.toLowerCase() !== 'done');
+        groupSummary.innerHTML = `
+          <div style="font-size:1.1rem; font-weight:500; color:#37474f;">
+            Group <span style='color:#1976d2;'>${group}</span>: <b>${notDone.length}</b> requirement(s) not done
+          </div>
+          ${notDone.length > 0 ? `<div style='margin-top:0.5rem;'><b>Not done requirements:</b><ul style='margin:0; padding-left:1.2em;'>${notDone.map(r => `<li><span style='color:#d32f2f;'>${r.id}</span> (status: <b>${r.status}</b>)</li>`).join('')}</ul></div>` : '<div style="color:#388e3c;">All requirements in this group are done!</div>'}`;
+      } else {
+        groupSummary.innerHTML = '';
+      }
+      Object.entries(doctypeGroups).forEach(([doctype, reqs]) => {
+        // Filter requirements
+        let filteredReqs = reqs.filter(r =>
+          (!filter || r.id.toLowerCase().includes(filter) || r.status.toLowerCase().includes(filter) || doctype.toLowerCase().includes(filter))
+        );
+        // Apply Not Covered filter if needed
+        if (notCoveredOnly) {
+          filteredReqs = filteredReqs.filter(r => {
+            let coverageStatus = 'Not covered';
+            if (r.shallowCoverage.toLowerCase() === 'covered' && r.deepCoverage.toLowerCase() === 'covered') {
+              coverageStatus = 'Fully covered';
+            } else if (r.shallowCoverage.toLowerCase() === 'covered') {
+              coverageStatus = 'Partially covered';
+            }
+            return coverageStatus === 'Not covered';
+          });
+        }
+        if (filteredReqs.length === 0) return;
+        // Section for each doctype, now foldable
+        const section = document.createElement('div');
+        section.className = 'doctype-section';
+        // Add a fold/unfold button
+        const header = document.createElement('div');
+        header.className = 'doctype-title';
+        header.style.display = 'flex';
+        header.style.alignItems = 'center';
+        header.style.cursor = 'pointer';
+        const foldBtn = document.createElement('span');
+        foldBtn.textContent = '\u25BC'; // Down arrow
+        foldBtn.style.marginRight = '0.7em';
+        foldBtn.style.transition = 'transform 0.2s';
+        let folded = false;
+        header.appendChild(foldBtn);
+        const titleText = document.createElement('span');
+        titleText.textContent = `${doctype.toUpperCase()} (${filteredReqs.length})`;
+        header.appendChild(titleText);
+        section.appendChild(header);
+        // Table
+        const table = document.createElement('table');
+        table.className = 'requirements-table';
+        table.innerHTML = `
+          <thead>
+            <tr>
+              <th>ID</th><th>Status</th><th>Source</th><th>Line</th><th>Coverage</th><th>Covered Types</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        `;
+        const tbody = table.querySelector('tbody');
+        filteredReqs.forEach((req, idx) => {
+          const row = document.createElement('tr');
+          row.className = 'requirement-row';
+          // Highlight not done (status not 'approved' or 'done')
+          if (req.status.toLowerCase() !== 'approved' && req.status.toLowerCase() !== 'done') {
+            row.style.background = '#ffe0e0';
+          }
+          // Covered Types clickable
+          const coveredTypesHtml = req.coveredTypes.map(ct =>
+            `<span class="covered-type-link" data-type="${ct.id}" style="color:#1976d2; text-decoration:underline; cursor:pointer;">${ct.id}</span>`
+          ).join(', ');
+          // Determine coverage status
+          let coverageStatus = 'Not covered';
+          if (req.shallowCoverage.toLowerCase() === 'covered' && req.deepCoverage.toLowerCase() === 'covered') {
+            coverageStatus = 'Fully covered';
+          } else if (req.shallowCoverage.toLowerCase() === 'covered') {
+            coverageStatus = 'Partially covered';
+          }
+          row.innerHTML = `
+            <td>${req.id}</td>
+            <td>${req.status}</td>
+            <td>${req.sourcefile}</td>
+            <td>${req.sourceline}</td>
+            <td>${coverageStatus}</td>
+            <td>${coveredTypesHtml}</td>
+          `;
+          // Expandable details row
+          row.addEventListener('click', () => {
+            detailsRow.classList.toggle('show');
+          });
+          tbody.appendChild(row);
+          // Details row
+          const detailsRow = document.createElement('tr');
+          detailsRow.className = 'details';
+          detailsRow.innerHTML = `<td colspan="6">
+            <strong>Requirement ID:</strong> ${req.id}<br>
+            <strong>Version:</strong> ${req.version}<br>
+            <strong>Status:</strong> ${req.status}<br>
+            <strong>Source File:</strong> ${req.sourcefile}<br>
+            <strong>Source Line:</strong> ${req.sourceline}<br>
+            <strong>Coverage:</strong> ${coverageStatus}<br>
+            <strong>Covered Types:</strong> ${req.coveredTypes.map(ct => `${ct.id} (Version: ${ct.version}, Doctype: ${ct.doctype})`).join(', ')}
+          </td>`;
+          tbody.appendChild(detailsRow);
+        });
+        section.appendChild(table);
+        // Folding logic
+        table.style.display = '';
+        header.addEventListener('click', () => {
+          folded = !folded;
+          table.style.display = folded ? 'none' : '';
+          foldBtn.textContent = folded ? '\u25B6' : '\u25BC'; // Right or down arrow
+        });
+        content.appendChild(section);
+      });
+      // Add click event for covered type links
+      setTimeout(() => {
+        document.querySelectorAll('.covered-type-link').forEach(el => {
+          el.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const typeId = this.getAttribute('data-type');
+            const groupFilter = document.getElementById('groupFilter');
+            if (groupFilter) {
+              groupFilter.value = typeId;
+              groupFilter.dispatchEvent(new Event('change'));
+            }
+          });
+        });
+      }, 0);
+    }
+
+    // Main logic for file input and group filter
+    document.addEventListener('DOMContentLoaded', () => {
+      const fileInput = document.getElementById('xmlFileInput');
+      const searchInput = document.getElementById('searchInput');
+      const groupFilter = document.getElementById('groupFilter');
+      const notCoveredOnly = document.getElementById('notCoveredOnly');
+      let doctypeGroups = {};
+      let allRequirements = [];
+      let groupList = [];
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          const text = ev.target.result;
+          const parser = new window.DOMParser();
+          const xmlDoc = parser.parseFromString(text, 'application/xml');
+          const extracted = extractRequirements(xmlDoc);
+          doctypeGroups = extracted.doctypeGroups;
+          allRequirements = extracted.allRequirements;
+          groupList = extracted.groupList;
+          // Populate group filter dropdown
+          groupFilter.innerHTML = '<option value="">-- Filter by group --</option>' + groupList.map(g => `<option value="${g}">${g}</option>`).join('');
+          groupFilter.disabled = false;
+          renderDashboard(calculateDashboardMetrics(allRequirements));
+          renderRequirements(doctypeGroups, '', '', allRequirements);
+          searchInput.disabled = false;
+          searchInput.value = '';
+        };
+        reader.readAsText(file);
+      });
+      groupFilter.addEventListener('change', (e) => {
+        const group = e.target.value;
+        renderRequirements(doctypeGroups, searchInput.value.trim().toLowerCase(), group, allRequirements, notCoveredOnly.checked);
+      });
+      searchInput.addEventListener('input', (e) => {
+        const filter = e.target.value.trim().toLowerCase();
+        renderRequirements(doctypeGroups, filter, groupFilter.value, allRequirements, notCoveredOnly.checked);
+      });
+      notCoveredOnly.addEventListener('change', (e) => {
+        renderRequirements(doctypeGroups, searchInput.value.trim().toLowerCase(), groupFilter.value, allRequirements, e.target.checked);
+      });
+    });
+  </script>
+</body>
+</html>

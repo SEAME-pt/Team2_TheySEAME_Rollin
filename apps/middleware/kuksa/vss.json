@@ -55,7 +55,7 @@
                 "type": "actuator",
                 "datatype": "uint8",
                 "unit": "enum",
-                "description": "Current gear: 0=P, 1=N, 2=R, 3=D",
+                "description": "Current Gear: 0=P, 1=N, 2=R, 3=D",
                 "allowed": [0, 1, 2, 3],
                 "dbc": { "signal": "gear" },
                 "vss2dbc": { "signal": "gear" }
@@ -71,23 +71,8 @@
                 "datatype": "float",
                 "unit": "deg",
                 "description": "Steering angle command",
-                "dbc": { "signal": "angle" },
-                "vss2dbc": { "signal": "angle" }
-              }
-            }
-          },
-          "Brake": {
-            "type": "branch",
-            "description": "Brake control signals",
-            "children": {
-              "Value": {
-                "type": "actuator",
-                "datatype": "uint8",
-                "unit": "enum",
-                "description": "Brake command: 0=OFF, 1=ON",
-                "allowed": [0, 1],
-                "dbc": { "signal": "brake" },
-                "vss2dbc": { "signal": "brake" }
+                "dbc": { "signal": "Angle" },
+                "vss2dbc": { "signal": "Angle" }
               }
             }
           },
@@ -95,221 +80,23 @@
             "type": "branch",
             "description": "Driving mode signals",
             "children": {
+              "Break": {
+                "type": "actuator",
+                "datatype": "uint8",
+                "unit": "enum",
+                "description": "Break: 0=DRIVE, 1=BREAK",
+                "allowed": [0, 1],
+                "dbc": { "signal": "Break" },
+                "vss2dbc": { "signal": "Break" }
+              },
               "DrivingMode": {
                 "type": "actuator",
                 "datatype": "uint8",
                 "unit": "enum",
-                "description": "Driving mode: 0=MANUAL, 1=AI_ASSIST, 2=AUTONOMOUS",
-                "allowed": [0, 1, 2],
+                "description": "Driving mode: 0=MANUAL, 1=AI_ASSIST",
+                "allowed": [0, 1],
                 "dbc": { "signal": "DrivingMode" },
                 "vss2dbc": { "signal": "DrivingMode" }
-              }
-            }
-          }
-        }
-      },
-      "ADAS": {
-        "type": "branch",
-        "description": "Advanced Driver-Assistance Systems signals",
-        "children": {
-          "LaneKeepAssist": {
-            "type": "branch",
-            "description": "Lane Keep Assist signals",
-            "children": {
-              "Enabled": {
-                "type": "actuator",
-                "datatype": "boolean",
-                "description": "Enable or disable Lane Keep Assist"
-                ,"dbc": { "signal": "Enabled" },
-                "vss2dbc": { "signal": "Enabled" }
-              },
-              "Active": {
-                "type": "sensor",
-                "datatype": "boolean",
-                "description": "Lane Keep Assist currently active"
-              },
-              "TargetSteeringAngle": {
-                "type": "actuator",
-                "datatype": "float",
-                "unit": "deg",
-                "description": "Steering correction command from LKA"
-                ,"dbc": { "signal": "TargetSteeringAngle" },
-                "vss2dbc": { "signal": "TargetSteeringAngle" }
-              },
-              "LaneOffset": {
-                "type": "sensor",
-                "datatype": "float",
-                "unit": "m",
-                "description": "Vehicle lateral offset from lane center"
-              }
-            }
-          },
-          "LaneDepartureWarning": {
-            "type": "branch",
-            "description": "Lane Departure Warning signals",
-            "children": {
-              "Enabled": {
-                "type": "actuator",
-                "datatype": "boolean",
-                "description": "Enable or disable LDW"
-                ,"dbc": { "signal": "Enabled" },
-                "vss2dbc": { "signal": "Enabled" }
-              },
-              "Warning": {
-                "type": "sensor",
-                "datatype": "boolean",
-                "description": "Lane departure warning active"
-              }
-            }
-          },
-          "CruiseControl": {
-            "type": "branch",
-            "description": "Cruise Control signals",
-            "children": {
-              "Enabled": {
-                "type": "actuator",
-                "datatype": "boolean",
-                "description": "Enable or disable Cruise Control"
-                ,"dbc": { "signal": "Enabled" },
-                "vss2dbc": { "signal": "Enabled" }
-              },
-              "Active": {
-                "type": "sensor",
-                "datatype": "boolean",
-                "description": "Cruise Control active"
-              },
-              "TargetSpeed": {
-                "type": "actuator",
-                "datatype": "float",
-                "unit": "hm/h",
-                "description": "Target speed for Cruise Control"
-                ,"dbc": { "signal": "TargetSpeed" },
-                "vss2dbc": { "signal": "TargetSpeed" }
-              }
-            }
-          },
-          "AdaptiveCruiseControl": {
-            "type": "branch",
-            "description": "Adaptive Cruise Control signals",
-            "children": {
-              "Enabled": {
-                "type": "actuator",
-                "datatype": "boolean",
-                "description": "Enable or disable ACC"
-                ,"dbc": { "signal": "Enabled" },
-                "vss2dbc": { "signal": "Enabled" }
-              },
-              "Active": {
-                "type": "sensor",
-                "datatype": "boolean",
-                "description": "Adaptive Cruise Control active"
-              },
-              "TargetSpeed": {
-                "type": "actuator",
-                "datatype": "float",
-                "unit": "hm/h",
-                "description": "Target speed for ACC"
-                ,"dbc": { "signal": "TargetSpeed" },
-                "vss2dbc": { "signal": "TargetSpeed" }
-              },
-              "TimeGap": {
-                "type": "actuator",
-                "datatype": "float",
-                "unit": "s",
-                "description": "Desired time gap to front vehicle"
-                ,"dbc": { "signal": "TimeGap" },
-                "vss2dbc": { "signal": "TimeGap" }
-              },
-              "LeadVehicleDistance": {
-                "type": "sensor",
-                "datatype": "float",
-                "unit": "m",
-                "description": "Distance to lead vehicle"
-              }
-            }
-          },
-          "BlindSpotDetection": {
-            "type": "branch",
-            "description": "Blind spot detection signals",
-            "children": {
-              "Enabled": {
-                "type": "actuator",
-                "datatype": "boolean",
-                "description": "Enable or disable blind spot detection"
-                ,"dbc": { "signal": "Enabled" },
-                "vss2dbc": { "signal": "Enabled" }
-              },
-              "LeftOccupied": {
-                "type": "sensor",
-                "datatype": "boolean",
-                "description": "Object detected in left blind spot"
-              },
-              "RightOccupied": {
-                "type": "sensor",
-                "datatype": "boolean",
-                "description": "Object detected in right blind spot"
-              },
-              "Warning": {
-                "type": "sensor",
-                "datatype": "boolean",
-                "description": "Blind spot warning active"
-              }
-            }
-          },
-          "TrafficSignRecognition": {
-            "type": "branch",
-            "description": "Traffic sign recognition signals",
-            "children": {
-              "Enabled": {
-                "type": "actuator",
-                "datatype": "boolean",
-                "description": "Enable or disable traffic sign recognition"
-                ,"dbc": { "signal": "Enabled" },
-                "vss2dbc": { "signal": "Enabled" }
-              },
-              "DetectedSpeedLimit": {
-                "type": "sensor",
-                "datatype": "float",
-                "unit": "hm/h",
-                "description": "Detected speed limit from traffic sign"
-              },
-              "DetectedSignType": {
-                "type": "sensor",
-                "datatype": "uint8",
-                "unit": "enum",
-                "description": "Detected traffic sign type: 0=UNKNOWN, 1=STOP, 2=SPEED_LIMIT_30, 3=SPEED_LIMIT_50, 4=SPEED_LIMIT_80, 5=SPEED_LIMIT_100, 6=SPEED_LIMIT_120, 7=YIELD, 8=NO_ENTRY, 9=TURN_LEFT, 10=TURN_RIGHT, 11=PEDESTRIAN, 12=TRAFFIC_LIGHT, 13=ONE_WAY, 14=NO_PARKING, 15=NO_OVERTAKING",
-                "allowed": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-                "dbc": { "signal": "TSR_DetectedSignType" }
-              }
-            }
-          },
-          "ParkingAssist": {
-            "type": "branch",
-            "description": "Parking assistance signals",
-            "children": {
-              "Enabled": {
-                "type": "actuator",
-                "datatype": "boolean",
-                "description": "Enable or disable parking assist"
-                ,"dbc": { "signal": "Enabled" },
-                "vss2dbc": { "signal": "Enabled" }
-              },
-              "Active": {
-                "type": "sensor",
-                "datatype": "boolean",
-                "description": "Parking assist active"
-              },
-              "ObstacleDistanceFront": {
-                "type": "sensor",
-                "datatype": "float",
-                "unit": "m",
-                "description": "Distance to front obstacle"
-              },
-              "ObstacleDistanceRear": {
-                "type": "sensor",
-                "datatype": "float",
-                "unit": "m",
-                "description": "Distance to rear obstacle"
               }
             }
           }

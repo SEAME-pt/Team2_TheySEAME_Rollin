@@ -8,6 +8,7 @@
  * - Uses fakes to control register reads and system ticks and to capture writes
  *
  * ====================== Test Traceability ===========================
+ * [test->dsn~can-telemetry-tx~1]
  * ==========================================================================
  */
 
@@ -31,6 +32,7 @@ void tearDown(void) {
  * Assert: Function returns HAL_OK and TXB0DATA was written with the expected dm/s byte (12).
  *
  * ====================== Test Traceability ===========================
+ * [test->dsn~can-telemetry-tx~1]
  * ==========================================================================
  */
 void test_MCP2515_SendSpeed_ValidSpeed_Success(void)
@@ -70,6 +72,7 @@ void test_MCP2515_SendSpeed_ValidSpeed_Success(void)
  * Assert: Negative speed writes 0, large speed writes 255, both return HAL_OK.
  *
  * ====================== Test Traceability ===========================
+ * [test->dsn~can-telemetry-tx~1]
  * ==========================================================================
  */
 void test_MCP2515_SendSpeed_ClampLowAndHigh(void)
@@ -111,6 +114,7 @@ void test_MCP2515_SendSpeed_ClampLowAndHigh(void)
  * Assert: Function returns HAL_BUSY and abort behavior is exercised.
  *
  * ====================== Test Traceability ===========================
+ * [test->dsn~can-telemetry-tx~1]
  * ==========================================================================
  */
 void test_MCP2515_SendSpeed_TxBufferBusy_ReturnsBusy(void)
@@ -129,6 +133,7 @@ void test_MCP2515_SendSpeed_TxBufferBusy_ReturnsBusy(void)
  * Assert: Function returns HAL_TIMEOUT and writes were made clearing EFLG and CANINTF.
  *
  * ====================== Test Traceability ===========================
+ * [test->dsn~can-error-handling~1]
  * ==========================================================================
  */
 void test_MCP2515_SendSpeed_Timeout_CleansFlags(void)
@@ -166,6 +171,7 @@ void test_MCP2515_SendSpeed_Timeout_CleansFlags(void)
  * Assert: Function returns HAL_OK and TXB0DATA contains the percentage (90).
  *
  * ====================== Test Traceability ===========================
+ * [test->dsn~can-telemetry-tx~1]
  * ==========================================================================
  */
 void test_MCP2515_SendBattery_ValidPercentage_Success(void)

@@ -41,7 +41,10 @@ target_sources(qtAppLib PRIVATE
   ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/types.pb.cc
   ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/val.pb.cc
   ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/val.grpc.pb.cc
+<<<<<<< HEAD
   ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/KuksaLib.cpp
+=======
+>>>>>>> 92140775 (Release/1.0.0 (#335))
 )
 
 add_executable(qtAppExec

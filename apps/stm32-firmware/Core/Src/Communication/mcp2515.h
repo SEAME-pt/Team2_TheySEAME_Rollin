@@ -83,6 +83,7 @@ typedef enum {
  * @param speed CAN speed selection (see MCP2515_Speed_t)
  *
  * Requirement traceability:
+ * [impl->dsn~can-init~1]
  *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR / other HAL status
  */
@@ -105,6 +106,10 @@ HAL_StatusTypeDef MCP2515_Init(MCP2515_Speed_t speed);
  * @param length Number of payload bytes (0..8)
  *
  * @par Requirement traceability:
+ * [impl->dsn~can-telemetry-tx~1]
+ * [impl->dsn~can-error-handling~1]
+ * [impl->dsn~can-rate-limit~1]
+ * [impl->dsn~can-logging-policy~1]
  *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR
  */
@@ -119,6 +124,7 @@ HAL_StatusTypeDef MCP2515_SendMessage(uint16_t can_id, uint8_t *data, uint8_t le
  * @param percentage Battery charge percentage (0..100)
  *
  * Requirement traceability:
+ * [impl->dsn~can-telemetry-tx~1]
  *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR
  */
@@ -131,6 +137,7 @@ HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage);  // Convenience wrapp
  * telemetry format (decimeters/second) and transmits using the MCP2515.
  *
  * Requirement traceability:
+ * [impl->dsn~can-telemetry-tx~1]
  *
  * @param speed_ms Vehicle speed in meters per second
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR
@@ -146,6 +153,7 @@ HAL_StatusTypeDef MCP2515_SendSpeed(float speed_ms);  // Convenience wrapper for
  * @param mode One of MCP2515_MODE_* values
  *
  * Requirement traceability:
+ * [impl->dsn~can-init~1]
  *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR
  */
@@ -162,6 +170,7 @@ HAL_StatusTypeDef MCP2515_SetMode(uint8_t mode);
  * @param length Pointer to variable that will receive the payload length
  *
  * Requirement traceability:
+ * [impl->dsn~can-telemetry-rx~1]
  *
  * @return int Returns 1 if a message was received, 0 if no message is available, negative on error
  */
@@ -174,6 +183,8 @@ int MCP2515_ReceiveMessage(uint32_t *can_id, uint8_t *data, uint8_t *length);  /
  * them and dispatch updates to the rest of the system.
  *
  * Requirement traceability:
+ * [impl->dsn~can-telemetry-rx~1]
+ * [impl->dsn~can-error-handling~1]
  */
 void MCP2515_CheckForMessages(void);  // Check and print any received messages
 
@@ -184,6 +195,7 @@ void MCP2515_CheckForMessages(void);  // Check and print any received messages
  * production builds unless explicitly enabled.
  *
  * Requirement traceability:
+ * [impl->dsn~can-logging-policy~1]
  */
 void MCP2515_PrintStatus(void);  // Diagnostic function
 
@@ -194,6 +206,7 @@ void MCP2515_PrintStatus(void);  // Diagnostic function
  * production builds unless explicitly enabled.
  *
  * Requirement traceability:
+ * [impl->dsn~can-logging-policy~1]
  */
 void MCP2515_PrintDetailedStatus(void);  // Verbose diagnostic with RX buffer check
 
@@ -204,6 +217,7 @@ void MCP2515_PrintDetailedStatus(void);  // Verbose diagnostic with RX buffer ch
  * dedicated test flows.
  *
  * Requirement traceability:
+ * [impl->dsn~can-init~1]
  */
 void MCP2515_TestConnection(void);  // Test SPI connection
 
@@ -215,6 +229,7 @@ void MCP2515_TestConnection(void);  // Test SPI connection
  * Used during initialization and error recovery to force device reset.
  *
  * Requirement traceability:
+ * [impl->dsn~can-init~1]
  */
 void MCP2515_Reset(void);
 
