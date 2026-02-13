@@ -6,8 +6,6 @@ labels: ""
 assignees: ""
 ---
 
-# Issue Title: [Short, descriptive title]
-
 **Description:**  
 [Provide a detailed description of the issue. Include context, problem statement, and any relevant background information.]
 

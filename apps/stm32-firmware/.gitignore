@@ -1,0 +1,16 @@
+Debug/**/*.o
+Debug/**/*.d
+Debug/**/*.su
+Debug/**/*.cyclo
+Debug/**/*.md5
+Debug/*.elf
+Debug/*.map
+Debug/*.list
+!Debug/objects.list
+!Debug/makefile
+!Debug/**/subdir.mk
+.metadata
+.settings
+*.launch
+Core/Tests/build/*
+tests/build/

@@ -1,0 +1,63 @@
+name: Build_rpi5
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'apps/rpi5-firmware/**'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    env:
+      RPI_PATH: apps/rpi5-firmware
+      BUILD_HOST: build/host
+      BUILD_TARGET: build/target
+
+    steps:
+      - name: Install deps
+        run: sudo apt-get install -y cmake
+
+      - name: Chekout repo
+        uses: actions/checkout@v5
+        with:
+          submodules: true
+          ref: ${{ github.head_ref }}
+
+      - name: Compile rpi5-firmware for Host (unit_tests)
+        run: |
+          cmake -S $RPI_PATH -B $BUILD_HOST
+          make install -C $BUILD_HOST
+          cp -r $BUILD_HOST/bin .
+
+      - name: Download sdk
+        id: aglSDK
+        uses: robinraju/release-downloader@v1
+        with:
+          preRelease: true
+          tag: "SDK"
+          filename: "*.sh"
+
+      - name: Run sdk
+        run: bash ${{ fromJson(steps.aglSDK.outputs.downloaded_files)[0] }} -yd sdk
+
+      - name: Compile rpi5-firmware for Target (RPI5)
+        run: |
+          source sdk/environment-setup-aarch64-agl-linux
+          cmake -S $RPI_PATH -B $BUILD_TARGET
+          make install -C $BUILD_TARGET
+          cp -r $BUILD_TARGET/bin .
+
+      - name: Create github release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: rpi5
+          name: RPI5
+          files: |
+            bin/CarControl
+            bin/unit_tests
+

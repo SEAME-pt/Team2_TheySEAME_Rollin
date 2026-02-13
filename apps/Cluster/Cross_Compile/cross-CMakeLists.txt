@@ -1,0 +1,99 @@
+cmake_minimum_required(VERSION 3.16)
+
+project(Cluster VERSION 0.1 LANGUAGES CXX)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick QuickControls2 Core Positioning Test)
+
+find_package(Protobuf CONFIG REQUIRED)
+
+set(GRPC_SEARCH_PATH "/build/qt-cross-build/lib")
+
+find_library(LIB_GRPC_CPP grpc++ PATHS ${GRPC_SEARCH_PATH} NO_DEFAULT_PATH REQUIRED)
+find_library(LIB_GRPC grpc PATHS ${GRPC_SEARCH_PATH} NO_DEFAULT_PATH REQUIRED)
+find_library(LIB_GPR gpr PATHS ${GRPC_SEARCH_PATH} NO_DEFAULT_PATH REQUIRED)
+find_library(LIB_ADDR_SORTING address_sorting PATHS ${GRPC_SEARCH_PATH} NO_DEFAULT_PATH REQUIRED)
+
+find_program(MY_PROTOC_EXEC protoc 
+             PATHS /usr/local/bin /usr/bin 
+             NO_DEFAULT_PATH REQUIRED)
+
+find_program(MY_GRPC_CPP_PLUGIN grpc_cpp_plugin 
+             PATHS /usr/local/bin /usr/bin 
+             NO_DEFAULT_PATH REQUIRED)
+
+add_library(qtAppLib
+    src/generalInfo.cpp
+    src/systemInfo.cpp
+)
+
+target_link_libraries(qtAppLib
+    PRIVATE 
+    Qt6::Core
+    Qt6::Quick
+    Qt6::Positioning
+    Qt6::Network
+    protobuf::libprotobuf
+    ${LIB_GRPC_CPP}
+    ${LIB_GRPC}
+    ${LIB_GPR}
+    ${LIB_ADDR_SORTING}
+)
+
+add_executable(qtAppExec
+    main.cpp
+    qml.qrc
+)
+
+target_include_directories(qtAppExec PRIVATE 
+    ${CMAKE_CURRENT_BINARY_DIR}
+    /build/qt-cross-build/include
+    ${CMAKE_SOURCE_DIR}/../../middleware
+)
+
+target_include_directories(qtAppLib PRIVATE
+  ${CMAKE_SOURCE_DIR}/../../middleware
+)
+target_include_directories(qtAppExec PRIVATE
+  ${CMAKE_SOURCE_DIR}/../../middleware
+)
+target_sources(qtAppLib PRIVATE
+  ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/types.pb.cc
+  ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/val.pb.cc
+  ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/val.grpc.pb.cc
+)
+
+file(GLOB ALL_STATIC_LIBS "/build/qt-cross-build/lib/*.a")
+
+target_link_libraries(qtAppExec
+    PRIVATE 
+    qtAppLib
+    Qt6::Quick
+    Qt6::QuickControls2
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Qml
+    Qt6::Network
+    Qt6::Positioning
+    Qt6::Test
+    -Wl,--start-group
+    ${ALL_STATIC_LIBS}
+    -Wl,--end-group
+    z
+    ssl
+    crypto
+    systemd
+)
+
+include(GNUInstallDirs)
+install(TARGETS qtAppExec
+    BUNDLE DESTINATION .
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
