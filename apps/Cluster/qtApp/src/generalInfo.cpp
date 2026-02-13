@@ -38,12 +38,14 @@ generalInfo::generalInfo(QObject *parent)
     });
     timer->start(1000);
 
-    // Setup network manager for weather data
     _manager = new QNetworkAccessManager(this);
     connect(_manager, &QNetworkAccessManager::finished,
             this, &generalInfo::onWeatherDataReceived);
 
-    // Setup position source for dynamic location
+    QTimer *weatherTimer = new QTimer(this);
+    connect(weatherTimer, &QTimer::timeout, this, &generalInfo::fetchWeatherData);
+    weatherTimer->start(10 * 1000);
+
     _positionSource = QGeoPositionInfoSource::createDefaultSource(this);
     if (_positionSource) {
         connect(_positionSource, &QGeoPositionInfoSource::positionUpdated, this, [this](const QGeoPositionInfo &info) {
@@ -55,7 +57,6 @@ generalInfo::generalInfo(QObject *parent)
             _positionSource->stopUpdates();
         });
         connect(_positionSource, &QGeoPositionInfoSource::errorOccurred, this, [this](QGeoPositionInfoSource::Error err) {
-            // fallback: use default location (Porto)
             _latitude = 41.1496;
             _longitude = -8.6109;
             _hasLocation = false;
@@ -64,7 +65,6 @@ generalInfo::generalInfo(QObject *parent)
         _positionSource->setUpdateInterval(1000);
         _positionSource->requestUpdate(3000);
     } else {
-        // fallback: use default location (Porto)
         _latitude = 41.1496;
         _longitude = -8.6109;
         _hasLocation = false;
