@@ -1,6 +1,0 @@
-../Core/Src/Sensors/sensors_queue.c:9:6:SensorsQueue_Init	1
-../Core/Src/Sensors/sensors_queue.c:15:5:SensorsQueue_TrySend	2
-../Core/Src/Sensors/sensors_queue.c:22:5:SensorsQueue_Send	2
-../Core/Src/Sensors/sensors_queue.c:29:6:SensorsQueue_Receive	1
-../Core/Src/Sensors/sensors_queue.c:33:10:SensorsQueue_GetDrops	1
-../Core/Src/Sensors/sensors_queue.c:37:6:SensorsQueue_GetOccupancy	3

@@ -1,6 +1,0 @@
-../Core/Src/Control/control_queue.c:9:6:ControlQueue_Init	1
-../Core/Src/Control/control_queue.c:16:5:ControlQueue_TrySend	2
-../Core/Src/Control/control_queue.c:28:5:ControlQueue_Send	2
-../Core/Src/Control/control_queue.c:40:6:ControlQueue_Receive	1
-../Core/Src/Control/control_queue.c:45:10:ControlQueue_GetDrops	1
-../Core/Src/Control/control_queue.c:49:6:ControlQueue_GetOccupancy	3
