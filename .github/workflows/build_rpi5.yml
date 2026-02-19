@@ -1,14 +1,12 @@
 name: Build_rpi5
 
 on:
+  workflow_call:
   workflow_dispatch:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
       - 'apps/rpi5-firmware/**'
-
-permissions:
-  contents: write
 
 jobs:
   build:
@@ -38,8 +36,7 @@ jobs:
         id: aglSDK
         uses: robinraju/release-downloader@v1
         with:
-          preRelease: true
-          tag: "SDK"
+          tag: "v[0-9]+.[0-9]+.[0-9]+"
           filename: "*.sh"
 
       - name: Run sdk
@@ -50,14 +47,10 @@ jobs:
           source sdk/environment-setup-aarch64-agl-linux
           cmake -S $RPI_PATH -B $BUILD_TARGET
           make install -C $BUILD_TARGET
-          cp -r $BUILD_TARGET/bin .
 
-      - name: Create github release
-        uses: softprops/action-gh-release@v1
+      - name: Set up Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: rpi5
-          name: RPI5
-          files: |
-            bin/CarControl
-            bin/unit_tests
-
+          name: rpi5-firmware
+          path: ${{ env.BUILD_TARGET }}/bin/CarControl
+          retention-days: 30

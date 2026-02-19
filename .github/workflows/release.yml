@@ -1,0 +1,56 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release Tag"
+        type: string
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-rpi5:
+    uses: ./.github/workflows/build_rpi5.yml
+  build-stm32:
+    uses: ./.github/workflows/build_stm32.yml
+  build-cluster:
+    uses: ./.github/workflows/build_cluster.yml
+  release:
+    needs: [build-rpi5, build-stm32, build-cluster]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Fetch artifacts
+        uses: actions/download-artifact
+
+      - name: Debug
+        run: ls
+
+      - name: Create RPI5 Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ inputs.tag }}
+          draft: true
+          name: RPI5
+          files: |
+            rpi5-firmware/*
+
+      - name: Create STM32 Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ inputs.tag }}
+          draft: true
+          name: STM32
+          files: |
+            stm32-firmware/*
+
+      - name: Create Cluster Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ inputs.tag }}
+          draft: true
+          name: Cluster
+          files: |
+            Cluster/*
