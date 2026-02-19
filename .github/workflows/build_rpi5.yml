@@ -36,7 +36,7 @@ jobs:
         id: aglSDK
         uses: robinraju/release-downloader@v1
         with:
-          tag: "v[0-9]+.[0-9]+.[0-9]+"
+          tag: "v1.0.0-SDK"
           filename: "*.sh"
 
       - name: Run sdk
