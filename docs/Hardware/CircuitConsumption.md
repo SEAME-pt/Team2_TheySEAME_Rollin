@@ -27,6 +27,8 @@ $P_{MAX\_RPI5\_CP} = 25 + 6,6 + 3,3 = 34,9W$
 $V = 5V$  
 $I_{RN} = 1,5A$  
 $I_{MAX} = 5A$  
+
+
 $P_{RN} = 5 \cdot 1,5 = 7,5W$  
 $P_{MAX} = 5 \cdot 5 = 25W$  
 
@@ -34,6 +36,8 @@ $P_{MAX} = 5 \cdot 5 = 25W$
 
 $V = 3.3V$  
 $I = 2.0A$  
+
+
 $P = 3.3 \cdot 2.0 = 6,6W$  
 
 ### RPI5-Hailo 26-Tops
@@ -41,6 +45,8 @@ $P = 3.3 \cdot 2.0 = 6,6W$
 $V = 3,3V$  
 $I_{RN} = 500mA$  
 $I_{MAX} = 1A$  
+
+
 $P_{RN} = 3,3 \cdot 0,5 = 1,65W$  
 $P_{MAX} = 3,3 \cdot 1 = 3,3W$  
 
@@ -48,6 +54,8 @@ $P_{MAX} = 3,3 \cdot 1 = 3,3W$
 
 $V = 5V$  
 $I = 500mA$  
+
+
 $P = 5 \cdot 0,5 = 2,5W$  
 
 ## Motors
@@ -62,6 +70,8 @@ $P_{ST\_Motors} = 14,4 + 6 = 20,4W$
 $V = 6~15V$  
 $I_{RN} = 120mA (12V)$  
 $I_{ST} = 1.2A (12V)$  
+
+
 $P_{RN} = 12 \cdot 0,12 = 1,44W$  
 $P_{ST} = 12 \cdot 1,2 = 14,4W$  
 
@@ -70,6 +80,8 @@ $P_{ST} = 12 \cdot 1,2 = 14,4W$
 $V = 4.8V~7.2V$  
 $I_{RN} = 500mA$  
 $I_{ST} = 2.5A at (6V)$  
+
+
 $P_{RN} = 5V \cdot 0,500 = 2,5W$  
 $P_{ST} = 5V \cdot 1,2 = 6W$  
 
@@ -77,6 +89,7 @@ $P_{ST} = 5V \cdot 1,2 = 6W$
 
 $V = 5V$  
 $I = 0,6A$  
+
 $P = 5 \cdot 0,6 = 3W$  
 
 ## Other Chips
