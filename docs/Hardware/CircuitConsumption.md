@@ -1,7 +1,5 @@
 # Circuit Consumption
 
-This is done in DC
-
 Glossary:
 - RN: Running
 - ST: Stall
@@ -10,10 +8,11 @@ Glossary:
 
 ## Components
 
-- [RPI5](#RPI5)
+- [RPI5 Components](#RPI5-Components)
 - [Microcontroller](#Microcontroller)
 - [Motors](#Motors)
 - [TouchScreen](#TouchScreen)
+- [Circuit Current](#Circuit-Current)
 
 ## RPI5 Components
 
