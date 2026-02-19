@@ -19,8 +19,8 @@ Glossary:
 
 All components
 
-$P_{RN\,RPI5\,CP} = 7,5 + 6,6 + 1,65 = 15,75W$  
-$P_{MAX_RPI5_CP} = 25 + 6,6 + 3,3 = 34,9W$  
+$P_{RN\_RPI5\_CP} = 7,5 + 6,6 + 1,65 = 15,75W$  
+$P_{MAX\_RPI5\_CP} = 25 + 6,6 + 3,3 = 34,9W$  
 
 ### RPI5
 
@@ -54,8 +54,8 @@ $P = 5 \cdot 0,5 = 2,5W$
 
 All components
 
-$P_{RN_Motors} = 1,44 + 2,5 = 3,94W$  
-$P_{ST_Motors} = 14,4 + 6 = 20,4W$  
+$P_{RN\_Motors} = 1,44 + 2,5 = 3,94W$  
+$P_{ST\_Motors} = 14,4 + 6 = 20,4W$  
 
 ### Back Motors
 
@@ -85,8 +85,8 @@ All other chips not listed here have a negligible current consumption to our cal
 
 # Circuit Current
 
-$P_{RN} = P_{RN_RPI5_CP} + P_{Micro} + P_{RN_Motors} + P_{Touchscreen}$  
+$P_{RN} = P_{RN\_RPI5\_CP} + P_{Micro} + P_{RN\_Motors} + P_{Touchscreen}$  
 $P_{RN} = 15,75 + 2,5 + 3,94 + 3 = 25,19W$  
-$P_{MAX} = P_{MAX_RPI5_CP} + P_{Micro} + P_{ST_Motors} + P_{TouchScreen}$  
+$P_{MAX} = P_{MAX\_PI5\_CP} + P_{Micro} + P_{ST\_Motors} + P_{TouchScreen}$  
 $P_{MAX} = 34,9 + 2,5 + 20,4 + 3 = 60,8W$  
 
