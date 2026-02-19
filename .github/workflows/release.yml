@@ -31,7 +31,7 @@ jobs:
       - name: Create RPI5 Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ inputs.tag }}
+          tag_name: ${{ inputs.tag }}-RPI_Firmware
           draft: true
           name: RPI5
           files: |
@@ -40,7 +40,7 @@ jobs:
       - name: Create STM32 Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ inputs.tag }}
+          tag_name: ${{ inputs.tag }}-STM32_Firmware
           draft: true
           name: STM32
           files: |
@@ -49,7 +49,7 @@ jobs:
       - name: Create Cluster Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ inputs.tag }}
+          tag_name: ${{ inputs.tag }}-Cluster
           draft: true
           name: Cluster
           files: |
