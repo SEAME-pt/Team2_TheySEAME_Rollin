@@ -12,7 +12,7 @@ Glossary:
 - [Microcontroller](#Microcontroller)
 - [Motors](#Motors)
 - [TouchScreen](#TouchScreen)
-- [Circuit Current](#Circuit-Current)
+- [Circuit Power](#Circuit-Power)
 
 ## RPI5 Components
 
@@ -93,9 +93,9 @@ $P = 5 \cdot 0,6 = 3W$
 
 ## Other Chips
 
-All other chips not listed here have a negligible current consumption to our calculations
+All other chips not listed here, beacuse they have a negligible current consumption
 
-# Circuit Current
+# Circuit Power
 
 $P_{RN} = P_{RN\_RPI5\_CP} + P_{Micro} + P_{RN\_Motors} + P_{Touchscreen}$  
 $P_{RN} = 15,75 + 2,5 + 3,94 + 3 = 25,19W$  
