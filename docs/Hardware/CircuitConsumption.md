@@ -18,11 +18,11 @@ Glossary:
 
 All components
 
-$P_{RPI5\_CP} = P_{RPI5} + P_{RPI5\_SSD} + P_{RPI5\_Hailo} + P_{RPI5\_SSD} + P_{RPI5\_PiCamera}$  
+$P_{RPI5\_CP} = P_{RPI5} + P_{RPI5\_SSD} + P_{RPI5\_Hailo} + P_{RPI5\_PiCamera}$  
 
 
-$P_{RN\_RPI5\_CP} = 7,5 + 6,6 + 1,65 + 1 = 16,75W$  
-$P_{MAX\_RPI5\_CP} = 25 + 6,6 + 3,3 + 1,75 = 36,65W$  
+$P_{RN\_RPI5\_CP} = 7,5 + 6,6 + 2,5 + 1 = 17,6W$  
+$P_{MAX\_RPI5\_CP} = 25 + 6,6 + 5 + 1,75 = 38,35W$  
 
 ### RPI5
 
@@ -44,13 +44,13 @@ $P = 3.3 \cdot 2.0 = 6,6W$
 
 ### RPI5-Hailo 26-Tops
 
-$V = 3,3V$  
+$V = 5V$  
 $I_{RN} = 500mA$  
 $I_{MAX} = 1A$  
 
 
-$P_{RN} = 3,3 \cdot 0,5 = 1,65W$  
-$P_{MAX} = 3,3 \cdot 1 = 3,3W$  
+$P_{RN} = 5 \cdot 0,5 = 2,5W$  
+$P_{MAX} = 5 \cdot 1 = 5W$  
 
 ### RPI5-PiCamera
 
@@ -114,7 +114,7 @@ All other chips not listed here, beacuse they have a negligible current consumpt
 # Circuit Power
 
 $P_{RN} = P_{RN\_RPI5\_CP} + P_{Micro} + P_{RN\_Motors} + P_{Touchscreen}$  
-$P_{RN} = 16,75 + 2,5 + 5,38 + 3 = 27,63W$  
+$P_{RN} = 17,6 + 2,5 + 5,38 + 3 = 28,48W$  
 $P_{MAX} = P_{MAX\_PI5\_CP} + P_{Micro} + P_{ST\_Motors} + P_{TouchScreen}$  
-$P_{MAX} = 36,65 + 2,5 + 34,8 + 3 = 76,95W$  
+$P_{MAX} = 38,35 + 2,5 + 34,8 + 3 = 78,65W$  
 
