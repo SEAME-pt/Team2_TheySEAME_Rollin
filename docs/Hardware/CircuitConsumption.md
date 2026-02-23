@@ -18,8 +18,11 @@ Glossary:
 
 All components
 
-$P_{RN\_RPI5\_CP} = 7,5 + 6,6 + 1,65 = 15,75W$  
-$P_{MAX\_RPI5\_CP} = 25 + 6,6 + 3,3 = 34,9W$  
+$P_{RPI5\_CP} = P_{RPI5} + P_{RPI5\_SSD} + P_{RPI5\_Hailo} + P_{RPI5\_SSD} + P_{RPI5\_PiCamera}$  
+
+
+$P_{RN\_RPI5\_CP} = 7,5 + 6,6 + 1,65 + 1 = 16,75W$  
+$P_{MAX\_RPI5\_CP} = 25 + 6,6 + 3,3 + 1,75 = 36,65W$  
 
 ### RPI5
 
@@ -49,6 +52,16 @@ $I_{MAX} = 1A$
 $P_{RN} = 3,3 \cdot 0,5 = 1,65W$  
 $P_{MAX} = 3,3 \cdot 1 = 3,3W$  
 
+### RPI5-PiCamera
+
+$V = 5V$  
+$I_{RN} = 200mA$  
+$I_{MAX} = 350mA$  
+
+
+$P_{RN} = 5 \cdot 0,2 = 1W$  
+$P_{MAX} = 5 \cdot 0,35 = 1,75W$  
+
 ## Microcontroller
 
 $V = 5V$  
@@ -61,8 +74,11 @@ $P = 5 \cdot 0,5 = 2,5W$
 
 All components
 
-$P_{RN\_Motors} = 1,44 + 2,5 = 3,94W$  
-$P_{ST\_Motors} = 14,4 + 6 = 20,4W$  
+$P_{Motors} = P_{Servo\_Motor} + 2 \cdot P_{Back\_Motor}$  
+
+
+$P_{RN\_Motors} = 2,5 + (2 \cdot 1,44) = 5,38W$  
+$P_{ST\_Motors} = 6 + (2 \cdot 14,4) = 34,8W$  
 
 ### Back Motors
 
@@ -98,7 +114,7 @@ All other chips not listed here, beacuse they have a negligible current consumpt
 # Circuit Power
 
 $P_{RN} = P_{RN\_RPI5\_CP} + P_{Micro} + P_{RN\_Motors} + P_{Touchscreen}$  
-$P_{RN} = 15,75 + 2,5 + 3,94 + 3 = 25,19W$  
+$P_{RN} = 16,75 + 2,5 + 5,38 + 3 = 27,63W$  
 $P_{MAX} = P_{MAX\_PI5\_CP} + P_{Micro} + P_{ST\_Motors} + P_{TouchScreen}$  
-$P_{MAX} = 34,9 + 2,5 + 20,4 + 3 = 60,8W$  
+$P_{MAX} = 36,65 + 2,5 + 34,8 + 3 = 76,95W$  
 
