@@ -23,34 +23,15 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Fetch artifacts
-        uses: actions/download-artifact
+        uses: actions/download-artifact@v5
 
-      - name: Debug
-        run: ls
-
-      - name: Create RPI5 Release
+      - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ inputs.tag }}-RPI_Firmware
+          tag_name: ${{ inputs.tag }}
           draft: true
-          name: RPI5
+          name: SEAME-Rollin
           files: |
             rpi5-firmware/*
-
-      - name: Create STM32 Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ inputs.tag }}-STM32_Firmware
-          draft: true
-          name: STM32
-          files: |
             stm32-firmware/*
-
-      - name: Create Cluster Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ inputs.tag }}-Cluster
-          draft: true
-          name: Cluster
-          files: |
             Cluster/*
