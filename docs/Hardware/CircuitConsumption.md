@@ -18,94 +18,96 @@ Glossary:
 
 All components
 
-$P_{RPI5\_CP} = P_{RPI5} + P_{RPI5\_SSD} + P_{RPI5\_Hailo} + P_{RPI5\_PiCamera}$  
+$`P_{RPI5CP} = P_{RPI5} + P_{RPI5\_SSD} + P_{RPI5\_Hailo} + P_{RPI5\_PiCamera}`$  
 
 
-$P_{RN\_RPI5\_CP} = 7,5 + 6,6 + 2,5 + 1 = 17,6W$  
-$P_{MAX\_RPI5\_CP} = 25 + 6,6 + 5 + 1,75 = 38,35W$  
+$`P_{RN\_RPI5\_CP} = 7,5 + 3,3 + 2,5 + 1 = 14,3W`$  
+$`P_{MAX\_RPI5\_CP} = 25 + 6,6 + 5 + 1,75 = 38,35W`$  
 
 ### RPI5
 
-$V = 5V$  
-$I_{RN} = 1,5A$  
-$I_{MAX} = 5A$  
+$`V = 5V`$  
+$`I_{RN} = 1,5A`$  
+$`I_{MAX} = 5A`$  
 
 
-$P_{RN} = 5 \cdot 1,5 = 7,5W$  
-$P_{MAX} = 5 \cdot 5 = 25W$  
+$`P_{RN} = 5 \cdot 1,5 = 7,5W`$  
+$`P_{MAX} = 5 \cdot 5 = 25W`$  
 
 ### RPI5-SSD
 
-$V = 3.3V$  
-$I = 2.0A$  
+$`V = 3.3V`$  
+$`I_{RN} = 1A`$  
+$`I_{MAX} = 2.0A`$  
 
 
-$P = 3.3 \cdot 2.0 = 6,6W$  
+$`P_{RN} = 3.3 \cdot 1.0 = 3,3W`$  
+$`P_{MAX} = 3.3 \cdot 2.0 = 6,6W`$  
 
 ### RPI5-Hailo 26-Tops
 
-$V = 5V$  
-$I_{RN} = 500mA$  
-$I_{MAX} = 1A$  
+$`V = 5V`$  
+$`I_{RN} = 500mA`$  
+$`I_{MAX} = 1A`$  
 
 
-$P_{RN} = 5 \cdot 0,5 = 2,5W$  
-$P_{MAX} = 5 \cdot 1 = 5W$  
+$`P_{RN} = 5 \cdot 0,5 = 2,5W`$  
+$`P_{MAX} = 5 \cdot 1 = 5W`$  
 
 ### RPI5-PiCamera
 
-$V = 5V$  
-$I_{RN} = 200mA$  
-$I_{MAX} = 350mA$  
+$`V = 5V`$  
+$`I_{RN} = 200mA`$  
+$`I_{MAX} = 350mA`$  
 
 
-$P_{RN} = 5 \cdot 0,2 = 1W$  
-$P_{MAX} = 5 \cdot 0,35 = 1,75W$  
+$`P_{RN} = 5 \cdot 0,2 = 1W`$  
+$`P_{MAX} = 5 \cdot 0,35 = 1,75W`$  
 
 ## Microcontroller
 
-$V = 5V$  
-$I = 500mA$  
+$`V = 5V`$  
+$`I = 500mA`$  
 
 
-$P = 5 \cdot 0,5 = 2,5W$  
+$`P = 5 \cdot 0,5 = 2,5W`$  
 
 ## Motors
 
 All components
 
-$P_{Motors} = P_{Servo\_Motor} + 2 \cdot P_{Back\_Motor}$  
+$`P_{Motors} = P_{Servo\_Motor} + 2 \cdot P_{Back\_Motor}`$  
 
 
-$P_{RN\_Motors} = 2,5 + (2 \cdot 1,44) = 5,38W$  
-$P_{ST\_Motors} = 6 + (2 \cdot 14,4) = 34,8W$  
+$`P_{RN\_Motors} = 2,5 + (2 \cdot 1,44) = 5,38W`$  
+$`P_{ST\_Motors} = 6 + (2 \cdot 14,4) = 34,8W`$  
 
 ### Back Motors
 
-$V = 6~15V$  
-$I_{RN} = 120mA (12V)$  
-$I_{ST} = 1.2A (12V)$  
+$`V = 6~15V`$  
+$`I_{RN} = 120mA (12V)`$  
+$`I_{ST} = 1.2A (12V)`$  
 
 
-$P_{RN} = 12 \cdot 0,12 = 1,44W$  
-$P_{ST} = 12 \cdot 1,2 = 14,4W$  
+$`P_{RN} = 12 \cdot 0,12 = 1,44W`$  
+$`P_{ST} = 12 \cdot 1,2 = 14,4W`$  
 
 ### Servo Motor
 
-$V = 4.8V~7.2V$  
-$I_{RN} = 500mA$  
-$I_{ST} = 2.5A at (6V)$  
+$`V = 4.8V~7.2V`$  
+$`I_{RN} = 500mA`$  
+$`I_{ST} = 2.5A at (6V)`$  
 
 
-$P_{RN} = 5V \cdot 0,500 = 2,5W$  
-$P_{ST} = 5V \cdot 1,2 = 6W$  
+$`P_{RN} = 5V \cdot 0,500 = 2,5W`$  
+$`P_{ST} = 5V \cdot 1,2 = 6W`$  
 
 ## TouchScreen
 
-$V = 5V$  
-$I = 0,6A$  
+$`V = 5V`$  
+$`I = 0,6A`$  
 
-$P = 5 \cdot 0,6 = 3W$  
+$`P = 5 \cdot 0,6 = 3W`$  
 
 ## Other Chips
 
@@ -113,8 +115,8 @@ All other chips not listed here, beacuse they have a negligible current consumpt
 
 # Circuit Power
 
-$P_{RN} = P_{RN\_RPI5\_CP} + P_{Micro} + P_{RN\_Motors} + P_{Touchscreen}$  
-$P_{RN} = 17,6 + 2,5 + 5,38 + 3 = 28,48W$  
-$P_{MAX} = P_{MAX\_PI5\_CP} + P_{Micro} + P_{ST\_Motors} + P_{TouchScreen}$  
-$P_{MAX} = 38,35 + 2,5 + 34,8 + 3 = 78,65W$  
+$`P_{RN} = P_{RN\_RPI5\_CP} + P_{Micro} + P_{RN\_Motors} + P_{Touchscreen}`$  
+$`P_{RN} = 14,3 + 2,5 + 5,38 + 3 = 25,18W`$  
+$`P_{MAX} = P_{MAX\_PI5\_CP} + P_{Micro} + P_{ST\_Motors} + P_{TouchScreen}`$  
+$`P_{MAX} = 38,35 + 2,5 + 34,8 + 3 = 78,65W`$  
 
