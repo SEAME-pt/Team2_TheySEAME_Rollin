@@ -25,6 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "Sensors/sensors.h"
+#include "SEGGER_SYSVIEW.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -94,6 +95,9 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   /* USER CODE END App_ThreadX_MEM_POOL */
 
   /* USER CODE BEGIN App_ThreadX_Init */
+    // Initialize SEGGER SystemView for thread profiling
+    SEGGER_SYSVIEW_Conf();
+    
     // Initialize global command structure
     g_vehicle_command.driving_mode = 0;
     g_vehicle_command.gear = 3;  // Default to Drive
