@@ -1,4 +1,5 @@
 #include "sensors.h"
+#include "sensors_queue.h"
 
 uint32_t delta_ticks = 0;
 
@@ -11,8 +12,6 @@ uint32_t delta_ticks = 0;
  * stored globally for processing by the Speed_Thread_Entry function.
  *
  * ====================== Requirement Traceability ===========================
- * [impl->dsn~speed-counter-overflow~1]
- * [impl->dsn~rpm-timer-settings~1]
  * ==========================================================================
  *
  * @param htim Pointer to TIM_HandleTypeDef structure containing timer configuration
@@ -69,8 +68,6 @@ static uint32_t Speed_ReadDeltaTicks(void)
  * - Minimum valid period: 20 ticks (1ms) for noise filtering
  * 
  * ====================== Requirement Traceability ===========================
- * [impl->dsn~calculate-rpm~1]
- * [impl->dsn~rpm-noise-handling~1]
  * ==========================================================================
  * 
  * @param delta_ticks Time delta in timer ticks
@@ -112,8 +109,6 @@ float Speed_RPMToMetersPerSecond(uint32_t rpm)
  * core logic extracted from the thread loop for testability.
  *
   * ====================== Requirement Traceability ===========================
- * [impl->dsn~rpm-data-interface~1]
- * [impl->dsn~rpm-average~1]
  * ==========================================================================
 
  * @param delta_ticks Time delta in timer ticks
@@ -121,7 +116,7 @@ float Speed_RPMToMetersPerSecond(uint32_t rpm)
  * @param counter Pointer to reading counter (modified)
  * @return 1 if output was generated (5 readings reached), 0 otherwise
  */
-int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter)
+int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter, float *out_speed_ms)
 {
     uint32_t rpm = Speed_CalculateRPM(delta_ticks);
     
@@ -141,12 +136,9 @@ int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter)
         snprintf(uart_buf, sizeof(uart_buf), "[SPEED THREAD] RPM = %lu, Speed (m/s) = %.2f\r\n", *average, speed_ms);
         Debug_Print(uart_buf);
         
-        if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS)
-        {
-            g_vehicle_data.vehicle_speed = speed_ms;
-            tx_mutex_put(&g_vehicle_data_mutex);
-        }
-        
+        // Output speed to caller for enqueueing
+        if (out_speed_ms) *out_speed_ms = speed_ms;
+
         *counter = 0;
         *average = 0;
         return 1;
@@ -171,8 +163,7 @@ int Speed_ProcessDelta(uint32_t delta_ticks, uint32_t *average, int *counter)
  * - Thread sleep: 0.1s between iterations (based on ThreadX timer)
  *
  * ====================== Requirement Traceability ===========================
- * [impl->dsn~rpm-read-frequency~1]
- * ==========================================================================
++++++++++++++++++++ * ==========================================================================
  *
  * @param thread_input Thread parameter passed by ThreadX scheduler (unused in this implementation)
  *
@@ -185,12 +176,45 @@ void Speed_Thread_Entry(ULONG thread_input)
     
     uint32_t average = 0;
     int counter = 0;
+    int no_pulse_counter = 0;  // Track iterations without pulses
+    char uart_buf[128];
+
 
     while(1)
     {
         uint32_t local_delta = Speed_ReadDeltaTicks();
-        Speed_ProcessDelta(local_delta, &average, &counter);
-        
+
+        if (local_delta >= 20) {
+            // Valid pulse - reset no-pulse counter and process
+            no_pulse_counter = 0;
+            float speed_ms;
+            if (Speed_ProcessDelta(local_delta, &average, &counter, &speed_ms)) {
+                // Enqueue sensor sample to sensors queue
+                SensorSample_t samp = { .sensor_id = SENSOR_ID_SPEED, .value = speed_ms, .ts = HAL_GetTick() };
+                if (!SensorsQueue_TrySend(&samp)) {
+                    Debug_Print("[SPEED] Sensors queue full - sample dropped\r\n");
+                }
+            }
+        } else {
+            // No valid pulse detected in this iteration
+            no_pulse_counter++;
+
+            // Stop after ~0.2s without pulses (THREAD_SLEEP_TICKS is 10 ticks = 0.1s)
+            if (no_pulse_counter == 2) {
+                // Send zero-speed sample (only once)
+                SensorSample_t samp = { .sensor_id = SENSOR_ID_SPEED, .value = 0.0f, .ts = HAL_GetTick() };
+                if (!SensorsQueue_TrySend(&samp)) {
+                    Debug_Print("[SPEED] Sensors queue full - zero-speed sample dropped\r\n");
+                } else {
+                    Debug_Print("[SPEED THREAD] No pulses detected - enqueued Speed = 0 m/s\r\n");
+                }
+                counter = 0;  // Reset averaging counter
+                average = 0;
+            }
+            if (no_pulse_counter > 255) {
+                no_pulse_counter = 0;  // Keep incrementing to stay past threshold, cap to prevent overflow
+            }
+        }
         // TX_TIMER_TICKS_PER_SECOND is defined as 100 ticks/second, so 10 ticks = 0.1s
         tx_thread_sleep(THREAD_SLEEP_TICKS);
     }

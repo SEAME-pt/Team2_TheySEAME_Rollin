@@ -44,6 +44,17 @@ oft-shell: oft-build | $(BUILD_DIR)
 		-v $(PWD)/$(BUILD_DIR):/output \
 		$(OFT_IMAGE) trace src/ requirements/
 
+oft-xml: oft-build | $(BUILD_DIR)
+	docker run --rm \
+		--user $(shell id -u):$(shell id -g) \
+		-v $(PWD)/$(BUILD_DIR):/output \
+		$(OFT_IMAGE) trace -o aspec -f /output/requirements.xml src/ requirements/ \
+		|| echo "Relatório XML gerado com problemas de cobertura - verifique trace_report.xml"
+
+view: oft-xml
+	@echo "Starting server at http://localhost:8000"
+	@cd $(BUILD_DIR) && python3 -m http.server 8000
+
 agl-image-build:
 	docker build --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g) \
 		-t $(AGL_IMAGE) $(AGL_DIR)
@@ -56,3 +67,4 @@ $(AGL): agl-image-build
 		-v $(AGL_HOST_CACHE):$(AGL_TARGET_CACHE) \
 		-e BUILD_DIR=$(AGL_BUILD_DIR) \
 		$(AGL_IMAGE) bash
+

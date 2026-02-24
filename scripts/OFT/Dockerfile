@@ -3,7 +3,6 @@ FROM eclipse-temurin:21
 WORKDIR /app
 
 COPY docs/requirements/*.md requirements/
-COPY docs/requirements/modules/*.md requirements/
 COPY apps/ src/
 
 RUN apt-get update && apt-get install -y curl \

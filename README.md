@@ -12,10 +12,10 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 | Field | Details |
 |-------|----------|
-| **Sprint Number** | Sprint 6 |
-| **Sprint Goal** | Perform full Integration test with unit tests per software module, requirements traceability, and implement CI/CD workflow for OTA updates. |
-| **Sprint Duration** | Jan 5 – Jan 16, 2025 |
-| **Focus Areas** | Tests, TSF, Automotive Frameworks, OTA updates. |
+| **Sprint Number** | Sprint 8 |
+| **Sprint Goal** | Full Car assembly and testing via Remote control|
+| **Sprint Duration** | Feb 02 – Feb 16, 2026 |
+| **Focus Areas** | Tests, Kuksa, OFT enhancement, OTA updates. |
 
 
 ## 📅 Scrum Team

@@ -24,31 +24,31 @@ Rectangle {
         source: "images/cluster.png"
         fillMode: Image.PreserveAspectFit
 
-        Text {
-            id: speed_unity
-            x: 259
-            y: 213
-            width: 74
-            height: 34
-            color: "#47473f"
-            text: qsTr("hm/h")
-            font.pixelSize: 28
-            font.bold: true
-            font.family: "BaseNeueTrial-Bold"
-        }
-
-        Text {
-            id: speed
+        Row {
             x: 121
             y: 162
-            width: 132
-            height: 123
-            color: "#47473f"
-            text: systemInfo ? systemInfo.speed.toString() : "0"
-            font.pixelSize: 98
-            font.family: "BaseNeueTrial-Bold"
-            font.bold: true
+            spacing: 6
+
+            Text {
+                id: speed
+                color: "#47473f"
+                text: systemInfo ? systemInfo.speed.toString() : "0"
+                font.pixelSize: 98
+                font.family: "BaseNeueTrial-Bold"
+                font.bold: true
+            }
+
+            Text {
+                id: speed_unity
+                color: "#47473f"
+                text: qsTr("hm/h")
+                font.pixelSize: 28
+                font.bold: true
+                font.family: "BaseNeueTrial-Bold"
+                anchors.bottom: speed.bottom
+            }
         }
+
 
         Text {
             id: battery_text

@@ -83,29 +83,277 @@ extern uint16_t ina219_calibrationValue;
 extern int16_t ina219_currentDivider_mA;
 extern int16_t ina219_powerMultiplier_mW;
 
+/**
+ * @brief Get the elapsed time in milliseconds since last call
+ *
+ * Returns the delta time between subsequent calls to this helper so power
+ * computations can integrate over time.
+ *
+ * Requirement traceability:
+ *
+ * @return int Delta time in ms
+ */
 int INA219_GetDeltaTime_ms();
+
+/**
+ * @brief Initialize INA219 sensor instance
+ *
+ * Verifies the device is present on the I2C bus and initializes internal state.
+ *
+ * @param ina219 Pointer to INA219 instance to initialize
+ * @param i2c Pointer to HAL I2C handle
+ * @param Address 7-bit I2C address of the INA219 device
+ *
+ * Requirement traceability:
+ *
+ * @return uint8_t 1 on success, 0 on failure
+ */
 uint8_t INA219_Init(INA219_t *ina219, I2C_HandleTypeDef *i2c, uint8_t Address);
+
+/**
+ * @brief Read bus voltage in millivolts
+ *
+ * Reads BUSVOLTAGE register and converts raw value to mV.
+ *
+ * @param ina219 Pointer to INA219 instance
+ *
+ * Requirement traceability:
+ *
+ * @return uint16_t Bus voltage in millivolts
+ */
 uint16_t INA219_ReadBusVoltage(INA219_t *ina219);
+
+/**
+ * @brief Read calculated current in milliamps
+ *
+ * Applies current divider and returns the instantaneous current in mA.
+ *
+ * @param ina219 Pointer to INA219 instance
+ *
+ * Requirement traceability:
+ *
+ * @return int16_t Current in mA
+ */
 int16_t INA219_ReadCurrent(INA219_t *ina219);
+
+/**
+ * @brief Read raw current register value
+ *
+ * Returns the raw 16-bit signed current register content without scaling.
+ *
+ * @param ina219 Pointer to INA219 instance
+ *
+ * Requirement traceability:
+ *
+ * @return int16_t Raw current register value
+ */
 int16_t INA219_ReadCurrent_raw(INA219_t *ina219);
+
+/**
+ * @brief Read shunt voltage in millivolts
+ *
+ * Reads the SHUNT VOLTAGE register and applies scaling.
+ *
+ * @param ina219 Pointer to INA219 instance
+ *
+ * Requirement traceability:
+ *
+ * @return uint16_t Shunt voltage in millivolts
+ */
 uint16_t INA219_ReadShuntVolage(INA219_t *ina219);
+
+/**
+ * @brief Read power in milliwatts
+ *
+ * Reads POWER register and multiplies by configured power LSB.
+ *
+ * @param ina219 Pointer to INA219 instance
+ *
+ * Requirement traceability:
+ *
+ * @return uint16_t Power in milliwatts
+ */
 uint16_t INA219_ReadPower(INA219_t *ina219);
+
+/**
+ * @brief Estimate battery state of charge as percentage
+ *
+ * Converts measured bus voltage into a percentage using provided bounds.
+ *
+ * @param ina219 Pointer to INA219 instance
+ * @param batteryMax Maximum expected battery voltage (mV)
+ * @param batteryMin Minimum expected battery voltage (mV)
+ *
+ * Requirement traceability:
+ *
+ * @return float Battery life percentage (0..100)
+ */
 float INA219_GetBatteryLife(INA219_t *ina219,float batteryMax, float batteryMin);
+
+/**
+ * @brief Compute averaged milliwatt reading over recent samples
+ *
+ * @param ina219 Pointer to INA219 instance
+ *
+ * Requirement traceability:
+ *
+ * @return float Average milliwatts
+ */
 float INA219_GetAVGMiliWatt(INA219_t *ina219);
+
+/**
+ * @brief Compute energy (mW * delta-time) since last call
+ *
+ * @param ina219 Pointer to INA219 instance
+ *
+ * Requirement traceability:
+ *
+ * @return float Energy sample in mW·s
+ */
 float INA219_GetMiliWattsDeltaTime(INA219_t *ina219);
+
+/**
+ * @brief Get total integrated energy used since boot (approximation)
+ *
+ * @param ina219 Pointer to INA219 instance
+ *
+ * Requirement traceability:
+ *
+ * @return float Total energy (mW·s)
+ */
 float INA219_GetTotalPowerUsed(INA219_t *ina219);
+
+/**
+ * @brief Perform a simple battery health check and return state
+ *
+ * @param ina219 Pointer to INA219 instance
+ * @param batteryPercentageThreshold Threshold percentage to consider low
+ * @param batteryPercentage Current battery percentage
+ *
+ * Requirement traceability:
+ *
+ * @return enum BatteryState Current battery state
+ */
 enum BatteryState INA219_HealthCheck(INA219_t *ina219,float batteryPercentageThreshold,float batteryPercentage);
 
+/**
+ * @brief Reset INA219 device (write reset bit to config)
+ *
+ * @param ina219 Pointer to INA219 instance
+ *
+ * Requirement traceability:
+ *
+ * @return void
+ */
 void INA219_Reset(INA219_t *ina219);
+
+/**
+ * @brief Set calibration register
+ *
+ * @param ina219 Pointer to INA219 instance
+ * @param CalibrationData Calibration value to write
+ *
+ * Requirement traceability:
+ *
+ * @return void
+ */
 void INA219_setCalibration(INA219_t *ina219, uint16_t CalibrationData);
+
+/**
+ * @brief Read configuration register
+ *
+ * @param ina219 Pointer to INA219 instance
+ *
+ * Requirement traceability:
+ *
+ * @return uint16_t Config register value
+ */
 uint16_t INA219_getConfig(INA219_t *ina219);
+
+/**
+ * @brief Write configuration register
+ *
+ * @param ina219 Pointer to INA219 instance
+ * @param Config Config value to write
+ *
+ * Requirement traceability:
+ *
+ * @return void
+ */
 void INA219_setConfig(INA219_t *ina219, uint16_t Config);
+
+/**
+ * @brief Convenience calibration: 32V, 2A profile
+ *
+ * @param ina219 Pointer to INA219 instance
+ *
+ * Requirement traceability:
+ *
+ * @return void
+ */
 void INA219_setCalibration_32V_2A(INA219_t *ina219);
+
+/**
+ * @brief Convenience calibration: 32V, 1A profile
+ *
+ * @param ina219 Pointer to INA219 instance
+ *
+ * Requirement traceability:
+ *
+ * @return void
+ */
 void INA219_setCalibration_32V_1A(INA219_t *ina219);
+
+/**
+ * @brief Convenience calibration: 16V, 400mA profile
+ *
+ * @param ina219 Pointer to INA219 instance
+ *
+ * Requirement traceability:
+ *
+ * @return void
+ */
 void INA219_setCalibration_16V_400mA(INA219_t *ina219);
+
+/**
+ * @brief Set operating power mode (powerdown/continuous/etc)
+ *
+ * @param ina219 Pointer to INA219 instance
+ * @param Mode One of INA219_CONFIG_MODE_* values
+ *
+ * Requirement traceability:
+ *
+ * @return void
+ */
 void INA219_setPowerMode(INA219_t *ina219, uint8_t Mode);
 
+/**
+ * @brief Low-level register read helper
+ *
+ * Reads a 16-bit register from the INA219 using I2C.
+ *
+ * @param ina219 Pointer to INA219 instance
+ * @param Register Register address to read
+ *
+ * Requirement traceability:
+ *
+ * @return uint16_t Register value
+ */
 uint16_t Read16(INA219_t *ina219, uint8_t Register);
+
+/**
+ * @brief Low-level register write helper
+ *
+ * Writes a 16-bit value to the specified INA219 register over I2C.
+ *
+ * @param ina219 Pointer to INA219 instance
+ * @param Register Register address to write
+ * @param Value 16-bit value to write
+ *
+ * Requirement traceability:
+ *
+ * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR / other HAL status
+ */
 HAL_StatusTypeDef Write16(INA219_t *ina219, uint8_t Register, uint16_t Value);
 
 

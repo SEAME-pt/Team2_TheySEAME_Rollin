@@ -20,6 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "app_threadx.h"
+#include "Control/control_queue.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -46,9 +47,11 @@
 TX_THREAD communication_thread;
 TX_THREAD battery_thread;
 TX_THREAD speed_thread;
+TX_THREAD sensors_proc_thread;
 TX_THREAD test_thread;
 TX_THREAD control_thread;
 
+UCHAR sensors_proc_thread_stack[2048];
 UCHAR test_thread_stack[2048];
 UCHAR speed_thread_stack[2048];
 UCHAR battery_thread_stack[2048];
@@ -60,6 +63,7 @@ extern void Communication_Thread_Entry(ULONG thread_input);
 extern void Control_Thread_Entry(ULONG thread_input);
 extern void Test_Thread_Entry(ULONG thread_input);
 extern void Speed_Thread_Entry(ULONG thread_input);
+extern void SensorsProcessor_Thread_Entry(ULONG thread_input);
 
 
 /* Global vehicle data and mutex */
@@ -92,6 +96,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   /* USER CODE BEGIN App_ThreadX_Init */
     // Initialize global command structure
     g_vehicle_command.driving_mode = 0;
+    g_vehicle_command.gear = 3;  // Default to Drive
     g_vehicle_command.throttle = 0;
     g_vehicle_command.steering_angle = 0;
     g_vehicle_command.command_valid = 0;
@@ -115,17 +120,26 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
       return TX_MUTEX_ERROR;
   }
 
-  #define TEST_MODE 1
-  
-  if (TEST_MODE) {
-    status = tx_thread_create(&test_thread, "Test Routine Thread",
+  /* Initialize control queue used for passing commands to the Control thread */
+  ControlQueue_Init();
+
+  /* Initialize sensors queue (sensor producers -> sensor processor) */
+  SensorsQueue_Init();
+
+  /* Disable test thread by default in production builds. Set TEST_MODE=1 for local test runs. */
+  #ifndef TEST_MODE
+  #define TEST_MODE 0
+  #endif
+
+  #if TEST_MODE
+  status = tx_thread_create(&test_thread, "Test Routine Thread",
                                   Test_Thread_Entry, 0,
                                   test_thread_stack, sizeof(test_thread_stack),
                                   10, 10, TX_NO_TIME_SLICE, TX_AUTO_START);
     if (status != TX_SUCCESS) {
       return TX_THREAD_ERROR;
     }
-  }
+  #endif
   
   // Create the battery monitoring thread
   status = tx_thread_create(&battery_thread, "Battery Thread",
@@ -149,7 +163,16 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   status = tx_thread_create(&control_thread, "Control Thread",
                             Control_Thread_Entry, 0,
                             control_thread_stack, sizeof(control_thread_stack),
-                            10, 10, TX_NO_TIME_SLICE, TX_AUTO_START);
+                            8, 8, TX_NO_TIME_SLICE, TX_AUTO_START);
+  if (status != TX_SUCCESS) {
+      return TX_THREAD_ERROR;
+  }
+
+  // Create sensors processor thread (aggregates samples and updates g_vehicle_data)
+  status = tx_thread_create(&sensors_proc_thread, "Sensors Proc Thread",
+                            SensorsProcessor_Thread_Entry, 0,
+                            sensors_proc_thread_stack, sizeof(sensors_proc_thread_stack),
+                            12, 12, TX_NO_TIME_SLICE, TX_AUTO_START);
   if (status != TX_SUCCESS) {
       return TX_THREAD_ERROR;
   }
@@ -157,7 +180,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   status = tx_thread_create(&speed_thread, "Speed Thread",
                                   Speed_Thread_Entry, 0,
                                   speed_thread_stack, sizeof(speed_thread_stack),
-                                  10, 10, TX_NO_TIME_SLICE, TX_AUTO_START);
+                                  14, 14, TX_NO_TIME_SLICE, TX_AUTO_START);
   if (status != TX_SUCCESS) {
       return TX_THREAD_ERROR;
   }

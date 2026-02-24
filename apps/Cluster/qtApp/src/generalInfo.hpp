@@ -2,13 +2,12 @@
 #include <QObject>
 #include <QString>
 #include <QTimer>
-#include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QNetworkRequest>
 #include <QDateTime>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <iostream>
+#include <QGeoPositionInfoSource>
 
 class generalInfo : public QObject
 {
@@ -18,19 +17,81 @@ class generalInfo : public QObject
     Q_PROPERTY(QString localTime READ getLocalTime NOTIFY localTimeChanged)
     Q_PROPERTY(QString currentDate READ getCurrentDate NOTIFY currentDateChanged)
 public:
+    /**
+    * @brief The generalInfo class
+    *
+    * Provides current system information such as:
+    * - Local time
+    * - Current date
+    * - Weather information (temperature + icon)
+    *
+    * Data is updated periodically:
+    * - Time and date every second
+    * - Weather via HTTP request to Open-Meteo API
+    *
+    * @param parent Optional parent QObject
+    *
+	  * Requirement traceability:
+    *
+    */
     explicit generalInfo(QObject *parent = nullptr);
 
+    /**
+    * @brief Destructs the generalInfo class.
+    *
+    */
+    ~generalInfo();
+
+    /**
+    * @brief Returns the current weather icon filename.
+    *
+	* Requirement traceability:
+    *
+    * @return QString representing icon (e.g., "sun-256.png")
+    *
+    */
     QString getWeatherInfo() const;
+
+    /**
+    * @brief Returns the current temperature in Celsius.
+    *
+	  * Requirement traceability:
+    *
+    * @return int temperature
+    *
+    */
     int getTemperature() const;
+
+    /**
+    * @brief Returns the local time in HH:mm format.
+    *
+	  * Requirement traceability:
+    *
+    * @return QString current time
+    *
+    */
     QString getLocalTime() const;
+
+    /**
+    * @brief Returns the current date in dd/MM/yyyy format.
+    *
+	  * Requirement traceability:
+    *
+    * @return QString current date
+    *
+    */
     QString getCurrentDate() const;
     
 private:
-    QString m_weatherInfo;
-    int m_temperature;
-    QString m_localTime;
-    QDate   m_currentDate;
-    QNetworkAccessManager* m_manager;
+    QString _weatherInfo;
+    int _temperature;
+    QString _localTime;
+    QDate   _currentDate;
+    QNetworkAccessManager* _manager = nullptr;
+    QGeoPositionInfoSource* _positionSource = nullptr;
+    double _latitude = 0.0;
+    double _longitude = 0.0;
+    bool _hasLocation = false;
 
 signals:
     void weatherInfoChanged();
@@ -39,6 +100,23 @@ signals:
     void currentDateChanged();
 
 public slots:
+
+    /**
+    * @brief Fetches current weather data from Open-Meteo API.
+    *
+	  * Requirement traceability:
+    *
+    */
     void fetchWeatherData();
+
+    /**
+    * @brief Handles the network reply for weather API.
+    * Parses JSON and updates temperature and weather icon.
+    * Emits temperatureChanged() and weatherInfoChanged() if necessary.
+    * @param reply QNetworkReply* from QNetworkAccessManager
+    *
+	  * Requirement traceability:
+    *
+    */
     void onWeatherDataReceived(QNetworkReply* reply);
 };

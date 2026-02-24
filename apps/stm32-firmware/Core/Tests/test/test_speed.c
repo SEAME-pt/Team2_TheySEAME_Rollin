@@ -23,7 +23,14 @@ uint32_t HAL_TIM_ReadCapturedValue(TIM_HandleTypeDef *htim, uint32_t Channel) {
 // External reference to delta_ticks global variable for testing
 extern uint32_t delta_ticks;
 
-/* Include SUT implementation directly for unit testing (compiled into test binary) */
+/* Note: Including the SUT .c file is usually an anti-pattern because it
+ * couples the test to the implementation compilation unit. This was the
+ * previous behavior and is restored here to ensure the test binary contains
+ * the speed implementation while we adjust Ceedling project settings to
+ * compile SUT sources per-test. Once project.yml is configured so SUT
+ * sources are compiled into the test executable, remove this include and
+ * rely on the build system instead.
+ */
 #include "../Src/Sensors/speed.c"
 
 void setUp(void) {
@@ -44,7 +51,6 @@ void tearDown(void) {
  * Expected RPM = (60 * 20000) / (delta_ticks * 10)7
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~calculate-rpm~1]
  * ==========================================================================
  */
 void test_Speed_CalculateRPM_ValidInput_ReturnsCorrectRPM(void) {
@@ -65,7 +71,6 @@ void test_Speed_CalculateRPM_ValidInput_ReturnsCorrectRPM(void) {
  * delta values below the threshold (20 ticks).
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~calculate-rpm~1]
  * ==========================================================================
  */
 void test_Speed_CalculateRPM_NoiseFiltering_ReturnsZero(void) {
@@ -85,7 +90,6 @@ void test_Speed_CalculateRPM_NoiseFiltering_ReturnsZero(void) {
  * Tests the function behavior at the noise filtering threshold boundary.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~calculate-rpm~1]
  * ==========================================================================
  */
 void test_Speed_CalculateRPM_MinimumValidInput_ReturnsRPM(void) {
@@ -106,7 +110,6 @@ void test_Speed_CalculateRPM_MinimumValidInput_ReturnsRPM(void) {
  * Tests conversion of zero RPM to meters per second.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-data-interface~1]
  * ==========================================================================
  */
 void test_Speed_RPMToMetersPerSecond_ZeroRPM_ReturnsZero(void) {
@@ -128,7 +131,6 @@ void test_Speed_RPMToMetersPerSecond_ZeroRPM_ReturnsZero(void) {
  * Formula: m/s = RPM * 0.21 / 60
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-data-interface~1]
  * ==========================================================================
  */
 void test_Speed_RPMToMetersPerSecond_TypicalRPM_ReturnsCorrectSpeed(void) {
@@ -148,7 +150,6 @@ void test_Speed_RPMToMetersPerSecond_TypicalRPM_ReturnsCorrectSpeed(void) {
  * Tests conversion with a higher RPM value to ensure accuracy.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-data-interface~1]
  * ==========================================================================
  */
 void test_Speed_RPMToMetersPerSecond_HighRPM_ReturnsCorrectSpeed(void) {
@@ -169,7 +170,6 @@ void test_Speed_RPMToMetersPerSecond_HighRPM_ReturnsCorrectSpeed(void) {
  * (when Speed_CalculateRPM returns 0).
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-noise-handling~1]
  * ==========================================================================
  */
 void test_Speed_ProcessDelta_NoiseFiltered_ReturnsZero(void) {
@@ -179,7 +179,7 @@ void test_Speed_ProcessDelta_NoiseFiltered_ReturnsZero(void) {
     uint32_t delta_ticks = 10; // Below noise threshold
     
     // When: Process delta
-    int result = Speed_ProcessDelta(delta_ticks, &average, &counter);
+    int result = Speed_ProcessDelta(delta_ticks, &average, &counter, NULL);
     
     // Then: Should return 0 (no output), average and counter unchanged
     TEST_ASSERT_EQUAL_INT(0, result);
@@ -194,7 +194,6 @@ void test_Speed_ProcessDelta_NoiseFiltered_ReturnsZero(void) {
  * without generating output until 5 readings are collected.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-average~1]
  * ==========================================================================
  */
 void test_Speed_ProcessDelta_AccumulatingReadings_ReturnsZero(void) {
@@ -204,7 +203,7 @@ void test_Speed_ProcessDelta_AccumulatingReadings_ReturnsZero(void) {
     uint32_t delta_ticks = 2000; // Valid delta (30 RPM)
     
     // When: Process first delta
-    int result = Speed_ProcessDelta(delta_ticks, &average, &counter);
+    int result = Speed_ProcessDelta(delta_ticks, &average, &counter, NULL);
     
     // Then: Should return 0 (still accumulating), average and counter updated
     TEST_ASSERT_EQUAL_INT(0, result);
@@ -219,7 +218,6 @@ void test_Speed_ProcessDelta_AccumulatingReadings_ReturnsZero(void) {
  * after accumulating 5 valid readings.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-average~1]
  * ==========================================================================
  */
 void test_Speed_ProcessDelta_FifthReading_ReturnsOne(void) {
@@ -233,7 +231,7 @@ void test_Speed_ProcessDelta_FifthReading_ReturnsOne(void) {
     _txe_mutex_put_IgnoreAndReturn(TX_SUCCESS);
 
     // When: Process fifth delta
-    int result = Speed_ProcessDelta(delta_ticks, &average, &counter);
+    int result = Speed_ProcessDelta(delta_ticks, &average, &counter, NULL);
     
     // Then: Should return 1 (output generated), counters reset, average calculated
     TEST_ASSERT_EQUAL_INT(1, result);
@@ -248,7 +246,6 @@ void test_Speed_ProcessDelta_FifthReading_ReturnsOne(void) {
  * Tests normal operation where current capture >= previous capture.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-timer-settings~1]
  * ==========================================================================
  */
 void test_HAL_TIM_IC_CaptureCallback_CorrectTimerChannel_UpdatesDelta(void) {
@@ -277,7 +274,6 @@ void test_HAL_TIM_IC_CaptureCallback_CorrectTimerChannel_UpdatesDelta(void) {
  * (current capture < previous capture).
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~speed-counter-overflow~1]
  * ==========================================================================
  */
 void test_HAL_TIM_IC_CaptureCallback_TimerOverflow_HandlesCorrectly(void) {
@@ -305,7 +301,6 @@ void test_HAL_TIM_IC_CaptureCallback_TimerOverflow_HandlesCorrectly(void) {
  * Tests that the callback function ignores calls from wrong timer instances.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-timer-settings~1]
  * ==========================================================================
  */
 void test_HAL_TIM_IC_CaptureCallback_WrongTimer_IgnoresCall(void) {
@@ -328,7 +323,6 @@ void test_HAL_TIM_IC_CaptureCallback_WrongTimer_IgnoresCall(void) {
  * Tests that the callback function ignores calls from wrong channels.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-timer-settings~1]
  * ==========================================================================
  */
 void test_HAL_TIM_IC_CaptureCallback_WrongChannel_IgnoresCall(void) {
@@ -352,7 +346,6 @@ void test_HAL_TIM_IC_CaptureCallback_WrongChannel_IgnoresCall(void) {
  * and proper delta calculation between captures.
  * 
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-timer-settings~1]
  * ==========================================================================
  */
 void test_HAL_TIM_IC_CaptureCallback_ConsecutiveCalls_UpdatesCorrectly(void) {
@@ -389,7 +382,6 @@ void test_HAL_TIM_IC_CaptureCallback_ConsecutiveCalls_UpdatesCorrectly(void) {
  * Tests the time interval between consecutive writes to vehicle_speed
  * to verify the 0.5 second (500ms) update interval.
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-read-frequency~1]
  * ==========================================================================
  */
 void test_SpeedThreadEntry_MeasureWriteSpeed_500ms(void) {
@@ -410,7 +402,7 @@ void test_SpeedThreadEntry_MeasureWriteSpeed_500ms(void) {
     for (int cycle = 0; cycle < 2; cycle++) {
         for (int i = 0; i < 5; i++) {
             current_tick += 10; // Simulate 0.1s thread sleep (THREAD_SLEEP_TICKS)
-            int result = Speed_ProcessDelta(2000, &average, &counter);
+            int result = Speed_ProcessDelta(2000, &average, &counter, NULL);
             
             if (result == 1) { // Write occurred
                 if (write_count > 0) {
@@ -434,7 +426,6 @@ void test_SpeedThreadEntry_MeasureWriteSpeed_500ms(void) {
  * Measures the computational overhead and timing consistency
  * of the speed calculation and global variable write operations.
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-read-frequency~1]
  * ==========================================================================
  */
 void test_SpeedThreadEntry_WritePerformance_Timing(void) {
@@ -455,7 +446,7 @@ void test_SpeedThreadEntry_WritePerformance_Timing(void) {
         for (int i = 0; i < 5; i++) {
             start_ticks = 100; // Simulate timing measurement start
             
-            int result = Speed_ProcessDelta(2000, &average, &counter);
+            int result = Speed_ProcessDelta(2000, &average, &counter, NULL);
             
             if (result == 1) { // Write operation occurred
                 uint32_t end_ticks = start_ticks + 1; // Simulate minimal processing time
@@ -483,7 +474,6 @@ void test_SpeedThreadEntry_WritePerformance_Timing(void) {
  * Tests how the thread handles rapid sensor updates and ensures
  * consistent write frequency regardless of sensor input rate.
  * ====================== Requirement Traceability ===========================
- * [test->dsn~rpm-read-frequency~1]
  * ==========================================================================
  */
 void test_SpeedThreadEntry_RapidSensorUpdates_ConsistentWrites(void) {
@@ -504,7 +494,7 @@ void test_SpeedThreadEntry_RapidSensorUpdates_ConsistentWrites(void) {
     for (int reading = 0; reading < 25; reading++) {
         simulation_time += 10; // Each iteration = 100ms
         
-        int result = Speed_ProcessDelta(2000, &average, &counter);
+        int result = Speed_ProcessDelta(2000, &average, &counter, NULL);
         
         if (result == 1) {
             if (write_count > 0) {

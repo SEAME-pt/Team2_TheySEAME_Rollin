@@ -6,136 +6,113 @@
 #include <QJsonObject>
 #include <QDebug>
 
-/**
- * @brief The generalInfo class
- *
- * Provides current system information such as:
- * - Local time
- * - Current date
- * - Weather information (temperature + icon)
- *
- * Data is updated periodically:
- * - Time and date every second
- * - Weather via HTTP request to Open-Meteo API
- *
- * @param parent Optional parent QObject
- *=======================Requirements traceability========================
- *        [impl->dsn~design-requirement-cluster-datetime~1]
- *        [impl->dsn~design-requirement-cluster-weather~1]
- *========================================================================
- */
 generalInfo::generalInfo(QObject *parent)
     : QObject(parent),
-      m_weatherInfo("sun"),
-      m_temperature(0.0f),
-      m_localTime("00:00"),
-      m_currentDate(QDate::currentDate()),
-      m_manager(nullptr)
+      _weatherInfo("sun"),
+      _temperature(0.0f),
+      _localTime("00:00"),
+      _currentDate(QDate::currentDate()),
+    _manager(nullptr),
+    _positionSource(nullptr),
+    _latitude(0.0),
+    _longitude(0.0),
+    _hasLocation(false)
 {
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, [this]() {
         QDateTime now = QDateTime::currentDateTime();
 
         QString newTime = now.toString("HH:mm");
-        if (newTime != m_localTime) {
-            m_localTime = newTime;
-            qDebug() << "Local time updated to:" << m_localTime;
+        if (newTime != _localTime) {
+            _localTime = newTime;
+            qDebug() << "Local time updated to:" << _localTime;
             emit localTimeChanged();
         }
 
         QDate newDate = now.date();
-        if (newDate != m_currentDate) {
-            m_currentDate = newDate;
-            qDebug() << "Current date updated to:" << m_currentDate.toString("dd/MM/yyyy");
+        if (newDate != _currentDate) {
+            _currentDate = newDate;
+            qDebug() << "Current date updated to:" << _currentDate.toString("dd/MM/yyyy");
             emit currentDateChanged();
         }
     });
     timer->start(1000);
 
-    // Setup network manager for weather data
-    m_manager = new QNetworkAccessManager(this);
-    connect(m_manager, &QNetworkAccessManager::finished,
+    _manager = new QNetworkAccessManager(this);
+    connect(_manager, &QNetworkAccessManager::finished,
             this, &generalInfo::onWeatherDataReceived);
 
-    fetchWeatherData();
+    QTimer *weatherTimer = new QTimer(this);
+    connect(weatherTimer, &QTimer::timeout, this, &generalInfo::fetchWeatherData);
+    weatherTimer->start(10 * 1000);
+
+    _positionSource = QGeoPositionInfoSource::createDefaultSource(this);
+    if (_positionSource) {
+        connect(_positionSource, &QGeoPositionInfoSource::positionUpdated, this, [this](const QGeoPositionInfo &info) {
+            _latitude = info.coordinate().latitude();
+            _longitude = info.coordinate().longitude();
+            _hasLocation = true;
+            qDebug() << "Location updated:" << _latitude << _longitude;
+            fetchWeatherData();
+            _positionSource->stopUpdates();
+        });
+        connect(_positionSource, &QGeoPositionInfoSource::errorOccurred, this, [this](QGeoPositionInfoSource::Error err) {
+            _latitude = 41.1496;
+            _longitude = -8.6109;
+            _hasLocation = false;
+            fetchWeatherData();
+        });
+        _positionSource->setUpdateInterval(1000);
+        _positionSource->requestUpdate(3000);
+    } else {
+        _latitude = 41.1496;
+        _longitude = -8.6109;
+        _hasLocation = false;
+        fetchWeatherData();
+    }
 }
 
-/**
- * @brief Returns the current weather icon filename.
- * @return QString representing icon (e.g., "sun-256.png")
- *
- *=======================Requirements traceability========================
- *        [impl->dsn~design-requirement-cluster-weather~1]
- *========================================================================
- */
+generalInfo::~generalInfo()
+{
+    if (_manager) {
+        delete _manager;
+        _manager = nullptr;
+    }
+    if (_positionSource) {
+        delete _positionSource;
+        _positionSource = nullptr;
+    }
+}
+
 QString generalInfo::getWeatherInfo() const
 {
-    return m_weatherInfo;
+    return _weatherInfo;
 }
 
-/**
- * @brief Returns the current temperature in Celsius.
- * @return int temperature
- *
- *=======================Requirements traceability========================
- *        [impl->dsn~design-requirement-cluster-weather~1]
- *========================================================================
- */
 int generalInfo::getTemperature() const
 {
-    return m_temperature;
+    return _temperature;
 }
 
-/**
- * @brief Returns the local time in HH:mm format.
- * @return QString current time
- *
- *=======================Requirements traceability========================
- *        [impl->dsn~design-requirement-cluster-datetime~1]
- *========================================================================
- */
 QString generalInfo::getLocalTime() const
 {
-    return m_localTime;
+    return _localTime;
 }
 
-/**
- * @brief Returns the current date in dd/MM/yyyy format.
- * @return QString current date
- *
- *=======================Requirements traceability========================
- *        [impl->dsn~design-requirement-cluster-datetime~1]
- *========================================================================
- */
 QString generalInfo::getCurrentDate() const
 {
-    return m_currentDate.toString("dd/MM/yyyy");
+    return _currentDate.toString("dd/MM/yyyy");
 }
 
-/**
- * @brief Fetches current weather data from Open-Meteo API.
- *
- *=======================Requirements traceability========================
- *        [impl->dsn~design-requirement-cluster-weather~1]
- *========================================================================
- */
 void generalInfo::fetchWeatherData()
 {
-    QNetworkRequest request(QUrl("https://api.open-meteo.com/v1/forecast?latitude=41.1496&longitude=-8.6109&current_weather=true"));
-    m_manager->get(request);
+    QString url = QString("https://api.open-meteo.com/v1/forecast?latitude=%1&longitude=%2&current_weather=true")
+        .arg(_latitude, 0, 'f', 6)
+        .arg(_longitude, 0, 'f', 6);
+    QNetworkRequest request{QUrl(url)};
+    _manager->get(request);
 }
 
-/**
- * @brief Handles the network reply for weather API.
- * Parses JSON and updates temperature and weather icon.
- * Emits temperatureChanged() and weatherInfoChanged() if necessary.
- *
- * @param reply QNetworkReply* from QNetworkAccessManager
- *
- *=======================Requirements traceability========================
- *        [impl->dsn~design-requirement-cluster-weather~1]
- *========================================================================
- */
 void generalInfo::onWeatherDataReceived(QNetworkReply* reply)
 {
     if (reply->error() != QNetworkReply::NoError) {
@@ -152,9 +129,8 @@ void generalInfo::onWeatherDataReceived(QNetworkReply* reply)
         QJsonObject currentWeather = obj["current_weather"].toObject();
 
         int temp = static_cast<int>(currentWeather["temperature"].toDouble());
-        if (temp != m_temperature) {
-            m_temperature = temp;
-            qDebug() << "Temperature updated to:" << m_temperature; 
+        if (temp != _temperature) {
+            _temperature = temp;
             emit temperatureChanged();
         }
 
@@ -176,9 +152,9 @@ void generalInfo::onWeatherDataReceived(QNetworkReply* reply)
             default: desc = "unknown"; break;
         }
 
-        if (desc != m_weatherInfo) {
-            m_weatherInfo = desc;
-            qDebug() << "Weather updated to:" << m_weatherInfo << "with temperature:" << m_temperature;
+        if (desc != _weatherInfo) {
+            _weatherInfo = desc;
+            qDebug() << "Weather updated to:" << _weatherInfo << "with temperature:" << _temperature;
             emit weatherInfoChanged();
         }
     }
