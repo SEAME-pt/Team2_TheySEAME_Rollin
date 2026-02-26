@@ -13,4 +13,4 @@ Debug/*.list
 .settings
 *.launch
 Core/Tests/build/*
-tests/build/
+*.SVDat

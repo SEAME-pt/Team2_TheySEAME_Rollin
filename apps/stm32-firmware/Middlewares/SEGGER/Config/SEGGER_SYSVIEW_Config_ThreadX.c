@@ -30,6 +30,11 @@ void SEGGER_SYSVIEW_Conf(void) {
                       _cbSendSystemDesc);
   
   SEGGER_SYSVIEW_SetRAMBase(SYSVIEW_RAM_BASE);
+  
+  // Auto-start recording so data streams immediately via RTT.
+  // Without this, SystemView waits for a "start" command from the host
+  // which only works over J-Link, not over the OpenOCD RTT bridge.
+  SEGGER_SYSVIEW_Start();
 }
 
 // Return current timestamp in CPU cycles

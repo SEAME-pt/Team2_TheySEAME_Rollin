@@ -1,184 +1,54 @@
-# SEGGER SystemView Integration for STM32U585 + ThreadX
+# SEGGER SystemView Profiling — STM32U585 + ThreadX
 
-## What's Been Done ✅
+Post-mortem thread profiling via OpenOCD RAM dump (ST-Link, no J-Link needed).
 
-1. **SEGGER Library Files Installed:**
-   - `Middlewares/SEGGER/RTT/` - Real-Time Transfer library
-   - `Middlewares/SEGGER/SystemView/` - SystemView core library
-   - `Middlewares/SEGGER/Config/` - Configuration files for STM32U585
-
-2. **Code Modified:**
-   - `Core/Src/app_threadx.c` - Added `SEGGER_SYSVIEW_Conf()` initialization
-   - Configuration files created for your specific hardware
-
-## ⚠️ Important: STM32CubeIDE Makefile Regeneration Issue
-
-STM32CubeIDE automatically regenerates makefiles when you change project settings or clean the build. This removes custom include paths from assembly build rules, causing build errors:
-
-```
-fatal error: SEGGER_RTT_Conf.h: No such file or directory
-```
-
-**Solution:** Run the fix script after any build errors:
+## Usage
 
 ```bash
 cd apps/stm32-firmware
+
+# 1. Capture (~2s snapshot of thread activity)
+./dump_sysview.sh
+
+# 2. Open the generated .SVDat file in SystemView
+/opt/SEGGER/SystemView_V362c/SystemView $(ls -t sysview_*.SVDat | head -1)
+```
+
+- Click **OK** on the "Error -161" warning — normal for post-mortem captures.
+- **Do NOT use the Record button** — it requires J-Link. Only use **File → Open**.
+
+## What You See
+
+- **Events List**: every context switch and ISR, microsecond timestamps
+- **Timeline**: which thread was running on the CPU at each moment
+- **CPU Load**: per-thread usage percentage
+- **Context Statistics** tab: min/max/avg execution times per thread
+
+Threads: Battery (pri 10), Communication (pri 10), Control (pri 8), Sensors Proc (pri 12), Speed (pri 14), System Timer.
+
+## Rebuilding After CubeIDE Regenerates Makefiles
+
+CubeIDE overwrites makefiles and drops custom flags. After regeneration:
+
+```bash
 ./fix_segger_build.sh
 ```
 
-The script automatically restores the required SEGGER include paths. You can run it anytime - it's safe and only modifies the makefile if needed.
+Also verify `Debug/Middlewares/ST/threadx/ports/cortex_m33/gnu/src/subdir.mk` has `-DTX_INCLUDE_USER_DEFINE_FILE` in the assembly compile rule — CubeIDE removes it.
 
-## Next Steps - Add Files to STM32CubeIDE Project
+## Key Files
 
-### Option 1: Using STM32CubeIDE GUI (Recommended)
+| File | Purpose |
+|------|---------|
+| `dump_sysview.sh` | Halt CPU + dump RTT buffer via OpenOCD |
+| `Config/SEGGER_SYSVIEW_Conf.h` | Buffer size (16 KB), post-mortem mode |
+| `Config/SEGGER_SYSVIEW_Config_ThreadX.c` | SystemView init, DWT cycle counter |
+| `Config/SEGGER_SYSVIEW_ThreadX.c` | ThreadX scheduler hooks → SystemView |
+| `Config/SEGGER_RTT_Conf.h` | RTT buffer config, lock macros |
 
-1. **Open your project in STM32CubeIDE**
+## Memory
 
-2. **Add SEGGER folders to project:**
-   - Right-click on project → **Refresh** (F5)
-   - You should now see `Middlewares/SEGGER` folder
+- Flash: ~15 KB
+- RAM: ~16 KB (event buffer)
+- CPU overhead: ~2-3%
 
-3. **Add Include Paths:**
-   - Right-click project → **Properties**
-   - Navigate to: `C/C++ Build → Settings → MCU GCC Compiler → Include paths`
-   - Click **Add** (green + icon) and add:
-     ```
-     "${workspace_loc:/${ProjName}/Middlewares/SEGGER/RTT}"
-     "${workspace_loc:/${ProjName}/Middlewares/SEGGER/SystemView}"
-     "${workspace_loc:/${ProjName}/Middlewares/SEGGER/Config}"
-     ```
-   - Click **Apply**
-
-4. **Add Source Files to Build:**
-   - In Project Explorer, expand `Middlewares/SEGGER/`
-   - Right-click each `.c` file and select **Add to Build**:
-     - `RTT/SEGGER_RTT.c`
-     - `SystemView/SEGGER_SYSVIEW.c`
-     - `Config/SEGGER_SYSVIEW_Config_ThreadX.c`
-
-5. **Build the project:**
-   - Project → **Build Project** (Ctrl+B)
-   - Should compile without errors
-
-### Option 2: Manual Build System Modification
-
-If GUI doesn't work, you can manually edit the Debug configuration:
-
-1. **Edit** `Debug/sources.mk`:
-   ```makefile
-   # Add after existing SUBDIRS:
-   SUBDIRS += \
-   ../Middlewares/SEGGER/RTT \
-   ../Middlewares/SEGGER/SystemView \
-   ../Middlewares/SEGGER/Config
-   ```
-
-2. **Create** `Debug/Middlewares/SEGGER/RTT/subdir.mk`:
-   ```makefile
-   C_SRCS += \
-   ../Middlewares/SEGGER/RTT/SEGGER_RTT.c
-   
-   OBJS += \
-   ./Middlewares/SEGGER/RTT/SEGGER_RTT.o
-   ```
-
-3. **Create** `Debug/Middlewares/SEGGER/SystemView/subdir.mk`:
-   ```makefile
-   C_SRCS += \
-   ../Middlewares/SEGGER/SystemView/SEGGER_SYSVIEW.c
-   
-   OBJS += \
-   ./Middlewares/SEGGER/SystemView/SEGGER_SYSVIEW.o
-   ```
-
-4. **Create** `Debug/Middlewares/SEGGER/Config/subdir.mk`:
-   ```makefile
-   C_SRCS += \
-   ../Middlewares/SEGGER/Config/SEGGER_SYSVIEW_Config_ThreadX.c
-     
-   OBJS += \
-   ./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_Config_ThreadX.o
-   ```
-
-## Testing SystemView
-
-### 1. Build and Flash Firmware
-
-```bash
-# In STM32CubeIDE:
-Project → Build Project
-Run → Debug (F11)
-```
-
-### 2. Open SystemView Application
-
-```bash
-# Launch SystemView (already installed)
-SystemView
-```
-
-### 3. Connect to Target
-
-1. In SystemView: **Target → Start Recording**
-2. Select:
-   - **Debugger**: ST-Link
-   - **Target Device**: STM32U585
-   - **Target Interface**: SWD
-3. Click **OK**
-
-### 4. Verify Connection
-
-You should see:
-- Timeline showing threads: Battery, Control, Communication, Sensors
-- CPU load graph
-- Event list populating
-
-### 5. Test Emergency Stop Profiling
-
-Once working, you can add custom events in your code:
-
-```c
-// In sensor interrupt:
-SEGGER_SYSVIEW_RecordU32(100, HAL_GetTick());  // Event ID 100 = sensor trigger
-
-// In Control thread emergency handler:
-SEGGER_SYSVIEW_RecordU32(101, HAL_GetTick());  // Event ID 101 = control response
-```
-
-Then measure the time between events in SystemView timeline!
-
-## Troubleshooting
-
-### Build Errors
-
-**Error: "SEGGER_SYSVIEW.h: No such file"**
-- Solution: Check include paths are added correctly in project properties
-
-**Error: "undefined reference to SEGGER_SYSVIEW_Conf"**
-- Solution: Make sure all 3 `.c` files are added to build
-
-### Runtime Issues
-
-**SystemView can't connect:**
-- Make sure ST-Link debugger is connected
-- Try: Target → Detect Target Device
-
-**No thread information showing:**
-- ThreadX integration is basic - you'll see CPU timeline but limited OS info
-- This is normal for manual ThreadX integration
-
-## Memory Usage
-
-- Flash: +~15 KB (SystemView library)
-- RAM: +~16 KB (event buffer)
-- CPU overhead: ~2-3% when recording
-
-## What Next?
-
-Once SystemView is working, you can:
-1. Profile your emergency stop response time
-2. Identify I2C mutex contention
-3. Optimize thread priorities
-4. Measure actual CPU usage per thread
-
-Good luck! 🚗💨

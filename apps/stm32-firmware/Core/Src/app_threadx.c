@@ -29,6 +29,7 @@
 
 /* Provided by SEGGER_SYSVIEW_ThreadX.c */
 extern void sysview_register_thread(TX_THREAD *thread);
+extern TX_THREAD _tx_timer_thread;
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -198,6 +199,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   sysview_register_thread(&control_thread);
   sysview_register_thread(&sensors_proc_thread);
   sysview_register_thread(&speed_thread);
+  sysview_register_thread(&_tx_timer_thread);
 
   /* USER CODE END App_ThreadX_Init */
 

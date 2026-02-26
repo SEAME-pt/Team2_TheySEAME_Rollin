@@ -32,6 +32,13 @@ Purpose : SEGGER SystemView configuration for STM32U585 with ThreadX
 // Use fixed RTT channel 1 for SystemView data (channel 0 = terminal)
 #define SEGGER_SYSVIEW_RTT_CHANNEL          1
 
+// Post-mortem mode: target writes continuously to a large circular buffer.
+// We halt + dump whenever we want to analyze. No data loss from slow RTT reads.
+#define SEGGER_SYSVIEW_POST_MORTEM_MODE     1
+
+// Large RTT buffer for post-mortem (16 KB out of ~256 KB SRAM available)
+#define SEGGER_SYSVIEW_RTT_BUFFER_SIZE      (16 * 1024)
+
 // Core clock frequency in Hz
 #define SEGGER_SYSVIEW_CPU_FREQ             (160000000)                     // STM32U585 running at 160 MHz
 
