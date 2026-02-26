@@ -16,6 +16,8 @@ Purpose : SEGGER SystemView configuration for STM32U585 with ThreadX
 #ifndef SEGGER_SYSVIEW_CONF_H
 #define SEGGER_SYSVIEW_CONF_H
 
+#include "stm32u5xx.h"  // For __get_IPSR() and CMSIS core functions
+
 /*********************************************************************
 *
 *       Defines, configurable
