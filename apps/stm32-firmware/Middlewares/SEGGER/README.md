@@ -11,6 +11,23 @@
    - `Core/Src/app_threadx.c` - Added `SEGGER_SYSVIEW_Conf()` initialization
    - Configuration files created for your specific hardware
 
+## ⚠️ Important: STM32CubeIDE Makefile Regeneration Issue
+
+STM32CubeIDE automatically regenerates makefiles when you change project settings or clean the build. This removes custom include paths from assembly build rules, causing build errors:
+
+```
+fatal error: SEGGER_RTT_Conf.h: No such file or directory
+```
+
+**Solution:** Run the fix script after any build errors:
+
+```bash
+cd apps/stm32-firmware
+./fix_segger_build.sh
+```
+
+The script automatically restores the required SEGGER include paths. You can run it anytime - it's safe and only modifies the makefile if needed.
+
 ## Next Steps - Add Files to STM32CubeIDE Project
 
 ### Option 1: Using STM32CubeIDE GUI (Recommended)
