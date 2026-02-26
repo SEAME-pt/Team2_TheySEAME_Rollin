@@ -26,6 +26,9 @@
 /* USER CODE BEGIN Includes */
 #include "Sensors/sensors.h"
 #include "SEGGER_SYSVIEW.h"
+
+/* Provided by SEGGER_SYSVIEW_ThreadX.c */
+extern void sysview_register_thread(TX_THREAD *thread);
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -188,6 +191,14 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   if (status != TX_SUCCESS) {
       return TX_THREAD_ERROR;
   }
+
+  /* Register all threads with SEGGER SystemView for detailed profiling */
+  sysview_register_thread(&battery_thread);
+  sysview_register_thread(&communication_thread);
+  sysview_register_thread(&control_thread);
+  sysview_register_thread(&sensors_proc_thread);
+  sysview_register_thread(&speed_thread);
+
   /* USER CODE END App_ThreadX_Init */
 
   return ret;

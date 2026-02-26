@@ -5,13 +5,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Middlewares/SEGGER/Config/SEGGER_SYSVIEW_Config_ThreadX.c 
+../Middlewares/SEGGER/Config/SEGGER_SYSVIEW_Config_ThreadX.c \
+../Middlewares/SEGGER/Config/SEGGER_SYSVIEW_ThreadX.c 
 
 OBJS += \
-./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_Config_ThreadX.o 
+./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_Config_ThreadX.o \
+./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_ThreadX.o 
 
 C_DEPS += \
-./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_Config_ThreadX.d 
+./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_Config_ThreadX.d \
+./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_ThreadX.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

@@ -8,12 +8,17 @@
 #define SYSVIEW_DEVICE_NAME     "Cortex-M33"
 #define SYSVIEW_RAM_BASE        (0x20000000)
 
+/* Provided by SEGGER_SYSVIEW_ThreadX.c */
+extern void sysview_send_task_list(void);
+
 static void _cbSendSystemDesc(void) {
   SEGGER_SYSVIEW_SendSysDesc("N="SYSVIEW_DEVICE_NAME",D=STM32U585,O=ThreadX");
   SEGGER_SYSVIEW_SendSysDesc("I#15=SysTick");
+  /* Re-send thread list when SystemView (re)connects */
+  sysview_send_task_list();
 }
 
-// Initialize SystemView - call once during startup
+// Initialize SystemView - call once during startu p
 void SEGGER_SYSVIEW_Conf(void) {
   // Enable DWT cycle counter for precise timestamps
   CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;

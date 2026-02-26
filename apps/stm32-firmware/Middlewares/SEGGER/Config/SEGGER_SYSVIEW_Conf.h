@@ -29,6 +29,9 @@ Purpose : SEGGER SystemView configuration for STM32U585 with ThreadX
 #define SEGGER_SYSVIEW_GET_TIMESTAMP()      SEGGER_SYSVIEW_X_GetTimestamp()  // Retrieve timestamp for System View events
 #define SEGGER_SYSVIEW_GET_INTERRUPT_ID()   ((U32)(__get_IPSR()))           // Get the currently active interrupt Id from IPSR
 
+// Use fixed RTT channel 1 for SystemView data (channel 0 = terminal)
+#define SEGGER_SYSVIEW_RTT_CHANNEL          1
+
 // Core clock frequency in Hz
 #define SEGGER_SYSVIEW_CPU_FREQ             (160000000)                     // STM32U585 running at 160 MHz
 

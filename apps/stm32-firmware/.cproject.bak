@@ -42,9 +42,6 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32U5xx/Include"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/threadx/ports/cortex_m33/gnu/inc"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
-									<listOptionValue builtIn="false" value="../Middlewares/SEGGER/RTT"/>
-									<listOptionValue builtIn="false" value="../Middlewares/SEGGER/SystemView"/>
-									<listOptionValue builtIn="false" value="../Middlewares/SEGGER/Config"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.1828852261" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
 							</tool>
@@ -149,9 +146,6 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32U5xx/Include"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/threadx/ports/cortex_m33/gnu/inc"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
-									<listOptionValue builtIn="false" value="../Middlewares/SEGGER/RTT"/>
-									<listOptionValue builtIn="false" value="../Middlewares/SEGGER/SystemView"/>
-									<listOptionValue builtIn="false" value="../Middlewares/SEGGER/Config"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.1095356929" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
 							</tool>
@@ -249,9 +243,6 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32U5xx/Include"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/threadx/ports/cortex_m33/gnu/inc"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
-									<listOptionValue builtIn="false" value="../Middlewares/SEGGER/RTT"/>
-									<listOptionValue builtIn="false" value="../Middlewares/SEGGER/SystemView"/>
-									<listOptionValue builtIn="false" value="../Middlewares/SEGGER/Config"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.600937122" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
 							</tool>
@@ -349,9 +340,6 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32U5xx/Include"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/threadx/ports/cortex_m33/gnu/inc"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
-									<listOptionValue builtIn="false" value="../Middlewares/SEGGER/RTT"/>
-									<listOptionValue builtIn="false" value="../Middlewares/SEGGER/SystemView"/>
-									<listOptionValue builtIn="false" value="../Middlewares/SEGGER/Config"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.1089798699" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
 							</tool>
@@ -434,6 +422,3 @@
 		</scannerConfigBuildInfo>
 	</storageModule>
 </cproject>
-<listOptionValue builtIn="false" value="../Middlewares/SEGGER/RTT"/>
-<listOptionValue builtIn="false" value="../Middlewares/SEGGER/SystemView"/>
-<listOptionValue builtIn="false" value="../Middlewares/SEGGER/Config"/>
