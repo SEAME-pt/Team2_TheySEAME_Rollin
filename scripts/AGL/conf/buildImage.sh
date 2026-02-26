@@ -11,5 +11,3 @@ bitbake-layers add-layer ../meta-mylayer
 
 # Symlink the site.conf
 ln -sf $HOME/site.conf $AGL_TOP/conf/.
-
-time bitbake agl-image-weston
