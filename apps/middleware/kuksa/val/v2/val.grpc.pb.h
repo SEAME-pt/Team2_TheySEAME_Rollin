@@ -18,7 +18,7 @@
 #ifndef GRPC_kuksa_2fval_2fv2_2fval_2eproto__INCLUDED
 #define GRPC_kuksa_2fval_2fv2_2fval_2eproto__INCLUDED
 
-#include "kuksa/val/v2/val.pb.h"
+#include "val.pb.h"
 
 #include <functional>
 #include <grpc/impl/codegen/port_platform.h>

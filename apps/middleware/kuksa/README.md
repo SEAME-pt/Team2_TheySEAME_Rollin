@@ -232,9 +232,9 @@ target_link_libraries(qtAppLib PRIVATE
 | SpeedMsg        | 0x200   | speed           | 0–200         | hm/h   | Current vehicle speed                       |
 | BatteryMsg      | 0x201   | StateOfCharge   | 0–100         | %      | Battery charge level                        |
 | ThrottleMsg     | 0x100  | throttle         | 0–100         | %      | Throttle position (acceleration)            |
-| Gear            | 0x101  | gear             | 0–3           | enum   | Current Gear(Parking(P),Neutral(N), Reverse(R), Drive(D) |
+| Gear            | 0x101  | gear             | 0–3           | enum   | Current Gear(Parking(P),Neutral(N), Reverse(R), Drive(D)) |
 | AngleMsg        | 0x102  | Angle            | -30-30        | deg    | Steering wheel angle                        |
-| Break           | 0x103  | break            | 0–1           | enum   | 0 = DRIVE, 1 = BREAK                        |
+| Brake           | 0x103  | brake            | 0–1           | enum   | 0 = DRIVE, 1 = BRAKE                        |
 | DrivingModeMsg  | 0x104  | DrivingMode      | 0–1           | enum   | 0 = MANUAL, 1 = AI_ASSIST                   |
 
 This architecture makes it simple to add new features or connect other systems, since all important vehicle data is sent in a clear, standard format.

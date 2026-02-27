@@ -80,14 +80,14 @@
             "type": "branch",
             "description": "Driving mode signals",
             "children": {
-              "Break": {
+              "brake": {
                 "type": "actuator",
                 "datatype": "uint8",
                 "unit": "enum",
-                "description": "Break: 0=DRIVE, 1=BREAK",
+                "description": "brake: 0=DRIVE, 1=brake",
                 "allowed": [0, 1],
-                "dbc": { "signal": "Break" },
-                "vss2dbc": { "signal": "Break" }
+                "dbc": { "signal": "brake" },
+                "vss2dbc": { "signal": "brake" }
               },
               "DrivingMode": {
                 "type": "actuator",
