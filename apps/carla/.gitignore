@@ -1,3 +1,5 @@
 PiracerSim/build/
 PiracerSim/CMakeFiles/
 PiracerSim/bin
+PiracerSim/lib
+PiracerSim/libcarla-install
