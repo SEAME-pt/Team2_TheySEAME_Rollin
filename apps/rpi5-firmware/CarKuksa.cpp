@@ -1,7 +1,7 @@
 #include "CarKuksa.hpp"
 #include <iostream>
 
-CarKuksa::CarKuksa(RemoteControl &remote) : _subject(remote), _kuksa(kuksaLib) {
+CarKuksa::CarKuksa(RemoteControl &remote) : _subject(remote) {
 	std::cout << "CarKuksa Constructor" << std::endl;
 }
 
@@ -18,18 +18,23 @@ int CarKuksa::processSteering(const int rawSteering) {
 }
 
 void CarKuksa::setThrottle(const int throttle) {
-	
+	_kuksa.sendValueToKuksa("Vehicle.Control.Throttle.Value", (float)abs(throttle));
 }
 
 void CarKuksa::setSteering(const int steering) {
-
+	_kuksa.sendValueToKuksa("Vehicle.Control.Steering.Angle", (float)steering);
 }
 
 void CarKuksa::setGear(const short gear) {
-
+	_gear = gear;
+	_kuksa.sendValueToKuksa("Vehicle.Control.Gear.Value", (uint8_t)gear);
 }
 
 void CarKuksa::brake() {}
+
+short CarKuksa::getGear() const {
+	return (_gear);
+}
 
 void CarKuksa::update(Events event) {
 	std::cout << "Received notify" << std::endl;

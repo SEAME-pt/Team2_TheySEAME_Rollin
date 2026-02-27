@@ -35,6 +35,6 @@ private:
 	int processThrottle(const int rawThrottle);
 	int processSteering(const int rawSteering);
 	RemoteControl &_subject;
-	kuksaLib &_kuksa;
+	kuksaLib _kuksa;
 	short _gear;
 };
