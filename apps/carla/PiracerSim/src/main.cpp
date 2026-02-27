@@ -54,7 +54,8 @@ int main() {
     kuksaLib kuksaCtrl;
     std::thread kuksaThread([&](){kuksaCtrl.subscribeFromKuksa();});
     kuksaThread.detach();
-
+    
+    kuksaCtrl.sendValueToKuksa("Vehicle.Speed", 0.1f);
     cc::Client client("localhost", 2000);
     // client.SetTimeout(40s);
 
@@ -83,12 +84,6 @@ int main() {
 
     // Basic physical adjustment (mass; you can also modify wheels)
     auto phys = vehicle->GetPhysicsControl();
-
-    phys.mass = (float)piracer::MASS_KG;
-
-    phys.drag_coefficient = 0.9f;
-
-    phys.center_of_mass = carla::geom::Vector3D(0.0f, 0.0f, -0.10f);
 
     vehicle->ApplyPhysicsControl(phys);
 
@@ -136,7 +131,7 @@ int main() {
 
       // 3) placeholder: target command from your ADAS
       float target_throttle = kuksaCtrl.getThrottle() / 100.0f;
-      float target_steer = kuksaCtrl.getSteering() / 30.0f;
+      float target_steer = kuksaCtrl.getSteering() / 5.0f;
 
       // cur_throttle = Slew(cur_throttle, target_throttle, (float)piracer::MAX_THROTTLE_SLEW_PER_TICK);
       // cur_steer    = Slew(cur_steer,    target_steer,    (float)piracer::MAX_STEER_SLEW_PER_TICK);
@@ -149,6 +144,27 @@ int main() {
       
       carlaCtrl.reverse = (kuksaCtrl.getGear() == 2);
       
+      auto vel = vehicle->GetVelocity();
+      float speed_ms = std::sqrt(vel.x*vel.x + vel.y*vel.y + vel.z*vel.z);
+
+      const float V_MAX = 6.0f;
+      const float V_HYST = 0.3f;
+      const float KP_BRAKE = 0.25f;
+
+      float throttle_cmd = std::clamp(target_throttle, 0.0f, 1.0f);
+      float brake_cmd = 0.0f;
+
+      if (speed_ms > V_MAX + V_HYST) {
+        float overshoot = speed_ms - V_MAX;
+        throttle_cmd = 0.0f;
+        brake_cmd = std::clamp(KP_BRAKE * overshoot, 0.0f, 1.0f);
+      } else if (speed_ms > V_MAX) {
+        float scale = std::clamp((V_MAX + V_HYST - speed_ms) / V_HYST, 0.0f, 1.0f);
+        throttle_cmd *= scale;
+      }
+      carlaCtrl.throttle = throttle_cmd;
+      carlaCtrl.brake = brake_cmd;
+
       vehicle->ApplyControl(carlaCtrl);
       std::cout << "VehicleControl: "
             << "throttle=" << carlaCtrl.throttle
