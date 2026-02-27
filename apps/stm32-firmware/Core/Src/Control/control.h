@@ -21,7 +21,7 @@
  * Note: For short-lived debugging you can disable the automatic safety stop
  * by defining `DISABLE_CONTROL_SAFETY` (compile-time only). Do NOT enable in
  * production builds.
- *errors
+ *
  * For convenience, in debug or test builds this macro is defined automatically
  * so you don't need to rebuild with extra flags. Remove this convenience for
  * production builds or CI by undefining `DEBUG`/`TEST_MODE` or explicitly

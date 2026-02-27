@@ -14,3 +14,5 @@ Debug/*.list
 *.launch
 Core/Tests/build/*
 *.SVDat
+*.bak
+Debug/build.log

@@ -434,6 +434,3 @@
 		</scannerConfigBuildInfo>
 	</storageModule>
 </cproject>
-<listOptionValue builtIn="false" value="../Middlewares/SEGGER/RTT"/>
-<listOptionValue builtIn="false" value="../Middlewares/SEGGER/SystemView"/>
-<listOptionValue builtIn="false" value="../Middlewares/SEGGER/Config"/>
