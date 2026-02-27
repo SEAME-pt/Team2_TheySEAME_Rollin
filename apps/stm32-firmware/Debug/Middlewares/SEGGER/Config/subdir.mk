@@ -24,7 +24,7 @@ Middlewares/SEGGER/Config/%.o Middlewares/SEGGER/Config/%.su Middlewares/SEGGER/
 clean: clean-Middlewares-2f-SEGGER-2f-Config
 
 clean-Middlewares-2f-SEGGER-2f-Config:
-	-$(RM) ./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_Config_ThreadX.cyclo ./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_Config_ThreadX.d ./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_Config_ThreadX.o ./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_Config_ThreadX.su
+	-$(RM) ./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_Config_ThreadX.cyclo ./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_Config_ThreadX.d ./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_Config_ThreadX.o ./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_Config_ThreadX.su ./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_ThreadX.cyclo ./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_ThreadX.d ./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_ThreadX.o ./Middlewares/SEGGER/Config/SEGGER_SYSVIEW_ThreadX.su
 
 .PHONY: clean-Middlewares-2f-SEGGER-2f-Config
 
