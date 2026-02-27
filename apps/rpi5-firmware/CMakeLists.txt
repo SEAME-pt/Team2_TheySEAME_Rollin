@@ -5,9 +5,11 @@ project(CarControl)
 set(BUILD_TESTS ON)
 set(RPI_BIN_DIR ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(SOURCES main.cpp ICar.hpp CarCAN.hpp CarCAN.cpp)
+set(SOURCES main.cpp ICar.hpp CarCAN.hpp CarCAN.cpp CarKuksa.hpp CarKuksa.cpp
+	../middleware/kuksa/val/v2/val.grpc.pb.cc ../middleware/kuksa/val/v2/types.pb.cc
+	../middleware/kuksa/val/v2/val.grpc.pb.cc ../middleware/kuksa/val/v2/KuksaLib.cpp)
 
-include_directories(PUBLIC comms mode_manager/remote middleware)
+include_directories(PUBLIC comms mode_manager/remote middleware ../middleware ../middleware/kuksa/val/v2/)
 
 add_subdirectory(mode_manager)
 add_subdirectory(middleware)
@@ -15,7 +17,7 @@ add_subdirectory(middleware)
 if(CMAKE_CROSSCOMPILING)
 	add_subdirectory(comms)
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
-	target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC comms mode socketcan middleware)
+	target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC comms mode socketcan middleware protobuf grpc)
 	install(TARGETS CarControl DESTINATION ${RPI_BIN_DIR})
 else()
 	if(BUILD_TESTS)
