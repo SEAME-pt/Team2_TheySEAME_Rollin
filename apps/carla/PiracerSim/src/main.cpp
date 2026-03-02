@@ -119,7 +119,26 @@ int main() {
     {
       // 1) advance simulation
       world.Tick(10s);
+      static carla::geom::Location smooth_loc = vehicle->GetTransform().location;
 
+      auto vt  = vehicle->GetTransform();
+      auto fwd = vt.GetForwardVector();
+
+      carla::geom::Location target = vt.location;
+      target.x -= fwd.x * 6.0f;
+      target.y -= fwd.y * 6.0f;
+      target.z += 2.5f;
+
+      // smoothing
+      float alpha = 0.1f; // menor = mais suave
+      smooth_loc.x = (1 - alpha) * smooth_loc.x + alpha * target.x;
+      smooth_loc.y = (1 - alpha) * smooth_loc.y + alpha * target.y;
+      smooth_loc.z = (1 - alpha) * smooth_loc.z + alpha * target.z;
+
+      carla::geom::Rotation cam_rot = vt.rotation;
+      cam_rot.pitch = -12.0f;
+
+      world.GetSpectator()->SetTransform({smooth_loc, cam_rot});
       // // 2) read the latest image (if needed)
       // {
       //   std::lock_guard<std::mutex> lk(g_mtx);
