@@ -138,7 +138,7 @@ running the C++ controller.
     Compiles the C++ client and its dependencies.\
     Output binary:
 
-        bin/PiracerSim
+        bin/piracer_sim
 
 -   **run**\
     Builds (if necessary) and executes the client.

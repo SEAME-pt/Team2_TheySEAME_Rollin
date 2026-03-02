@@ -20,23 +20,23 @@ clean:
 
 run: build
 	$(call log,Running C++ Client...)
-	@$(BINDIR)/cpp_client $(ARGS)
+	@$(BINDIR)/piracer_sim $(ARGS)
 
 run.only:
 	$(call log,Running C++ Client...)
-	@$(BINDIR)/cpp_client $(ARGS)
+	@$(BINDIR)/piracer_sim $(ARGS)
 
 re: 
-	rm -rf $(BINDIR)/cpp_client
+	rm -rf $(BINDIR)/piracer_sim
 	$(MAKE) build
 
-build: $(BINDIR)/cpp_client
+build: $(BINDIR)/piracer_sim
 
-$(BINDIR)/cpp_client: | build_libcarla
+$(BINDIR)/piracer_sim: | build_libcarla
 	$(call log,Compiling C++ Client...)
 	@mkdir -p $(BINDIR)
 	@$(CXX) $(CXXFLAGS) -I$(INSTALLDIR)/include -isystem $(INSTALLDIR)/include/system -L$(INSTALLDIR)/lib \
-		-o $(BINDIR)/cpp_client src/main.cpp \
+		-o $(BINDIR)/piracer_sim src/main.cpp \
 		kuksa/val/v2/*.cc kuksa/val/v2/*.cpp \
 		-Wl,-Bstatic -lcarla_client -lrpc -lboost_filesystem -Wl,-Bdynamic \
 		-lgrpc++ -lgrpc -lgpr -lprotobuf -lz -lssl -lcrypto -ldl \
