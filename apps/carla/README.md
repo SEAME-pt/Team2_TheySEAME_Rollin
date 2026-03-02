@@ -2,16 +2,17 @@
 
 ## Overview
 
-This project integrates a custom **PiRacer simulation module** into the
-CARLA simulator using the C++ API and KUKSA middleware for vehicle
-signal communication.
+This project integrates a custom **PiRacer simulation module** with the
+**CARLA simulator** using the CARLA C++ API and KUKSA middleware for
+vehicle signal communication.
 
-The system allows testing vehicle control logic inside CARLA before
-deploying it to a real PiRacer platform.
+The goal is to validate and test vehicle control logic in a simulated
+environment before deploying it to a physical PiRacer platform. This
+reduces development risk and enables deterministic, repeatable testing.
 
 ------------------------------------------------------------------------
 
-# What is CARLA?
+## What is CARLA?
 
 CARLA (Car Learning to Act) is an open-source autonomous driving
 simulator built on Unreal Engine.
@@ -22,72 +23,86 @@ It provides:
 -   High-fidelity 3D environments
 -   Configurable sensors (Camera, LiDAR, IMU, GNSS)
 -   Python and C++ APIs
--   Deterministic simulation via synchronous mode
+-   Deterministic simulation through synchronous mode
 
-In this project, we use the **C++ client API** to:
+In this project, the **CARLA C++ Client API** is used to:
 
-1.  Connect to a running CARLA server
-2.  Spawn a vehicle
-3.  Apply throttle, steering, and gear commands
-4.  Run in synchronous mode with a fixed timestep
+1.  Connect to a running CARLA server\
+2.  Spawn a vehicle actor in the simulation\
+3.  Apply throttle, steering, and gear commands\
+4.  Run the simulation in synchronous mode with a fixed timestep
 
 ------------------------------------------------------------------------
 
-# Purpose of `piracer_config.hpp`
+## Purpose of `piracer_config.hpp`
 
-The `piracer_config.hpp` file centralizes all tunable parameters used in
-the simulation.
+The `piracer_config.hpp` file centralizes all simulation parameters to
+ensure maintainability and consistent behavior.
 
-It defines:
+It defines three main parameter groups:
 
-## Physical Parameters
+### Physical Parameters
 
--   MASS_KG
--   WHEELBASE_M
--   MAX_STEER_DEG
--   MAX_SPEED_MPS
+-   `MASS_KG`
+-   `WHEELBASE_M`
+-   `MAX_STEER_DEG`
+-   `MAX_SPEED_MPS`
 
-These parameters approximate the physical behavior of the PiRacer inside
+These parameters approximate the dynamic behavior of the PiRacer within
 CARLA.
 
-Note: CARLA vehicle blueprints are full-scale real vehicles. The
-configuration approximates RC behavior but does not change the mesh
-scale.
+> **Note:** CARLA vehicle blueprints represent full-scale vehicles.\
+> The configuration approximates RC-scale behavior but does not modify
+> the visual mesh scale.
 
-## Timing Parameters
+------------------------------------------------------------------------
 
--   WORLD_DT_S
--   CAM_TICK_S
--   IMU_TICK_S
--   GNSS_TICK_S
+### Timing Parameters
 
-These define deterministic update frequencies.
+-   `WORLD_DT_S`
+-   `CAM_TICK_S`
+-   `IMU_TICK_S`
+-   `GNSS_TICK_S`
 
-## Control Parameters
+These define deterministic update rates for the simulation world and
+sensors.
 
--   Steering and throttle slew rate limits
+------------------------------------------------------------------------
+
+### Control Parameters
+
+-   Steering slew rate limits\
+-   Throttle slew rate limits\
 -   Simulated control latency
 
-This improves simulation-to-real consistency.
+These improve simulation-to-real consistency by modeling realistic
+actuator response and smoothing command transitions.
+
 ------------------------------------------------------------------------
 
 # Setup Instructions
 
-## 1. Setup CARLA
+## 1. Install CARLA
 
-Follow the instructions in the [official CARLA documentation](https://carla.readthedocs.io/en/latest/).
+Follow the official CARLA installation guide:
+
+https://carla.readthedocs.io/en/latest/
 
 ------------------------------------------------------------------------
 
 ## 2. Copy the PiRacer Simulation Module
 
+``` sh
 cp -r PiracerSim CarlaRoot/
+```
 
 ------------------------------------------------------------------------
 
-## 3. Copy the KUKSA Middleware
+## 3. Copy the KUKSA Library
 
-cp -r kuksa CarlaRoot/
+``` sh
+cp -r libs/libkuksa CarlaRoot/PiracerSim/
+```
 
 ------------------------------------------------------------------------
 
@@ -95,48 +110,54 @@ cp -r kuksa CarlaRoot/
 
 ## 1. Start CARLA
 
+Launch the CARLA server:
+
+``` sh
 make launch
+```
+
+Once the CARLA window opens:
+
+-   Click **Start** in the simulator interface.
+-   Wait until the world is fully loaded.
 
 ------------------------------------------------------------------------
 
-
 ## 2. Build and Run the PiRacer Controller
-
-To build and run the PiRacer simulation client, use the following Makefile targets:
-
-## Build & Run (Makefile)
 
 The PiRacerSim project includes a Makefile to simplify building and
 running the C++ controller.
 
+------------------------------------------------------------------------
+
+## Build & Run (Makefile)
+
 ### Available Targets
 
 -   **build**\
-    Compiles the C++ client and all required dependencies.\
-    The generated binary is placed in:
+    Compiles the C++ client and its dependencies.\
+    Output binary:
 
-        bin/cpp_client
+        bin/PiracerSim
 
 -   **run**\
-    Builds the project (if necessary) and executes the C++ client.
+    Builds (if necessary) and executes the client.
 
 -   **run.only**\
-    Executes the already compiled binary without triggering a rebuild.
+    Executes the existing binary without rebuilding.
 
 -   **clean**\
-    Removes all build artifacts (object files, binaries, and temporary
-    files).
+    Removes all build artifacts.
 
 -   **re**\
-    Cleans the project and rebuilds everything from scratch.
+    Cleans and rebuilds the project from scratch.
 
 -   **build_libcarla**\
-    Builds LibCarla using `cmake` and `ninja` (requires a properly
-    configured CARLA environment).
+    Builds LibCarla using `cmake` and `ninja`.\
+    Requires a properly configured CARLA environment.
 
 -   **ToolChain.cmake**\
-    Generates the CMake toolchain configuration file with the
-    appropriate compiler settings.
+    Generates the CMake toolchain configuration file.
 
 ------------------------------------------------------------------------
 
@@ -160,13 +181,13 @@ Run without rebuilding:
 make run.only
 ```
 
-Clean build artifacts:
+Clean:
 
 ``` sh
 make clean
 ```
 
-Rebuild from scratch:
+Rebuild:
 
 ``` sh
 make re
@@ -174,5 +195,6 @@ make re
 
 ------------------------------------------------------------------------
 
-These commands streamline the development workflow and simplify testing
-the PiRacer controller within the CARLA simulation environment.
+These commands streamline the development workflow and simplify
+validation of the PiRacer controller inside the CARLA simulation
+environment.
