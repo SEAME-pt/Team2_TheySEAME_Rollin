@@ -9,7 +9,7 @@ set(PROTO_GRPC_SRCS ./kuksa/val/v2/val.proto)
 find_package(Protobuf REQUIRED)
 find_package(absl REQUIRED)
 
-add_library(kuksa SHARED ${SOURCES}) 
+add_library(kuksa STATIC ${SOURCES}) 
 
 target_include_directories(kuksa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/kuksa/val/v2)
 target_link_libraries(
