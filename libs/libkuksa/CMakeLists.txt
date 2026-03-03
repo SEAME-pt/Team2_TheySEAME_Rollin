@@ -28,7 +28,7 @@ protobuf_generate(
 	TARGET kuksa
 	LANGUAGE grpc
 	GENERATE_EXTENSIONS .grpc.pb.h .grpc.pb.cc
-	PLUGIN protoc-gen-grpc=/usr/bin/grpc_cpp_plugin
+	PLUGIN protoc-gen-grpc=/usr/local/bin/grpc_cpp_plugin
 	PROTOS ${PROTO_GRPC_SRCS}
 )
 
