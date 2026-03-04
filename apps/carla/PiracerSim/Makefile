@@ -3,10 +3,16 @@ BUILDDIR=$(CURDIR)/build
 BINDIR=$(CURDIR)/bin
 INSTALLDIR=$(CURDIR)/libcarla-install
 TOOLCHAIN=$(CURDIR)/ToolChain.cmake
+KUKSADIR=$(CURDIR)/kuksa
+LIBKUKSADIR=$(CURDIR)/libkuksa
+KUKSABUILDDIR=$(LIBKUKSADIR)/build
 
 CC=/usr/bin/gcc
 CXX=/usr/bin/g++
 CXXFLAGS=-std=c++17 -pthread -fPIC -O3 -DNDEBUG
+
+ABSL_DIR := /usr/local/lib
+ABSL_LIBS := $(wildcard $(ABSL_DIR)/libabsl_*.a)
 
 define log
 	@echo "\033[1;35m$(1)\033[0m"
@@ -20,26 +26,41 @@ clean:
 
 run: build
 	$(call log,Running C++ Client...)
-	@$(BINDIR)/piracer_sim $(ARGS)
+	@$(BINDIR)/cpp_client $(ARGS)
 
 run.only:
 	$(call log,Running C++ Client...)
-	@$(BINDIR)/piracer_sim $(ARGS)
+	@$(BINDIR)/cpp_client $(ARGS)
 
 re: 
-	rm -rf $(BINDIR)/piracer_sim
+	rm -rf $(BINDIR)/cpp_client
 	$(MAKE) build
 
-build: $(BINDIR)/piracer_sim
+build: $(BINDIR)/cpp_client
 
-$(BINDIR)/piracer_sim: | build_libcarla
+$(BINDIR)/cpp_client: | build_libcarla build_libkuksa
 	$(call log,Compiling C++ Client...)
 	@mkdir -p $(BINDIR)
-	@$(CXX) $(CXXFLAGS) -I$(INSTALLDIR)/include -isystem $(INSTALLDIR)/include/system -L$(INSTALLDIR)/lib \
-		-o $(BINDIR)/piracer_sim src/main.cpp \
-		kuksa/val/v2/*.cc kuksa/val/v2/*.cpp \
+	@$(CXX) $(CXXFLAGS) -I . -I$(INSTALLDIR)/include -isystem $(INSTALLDIR)/include/system -L$(INSTALLDIR)/lib \
+		-o $(BINDIR)/cpp_client src/main.cpp \
+		$(KUKSADIR)/val/v2/*.cc $(KUKSADIR)/val/v2/*.cpp \
 		-Wl,-Bstatic -lcarla_client -lrpc -lboost_filesystem -Wl,-Bdynamic \
-		-lgrpc++ -lgrpc -lgpr -lprotobuf -lz -lssl -lcrypto -ldl \
+		-L/usr/local/lib -L/usr/lib/x86_64-linux-gnu \
+		-Wl,--start-group \
+		-lgrpc++ -lgrpc -lgpr -lprotobuf \
+		-l:libcares.a \
+		-l:libaddress_sorting.a \
+		-l:libre2.a \
+		-l:libupb.a \
+		-l:libupb_collections_lib.a \
+		-l:libupb_json_lib.a \
+		-l:libupb_textformat_lib.a \
+		-l:libutf8_range.a \
+		-l:libutf8_range_lib.a \
+		-l:libutf8_validity.a \
+		$(ABSL_LIBS) \
+		-Wl,--end-group \
+		-lz -lssl -lcrypto -ldl -lpthread \
 		-lpng -ltiff -ljpeg -lRecast -lDetour -lDetourCrowd
 
 build_libcarla: $(TOOLCHAIN)
@@ -64,6 +85,14 @@ build_libcarla: $(TOOLCHAIN)
 		ninja; \
 		ninja install | grep -v "Up-to-date:"; \
 	}
+
+build_libkuksa:
+	$(call log,Compiling libkuksa...)
+	@mkdir -p $(KUKSABUILDDIR)
+	@cd $(KUKSABUILDDIR) && cmake .. && $(MAKE)
+	@cp -r $(KUKSABUILDDIR)/kuksa ./
+	@cp $(LIBKUKSADIR)/KuksaLib.cpp $(KUKSADIR)/val/v2/
+	@cp $(LIBKUKSADIR)/KuksaLib.hpp $(KUKSADIR)/val/v2/
 
 $(TOOLCHAIN):
 	@echo "set(CMAKE_C_COMPILER $(CC))" > $(TOOLCHAIN)

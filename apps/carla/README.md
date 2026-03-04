@@ -156,6 +156,10 @@ running the C++ controller.
     Builds LibCarla using `cmake` and `ninja`.\
     Requires a properly configured CARLA environment.
 
+-   **build_libkuksa**\
+    Builds libkuksa using `cmake` \
+    Requires grpc 1.60.1/1.60 and protobuf 25.8 installed.
+
 -   **ToolChain.cmake**\
     Generates the CMake toolchain configuration file.
 
