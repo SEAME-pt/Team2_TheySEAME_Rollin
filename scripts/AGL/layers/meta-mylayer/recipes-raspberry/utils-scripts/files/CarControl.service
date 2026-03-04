@@ -1,5 +1,7 @@
 [Unit]
 Description=CarControl Application
+Wants=network-online.target
+After=systemd-networkd.service
 
 [Service]
 Type=simple
