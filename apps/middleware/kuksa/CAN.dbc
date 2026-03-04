@@ -44,7 +44,7 @@ BO_ 256 ThrottleMsg: 8 RASPI
  SG_ throttle : 0|16@1+ (1,0) [0|100] "%" STM32
 
 BO_ 258 AngleMsg: 8 RASPI
- SG_ Angle : 0|16@1- (1,0) [-30|30] "deg" STM32
+ SG_ angle : 0|16@1- (1,0) [-30|30] "deg" STM32
 
 
 BO_ 261 GearMsg: 8 RASPI
@@ -56,12 +56,12 @@ VAL_ 261 gear
  2 "REVERSE"
  3 "DRIVE";
 
-BO_ 262 BreakMsg: 8 RASPI
- SG_ break : 0|8@1+ (1,0) [0|1] "" STM32
+BO_ 262 BrakeMsg: 8 RASPI
+ SG_ brake : 0|8@1+ (1,0) [0|1] "" STM32
 
-VAL_ 262 break
+VAL_ 262 brake
  0 "DRIVE"
- 1 "BREAK";
+ 1 "BRAKE";
 
 BO_ 260 DrivingModeMsg: 8 RASPI
  SG_ DrivingMode : 0|8@1+ (1,0) [0|1] "" STM32

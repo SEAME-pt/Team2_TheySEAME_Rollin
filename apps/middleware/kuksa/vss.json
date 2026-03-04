@@ -71,8 +71,8 @@
                 "datatype": "float",
                 "unit": "deg",
                 "description": "Steering angle command",
-                "dbc": { "signal": "Angle" },
-                "vss2dbc": { "signal": "Angle" }
+                "dbc": { "signal": "angle" },
+                "vss2dbc": { "signal": "angle" }
               }
             }
           },
