@@ -53,7 +53,6 @@ int main() {
     std::thread kuksaThread([&](){kuksaCtrl.subscribeFromKuksa();});
     kuksaThread.detach();
 
-    kuksaCtrl.sendValueToKuksa("Vehicle.Speed", 0.1f);
     cc::Client client("localhost", 2000);
 
     auto world = client.GetWorld();
@@ -132,14 +131,6 @@ int main() {
       float throttle_cmd = std::clamp(target_throttle, 0.0f, 1.0f);
       float brake_cmd = 0.0f;
 
-      if (speed_ms > V_MAX + V_HYST) {
-        float overshoot = speed_ms - V_MAX;
-        throttle_cmd = 0.0f;
-        brake_cmd = std::clamp(KP_BRAKE * overshoot, 0.0f, 1.0f);
-      } else if (speed_ms > V_MAX) {
-        float scale = std::clamp((V_MAX + V_HYST - speed_ms) / V_HYST, 0.0f, 1.0f);
-        throttle_cmd *= scale;
-      }
       carlaCtrl.throttle = throttle_cmd;
       carlaCtrl.brake = brake_cmd;
 
