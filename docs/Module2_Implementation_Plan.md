@@ -16,19 +16,19 @@
 
 ## Phase Outline
 ### Phase 1: Foundation and Basic Lane Navigation
-Control Model (PID + MPC)
-CARLA Simulator Setup
-LKA — Lane Keeping Assist
-EBA — Emergency Brake Assist
-TSF Requirements & ADR
-Unit Test Infrastructure
+- Control Model (PID + MPC)
+- CARLA Simulator Setup
+- LKA — Lane Keeping Assist
+- EBA — Emergency Brake Assist
+- TSF Requirements & ADR
+- Unit Test Infrastructure
 
 ### Phase 2: Advanced Decision Making and Traffic Sign Recognition
-CC — Cruise Control
-Traffic Sign Recognition (TSR) Model
-TSR Integration with Speed Control
-Qt Cluster UI — ADAS Overlay
-Bonus Implmentation : Truck Platooning, ACC, ...
+- CC — Cruise Control
+- Traffic Sign Recognition (TSR) Model
+- TSR Integration with Speed Control
+- Qt Cluster UI — ADAS Overlay
+- Bonus Implementation : Truck Platooning, ACC, ...
 
 ## Architecture Decision Record (ADR)
 https://github.com/joelparkerhenderson/architecture-decision-record
