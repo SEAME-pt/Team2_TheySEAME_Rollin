@@ -33,6 +33,7 @@ static uint32_t Speed_ReadDeltaTicks(void)
 
 uint32_t Speed_CalculateRPM(uint32_t delta_ticks)
 {
+	// Ignore zero or unrealistically small deltas (debounce/glitches)
 	if (delta_ticks < 20)
 		return 0;
 
@@ -95,8 +96,10 @@ void Speed_Thread_Entry(ULONG thread_input)
 		}
 		else
 		{
+			// No valid pulse detected in this iteration
 			no_pulse_counter++;
 
+			// Stop after ~0.2s without pulses (THREAD_SLEEP_TICKS is 10 ticks = 0.1s)
 			if (no_pulse_counter == 2)
 			{
 				SensorSample_t samp = { .sensor_id = SENSOR_ID_SPEED, .value = 0.0f, .ts = HAL_GetTick() };
@@ -106,9 +109,9 @@ void Speed_Thread_Entry(ULONG thread_input)
 			}
 
 			if (no_pulse_counter > 255)
-				no_pulse_counter = 0;
+				no_pulse_counter = 0;  // Keep incrementing to stay past threshold, cap to prevent overflow
 		}
-
+		// TX_TIMER_TICKS_PER_SECOND is defined as 100 ticks/second, so 10 ticks = 0.1s
 		tx_thread_sleep(THREAD_SLEEP_TICKS);
 	}
 }
