@@ -27,9 +27,9 @@ It provides:
 
 In this project, the **CARLA C++ Client API** is used to:
 
-1.  Connect to a running CARLA server\
-2.  Spawn a vehicle actor in the simulation\
-3.  Apply throttle, steering, and gear commands\
+1.  Connect to a running CARLA server
+2.  Spawn a vehicle actor in the simulation
+3.  Apply throttle, steering, and gear commands
 4.  Run the simulation in synchronous mode with a fixed timestep
 
 ------------------------------------------------------------------------
@@ -71,8 +71,8 @@ sensors.
 
 ### Control Parameters
 
--   Steering slew rate limits\
--   Throttle slew rate limits\
+-   Steering slew rate limits
+-   Throttle slew rate limits
 -   Simulated control latency
 
 These improve simulation-to-real consistency by modeling realistic
@@ -198,7 +198,3 @@ make re
 ```
 
 ------------------------------------------------------------------------
-
-These commands streamline the development workflow and simplify
-validation of the PiRacer controller inside the CARLA simulation
-environment.
