@@ -71,8 +71,8 @@ sensors.
 
 ### Control Parameters
 
--   Steering slew rate limits\
--   Throttle slew rate limits\
+-   Steering slew rate limits
+-   Throttle slew rate limits
 -   Simulated control latency
 
 These improve simulation-to-real consistency by modeling realistic
@@ -198,7 +198,3 @@ make re
 ```
 
 ------------------------------------------------------------------------
-
-These commands streamline the development workflow and simplify
-validation of the PiRacer controller inside the CARLA simulation
-environment.
