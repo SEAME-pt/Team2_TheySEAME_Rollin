@@ -1,19 +1,20 @@
 #pragma once
 
-#include "CarDecorator.hpp"
-#include "KuksaLib.hpp"
+#include "ICar.hpp"
 
-class CarKuksa : public CarDecorator {
+class CarDecorator : public ICar {
 public:
 
-	CarKuksa(ICar *car);
-	~CarKuksa();
-
+	CarDecorator(ICar *car);
+	~CarDecorator();
+	
 	virtual void setThrottle(const int throttle);
 	virtual void setSteering(const int steering);
 	virtual void setGear(const short gear);
+	virtual void brake();
+	virtual short getGear() const;
 
 private:
 
-	kuksaLib _kuksa;
+	ICar *_car;
 };

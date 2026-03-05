@@ -1,11 +1,13 @@
 #include "Evdev.hpp"
-#include "CarKuksa.hpp"
 #include "RemoteControl.hpp"
-#include <stdio.h>
+#include "CarCAN.hpp"
+#include "CAN.hpp"
+#include "CarKuksa.hpp"
 #include <unistd.h>
 #include <stdlib.h>
 #include <poll.h>
 #include <csignal>
+#include "CarController.hpp"
 
 bool run = true;
 
@@ -13,14 +15,27 @@ void signal_handler(int signal) {
 	run = false;
 }
 
+//int main() {
+//	CAN can("can0", 500, 0, 0);
+//	Evdev evdev("/dev/input/event6");
+//	RemoteControl remote(evdev);
+//	ICar *carKuksa = new CarKuksa(new CarCAN(can, remote));
+//
+//	carKuksa->setThrottle(100);
+//}
+
 int main() {
 	struct pollfd fds[2];
 	Evdev evdev("/dev/input/event6");
 	RemoteControl remote(evdev);
-	CarKuksa car(remote);
+	CAN can("can0", 500, 0, 0);
+	ICar *car = new CarKuksa(
+		new CarCAN(can, remote)
+	);
+	CarController ctrl(car, remote);
 
 	std::signal(SIGINT, signal_handler);
-	remote.attach(&car);
+	remote.attach(&ctrl);
 
 	fds[0].fd = evdev.getfd();
 	fds[0].events = POLLIN;
