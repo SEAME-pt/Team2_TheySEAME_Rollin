@@ -1,13 +1,13 @@
 #include "Evdev.hpp"
 #include "RemoteControl.hpp"
-#include "CarCAN.hpp"
+#include "ActuatorCAN.hpp"
 #include "CAN.hpp"
-#include "CarKuksa.hpp"
+#include "ActuatorKuksa.hpp"
 #include <unistd.h>
 #include <stdlib.h>
 #include <poll.h>
 #include <csignal>
-#include "CarController.hpp"
+#include "ActuatorController.hpp"
 
 bool run = true;
 
@@ -29,10 +29,10 @@ int main() {
 	Evdev evdev("/dev/input/event6");
 	RemoteControl remote(evdev);
 	CAN can("can0", 500, 0, 0);
-	ICar *car = new CarKuksa(
-		new CarCAN(can, remote)
+	IActuator *car = new ActuatorKuksa(
+		new ActuatorCAN(can, remote)
 	);
-	CarController ctrl(car, remote);
+	ActuatorController ctrl(car, remote);
 
 	std::signal(SIGINT, signal_handler);
 	remote.attach(&ctrl);

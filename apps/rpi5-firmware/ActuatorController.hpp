@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Observer.hpp"
-#include "ICar.hpp"
+#include "IActuator.hpp"
 #include "RemoteControl.hpp"
 
-class CarController : public Observer {
+class ActuatorController : public Observer {
 public:
 
-	CarController(ICar *_car, RemoteControl &remote);
-	~CarController();
+	ActuatorController(IActuator *_car, RemoteControl &remote);
+	~ActuatorController();
 
 	void update(Events event);
 
@@ -16,6 +16,6 @@ private:
 
 	int processThrottle(const int rawThrottle);
 	int processSteering(const int rawSteering);
-	ICar *_car;
+	IActuator *_car;
 	RemoteControl &_subject;
 };

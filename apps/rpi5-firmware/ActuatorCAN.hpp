@@ -1,9 +1,8 @@
 #pragma once
 
 #include "RemoteControl.hpp"
-#include "ICar.hpp"
+#include "IActuator.hpp"
 #include "ICAN.hpp"
-#include "Observer.hpp"
 
 /// ID for the different CAN frames
 enum CAN_ID {
@@ -15,17 +14,17 @@ enum CAN_ID {
 };
 
 /**
- * @class CarCAN
- * @brief CarCAN class
+ * @class ActuatorCAN
+ * @brief ActuatorCAN class
  *
- * The CarCAN encapsulates the CAN communication between software and hardware
- * It implements the Observer and ICar interface
+ * The ActuatorCAN encapsulates the CAN communication between software and hardware
+ * It implements IActuator interface
  */
-class CarCAN : public ICar, public Observer {
+class ActuatorCAN : public IActuator {
 public:
 
-	CarCAN(ICAN &can, RemoteControl &remote);
-	~CarCAN();
+	ActuatorCAN(ICAN &can, RemoteControl &remote);
+	~ActuatorCAN();
 
 	void startNstop(const bool signal);
 	void setThrottle(const int throttle);

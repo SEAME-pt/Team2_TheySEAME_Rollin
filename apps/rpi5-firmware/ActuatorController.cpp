@@ -1,20 +1,20 @@
-#include "CarController.hpp"
+#include "ActuatorController.hpp"
 #include <iostream>
 
-CarController::CarController(ICar *car, RemoteControl &remote) : _car(car), _subject(remote) {}
+ActuatorController::ActuatorController(IActuator *car, RemoteControl &remote) : _car(car), _subject(remote) {}
 
-CarController::~CarController() {}
+ActuatorController::~ActuatorController() {}
 
-int CarController::processThrottle(const int rawThrottle) {
+int ActuatorController::processThrottle(const int rawThrottle) {
 	return ((rawThrottle - 127) / 1.27);
 }
 
-int CarController::processSteering(const int rawSteering) {
+int ActuatorController::processSteering(const int rawSteering) {
 	return ((rawSteering - 127) / 127);
 }
 
-void CarController::update(Events event) {
-	std::cout << "Received notify" << std::endl;
+void ActuatorController::update(Events event) {
+	std::cout << "Received notify " << event << std::endl;
 	switch (event) {
 		case Events::CAR_THROTTLE:
 			_car->setThrottle(processThrottle(_subject.getkey(Keys::JoyY)));

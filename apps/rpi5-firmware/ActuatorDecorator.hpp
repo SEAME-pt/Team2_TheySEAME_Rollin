@@ -1,12 +1,12 @@
 #pragma once
 
-#include "ICar.hpp"
+#include "IActuator.hpp"
 
-class CarDecorator : public ICar {
+class ActuatorDecorator : public IActuator {
 public:
 
-	CarDecorator(ICar *car);
-	~CarDecorator();
+	ActuatorDecorator(IActuator *car);
+	~ActuatorDecorator();
 	
 	virtual void setThrottle(const int throttle);
 	virtual void setSteering(const int steering);
@@ -16,5 +16,5 @@ public:
 
 private:
 
-	ICar *_car;
+	IActuator *_car;
 };

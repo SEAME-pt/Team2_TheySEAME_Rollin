@@ -1,13 +1,13 @@
 #pragma once
 
-#include "CarDecorator.hpp"
+#include "ActuatorDecorator.hpp"
 #include "KuksaLib.hpp"
 
-class CarKuksa : public CarDecorator {
+class ActuatorKuksa : public ActuatorDecorator {
 public:
 
-	CarKuksa(ICar *car);
-	~CarKuksa();
+	ActuatorKuksa(IActuator *car);
+	~ActuatorKuksa();
 
 	virtual void setThrottle(const int throttle);
 	virtual void setSteering(const int steering);

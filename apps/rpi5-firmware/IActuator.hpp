@@ -9,16 +9,16 @@ enum GearState {
 };
 
 /**
- * @interface ICar
- * @brief ICar interface
+ * @interface IActuator
+ * @brief IActuator interface
  *
- * The ICar interface defines the contract to create a middleware 
+ * The IActuator interface defines the contract to create a middleware 
  * between software and hardware 
  */
-class ICar {
+class IActuator {
 public:
 
-	virtual ~ICar() {};
+	virtual ~IActuator() {};
 
 	/**
 	 * @brief Set Car Throttle
