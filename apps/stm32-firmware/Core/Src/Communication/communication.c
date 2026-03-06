@@ -12,8 +12,11 @@
 #include "main.h"
 #include "../Control/control_queue.h"
 #include <stdio.h>
+#include <string.h>
 
-#ifndef COMM_DEBUG
+#ifdef COMM_DEBUG
+extern void Debug_Print(const char *msg);
+#else
 #define Debug_Print(msg) ((void)0)
 #endif
 char comm_uart_buf[128];
@@ -33,26 +36,50 @@ enum {
     DETAILED_STATUS_INTERVAL_LOOPS = 5000, /* 50s */
 };
 
+/* CAN message IDs */
+enum CAN_IDs {
+    CAN_ID_CONTROLLER_COMBINED = 0x100,
+    CAN_ID_THROTTLE            = 0x100,
+    CAN_ID_GEAR                = 0x101,
+    CAN_ID_STEERING            = 0x102,
+    CAN_ID_BRAKE               = 0x103,
+    CAN_ID_DRIVING_MODE        = 0x104,
+    CAN_ID_TX_SPEED            = 0x200,
+    CAN_ID_TX_BATTERY          = 0x201,
+};
+
 static const uint32_t HEARTBEAT_MS = 1000; /* resend every 1s if no command seen */
 
+/* Bus-off recovery counter (reset on successful TX) */
+static uint32_t busoff_count = 0;
+
 /* Helper: safely snapshot global vehicle data with mutex protection */
-static void snapshot_vehicle_data(VehicleData_t *out) {
+static int snapshot_vehicle_data(VehicleData_t *out) {
     if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
         *out = g_vehicle_data;
         tx_mutex_put(&g_vehicle_data_mutex);
+        return 1;  // Success
     }
+    Debug_Print("[COMM] Failed to acquire vehicle data mutex\r\n");
+    return 0;  // Failure
 }
 
 /* Send battery and speed messages over CAN and print a concise summary */
 static void send_battery_and_speed(const VehicleData_t *snapshot) {
+    // Add validation check
+    if (!snapshot->data_valid) {
+        Debug_Print("[COMM] Warning: Sending invalid/stale vehicle data\r\n");
+    }
+    
     uint8_t battery = (uint8_t)snapshot->battery_percentage;
     HAL_StatusTypeDef bat_status = MCP2515_SendBattery(battery);
     HAL_StatusTypeDef speed_status = MCP2515_SendSpeed(snapshot->vehicle_speed);
 
     uint16_t speed_hmh = (uint16_t)(snapshot->vehicle_speed * 36.0f);
     snprintf(comm_uart_buf, sizeof(comm_uart_buf),
-            "[TX] 0x200 Speed=%u hm/h (%s) | 0x201 Bat=%u%% (%s)\r\n",
+            "[TX] 0x200 Speed=%u hm/h (raw=%.2f m/s) (%s) | 0x201 Bat=%u%% (%s)\r\n",
             speed_hmh,
+            snapshot->vehicle_speed,  // Add raw value for debugging
             (speed_status == HAL_OK) ? "OK" : (speed_status == HAL_BUSY) ? "BUSY" : "FAIL",
             battery,
             (bat_status == HAL_OK) ? "OK" : (bat_status == HAL_BUSY) ? "BUSY" : "FAIL");
@@ -60,13 +87,14 @@ static void send_battery_and_speed(const VehicleData_t *snapshot) {
 
     /* Try to recover from repeated bus-off by reinitializing MCP2515 */
     if (bat_status == HAL_TIMEOUT || speed_status == HAL_TIMEOUT) {
-        static uint32_t busoff_count = 0;
         busoff_count++;
         if (busoff_count >= 3) {
             Debug_Print("[COMM] Resetting MCP2515 due to bus-off...\r\n");
             MCP2515_Init(CAN_SPEED_500KBPS);
             busoff_count = 0;
         }
+    } else {
+        busoff_count = 0; /* Reset on successful transmission */
     }
 }
 
@@ -81,46 +109,46 @@ static void enqueue_command_or_log(const VehicleCommand_t *cmd) {
 static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
     int updated = 0;
 
-    /* Controller combined: 0x100 DLC=3 => [mode, throttle, steering(-1/0/1)] */
-    if (can_id == 0x100 && dlc == 3) {
-        uint8_t mode = data[0] > 0 ? 1 : 0;
-        uint8_t throttle = data[1] > 100 ? 100 : data[1];
-        int8_t steering = ((int8_t)data[2]) * 100;
+    /* Handle CAN ID 0x100: Controller combined (DLC=3) or Throttle-only (DLC=1) */
+    if (can_id == CAN_ID_CONTROLLER_COMBINED) {
+        if (dlc == 3) {
+            /* Controller combined: [mode, throttle, steering(-1/0/1)] */
+            uint8_t mode = data[0] > 0 ? 1 : 0;
+            uint8_t throttle = data[1] > 100 ? 100 : data[1];
+            int8_t steering = ((int8_t)data[2]) * 100;
 
-        if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-            g_vehicle_command.driving_mode = mode;
-            g_vehicle_command.gear = 3; /* default to Drive when controller omits gear */
-            g_vehicle_command.throttle = throttle;
-            g_vehicle_command.steering_angle = steering;
-            g_vehicle_command.command_valid = 1;
-            tx_mutex_put(&g_vehicle_command_mutex);
+            if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                g_vehicle_command.driving_mode = mode;
+                g_vehicle_command.gear = 3; /* default to Drive when controller omits gear */
+                g_vehicle_command.throttle = throttle;
+                g_vehicle_command.steering_angle = steering;
+                g_vehicle_command.command_valid = 1;
+                tx_mutex_put(&g_vehicle_command_mutex);
+            }
+
+            snprintf(comm_uart_buf, sizeof(comm_uart_buf),
+                    "[CMD] Controller: Mode=%s Throttle=%d%% Steering=%d\r\n",
+                    mode ? "AI" : "MAN", throttle, steering);
+            Debug_Print(comm_uart_buf);
+            updated = 1;
+        } else if (dlc >= 1) {
+            /* Throttle-only message: byte0 = 0-100% */
+            uint8_t throttle = data[0] > 100 ? 100 : data[0];
+            if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                g_vehicle_command.throttle = throttle;
+                g_vehicle_command.command_valid = 1;
+                tx_mutex_put(&g_vehicle_command_mutex);
+            }
+            snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Throttle=%d%%\r\n", throttle);
+            Debug_Print(comm_uart_buf);
+            updated = 1;
         }
-
-        snprintf(comm_uart_buf, sizeof(comm_uart_buf),
-                "[CMD] Controller: Mode=%s Throttle=%d%% Steering=%d\r\n",
-                mode ? "AI" : "MAN", throttle, steering);
-        Debug_Print(comm_uart_buf);
-        updated = 1;
         return updated;
     }
 
     /* Kuksa-style / per-message handling */
     switch (can_id) {
-        case 0x100: /* Throttle message, byte0 = 0-100% */
-            if (dlc >= 1) {
-                uint8_t throttle = data[0] > 100 ? 100 : data[0];
-                if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                    g_vehicle_command.throttle = throttle;
-                    g_vehicle_command.command_valid = 1;
-                    tx_mutex_put(&g_vehicle_command_mutex);
-                }
-                snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Throttle=%d%%\r\n", throttle);
-                Debug_Print(comm_uart_buf);
-                updated = 1;
-            }
-            break;
-
-        case 0x101: /* Gear: 0=P,1=N,2=R,3=D */
+        case CAN_ID_GEAR: /* Gear: 0=P,1=N,2=R,3=D */
             if (dlc >= 1) {
                 uint8_t gear = data[0];
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
@@ -135,7 +163,7 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
             }
             break;
 
-        case 0x102: /* Steering: either 1-byte controller (-1/0/1) or Kuksa 8-byte */
+        case CAN_ID_STEERING: /* Steering: either 1-byte controller (-1/0/1) or Kuksa 8-byte */
             if (dlc == 1) {
                 int8_t raw = (int8_t)data[0];
                 int8_t steering = raw * 100;
@@ -160,14 +188,14 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
             }
             break;
 
-        case 0x103: /* Brake (logged only) */
+        case CAN_ID_BRAKE: /* Brake (logged only) */
             if (dlc >= 1) {
                 snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Brake=%d\r\n", data[0]);
                 Debug_Print(comm_uart_buf);
             }
             break;
 
-        case 0x104: /* Driving mode */
+        case CAN_ID_DRIVING_MODE: /* Driving mode */
             if (dlc >= 1) {
                 uint8_t mode = data[0] > 0 ? 1 : 0;
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
@@ -179,6 +207,10 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
                 Debug_Print(comm_uart_buf);
                 updated = 1;
             }
+            break;
+
+        default:
+            /* Unknown CAN ID - ignore */
             break;
     }
 
@@ -204,10 +236,13 @@ static void drain_and_process_can_messages(VehicleCommand_t *out_last_cmd, uint3
         int updated = handle_rx_frame(rx_can_id, rx_data, rx_length);
         if (!updated) continue;
 
-        VehicleCommand_t snapshot_cmd;
+        VehicleCommand_t snapshot_cmd = {0};
         if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
             snapshot_cmd = g_vehicle_command;
             tx_mutex_put(&g_vehicle_command_mutex);
+        } else {
+            Debug_Print("[COMM] Failed to acquire mutex for command snapshot\r\n");
+            continue;
         }
         enqueue_command_or_log(&snapshot_cmd);
 
@@ -247,10 +282,13 @@ void Communication_Thread_Entry(ULONG thread_input) {
 
     Debug_Print("[COMM] Heartbeat initialized with default SAFE command\r\n");
 
-    while (1) {
+   while (1) {
         if ((loop_counter % STATUS_TX_INTERVAL_LOOPS) == 0) {
-            snapshot_vehicle_data(&snapshot);
-            send_battery_and_speed(&snapshot);
+            if (snapshot_vehicle_data(&snapshot)) {
+                send_battery_and_speed(&snapshot);
+            } else {
+                Debug_Print("[COMM] Skipping TX - no valid data\r\n");
+            }
         }
 
         drain_and_process_can_messages(&last_cmd, &last_cmd_ts, &have_last_cmd);

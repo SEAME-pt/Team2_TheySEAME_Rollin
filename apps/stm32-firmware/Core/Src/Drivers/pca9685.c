@@ -62,9 +62,9 @@ static HAL_StatusTypeDef PCA9685_Init_Device_NoReset(I2C_HandleTypeDef *hi2c, ui
         return ret;
     }
     
-    // Step 2: Set prescaler for 50Hz (must be in sleep mode)
-    Debug_Print("  Step 2: PRESCALE=121 (50Hz)...\r\n");
-    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_PRESCALE, 121);
+    // Step 2: Set prescaler for ~1526Hz (must be in sleep mode) - higher freq = quieter DC motors
+    Debug_Print("  Step 2: PRESCALE=3 (~1526Hz)...\r\n");
+    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_PRESCALE, 0x05);
     if (ret != HAL_OK) {
         snprintf(msg, sizeof(msg), "  FAILED: %d\r\n", ret);
         Debug_Print(msg);
@@ -157,9 +157,9 @@ HAL_StatusTypeDef PCA9685_Init_Device(I2C_HandleTypeDef *hi2c, uint8_t addr, con
         return ret;
     }
     
-    // Step 2: Set prescaler for 50Hz (must be in sleep mode)
-    Debug_Print("  Step 2: PRESCALE=121 (50Hz)...\r\n");
-    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_PRESCALE, 121);
+    // Step 2: Set prescaler for ~1526Hz (must be in sleep mode) - higher freq = quieter DC motors
+    Debug_Print("  Step 2: PRESCALE=3 (~1526Hz)...\r\n");
+    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_PRESCALE, 3);
     if (ret != HAL_OK) {
         snprintf(msg, sizeof(msg), "  FAILED: %d\r\n", ret);
         Debug_Print(msg);
