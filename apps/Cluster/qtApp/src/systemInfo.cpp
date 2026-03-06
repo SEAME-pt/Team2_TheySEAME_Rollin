@@ -3,6 +3,7 @@
 systemInfo::systemInfo(QObject *parent)
     : QObject(parent)
 {
+    
 }
 
 systemInfo::~systemInfo()
@@ -43,80 +44,22 @@ bool systemInfo::start()
     _running = true;
 
     _thread = std::thread([this]() {
-        this->updateFromKuksa();
+
+        std::thread subThread([this]() {
+            if (!_kuksa.subscribeFromKuksa()) {
+                qWarning() << "Failed to subscribe to Kuksa";
+            }
+        });
+
+        while (_running) {
+            setSpeed(static_cast<int>(_kuksa.getSpeed()));
+            setBattery(static_cast<int>(_kuksa.getBattery()));
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+
+        subThread.join();
     });
 
-    _thread.detach();
     return true;
 }
-
-bool systemInfo::updateFromKuksa()
-{
-    auto channel = grpc::CreateChannel(_server.toStdString(), grpc::InsecureChannelCredentials());
-    std::unique_ptr<VAL::Stub> stub = VAL::NewStub(channel);
-
-    kuksa::val::v2::SubscribeRequest req;
-
-    req.add_signal_paths("Vehicle.Speed");
-    req.add_signal_paths("Vehicle.Powertrain.Battery.StateOfCharge");
-
-    grpc::ClientContext ctx;
-    auto stream = stub->Subscribe(&ctx, req);
-
-    kuksa::val::v2::SubscribeResponse resp;
-    while (stream->Read(&resp)) {
-
-        const auto& entries = resp.entries();
-        for (auto it = entries.begin(); it != entries.end(); ++it) {
-            const std::string& path = it->first;
-            const auto& datapoint = it->second;
-
-            if (!datapoint.has_value()) {
-                qDebug() << "[READER]" << QString::fromStdString(path) << "= <no value>";
-                continue;
-            }
-
-            int vInt = 0;
-            if (!valueToInt(datapoint.value(), vInt)) {
-                qWarning() << "[READER]" << QString::fromStdString(path) << "value type not int-compatible";
-                continue;
-            }
-
-            if (path == "Vehicle.Speed") {
-                setSpeed(vInt);
-            } else if (path == "Vehicle.Powertrain.Battery.StateOfCharge") {
-                setBattery(vInt);
-            }
-        }
-    }
-
-    auto status = stream->Finish();
-    if (!status.ok()) {
-        qWarning() << "gRPC Subscribe failed:" << QString::fromStdString(status.error_message());
-        return false;
-    }
-    return true;
-}
-
-
-bool systemInfo::valueToInt(const kuksa::val::v2::Value& v, int& out)
-{
-    using V = kuksa::val::v2::Value;
-
-    switch (v.typed_value_case()) {
-    case V::kInt32:  out = v.int32(); return true;
-    case V::kInt64:  out = static_cast<int>(v.int64()); return true;
-    case V::kUint32: out = static_cast<int>(v.uint32()); return true;
-    case V::kUint64: out = static_cast<int>(v.uint64()); return true;
-
-    case V::kFloat:  out = static_cast<int>(std::lround(v.float_())); return true;
-    case V::kDouble: out = static_cast<int>(std::lround(v.double_())); return true;
-
-    case V::kBool:   out = v.bool_() ? 1 : 0; return true;
-
-    case V::TYPED_VALUE_NOT_SET:
-    default:
-        return false;
-    }
-}
-
