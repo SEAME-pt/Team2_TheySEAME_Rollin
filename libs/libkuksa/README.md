@@ -216,11 +216,9 @@ make
 
 Make sure the following tools are installed:
 
--   protoc
--   grpc_cpp_plugin
--   gRPC development libraries
--   Protobuf development libraries
--   Abseil
+-   Protobuf v25.8
+-   gRPC v1.60.1
+-   Abseil (Protobuf and gRPC alredy installs Abseil)
 
 ------------------------------------------------------------------------
 
