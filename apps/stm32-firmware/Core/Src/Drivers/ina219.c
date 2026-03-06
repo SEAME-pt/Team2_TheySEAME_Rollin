@@ -1,6 +1,16 @@
-#include "ina219.h"
+/*
+ * INA219.c
+ *
+ *  Created on: Dec 30, 2020
+ *  Updated on: Jan 29, 2022
+ *       Author: Piotr Smolen <komuch@gmail.com>
+ *       Updated by: Brandon Thibeaux <github: thibeaux>
+ */
 
+#include "ina219.h"
 enum BatteryState batteryState;
+
+// Variable definitions for extern declarations in header
 bool isFirst;
 uint16_t ina219_calibrationValue;
 int16_t ina219_currentDivider_mA;
@@ -9,9 +19,10 @@ int16_t ina219_powerMultiplier_mW;
 static int lastTime;
 static int deltaTime;
 static float totalEnergy;
-static float sample[10];
+static float sample[10]; // this can be set to any number. Remember the bigger the sample amount the longer it takes to become accurate.
 static int idx = 0;
 
+// Read a 16-bit register from INA219 (internal helper)
 uint16_t Read16(INA219_t *ina219, uint8_t Register)
 {
 	uint8_t Value[2];
@@ -19,42 +30,70 @@ uint16_t Read16(INA219_t *ina219, uint8_t Register)
 	return ((Value[0] << 8) | Value[1]);
 }
 
+/*
+ * @brief:              Write to a register on the IN219 sensor.
+ * @param:              Pointer to the device object that was made from the struct. EX:  (&ina219)
+ * @param:              Register address in hexadecimal
+ * @param:              16 bit integer in hexadecimal that is the value you want to write to the register.
+ * @retval:             HAL_StatusTypeDef, this will include an enum value representing
+ *                              if the I2C transmission was successful or not.
+ *                              typedef enum
+                                {
+                                  HAL_OK       = 0x00U,
+                                  HAL_ERROR    = 0x01U,
+                                  HAL_BUSY     = 0x02U,
+                                  HAL_TIMEOUT  = 0x03U
+                                } HAL_StatusTypeDef;
+ */
 HAL_StatusTypeDef Write16(INA219_t *ina219, uint8_t Register, uint16_t Value)
 {
 	uint8_t addr[2];
-	addr[0] = (Value >> 8) & 0xFF;
-	addr[1] = (Value >> 0) & 0xFF;
+	addr[0] = (Value >> 8) & 0xff;  // upper byte
+	addr[1] = (Value >> 0) & 0xff; // lower byte
 	return HAL_I2C_Mem_Write(ina219->ina219_i2c, (INA219_ADDRESS << 1), Register, 1, addr, 2, 1000);
 }
 
+// Read bus voltage in millivolts
 uint16_t INA219_ReadBusVoltage(INA219_t *ina219)
 {
 	uint16_t result = Read16(ina219, INA219_REG_BUSVOLTAGE);
 	return ((result >> 3) * 4);
 }
 
+// Get raw current register value (signed)
 int16_t INA219_ReadCurrent_raw(INA219_t *ina219)
 {
 	return Read16(ina219, INA219_REG_CURRENT);
 }
 
+// Get current in milliamps (scaled)
 int16_t INA219_ReadCurrent(INA219_t *ina219)
 {
 	return INA219_ReadCurrent_raw(ina219) / ina219_currentDivider_mA;
 }
 
+// Read shunt voltage in millivolts
 uint16_t INA219_ReadShuntVolage(INA219_t *ina219)
 {
 	uint16_t result = Read16(ina219, INA219_REG_SHUNTVOLTAGE);
 	return (result * 0.01);
 }
 
+// Read instantaneous power in milliwatts
 uint16_t INA219_ReadPower(INA219_t *ina219)
 {
 	uint16_t result = Read16(ina219, INA219_REG_POWER);
-	return (result * ina219_powerMultiplier_mW);
+	return (result * ina219_powerMultiplier_mW); // power is the power register times the power_LSB (power multiplier)
 }
 
+/*
+ * @brief:              This takes a minimum and maximum value an turn the current voltage
+ *                              level into a percentage to give you a reference on how much battery life is left on your device.
+ * @param:      <object pointer> <maximum mili-voltage level> <minumum mili-voltage level>
+ * @retval:     Percentage floating point value
+ * @example:    GetBatteryLife(&ina219, 6000, 4000)
+ *                              returns 75.02%
+ */
 float INA219_GetBatteryLife(INA219_t *ina219, float batteryMax, float batteryMin)
 {
 	uint16_t vbus = INA219_ReadBusVoltage(ina219);
@@ -66,6 +105,9 @@ float INA219_GetBatteryLife(INA219_t *ina219, float batteryMax, float batteryMin
 		return 0.0f;
 }
 
+/*
+ * @brief: get Delta time in mili-seconds which is the difference between the last time you called this function and now
+ */
 int INA219_GetDeltaTime_ms()
 {
 	int now = HAL_GetTick();
@@ -74,21 +116,37 @@ int INA219_GetDeltaTime_ms()
 	return deltaTime;
 }
 
+/*
+ * @brief:              The goal is to add up all the power used since the system turned on. WE do this by adding up samples from
+ *                              INA219_GetMiliWattsDeltaTime every time this function is called. This returns a total used amount of mW seconds.
+ */
 float INA219_GetTotalPowerUsed(INA219_t *ina219)
 {
-	float s = INA219_GetMiliWattsDeltaTime(ina219);
-	totalEnergy += (s * 1000);
+	float sample = INA219_GetMiliWattsDeltaTime(ina219); // for some reason it comes out in a really small number so multiply this by 1000 to get real figure.
+	totalEnergy += (sample * 1000);
 	return totalEnergy;
 }
 
+/*
+ * @brief:              The goal of this function is to give you the amount of mili-watts being
+ *                              consumed every time the function is called or every change in time.
+ * @param:              Pointer to the device object that was made from the struct. EX:  (&ina219)
+ * @retval:             floating point number giving back a value for mili-watts seconds
+ */
 float INA219_GetMiliWattsDeltaTime(INA219_t *ina219)
 {
 	float energy = INA219_GetDeltaTime_ms() * INA219_ReadPower(ina219);
-	return energy / 1000;
+	return energy / 1000; // convert mili-seconds to seconds.
 }
 
+/*
+ * @brief:              The goal of this function is to give you the average mW amount
+ * @param:              Pointer to the device object that was made from the struct. EX:  (&ina219)
+ * @retval:             floating point number giving back a value for mili-watts
+ */
 float INA219_GetAVGMiliWatt(INA219_t *ina219)
 {
+	// Energy = Power * Time
 	float energy = 0;
 
 	if (!isFirst)
@@ -109,21 +167,46 @@ float INA219_GetAVGMiliWatt(INA219_t *ina219)
 	return energy / 10;
 }
 
+/*
+ * @brief:              The goal of this function is to make sure the battery is working as we
+ *                              specify it to. If there is a discrepancy that is found in this check we
+ *                              update the battery's state to alert the main function to take action.
+ * @param:              Pointer to the device object that was made from the struct. EX:  (&ina219)
+ * @param:              Floating point value for the percent of battery life we want to
+ *                              dedicate as a threshold that indicates a "LOW" state
+ * @param:              Floating point value that represents out batteries current life percentage ratio
+ * @retval:             We will return an enum state that represents the battery's state. This tells
+ *                              the program that called the health check function what state our battery is
+ *                              at and whether we have entered a "LOW" state. This way the program can take
+ *                              appropriate action.
+ */
 enum BatteryState INA219_HealthCheck(INA219_t *ina219, float batteryPercentageThreshold, float batteryPercentage)
 {
 	switch (batteryState)
 	{
 		case Battery_START:
+			/* Enter your start up functionality here */
 			batteryState = Battery_OK;
 			break;
 		case Battery_OK:
+			/* Enter your battery OK state functionality here */
+			if (batteryPercentage > batteryPercentageThreshold) // is battery life below given threshold?
+				batteryState = Battery_OK;
+			else
+				batteryState = Battery_LOW;
+			break;
 		case Battery_LOW:
-			if (batteryPercentage > batteryPercentageThreshold)
+			/* Enter your battery LOW state functionality here */
+			if (batteryPercentage > batteryPercentageThreshold) // is battery life below given threshold?
 				batteryState = Battery_OK;
 			else
 				batteryState = Battery_LOW;
 			break;
 		default:
+			/*
+			 * If program encounters a bug or a value outside what is expected we go here.
+			 * Feel free to add functionality if needed.
+			 */
 			batteryState = Battery_START;
 			break;
 	}
@@ -160,8 +243,8 @@ void INA219_setCalibration_32V_2A(INA219_t *ina219)
 	                  INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
 
 	ina219_calibrationValue = 4096;
-	ina219_currentDivider_mA = 10;
-	ina219_powerMultiplier_mW = 2;
+	ina219_currentDivider_mA = 10; // Current LSB = 100uA per bit (1000/100 = 10)
+	ina219_powerMultiplier_mW = 2; // Power LSB = 1mW per bit (2/1)
 
 	INA219_setCalibration(ina219, ina219_calibrationValue);
 	INA219_setConfig(ina219, config);
@@ -176,8 +259,8 @@ void INA219_setCalibration_32V_1A(INA219_t *ina219)
 	                  INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
 
 	ina219_calibrationValue = 10240;
-	ina219_currentDivider_mA = 25;
-	ina219_powerMultiplier_mW = 0.8f;
+	ina219_currentDivider_mA = 25;    // Current LSB = 40uA per bit (1000/40 = 25)
+	ina219_powerMultiplier_mW = 0.8f; // Power LSB = 800uW per bit
 
 	INA219_setCalibration(ina219, ina219_calibrationValue);
 	INA219_setConfig(ina219, config);
@@ -185,15 +268,16 @@ void INA219_setCalibration_32V_1A(INA219_t *ina219)
 
 void INA219_setCalibration_16V_400mA(INA219_t *ina219)
 {
+	// Changed from INA219_CONFIG_GAIN_1_40MV to INA219_CONFIG_GAIN_8_320MV to match Hugo work
 	uint16_t config = INA219_CONFIG_BVOLTAGERANGE_16V |
 	                  INA219_CONFIG_GAIN_8_320MV |
 	                  INA219_CONFIG_BADCRES_12BIT |
 	                  INA219_CONFIG_SADCRES_12BIT_1S_532US |
 	                  INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
 
-	ina219_calibrationValue = 33600;
-	ina219_currentDivider_mA = 11;
-	ina219_powerMultiplier_mW = 2.0f;
+	ina219_calibrationValue = 33600; //Previous: 10240
+	ina219_currentDivider_mA = 11;    // Current LSB = 91uA per bit (1000/91 = 11)
+	ina219_powerMultiplier_mW = 2.0f; // Power LSB = 4mW per bit
 
 	INA219_setCalibration(ina219, ina219_calibrationValue);
 	INA219_setConfig(ina219, config);
@@ -207,9 +291,9 @@ void INA219_setCalibration_16V_3A(INA219_t *ina219)
 	                  INA219_CONFIG_SADCRES_12BIT_1S_532US |
 	                  INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
 
-	ina219_calibrationValue = 33600;
-	ina219_currentDivider_mA = 11;
-	ina219_powerMultiplier_mW = 2;
+	ina219_calibrationValue = 33600;       // Calibration register
+	ina219_currentDivider_mA = 11;        // Current LSB = 91 uA/bit
+	ina219_powerMultiplier_mW = 2;        // Power multiplier
 
 	INA219_setCalibration(ina219, ina219_calibrationValue);
 	INA219_setConfig(ina219, config);
@@ -224,7 +308,7 @@ void INA219_setPowerMode(INA219_t *ina219, uint8_t Mode)
 
 uint8_t INA219_Init(INA219_t *ina219, I2C_HandleTypeDef *i2c, uint8_t Address)
 {
-	isFirst = false;
+	isFirst = false; // set global var used by INA219_GetMiliWattMinutes
 	ina219->ina219_i2c = i2c;
 	ina219->Address = Address;
 	ina219_currentDivider_mA = 0;
@@ -234,7 +318,10 @@ uint8_t INA219_Init(INA219_t *ina219, I2C_HandleTypeDef *i2c, uint8_t Address)
 
 	if (ina219_isReady == HAL_OK)
 	{
-		batteryState = Battery_START;
+		// just to initialize our state machine.
+		//The numbers 0.0f and 1.0f is just to call the healthcheck function.
+		//Feel free to change this if you want. This function should be called in your main function to be polled.
+		batteryState = Battery_START; // go to starting position.
 		INA219_HealthCheck(ina219, 0.0f, 1.0f);
 		INA219_Reset(ina219);
 		INA219_setCalibration_16V_3A(ina219);
