@@ -30,6 +30,10 @@ void kuksaLib::setSpeed(float s) {
     speed.store(s);
 }
 
+void kuksaLib::setBrake(int b) {
+    brake.store(b);
+}
+
 void kuksaLib::setDrivingMode(int dm) {
     drivingMode.store(dm);
 }
@@ -42,6 +46,7 @@ bool kuksaLib::subscribeFromKuksa()
     req.add_signal_paths("Vehicle.Control.Throttle.Value");
     req.add_signal_paths("Vehicle.Control.Steering.Angle");
     req.add_signal_paths("Vehicle.Control.Gear.Value");
+    req.add_signal_paths("Vehicle.Control.Brake.Value");
     req.add_signal_paths("Vehicle.Powertrain.Battery.StateOfCharge");
     req.add_signal_paths("Vehicle.Speed");
     req.add_signal_paths("Vehicle.Control.Mode.DrivingMode");
@@ -72,6 +77,9 @@ bool kuksaLib::subscribeFromKuksa()
             }
             else if (path == "Vehicle.Control.Gear.Value") {
                 setGear(value);
+            }
+            else if (path == "Vehicle.Control.Brake.Value") {
+                setBrake(value);
             }
             else if (path == "Vehicle.Powertrain.Battery.StateOfCharge") {
                 setBattery(value);

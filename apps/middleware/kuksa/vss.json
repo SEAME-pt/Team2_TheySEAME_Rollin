@@ -76,19 +76,23 @@
               }
             }
           },
-          "Mode": {
+          "Brake": {
             "type": "branch",
-            "description": "Driving mode signals",
+            "description": "Brake control signals",
             "children": {
-              "brake": {
+              "Value": {
                 "type": "actuator",
                 "datatype": "uint8",
                 "unit": "enum",
                 "description": "brake: 0=DRIVE, 1=brake",
-                "allowed": [0, 1],
                 "dbc": { "signal": "brake" },
                 "vss2dbc": { "signal": "brake" }
-              },
+              }
+            }
+          },
+          "Mode": {
+            "type": "branch",
+            "description": "Driving mode signals",
               "DrivingMode": {
                 "type": "actuator",
                 "datatype": "uint8",

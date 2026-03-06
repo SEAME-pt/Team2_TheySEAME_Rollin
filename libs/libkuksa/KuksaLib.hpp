@@ -17,6 +17,7 @@ private:
     std::atomic<int> gear{0};
     std::atomic<float> battery{0};
     std::atomic<float> speed{0};
+    std::atomic<int> brake{0};
     std::atomic<int> drivingMode{0};
     std::string _server = "10.21.221.17:55555";
     std::thread _thread;
@@ -28,6 +29,7 @@ private:
     void setGear(int g);
     void setBattery(float b);
     void setSpeed(float s);
+    void setBrake(int b);
     void setDrivingMode(int dm);
 public:
     kuksaLib();
@@ -44,6 +46,7 @@ public:
     int getGear() const { return gear.load(); }
     float getBattery() const { return battery.load(); }
     float getSpeed() const { return speed.load(); }
+    int getBrake() const { return brake.load(); }
     int getDrivingMode() const { return drivingMode.load(); }
 };
 
