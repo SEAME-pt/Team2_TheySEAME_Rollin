@@ -14,8 +14,8 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 |-------|----------|
 | **Sprint Number** | Sprint 10 |
 | **Sprint Goal** | Exploring models for Lane Perception and implementing a PID Controller. |
-| **Sprint Duration** | Feb 23 – Mar 06, 2026 |
-| **Focus Areas** | Car Control, Carla, STM32 |
+| **Sprint Duration** | Mar 9 – Mar 22, 2026 |
+| **Focus Areas** | PID, OpenCV, CARLA Setup |
 
 
 ## 📅 Scrum Team
