@@ -1,9 +1,12 @@
 [Unit]
-Description=wifi on boot
-After=network.target
+Description=WiFi setup script
+Wants=network-online.target
+After=systemd-networkd.service
 
 [Service]
 Type=oneshot
 ExecStart=/root/scripts/wifi.sh
 RemainAfterExit=yes
 
+[Install]
+WantedBy=multi-user.target
