@@ -12,8 +12,8 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 | Field | Details |
 |-------|----------|
-| **Sprint Number** | Sprint 9 |
-| **Sprint Goal** | Research about new Tecnologies and start STM Code Refactor |
+| **Sprint Number** | Sprint 10 |
+| **Sprint Goal** | Exploring models for Lane Perception and implementing a PID Controller. |
 | **Sprint Duration** | Feb 23 – Mar 06, 2026 |
 | **Focus Areas** | Car Control, Carla, STM32 |
 
