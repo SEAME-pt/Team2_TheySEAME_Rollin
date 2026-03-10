@@ -201,6 +201,22 @@ Needs: impl, itest
 
 Needs: dsn
 ```
+# Draft
+## Module Control
+
+---
+
+```
+`feat~cruise-control-speed-regulation~1`
+
+Status: proposed
+
+The system shall provide a cruise control feature that automatically maintains a user-defined target vehicle speed without requiring continuous driver throttle input.
+
+Needs: dsn, impl, itest
+```
+
+---
 
 ## Notes: 
 Safety Critical messages shall be prioritized over other types of CAN messages.
