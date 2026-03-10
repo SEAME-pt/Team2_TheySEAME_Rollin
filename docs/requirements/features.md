@@ -207,7 +207,7 @@ Needs: dsn
 ---
 
 ```
-`feat~cruise-control-speed-regulation~1`
+`feat~cruise-control~1`
 
 Status: proposed
 
