@@ -197,7 +197,6 @@ Needs: dsn
 Status: draft
 
 The system shall support four gear modes: Park (P), Neutral (N), Drive (D), and Reverse (R), selectable by the driver.
-Needs: impl, itest
 
 Needs: dsn
 ```
@@ -213,7 +212,7 @@ Status: proposed
 
 The system shall provide a cruise control feature that automatically maintains a user-defined target vehicle speed without requiring continuous driver throttle input.
 
-Needs: dsn, impl, itest
+Needs: dsn
 ```
 
 ---
