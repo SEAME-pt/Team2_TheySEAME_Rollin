@@ -1,3 +1,12 @@
 [submodule "libs/googletest"]
 	path = libs/googletest
 	url = https://github.com/google/googletest.git
+[submodule "apps/stm32-firmware/Drivers/BSP/Components/iis2mdc"]
+	path = apps/stm32-firmware/Drivers/BSP/Components/iis2mdc
+	url = https://github.com/STMicroelectronics/stm32-iis2mdc.git
+[submodule "apps/stm32-firmware/Drivers/BSP/B-U585I-IOT02A"]
+	path = apps/stm32-firmware/Drivers/BSP/B-U585I-IOT02A
+	url = https://github.com/STMicroelectronics/b-u585i-iot02a-bsp.git
+[submodule "apps/stm32-firmware/Drivers/BSP/Components/Common"]
+	path = apps/stm32-firmware/Drivers/BSP/Components/Common
+	url = https://github.com/STMicroelectronics/stm32-bsp-common.git
