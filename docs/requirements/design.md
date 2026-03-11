@@ -385,18 +385,6 @@ Needs: impl, itest
 ## Control Module
 
 ```
-`dsn~pid-control-terms~1`
-
-Status: draft
-
-The PID controller shall compute its output as the sum of three terms: a proportional term based on `Kp` and the instantaneous speed error, an integral term based on `Ki` and the accumulated speed error over time, and a derivative term based on `Kd` and the rate of change of the speed error between consecutive control cycles.
-
-Covers: - `feat~cruise-control~1`
-
-Needs: impl, utest
-```
-
-```
 `dsn~pid-output-clamping~1`
 
 Status: draft
