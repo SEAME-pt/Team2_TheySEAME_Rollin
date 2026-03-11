@@ -2,6 +2,13 @@
 
 This is just concepts about AGL
 
+## Target PC and Host PC
+
+This 2 terms will be used a lot, so heres an explantion. One cannot be the other and vice-versa
+
+Target PC - PC which runs the AGL image
+Host PC - PC used to build the AGL image
+
 ## What's a Recipe
 
 A recipe is a **.bb** file. This file contains information about the recipe, as well as, how to build it.

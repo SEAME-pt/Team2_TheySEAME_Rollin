@@ -13,3 +13,6 @@ AGL can be tailored to our specific requirements and it's open source software, 
 
 1. [AGL-Concepts](./AGLConcepts.md)
 2. [Useful-Commands](./UsefulCommands.md)
+3. [Http-RPM](./HttpRPM.md)
+4. [Hailo-in-AGL](./HailoInAGl.md)
+5. [Camera-Module-3-in-Agl](./CameraModule3InAGL.md)
