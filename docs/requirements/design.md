@@ -4,7 +4,7 @@
 ```
 `dsn~display-battery-real-time~1`
 
-Status: proposed
+Status: draft
 
 The QT App (cluster) shall display the battery state of the vehicle in real time in percentage (%), as measured, and communicated via CAN, from the STM32 Sensor's module, with a maximum refresh rate of, 0.1 Hz.
 
@@ -19,7 +19,7 @@ Needs: impl, itest
 ```
 `dsn~display-speed-real-time~1`
 
-Status: proposed
+Status: draft
 
 The QT App (cluster) shall display the vehicle's ground speed in real time in hectometer per hour (hm/h), as measured, and communicated via CAN, from the STM32 Sensor's module, with a maximum refresh rate of, 10 Hz.
 
@@ -47,7 +47,7 @@ Needs: impl, itest
 ```
 `dsn~manufacturer-logo-display~1`
 
-Status: proposed
+Status: draft
 
 The manufacturer (They SEA:ME Rolling Team) shall be displayed on startup for no more than 4 seconds.
 
@@ -60,7 +60,7 @@ Needs: impl, itest
 ```
 `dsn~current-weather-display~1`
 
-Status: proposed
+Status: draft
 
 The Weather information shall be fetched from Open-Meteo API, and displayed on the QT App with a refresh rate equivalent to the API's refresh rate.
 
@@ -75,7 +75,7 @@ Needs: impl, itest
 ```
 `dsn~current-time-display~1`
 
-Status: proposed
+Status: draft
 
 The Time information shall be fetched from System Info, and displayed in HH:MM format on the QT App with, and refreshed every second.
 
@@ -101,7 +101,7 @@ Needs: impl, itest
 ```
 `dsn~remote-control-functions~1`
 
-Status: proposed
+Status: draft
 
 The remote control shall implement controls to update the throttle and steering, enable emergency braking, and to alternate betwen gears.
 
@@ -113,7 +113,7 @@ Needs: impl, itest
 ```
 `dsn~gear-park-behavior~1`
 
-Status: proposed
+Status: draft
 
 When in Park (P) mode, the system shall set throttle to 0% and disable all motor control.
 
@@ -125,7 +125,7 @@ Needs: impl, itest
 ```
 `dsn~gear-neutral-behavior~1`
 
-Status: proposed
+Status: draft
 
 When in Neutral (N) mode, the system shall set throttle to 0% and disable all motor control.
 
@@ -137,7 +137,7 @@ Needs: impl, itest
 ```
 `dsn~gear-drive-behavior~1`
 
-Status: proposed
+Status: draft
 
 When in Drive (D) mode, the system shall enable motor control in both forward and backward directions based on driver input.
 
@@ -149,7 +149,7 @@ Needs: impl, itest
 ```
 `dsn~gear-reverse-behavior~1`
 
-Status: proposed
+Status: draft
 
 When in Reverse (R) mode, the system shall enable motor control in backward direction only and ignore forward direction commands.
 
@@ -162,7 +162,7 @@ Needs: impl, itest
 ```
 `dsn~can-bus-configuration~1`
 
-Status: proposed
+Status: draft
 
 The system shall use CAN 2.0B with 500 kbps bit rate for all inter-module communication.
 
@@ -174,7 +174,7 @@ Needs: impl, itest
 ```
 `dsn~can-bus-load~1`
 
-Status: proposed
+Status: draft
 
 The CAN bus utilization shall not exceed 40% under normal operating conditions with all messages transmitting at specified periods.
 
@@ -204,7 +204,7 @@ Needs: impl, itest
 ```
 `dsn~speed-measure-device~1`
 
-Status: proposed
+Status: draft
 
 The Sensors module shall update the speed value in the QT display.
 
@@ -216,7 +216,7 @@ Needs: impl, itest
 ```
 `dsn~battery-measure-device~1`
 
-Status: proposed
+Status: draft
 
 The Sensors module shall update the battery value in the QT display.
 
@@ -229,7 +229,7 @@ Needs: impl, itest
 ```
 `dsn~safety-module-authority~1`
 
-Status: proposed
+Status: draft
 
 The Safety Module (STM32) shall have final authority over vehicle motion commands and shall override Perception Module outputs when obstacle detected within safety threshold, immediately (< 10 ms) activating the FAILSAFE mode upon object detection, and stopping the vehicle (set throttle 0% and enable safe braking).
 
@@ -387,7 +387,7 @@ Needs: impl, itest
 ```
 `dsn~pid-control-terms~1`
 
-Status: proposed
+Status: draft
 
 The PID controller shall compute its output as the sum of three terms: a proportional term based on `Kp` and the instantaneous speed error, an integral term based on `Ki` and the accumulated speed error over time, and a derivative term based on `Kd` and the rate of change of the speed error between consecutive control cycles.
 
@@ -399,7 +399,7 @@ Needs: impl, utest
 ```
 `dsn~pid-output-clamping~1`
 
-Status: proposed
+Status: draft
 
 The PID controller output shall be clamped to the range [0%, 100%] before being applied as a throttle command, where 0% represents fully closed throttle and 100% represents fully open throttle.
 
@@ -412,7 +412,7 @@ Needs: impl, utest
 ```
 `dsn~pid-anti-windup~1`
 
-Status: proposed
+Status: draft
 
 The PID controller shall implement integral anti-windup by suspending the accumulation of the integral term whenever the controller output is saturated (i.e., clamped at 0% or 100%) and the sign of the error would further increase the magnitude of the integrator.
 
@@ -425,11 +425,77 @@ Needs: impl, utest
 ```
 
 ```
+`dsn~cruise-control-activation-command~1`
+
+Status: proposed
+
+The cruise control system shall activate only when the driver actuates the `+` cruise control command and all activation conditions are satisfied.
+
+Covers:
+- `feat~cruise-control~1`
+
+Needs: impl, itest
+```
+
+```
 `dsn~cruise-control-activation-conditions~1`
 
 Status: proposed
 
-The cruise control system shall only allow activation if all of the following conditions are simultaneously satisfied: vehicle speed is within the valid range [30, 180] hm/h, the brake and throttle command is not actuated, and no active fault codes related to the throttle, speed sensor, or CAN bus are present.
+The cruise control system shall only allow activation if all of the following conditions are simultaneously satisfied: vehicle speed is within the valid range [30, 180] hm/h, the brake pedal and accelerator pedal are not actuated, and no active fault codes related to the throttle actuator, vehicle speed sensor, or cruise-control communication bus are present.
+
+Covers:
+- `feat~cruise-control~1`
+
+Needs: impl, itest
+```
+
+```
+`dsn~cruise-control-initial-target-speed~1`
+
+Status: proposed
+
+Upon cruise control activation, the system shall store the current vehicle speed as the initial target speed.
+
+Covers:
+- `feat~cruise-control~1`
+
+Needs: impl, itest
+```
+
+```
+
+`dsn~cruise-control-target-speed-increment~1`
+
+Status: proposed
+
+If the driver actuates the `+` cruise control command while cruise control is active, the system shall increase the active target speed by 1 km/h for each command actuation.
+
+Covers:
+- `feat~cruise-control~1`
+
+Needs: impl, itest
+```
+
+```
+`dsn~cruise-control-target-speed-decrement~1`
+
+Status: proposed
+
+If the driver actuates the `-` cruise control command while cruise control is active, the system shall decrease the active target speed by 1 km/h for each command actuation.
+
+Covers:
+- `feat~cruise-control~1`
+
+Needs: impl, itest
+```
+
+```
+`dsn~cruise-control-speed-adjustment-without-deactivation~1`
+
+Status: proposed
+
+Actuation of the `+` or `-` cruise control command while cruise control is active shall modify the active target speed and shall not deactivate cruise control.
 
 Covers:
 - `feat~cruise-control~1`
@@ -440,7 +506,7 @@ Needs: impl, itest
 ```
 `dsn~cruise-control-throttle-authority~1`
 
-Status: proposed
+Status: draft
 
 When cruise control is active, the system shall generate the commanded throttle from the cruise control speed controller rather than from continuous driver throttle input, unless a deactivation condition is present.
 
@@ -453,7 +519,7 @@ Needs: impl, itest
 ```
 `dsn~cruise-control-driver-deactivation~1`
 
-Status: proposed
+Status: draft
 
 If the driver actuates the accelerator pedal or brake pedal while cruise control is active, the system shall deactivate cruise control and transfer throttle authority back to the driver.
 
@@ -466,7 +532,7 @@ Needs: impl, itest
 ```
 `dsn~cruise-control-fault-deactivation~1`
 
-Status: proposed
+Status: draft
 
 If a cruise-control communication fault is detected while cruise control is active, the system shall deactivate cruise control and transfer throttle authority back to the driver.
 
@@ -477,22 +543,9 @@ Needs: impl, itest
 ```
 
 ```
-`dsn~cruise-control-target-speed-definition~1`
-
-Status: proposed
-
-Upon cruise control activation, the system shall store the current vehicle speed as the initial target speed, and shall maintain that stored target speed until the driver issues an explicit set-speed adjustment command or the system is deactivated.
-
-Covers:
-- `feat~cruise-control~1`
-
-Needs: impl, itest
-```
-
-```
 `dsn~cruise-control-speed-regulation-accuracy~1`
 
-Status: proposed
+Status: draft
 
 When cruise control is active and no deactivation condition is present, the system shall regulate vehicle speed to within ±2 hm/h of the active target speed under steady-state road load conditions.
 
