@@ -436,3 +436,68 @@ Covers:
 
 Needs: impl, itest
 ```
+
+```
+`dsn~cruise-control-throttle-authority~1`
+
+Status: proposed
+
+When cruise control is active, the system shall generate the commanded throttle from the cruise control speed controller rather than from continuous driver throttle input, unless a deactivation or driver-override condition is present.
+
+Covers:
+- `feat~cruise-control~1`
+
+Needs: impl, itest
+```
+
+```
+`dsn~cruise-control-driver-deactivation~1`
+
+Status: proposed
+
+If the driver actuates the accelerator pedal or brake pedal while cruise control is active, the system shall deactivate cruise control and transfer throttle authority back to the driver.
+
+Covers:
+- `feat~cruise-control~1`
+
+Needs: impl, itest
+```
+
+```
+`dsn~cruise-control-fault-deactivation~1`
+
+Status: proposed
+
+If a cruise-control communication fault is detected while cruise control is active, the system shall deactivate cruise control and transfer throttle authority back to the driver.
+
+Covers:
+- `feat~cruise-control~1`
+
+Needs: impl, itest
+```
+
+```
+`dsn~cruise-control-target-speed-definition~1`
+
+Status: proposed
+
+Upon cruise control activation, the system shall store the current vehicle speed as the initial target speed, and shall maintain that stored target speed until the driver issues an explicit set-speed adjustment command or the system is deactivated.
+
+Covers:
+- `feat~cruise-control~1`
+
+Needs: impl, itest
+```
+
+```
+`dsn~cruise-control-speed-regulation-accuracy~1`
+
+Status: proposed
+
+When cruise control is active and no deactivation condition is present, the system shall regulate vehicle speed to within ±2 hm/h of the active target speed under steady-state road load conditions.
+
+Covers:
+- `feat~cruise-control~1`
+
+Needs: impl, itest
+```
