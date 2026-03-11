@@ -385,55 +385,16 @@ Needs: impl, itest
 ## Control Module
 
 ```
-`dsn~pid-proportional-term~1`
+`dsn~pid-control-terms~1`
 
 Status: proposed
 
-The PID controller shall compute a proportional output term as the product of the proportional gain `Kp` and the instantaneous speed error `e(t) = v_target - v_measured`, expressed in km/h.
+The PID controller shall compute its output as the sum of three terms: a proportional term based on `Kp` and the instantaneous speed error, an integral term based on `Ki` and the accumulated speed error over time, and a derivative term based on `Kd` and the rate of change of the speed error between consecutive control cycles.
 
-Rationale: The proportional term provides an immediate corrective response proportional to the magnitude of the current error, forming the primary driver of the control action.
-
-Covers:
-- `feat~pid-speed-control~1`
+Covers: - `feat~cruise-control~1`
 
 Needs: impl, utest
 ```
-
----
-
-```
-`dsn~pid-integral-term~1`
-
-Status: proposed
-
-The PID controller shall compute an integral output term as the product of the integral gain `Ki` and the discrete-time accumulation of speed error over time, using the update period `dt` as the integration step, in accordance with `I(t) = I(t-1) + Ki * e(t) * dt`.
-
-Rationale: The integral term eliminates steady-state error that the proportional term alone cannot correct, such as the constant throttle offset needed to maintain speed on an incline.
-
-Covers:
-- `feat~pid-speed-control~1`
-
-Needs: impl, utest
-```
-
----
-
-```
-`dsn~pid-derivative-term~1`
-
-Status: proposed
-
-The PID controller shall compute a derivative output term as the product of the derivative gain `Kd` and the rate of change of speed error between consecutive control cycles, in accordance with `D(t) = Kd * (e(t) - e(t-1)) / dt`.
-
-Rationale: The derivative term anticipates future error trends and damps oscillatory behaviour, preventing overshoot during rapid speed changes such as downhill acceleration.
-
-Covers:
-- `feat~pid-speed-control~1`
-
-Needs: impl, utest
-```
-
----
 
 ```
 `dsn~pid-output-clamping~1`
@@ -442,15 +403,11 @@ Status: proposed
 
 The PID controller output shall be clamped to the range [0%, 100%] before being applied as a throttle command, where 0% represents fully closed throttle and 100% represents fully open throttle.
 
-Rationale: Clamping prevents the controller from issuing physically unrealisable throttle commands and protects the actuator from saturation-induced instability (integrator wind-up mitigation).
-
 Covers:
-- `feat~pid-speed-control~1`
+- `feat~cruise-control~1`
 
 Needs: impl, utest
 ```
-
----
 
 ```
 `dsn~pid-anti-windup~1`
@@ -462,60 +419,20 @@ The PID controller shall implement integral anti-windup by suspending the accumu
 Rationale: Without anti-windup, the integrator continues to accumulate during saturation, causing a large overshoot or delayed response when the system leaves saturation.
 
 Covers:
-- `feat~pid-speed-control~1`
+- `feat~cruise-control~1`
 
 Needs: impl, utest
 ```
-
----
-
-```
-`dsn~pid-update-rate~1`
-
-Status: proposed
-
-The PID controller shall execute its control loop at a fixed update rate of 100 Hz (i.e., `dt = 10 ms`), synchronised with the vehicle speed measurement input.
-
-Rationale: 100 Hz provides a control bandwidth well above the mechanical response bandwidth of the throttle actuator (typically < 10 Hz), ensuring the discrete approximation of the continuous-time PID is accurate and stable.
-
-Covers:
-- `feat~pid-speed-control~1`
-
-Needs: impl, itest
-```
-
----
 
 ```
 `dsn~cruise-control-activation-conditions~1`
 
 Status: proposed
 
-The cruise control system shall only allow activation if all of the following conditions are simultaneously satisfied: vehicle speed is within the valid range [30, 180] km/h, the brake pedal is not actuated, the engine is running, and no active fault codes related to the throttle, speed sensor, or CAN bus are present.
-
-Rationale: Gating activation on these conditions prevents engagement in unsafe or degraded system states.
+The cruise control system shall only allow activation if all of the following conditions are simultaneously satisfied: vehicle speed is within the valid range [30, 180] hm/h, the brake and throttle command is not actuated, and no active fault codes related to the throttle, speed sensor, or CAN bus are present.
 
 Covers:
-- `feat~cruise-control-speed-regulation~1`
-- `feat~cruise-control-set-target-speed~1`
+- `feat~cruise-control~1`
 
 Needs: impl, itest
 ```
----
-
-```
-`dsn~cruise-control-deactivation-response-time~1`
-
-Status: proposed
-
-Upon detection of a deactivation event, the cruise control system shall transfer throttle authority back to the driver within a maximum latency of 50 ms from the moment the trigger signal is asserted.
-
-Rationale: A 50 ms response time is within the range imperceptible to the driver and well below the threshold that could cause a safety-relevant delay in throttle handover.
-
-Covers:
-- `feat~cruise-control-deactivation~1`
-
-Needs: impl, itest
-```
-
----
