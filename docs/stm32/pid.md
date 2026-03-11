@@ -42,9 +42,9 @@ integral += error * dt;
 
 derivative = (error - prev_error) / dt;
 
-controller_output = kp * error + ki * integral + kd * derivative;
-
 prev_error = error;
+
+controller_output = kp * error + ki * integral + kd * derivative;
 ```
 ------------------------------------------------------------------------
 
