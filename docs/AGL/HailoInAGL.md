@@ -32,7 +32,7 @@ Now, go back to your AGL installation enviroment (Host PC) and run this commands
 
 ```bash
 bitbake -c cleanall linux-raspberrypi
-bitbake -c install hailo-pci
+bitbake -c packagedata hailo-pci
 bitbake package-index
 ```
 
