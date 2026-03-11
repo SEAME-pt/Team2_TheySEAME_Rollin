@@ -8,22 +8,6 @@
 #define PULSES_PER_REV 20
 
 /**
- * @brief Global vehicle telemetry structure
- *
- * Holds the latest sampled vehicle state such as battery and speed. Protected
- * by `g_vehicle_data_mutex` when updated/read by multiple threads.
- *
- * Requirement traceability:
- */
-typedef struct {
-    uint16_t battery_voltage;      /**< Battery voltage in millivolts */
-    float battery_percentage;      /**< Battery percentage (0-100%) */
-    float battery_current;         /**< Battery current in mA */
-    float vehicle_speed;           /**< Vehicle speed in meters per second */
-    uint8_t data_valid;            /**< Flag: 1 if data is valid, 0 if not updated yet */
-} VehicleData_t;
-
-/**
  * @brief Vehicle command received from CAN/RPi
  *
  * Encodes the control inputs coming from remote/system controller.
@@ -37,20 +21,6 @@ typedef struct {
     int8_t steering_angle;      /**< Steering -100..+100 representing -1.0..+1.0 */
     uint8_t command_valid;      /**< Flag: 1 if command received, 0 otherwise */
 } VehicleCommand_t;
-
-/**
- * @brief Global vehicle data accessible by all threads
- *
- * Protected by `g_vehicle_data_mutex` when modified.
- *
- * Requirement traceability:
- */
-extern VehicleData_t g_vehicle_data;
-
-/**
- * @brief Mutex protecting `g_vehicle_data`
- */
-extern TX_MUTEX g_vehicle_data_mutex;
 
 /**
  * @brief Global vehicle command received via CAN
@@ -98,11 +68,12 @@ float Speed_RPMToMetersPerSecond(uint32_t rpm);
  * @brief Process a delta reading and update running averages
  *
  * Adds the incoming RPM sample to the running average and emits a report
- * every N samples (N=5). On emit, updates `g_vehicle_data.vehicle_speed`.
+ * every N samples (N=5). On emit, outputs calculated speed.
  *
  * @param delta_ticks Time delta in timer ticks
  * @param average Pointer to running average accumulator (modified)
  * @param counter Pointer to reading counter (modified)
+ * @param out_speed_ms Output pointer for calculated speed in m/s
  *
  * Requirement traceability:
  *

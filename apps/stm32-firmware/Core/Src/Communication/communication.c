@@ -1,14 +1,15 @@
 /**
  ******************************************************************************
  * @file    communication.c
- * @brief   CAN Communication Thread - Reads global vehicle data and transmits
- * @note    This module is independent from sensors, reads from global variables
+ * @brief   CAN Communication Thread - Reads sensor queue and transmits
+ * @note    This module reads sensor samples directly from the sensors queue
  ******************************************************************************
  */
 
 #include "comm.h"
 #include "mcp2515.h"
 #include "../Sensors/sensors.h"
+#include "../Sensors/sensors_queue.h"
 #include "main.h"
 #include "../Control/control_queue.h"
 #include <stdio.h>
@@ -47,10 +48,14 @@ void Communication_Thread_Entry(ULONG thread_input) {
     }
     
     Debug_Print("[COMM] Starting CAN loop (TX every 200ms, RX continuous)\r\n");
-    Debug_Print("[COMM] Reading from global vehicle data\r\n\r\n");
+    Debug_Print("[COMM] Reading sensor samples directly from sensors queue\r\n\r\n");
     
     uint32_t count = 0;
-    VehicleData_t local_data;
+    
+    /* Local sensor state - updated from sensors queue */
+    float battery_percentage = 0.0f;
+    float vehicle_speed = 0.0f;
+    int sensors_valid = 0;
 
     /* Heartbeat state: re-send last command if no new command seen for HEARTBEAT_MS */
     const uint32_t HEARTBEAT_MS = 1000; /* 1s heartbeat to avoid log flooding */
@@ -64,27 +69,37 @@ void Communication_Thread_Entry(ULONG thread_input) {
     Debug_Print("[COMM] Heartbeat initialized with default SAFE command\r\n");
 
     while(1) {
+        // Drain sensor queue to get latest samples (non-blocking)
+        SensorSample_t samp;
+        while (SensorsQueue_Receive(&samp, TX_NO_WAIT) == TX_SUCCESS) {
+            switch (samp.sensor_id) {
+                case SENSOR_ID_SPEED:
+                    vehicle_speed = samp.value;
+                    sensors_valid = 1;
+                    break;
+                case SENSOR_ID_BATTERY:
+                    battery_percentage = samp.value;
+                    sensors_valid = 1;
+                    break;
+                default:
+                    break;
+            }
+        }
+        
         // Send status every 1s (every 100 loops at 10ms) to reduce log spam
         if (count % 100 == 0) {
-            // Read global vehicle data with mutex protection
-            if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                // Copy data locally to minimize mutex hold time
-                local_data = g_vehicle_data;
-                tx_mutex_put(&g_vehicle_data_mutex);
-            }
-            
             // Check if data is valid before sending
-            if (1) {
+            if (sensors_valid) {
                 // Send battery percentage over CAN (ID: 0x201)
-                uint8_t battery = (uint8_t)local_data.battery_percentage;
+                uint8_t battery = (uint8_t)battery_percentage;
                 HAL_StatusTypeDef status = MCP2515_SendBattery(battery);
                 // HAL_StatusTypeDef status = MCP2515_SendBattery(90);
             
                 // Send speed over CAN (ID: 0x200 - SpeedMsg)
-                HAL_StatusTypeDef speed_status = MCP2515_SendSpeed(local_data.vehicle_speed);
+                HAL_StatusTypeDef speed_status = MCP2515_SendSpeed(vehicle_speed);
 
                 // Single summary line for TX
-                uint16_t speed_hmh = (uint16_t)(local_data.vehicle_speed * 36.0f);
+                uint16_t speed_hmh = (uint16_t)(vehicle_speed * 36.0f);
                 snprintf(comm_uart_buf, sizeof(comm_uart_buf),
                         "[TX] 0x200 Speed=%u hm/h (%s) | 0x201 Bat=%u%% (%s)\r\n",
                         speed_hmh,
