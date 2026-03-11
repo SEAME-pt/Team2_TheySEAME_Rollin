@@ -26,6 +26,18 @@ static inline void RX_Print(const char *msg) {
     HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), 100);
 }
 
+/* Maximum velocity in m/s (used for throttle % to velocity conversion) */
+#define MAX_VELOCITY_MS 2.0f
+
+/**
+ * @brief Convert throttle percentage (0-100) to desired velocity in m/s
+ * @param throttle_percent Throttle value 0-100%
+ * @return float Desired velocity in m/s (0.0 to MAX_VELOCITY_MS)
+ */
+static inline float Throttle_ToVelocity(uint8_t throttle_percent) {
+    return (throttle_percent / 100.0f) * MAX_VELOCITY_MS;
+}
+
 void Communication_Thread_Entry(ULONG thread_input) {
     (void) thread_input;
     
@@ -59,10 +71,10 @@ void Communication_Thread_Entry(ULONG thread_input) {
 
     /* Heartbeat state: re-send last command if no new command seen for HEARTBEAT_MS */
     const uint32_t HEARTBEAT_MS = 1000; /* 1s heartbeat to avoid log flooding */
-    /* Default safe command: throttle=0, steering=0, command_valid=1
+    /* Default safe command: desired_velocity=0, steering=0, command_valid=1
      * This prevents repeated safety stop messages until a real command is received.
      */
-    VehicleCommand_t last_cmd = { .driving_mode = 0, .throttle = 0, .steering_angle = 0, .current_velocity = 0.0f, .command_valid = 1 };
+    VehicleCommand_t last_cmd = { .driving_mode = 0, .desired_velocity = 0.0f, .steering_angle = 0, .current_velocity = 0.0f, .command_valid = 1 };
     uint32_t last_cmd_ts = HAL_GetTick();
     int have_last_cmd = 1; /* start with default command enabled */
 
@@ -157,7 +169,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
                     g_vehicle_command.driving_mode = mode;
                     g_vehicle_command.gear = 3;  // Controller doesn't send gear, default to Drive
-                    g_vehicle_command.throttle = throttle;
+                    g_vehicle_command.desired_velocity = desired_vel;
                     g_vehicle_command.steering_angle = steering;
                     g_vehicle_command.command_valid = 1;
                     tx_mutex_put(&g_vehicle_command_mutex);
@@ -165,22 +177,23 @@ void Communication_Thread_Entry(ULONG thread_input) {
                 cmd_updated = 1;
 
                 snprintf(comm_uart_buf, sizeof(comm_uart_buf),
-                        "[CMD] Controller: Mode=%s Throttle=%d%% Steering=%d\r\n",
-                        mode ? "AI" : "MAN", throttle, steering);
+                        "[CMD] Controller: Mode=%s Throttle=%d%% (%.2fm/s) Steering=%d\r\n",
+                        mode ? "AI" : "MAN", throttle, desired_vel, steering);
                 Debug_Print(comm_uart_buf);
             }
             else if (rx_can_id == 0x100 && rx_length >= 1) {
                 // Kuksa ThrottleMsg: DLC=8, first byte is throttle 0-100%
                 uint8_t throttle = rx_data[0] > 100 ? 100 : rx_data[0];
+                float desired_vel = Throttle_ToVelocity(throttle);
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                    g_vehicle_command.throttle = throttle;
+                    g_vehicle_command.desired_velocity = desired_vel;
                     g_vehicle_command.command_valid = 1;
                     tx_mutex_put(&g_vehicle_command_mutex);
                 }
                 cmd_updated = 1;
 
                 snprintf(comm_uart_buf, sizeof(comm_uart_buf),
-                        "[CMD] Throttle=%d%%\r\n", throttle);
+                        "[CMD] Throttle=%d%% (%.2fm/s)\r\n", throttle, desired_vel);
                 Debug_Print(comm_uart_buf);
             }
             else if (rx_can_id == 0x101 && rx_length >= 1) {
