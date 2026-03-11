@@ -9,61 +9,7 @@ AGL can address all software in a vehicle like in-vehicle-infotainment (ivi), in
 The project required an Operating System capable of running an Instrument Cluster and supporting ADAS features for our car.
 AGL can be tailored to our specific requirements and it's open source software, hence this choice
 
-## Building AGL Image
+## Docs Index
 
-This project followed the [AGL docs](https://docs.automotivelinux.org/en/trout/#) in the trout
-
-The target machine is a ```raspberrypi5``` and the image built is ```agl-image-weston```.
-[Here](/scripts/AGL/README) is a Dockerfile which builds this image
-
-### Features
-
-This image contains:
-- agl-devel
-- agl-netboot
-- agl-pipewire
-- agl-app-framework
-- agl-selinux
-- agl-buildstats
-- agl-ic
-- agl-drm-lease
-
-```bash
-source meta-agl/scripts/aglsetup.sh -m <machine> -d <build-name> \
-    agl-devel agl-netboot agl-pipewire agl-app-framework \
-    agl-selinux agl-buildstats agl-ic agl-drm-lease
-```
-
-### Layers
-
-The ```meta-qt6``` layer is added to the bblayers.conf file
-
-```bash
-bitbake-layers add-layer meta-qt6
-```
-
-In the local.conf file, install the following recipes:
-- QT: "qtbase qtmultimedia qtquick3d qtdeclarative"
-- DEV: "cmake"
-
-```bash
-IMAGE_INSTALL:append = " qtbase qtmultimedia qtquick3d qtdeclarative"
-IMAGE_INSTALL:append = " cmake"
-```
-
-Then build the image
-
-```bash
-time bitbake <image>
-```
-
-### SDK
-
-SDK mirrors the enviroment of the created AGL image.
-With it, apps can be developed and tested in a enviroment close to the real one without messing with physical hardware
-
-To create the SDK run this command
-```bash
-bitbake <image> -c do_populate_sdk
-```
-
+1. [AGL-Concepts](./AGLConcepts.md)
+2. [Useful-Commands](./UsefulCommands.md)
