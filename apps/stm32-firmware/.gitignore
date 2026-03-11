@@ -15,3 +15,5 @@ Debug/*.list
 Core/Tests/build/*
 tests/build/
 *.SVDat
+*.bak
+Debug/build.log
