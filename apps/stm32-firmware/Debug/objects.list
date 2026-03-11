@@ -6,7 +6,6 @@
 "./Core/Src/Drivers/ina219.o"
 "./Core/Src/Drivers/pca9685.o"
 "./Core/Src/Sensors/battery.o"
-"./Core/Src/Sensors/sensors_processor.o"
 "./Core/Src/Sensors/sensors_queue.o"
 "./Core/Src/Sensors/speed.o"
 "./Core/Src/app_threadx.o"
