@@ -18,9 +18,7 @@ jobs:
 
     steps:
       - name: Install deps
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake protobuf-compiler libprotobuf-dev libgrpc++-dev libabsl-dev
+        run: sudo apt-get install -y cmake
 
       - name: Chekout repo
         uses: actions/checkout@v5
