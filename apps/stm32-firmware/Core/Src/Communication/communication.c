@@ -62,7 +62,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
     /* Default safe command: throttle=0, steering=0, command_valid=1
      * This prevents repeated safety stop messages until a real command is received.
      */
-    VehicleCommand_t last_cmd = { .driving_mode = 0, .throttle = 0, .steering_angle = 0, .command_valid = 1 };
+    VehicleCommand_t last_cmd = { .driving_mode = 0, .throttle = 0, .steering_angle = 0, .current_velocity = 0.0f, .command_valid = 1 };
     uint32_t last_cmd_ts = HAL_GetTick();
     int have_last_cmd = 1; /* start with default command enabled */
 
@@ -252,6 +252,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
                 VehicleCommand_t cmd;
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
                     cmd = g_vehicle_command;
+                    cmd.current_velocity = vehicle_speed;  // Add current speed from sensor
                     tx_mutex_put(&g_vehicle_command_mutex);
                 }
                 if (!ControlQueue_TrySend(&cmd)) {
@@ -279,6 +280,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
         if (have_last_cmd) {
             uint32_t now = HAL_GetTick();
             if ((now - last_cmd_ts) > HEARTBEAT_MS) {
+                last_cmd.current_velocity = vehicle_speed;  // Update with current speed
                 if (ControlQueue_TrySend(&last_cmd)) {
                     /* Log heartbeat at most once per resend (HEARTBEAT_MS) to avoid flooding */
                     Debug_Print("[COMM] Heartbeat: re-sent last command to Control queue\r\n");
