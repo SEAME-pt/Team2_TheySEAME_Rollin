@@ -442,7 +442,7 @@ Needs: impl, itest
 
 Status: proposed
 
-When cruise control is active, the system shall generate the commanded throttle from the cruise control speed controller rather than from continuous driver throttle input, unless a deactivation or driver-override condition is present.
+When cruise control is active, the system shall generate the commanded throttle from the cruise control speed controller rather than from continuous driver throttle input, unless a deactivation condition is present.
 
 Covers:
 - `feat~cruise-control~1`
