@@ -11,7 +11,7 @@
 #include <atomic>
 #include "../../../middleware/kuksa/val/v2/val.grpc.pb.h"
 #include "../../../middleware/kuksa/val/v2/types.pb.h"
-
+#include "../middleware/kuksa/val/v2/KuksaLib.hpp"
 
 using kuksa::val::v2::VAL;
 
@@ -95,13 +95,10 @@ signals:
     void speedUpdated(int speed);
     void batteryUpdated(int battery);
 
-public slots:
-    bool updateFromKuksa();
-
 private:
-    QString _server = "0.0.0.0:55555";
-    int _battery = -0;
-    int _speed = 0;
+    std::atomic<int> _battery{0};
+    std::atomic<int> _speed{0};
+    kuksaLib _kuksa;
     std::thread _thread;
     std::atomic_bool _running{false};
 };

@@ -71,24 +71,28 @@
                 "datatype": "float",
                 "unit": "deg",
                 "description": "Steering angle command",
-                "dbc": { "signal": "Angle" },
-                "vss2dbc": { "signal": "Angle" }
+                "dbc": { "signal": "angle" },
+                "vss2dbc": { "signal": "angle" }
+              }
+            }
+          },
+          "Brake": {
+            "type": "branch",
+            "description": "Brake control signals",
+            "children": {
+              "Value": {
+                "type": "actuator",
+                "datatype": "uint8",
+                "unit": "enum",
+                "description": "brake: 0=DRIVE, 1=brake",
+                "dbc": { "signal": "brake" },
+                "vss2dbc": { "signal": "brake" }
               }
             }
           },
           "Mode": {
             "type": "branch",
             "description": "Driving mode signals",
-            "children": {
-              "Break": {
-                "type": "actuator",
-                "datatype": "uint8",
-                "unit": "enum",
-                "description": "Break: 0=DRIVE, 1=BREAK",
-                "allowed": [0, 1],
-                "dbc": { "signal": "Break" },
-                "vss2dbc": { "signal": "Break" }
-              },
               "DrivingMode": {
                 "type": "actuator",
                 "datatype": "uint8",
