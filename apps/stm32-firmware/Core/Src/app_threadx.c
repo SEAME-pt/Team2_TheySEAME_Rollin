@@ -52,11 +52,9 @@ extern TX_THREAD _tx_timer_thread;
 TX_THREAD communication_thread;
 TX_THREAD battery_thread;
 TX_THREAD speed_thread;
-TX_THREAD sensors_proc_thread;
 TX_THREAD test_thread;
 TX_THREAD control_thread;
 
-UCHAR sensors_proc_thread_stack[2048];
 UCHAR test_thread_stack[2048];
 UCHAR speed_thread_stack[2048];
 UCHAR battery_thread_stack[2048];
@@ -68,12 +66,7 @@ extern void Communication_Thread_Entry(ULONG thread_input);
 extern void Control_Thread_Entry(ULONG thread_input);
 extern void Test_Thread_Entry(ULONG thread_input);
 extern void Speed_Thread_Entry(ULONG thread_input);
-extern void SensorsProcessor_Thread_Entry(ULONG thread_input);
 
-
-/* Global vehicle data and mutex */
-VehicleData_t g_vehicle_data;
-TX_MUTEX g_vehicle_data_mutex;
 
 /* Global vehicle command and mutex */
 VehicleCommand_t g_vehicle_command;
@@ -105,28 +98,16 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
     // Initialize global command structure
     g_vehicle_command.driving_mode = 0;
     g_vehicle_command.gear = 3;  // Default to Drive
-    g_vehicle_command.throttle = 0;
+    g_vehicle_command.desired_velocity = 0.0f;
     g_vehicle_command.steering_angle = 0;
+    g_vehicle_command.current_velocity = 0.0f;
     g_vehicle_command.command_valid = 0;
     
-    // Initialize global vehicle data structure
-    g_vehicle_data.battery_voltage = 0;
-    g_vehicle_data.battery_percentage = 0.0f;
-    g_vehicle_data.battery_current = 0.0f;
-    g_vehicle_data.vehicle_speed = 0.0f;
-    g_vehicle_data.data_valid = 0;
-    
-    // Create mutex for protecting global vehicle data
-    UINT status = tx_mutex_create(&g_vehicle_data_mutex, "VehicleData Mutex", TX_NO_INHERIT);
+    // Create mutex for protecting global vehicle command
+    UINT status = tx_mutex_create(&g_vehicle_command_mutex, "VehicleCommand Mutex", TX_NO_INHERIT);
     if (status != TX_SUCCESS) {
         return TX_MUTEX_ERROR;
-  }
-  
-  // Create mutex for protecting global vehicle command
-  status = tx_mutex_create(&g_vehicle_command_mutex, "VehicleCommand Mutex", TX_NO_INHERIT);
-  if (status != TX_SUCCESS) {
-      return TX_MUTEX_ERROR;
-  }
+    }
 
   /* Initialize control queue used for passing commands to the Control thread */
   ControlQueue_Init();
@@ -176,15 +157,6 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
       return TX_THREAD_ERROR;
   }
 
-  // Create sensors processor thread (aggregates samples and updates g_vehicle_data)
-  status = tx_thread_create(&sensors_proc_thread, "Sensors Proc Thread",
-                            SensorsProcessor_Thread_Entry, 0,
-                            sensors_proc_thread_stack, sizeof(sensors_proc_thread_stack),
-                            12, 12, TX_NO_TIME_SLICE, TX_AUTO_START);
-  if (status != TX_SUCCESS) {
-      return TX_THREAD_ERROR;
-  }
-
   status = tx_thread_create(&speed_thread, "Speed Thread",
                                   Speed_Thread_Entry, 0,
                                   speed_thread_stack, sizeof(speed_thread_stack),
@@ -197,7 +169,6 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   sysview_register_thread(&battery_thread);
   sysview_register_thread(&communication_thread);
   sysview_register_thread(&control_thread);
-  sysview_register_thread(&sensors_proc_thread);
   sysview_register_thread(&speed_thread);
   sysview_register_thread(&_tx_timer_thread);
 

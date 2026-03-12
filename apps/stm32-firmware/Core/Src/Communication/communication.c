@@ -1,14 +1,15 @@
 /**
  ******************************************************************************
  * @file    communication.c
- * @brief   CAN Communication Thread - Reads global vehicle data and transmits
- * @note    This module is independent from sensors, reads from global variables
+ * @brief   CAN Communication Thread - Reads sensor queue and transmits
+ * @note    This module reads sensor samples directly from the sensors queue
  ******************************************************************************
  */
 
 #include "comm.h"
 #include "mcp2515.h"
 #include "../Sensors/sensors.h"
+#include "../Sensors/sensors_queue.h"
 #include "main.h"
 #include "../Control/control_queue.h"
 #include <stdio.h>
@@ -24,6 +25,9 @@ extern UART_HandleTypeDef huart1;
 static inline void RX_Print(const char *msg) {
     HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), 100);
 }
+
+/* Constant test velocity (ignores command input for now) */
+#define CONSTANT_VELOCITY_MS 1.0f
 
 void Communication_Thread_Entry(ULONG thread_input) {
     (void) thread_input;
@@ -47,44 +51,58 @@ void Communication_Thread_Entry(ULONG thread_input) {
     }
     
     Debug_Print("[COMM] Starting CAN loop (TX every 200ms, RX continuous)\r\n");
-    Debug_Print("[COMM] Reading from global vehicle data\r\n\r\n");
+    Debug_Print("[COMM] Reading sensor samples directly from sensors queue\r\n\r\n");
     
     uint32_t count = 0;
-    VehicleData_t local_data;
+    
+    /* Local sensor state - updated from sensors queue */
+    float battery_percentage = 0.0f;
+    float vehicle_speed = 0.0f;
+    int sensors_valid = 0;
 
     /* Heartbeat state: re-send last command if no new command seen for HEARTBEAT_MS */
     const uint32_t HEARTBEAT_MS = 1000; /* 1s heartbeat to avoid log flooding */
-    /* Default safe command: throttle=0, steering=0, command_valid=1
+    /* Default safe command: desired_velocity=0, steering=0, command_valid=1
      * This prevents repeated safety stop messages until a real command is received.
      */
-    VehicleCommand_t last_cmd = { .driving_mode = 0, .throttle = 0, .steering_angle = 0, .command_valid = 1 };
+    VehicleCommand_t last_cmd = { .driving_mode = 0, .desired_velocity = 0.0f, .steering_angle = 0, .current_velocity = 0.0f, .command_valid = 1 };
     uint32_t last_cmd_ts = HAL_GetTick();
     int have_last_cmd = 1; /* start with default command enabled */
 
     Debug_Print("[COMM] Heartbeat initialized with default SAFE command\r\n");
 
     while(1) {
+        // Drain sensor queue to get latest samples (non-blocking)
+        SensorSample_t samp;
+        while (SensorsQueue_Receive(&samp, TX_NO_WAIT) == TX_SUCCESS) {
+            switch (samp.sensor_id) {
+                case SENSOR_ID_SPEED:
+                    vehicle_speed = samp.value;
+                    sensors_valid = 1;
+                    break;
+                case SENSOR_ID_BATTERY:
+                    battery_percentage = samp.value;
+                    sensors_valid = 1;
+                    break;
+                default:
+                    break;
+            }
+        }
+        
         // Send status every 1s (every 100 loops at 10ms) to reduce log spam
         if (count % 100 == 0) {
-            // Read global vehicle data with mutex protection
-            if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                // Copy data locally to minimize mutex hold time
-                local_data = g_vehicle_data;
-                tx_mutex_put(&g_vehicle_data_mutex);
-            }
-            
             // Check if data is valid before sending
-            if (1) {
+            if (sensors_valid) {
                 // Send battery percentage over CAN (ID: 0x201)
-                uint8_t battery = (uint8_t)local_data.battery_percentage;
+                uint8_t battery = (uint8_t)battery_percentage;
                 HAL_StatusTypeDef status = MCP2515_SendBattery(battery);
                 // HAL_StatusTypeDef status = MCP2515_SendBattery(90);
             
                 // Send speed over CAN (ID: 0x200 - SpeedMsg)
-                HAL_StatusTypeDef speed_status = MCP2515_SendSpeed(local_data.vehicle_speed);
+                HAL_StatusTypeDef speed_status = MCP2515_SendSpeed(vehicle_speed);
 
                 // Single summary line for TX
-                uint16_t speed_hmh = (uint16_t)(local_data.vehicle_speed * 36.0f);
+                uint16_t speed_hmh = (uint16_t)(vehicle_speed * 36.0f);
                 snprintf(comm_uart_buf, sizeof(comm_uart_buf),
                         "[TX] 0x200 Speed=%u hm/h (%s) | 0x201 Bat=%u%% (%s)\r\n",
                         speed_hmh,
@@ -142,7 +160,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
                     g_vehicle_command.driving_mode = mode;
                     g_vehicle_command.gear = 3;  // Controller doesn't send gear, default to Drive
-                    g_vehicle_command.throttle = throttle;
+                    g_vehicle_command.desired_velocity = CONSTANT_VELOCITY_MS;  // Ignoring throttle input
                     g_vehicle_command.steering_angle = steering;
                     g_vehicle_command.command_valid = 1;
                     tx_mutex_put(&g_vehicle_command_mutex);
@@ -150,22 +168,22 @@ void Communication_Thread_Entry(ULONG thread_input) {
                 cmd_updated = 1;
 
                 snprintf(comm_uart_buf, sizeof(comm_uart_buf),
-                        "[CMD] Controller: Mode=%s Throttle=%d%% Steering=%d\r\n",
-                        mode ? "AI" : "MAN", throttle, steering);
+                        "[CMD] Controller: Mode=%s Throttle=%d%% (CONSTANT %.2fm/s) Steering=%d\r\n",
+                        mode ? "AI" : "MAN", throttle, CONSTANT_VELOCITY_MS, steering);
                 Debug_Print(comm_uart_buf);
             }
             else if (rx_can_id == 0x100 && rx_length >= 1) {
                 // Kuksa ThrottleMsg: DLC=8, first byte is throttle 0-100%
                 uint8_t throttle = rx_data[0] > 100 ? 100 : rx_data[0];
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                    g_vehicle_command.throttle = throttle;
+                    g_vehicle_command.desired_velocity = CONSTANT_VELOCITY_MS;  // Ignoring throttle input
                     g_vehicle_command.command_valid = 1;
                     tx_mutex_put(&g_vehicle_command_mutex);
                 }
                 cmd_updated = 1;
 
                 snprintf(comm_uart_buf, sizeof(comm_uart_buf),
-                        "[CMD] Throttle=%d%%\r\n", throttle);
+                        "[CMD] Throttle=%d%% (CONSTANT %.2fm/s)\r\n", throttle, CONSTANT_VELOCITY_MS);
                 Debug_Print(comm_uart_buf);
             }
             else if (rx_can_id == 0x101 && rx_length >= 1) {
@@ -237,6 +255,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
                 VehicleCommand_t cmd;
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
                     cmd = g_vehicle_command;
+                    cmd.current_velocity = vehicle_speed;  // Add current speed from sensor
                     tx_mutex_put(&g_vehicle_command_mutex);
                 }
                 if (!ControlQueue_TrySend(&cmd)) {
@@ -264,6 +283,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
         if (have_last_cmd) {
             uint32_t now = HAL_GetTick();
             if ((now - last_cmd_ts) > HEARTBEAT_MS) {
+                last_cmd.current_velocity = vehicle_speed;  // Update with current speed
                 if (ControlQueue_TrySend(&last_cmd)) {
                     /* Log heartbeat at most once per resend (HEARTBEAT_MS) to avoid flooding */
                     Debug_Print("[COMM] Heartbeat: re-sent last command to Control queue\r\n");
