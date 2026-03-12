@@ -6,7 +6,7 @@
       "Speed": {
         "type": "sensor",
         "datatype": "float",
-        "unit": "hm/h",
+        "unit": "km/h",
         "description": "Vehicle speed from STM32",
         "dbc": { "signal": "speed" }
       },
@@ -55,7 +55,7 @@
                 "type": "actuator",
                 "datatype": "uint8",
                 "unit": "enum",
-                "description": "Current Gear: 0=P, 1=N, 2=R, 3=D",
+                "description": "Current gear: 0=P, 1=N, 2=R, 3=D",
                 "allowed": [0, 1, 2, 3],
                 "dbc": { "signal": "gear" },
                 "vss2dbc": { "signal": "gear" }
@@ -84,7 +84,8 @@
                 "type": "actuator",
                 "datatype": "uint8",
                 "unit": "enum",
-                "description": "brake: 0=DRIVE, 1=brake",
+                "description": "Brake command: 0=OFF, 1=ON",
+                "allowed": [0, 1],
                 "dbc": { "signal": "brake" },
                 "vss2dbc": { "signal": "brake" }
               }
@@ -93,14 +94,199 @@
           "Mode": {
             "type": "branch",
             "description": "Driving mode signals",
+            "children": {
               "DrivingMode": {
                 "type": "actuator",
                 "datatype": "uint8",
                 "unit": "enum",
-                "description": "Driving mode: 0=MANUAL, 1=AI_ASSIST",
-                "allowed": [0, 1],
+                "description": "Driving mode: 0=MANUAL, 1=AI_ASSIST, 2=AUTONOMOUS",
+                "allowed": [0, 1, 2],
                 "dbc": { "signal": "DrivingMode" },
                 "vss2dbc": { "signal": "DrivingMode" }
+              }
+            }
+          }
+        }
+      },
+      "ADAS": {
+        "type": "branch",
+        "description": "Advanced Driver-Assistance Systems signals",
+        "children": {
+          "LaneKeepAssist": {
+            "type": "branch",
+            "description": "Lane Keep Assist signals",
+            "children": {
+              "Enabled": {
+                "type": "actuator",
+                "datatype": "boolean",
+                "description": "Enable or disable Lane Keep Assist"
+              },
+              "Active": {
+                "type": "sensor",
+                "datatype": "boolean",
+                "description": "Lane Keep Assist currently active"
+              },
+              "TargetSteeringAngle": {
+                "type": "actuator",
+                "datatype": "float",
+                "unit": "deg",
+                "description": "Steering correction command from LKA"
+              },
+              "LaneOffset": {
+                "type": "sensor",
+                "datatype": "float",
+                "unit": "m",
+                "description": "Vehicle lateral offset from lane center"
+              }
+            }
+          },
+          "LaneDepartureWarning": {
+            "type": "branch",
+            "description": "Lane Departure Warning signals",
+            "children": {
+              "Enabled": {
+                "type": "actuator",
+                "datatype": "boolean",
+                "description": "Enable or disable LDW"
+              },
+              "Warning": {
+                "type": "sensor",
+                "datatype": "boolean",
+                "description": "Lane departure warning active"
+              }
+            }
+          },
+          "CruiseControl": {
+            "type": "branch",
+            "description": "Cruise Control signals",
+            "children": {
+              "Enabled": {
+                "type": "actuator",
+                "datatype": "boolean",
+                "description": "Enable or disable Cruise Control"
+              },
+              "Active": {
+                "type": "sensor",
+                "datatype": "boolean",
+                "description": "Cruise Control active"
+              },
+              "TargetSpeed": {
+                "type": "actuator",
+                "datatype": "float",
+                "unit": "km/h",
+                "description": "Target speed for Cruise Control"
+              }
+            }
+          },
+          "AdaptiveCruiseControl": {
+            "type": "branch",
+            "description": "Adaptive Cruise Control signals",
+            "children": {
+              "Enabled": {
+                "type": "actuator",
+                "datatype": "boolean",
+                "description": "Enable or disable ACC"
+              },
+              "Active": {
+                "type": "sensor",
+                "datatype": "boolean",
+                "description": "Adaptive Cruise Control active"
+              },
+              "TargetSpeed": {
+                "type": "actuator",
+                "datatype": "float",
+                "unit": "km/h",
+                "description": "Target speed for ACC"
+              },
+              "TimeGap": {
+                "type": "actuator",
+                "datatype": "float",
+                "unit": "s",
+                "description": "Desired time gap to front vehicle"
+              },
+              "LeadVehicleDistance": {
+                "type": "sensor",
+                "datatype": "float",
+                "unit": "m",
+                "description": "Distance to lead vehicle"
+              }
+            }
+          },
+          "BlindSpotDetection": {
+            "type": "branch",
+            "description": "Blind spot detection signals",
+            "children": {
+              "Enabled": {
+                "type": "actuator",
+                "datatype": "boolean",
+                "description": "Enable or disable blind spot detection"
+              },
+              "LeftOccupied": {
+                "type": "sensor",
+                "datatype": "boolean",
+                "description": "Object detected in left blind spot"
+              },
+              "RightOccupied": {
+                "type": "sensor",
+                "datatype": "boolean",
+                "description": "Object detected in right blind spot"
+              },
+              "Warning": {
+                "type": "sensor",
+                "datatype": "boolean",
+                "description": "Blind spot warning active"
+              }
+            }
+          },
+          "TrafficSignRecognition": {
+            "type": "branch",
+            "description": "Traffic sign recognition signals",
+            "children": {
+              "Enabled": {
+                "type": "actuator",
+                "datatype": "boolean",
+                "description": "Enable or disable traffic sign recognition"
+              },
+              "DetectedSpeedLimit": {
+                "type": "sensor",
+                "datatype": "float",
+                "unit": "hm/h",
+                "description": "Detected speed limit from traffic sign"
+              },
+                "DetectedSignType": {
+                  "type": "sensor",
+                  "datatype": "enum",
+                  "description": "Detected traffic sign type: 0=UNKNOWN, 1=STOP, 2=SPEED_LIMIT_50, 3=SPEED_LIMIT_100, 4=YIELD, 5=NO_ENTRY, 6=TURN_LEFT, 7=TURN_RIGHT, 8=PEDESTRIAN, 9=TRAFFIC_LIGHT, 10=SPEED_LIMIT_30, 11=SPEED_LIMIT_80, 12=SPEED_LIMIT_120, 13=ONE_WAY, 14=NO_PARKING, 15=NO_OVERTAKING",
+                  "allowed": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                  "dbc": { "signal": "TSR_DetectedSignType" }
+                }
+            }
+          },
+          "ParkingAssist": {
+            "type": "branch",
+            "description": "Parking assistance signals",
+            "children": {
+              "Enabled": {
+                "type": "actuator",
+                "datatype": "boolean",
+                "description": "Enable or disable parking assist"
+              },
+              "Active": {
+                "type": "sensor",
+                "datatype": "boolean",
+                "description": "Parking assist active"
+              },
+              "ObstacleDistanceFront": {
+                "type": "sensor",
+                "datatype": "float",
+                "unit": "m",
+                "description": "Distance to front obstacle"
+              },
+              "ObstacleDistanceRear": {
+                "type": "sensor",
+                "datatype": "float",
+                "unit": "m",
+                "description": "Distance to rear obstacle"
               }
             }
           }
