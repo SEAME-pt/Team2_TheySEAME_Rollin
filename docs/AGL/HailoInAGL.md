@@ -9,38 +9,21 @@ Get the [meta-hailo](https://github.com/hailo-ai/meta-hailo/tree/hailo8-scarthga
 Then, add the following recipes to the AGL **local.conf** or **site.conf** file
 
 ```bash
-IMAGE_INSTALL:append = " hailortcli hailo-firmware libhailort packagegroup-hailo-hailort"
+IMAGE_INSTALL:append = " hailo-pci hailortcli hailo-firmware libhailort packagegroup-hailo-hailort"
 ```
 
-The **hailo-pci** recipe is necesserary but it has a problem. Below is a fix and how to install it
+The **hailo-pci** recipe is necesserary but it has a problem. Below is a fix and how to build it
 
-## Problems
+## Common Problems
 
 Theres an overlap problem with the **hailo-pci** and **linux-raspberrypi_6.12.bb** recipes.
 They try to add files with the same name to the same directorie resulting in an error.
-When this happens, run the following commands
 
-Before everything, set up a http server for the AGL rpm packages
-If you don't know how to do it, go to this [file](./HttpRPM.md)
-After this set up remove the current hailo driver in the Target PC
+One solution to this problem is to don't split the kernel modules.
+So the **linux-raspberrypi** will produce a single package, which makes the conflict disappear
 
 ```bash
-dnf remove kernel-module-hailo-pci
-```
-
-Now, go back to your AGL installation enviroment (Host PC) and run this commands
-
-```bash
-bitbake -c cleanall linux-raspberrypi
-bitbake -c packagedata hailo-pci
-bitbake package-index
-```
-
-Now, go back to the Target PC and run this
-
-```bash
-dnf makecache
-dnf install kernel-module-hailo-pci
+KERNEL_MODULES_SPLIT = "0"
 ```
 
 To check if everything is OK, you can use this command and check the hailo driver version.
