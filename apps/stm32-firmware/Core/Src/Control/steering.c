@@ -1,6 +1,7 @@
 #include "control.h"
 #include "../Drivers/pca9685.h"
 #include "../Sensors/sensors.h"
+#include "cruise_control.h"
 #include "control_queue.h"
 #include "../Sensors/sensors_queue.h"
 #include <stdio.h>
@@ -138,10 +139,16 @@ void Control_Thread_Entry(ULONG thread_input) {
                 g_vehicle_command = recv;
                 tx_mutex_put(&g_vehicle_command_mutex);
             }
-
+            
             local_cmd = recv;
+            local_cmd.cruise_control_active = true; // Force cruise control active for testing
+            if (local_cmd.cruise_control_active) {
+                
+               local_cmd.cruise_control_active = cruise_control(local_cmd.desired_velocity, local_cmd.current_velocity, 0.1f, local_cmd); // dt=100ms for PID
+                
+            }
 
-            if (local_cmd.command_valid) {
+            if (local_cmd.command_valid && !local_cmd.cruise_control_active) {
                 // Check if command changed (use small epsilon for float comparison)
                 const float VELOCITY_EPSILON = 0.01f;
                 if (local_cmd.driving_mode != last_mode || 

@@ -3,7 +3,8 @@
 
 #include <stdbool.h>
 #include <stdio.h>
-
+#include "../Drivers/pca9685.h"
+#include "../Sensors/sensors.h"
 /*----------------------------------------CRUISE_CONTROL --------------------------------------------*/
 
 
@@ -18,7 +19,7 @@
 
 float PID(float target_speed, float current_speed, float dt);
 float clamp(float value);
-
+bool cruise_control(float target_speed, float current_speed, float dt, VehicleCommand_t command_data);
 /* test helpers */
 void PID_Reset(void);
 float PID_GetIntegral(void);

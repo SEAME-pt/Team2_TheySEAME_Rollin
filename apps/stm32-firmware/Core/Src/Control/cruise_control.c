@@ -50,26 +50,14 @@ float clamp(float value)
         return value;
 }
 
-int cruise_control()
+bool cruise_control(float target_speed, float current_speed, float dt, VehicleCommand_t command_data)
 {
-    PID_Reset();
-
-    float target_speed = 50.0f;
-    float current_speed = 0.0f;
-    float dt = 0.1f;
-
-    for (int i = 0; i < 100; i++) {
-        float control_signal = PID(target_speed, current_speed, dt);
-        printf("Control Signal: %f\n", control_signal);
-
-        // Simulate the effect of the control signal on the current speed
-        current_speed += control_signal * dt;
-
-        // Simulate some external disturbance
-        if (i == 50) {
-            current_speed -= 10.0f; // Sudden drop in speed
-        }
-    }
-
-    return 0;
+    float throttle = PID(target_speed, current_speed, dt);
+    uint16_t speed_pwm = (uint16_t)((throttle * 4095) / 100);
+    Debug_Print("[CRUISE CONTROL] PID output (throttle %): ");
+    char buf[64];
+    snprintf(buf, sizeof(buf), "%d.%02d%%\r\n", (int)throttle, (int)((throttle - (int)throttle) * 100));
+    PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 0, 0, speed_pwm);
+    PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 4, 0, speed_pwm);
+    return true;
 }
