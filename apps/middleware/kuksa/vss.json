@@ -120,6 +120,8 @@
                 "type": "actuator",
                 "datatype": "boolean",
                 "description": "Enable or disable Lane Keep Assist"
+                ,"dbc": { "signal": "Enabled" },
+                "vss2dbc": { "signal": "Enabled" }
               },
               "Active": {
                 "type": "sensor",
@@ -131,6 +133,8 @@
                 "datatype": "float",
                 "unit": "deg",
                 "description": "Steering correction command from LKA"
+                ,"dbc": { "signal": "TargetSteeringAngle" },
+                "vss2dbc": { "signal": "TargetSteeringAngle" }
               },
               "LaneOffset": {
                 "type": "sensor",
@@ -148,6 +152,8 @@
                 "type": "actuator",
                 "datatype": "boolean",
                 "description": "Enable or disable LDW"
+                ,"dbc": { "signal": "Enabled" },
+                "vss2dbc": { "signal": "Enabled" }
               },
               "Warning": {
                 "type": "sensor",
@@ -164,6 +170,8 @@
                 "type": "actuator",
                 "datatype": "boolean",
                 "description": "Enable or disable Cruise Control"
+                ,"dbc": { "signal": "Enabled" },
+                "vss2dbc": { "signal": "Enabled" }
               },
               "Active": {
                 "type": "sensor",
@@ -175,6 +183,8 @@
                 "datatype": "float",
                 "unit": "hm/h",
                 "description": "Target speed for Cruise Control"
+                ,"dbc": { "signal": "TargetSpeed" },
+                "vss2dbc": { "signal": "TargetSpeed" }
               }
             }
           },
@@ -186,6 +196,8 @@
                 "type": "actuator",
                 "datatype": "boolean",
                 "description": "Enable or disable ACC"
+                ,"dbc": { "signal": "Enabled" },
+                "vss2dbc": { "signal": "Enabled" }
               },
               "Active": {
                 "type": "sensor",
@@ -197,12 +209,16 @@
                 "datatype": "float",
                 "unit": "hm/h",
                 "description": "Target speed for ACC"
+                ,"dbc": { "signal": "TargetSpeed" },
+                "vss2dbc": { "signal": "TargetSpeed" }
               },
               "TimeGap": {
                 "type": "actuator",
                 "datatype": "float",
                 "unit": "s",
                 "description": "Desired time gap to front vehicle"
+                ,"dbc": { "signal": "TimeGap" },
+                "vss2dbc": { "signal": "TimeGap" }
               },
               "LeadVehicleDistance": {
                 "type": "sensor",
@@ -220,6 +236,8 @@
                 "type": "actuator",
                 "datatype": "boolean",
                 "description": "Enable or disable blind spot detection"
+                ,"dbc": { "signal": "Enabled" },
+                "vss2dbc": { "signal": "Enabled" }
               },
               "LeftOccupied": {
                 "type": "sensor",
@@ -246,6 +264,8 @@
                 "type": "actuator",
                 "datatype": "boolean",
                 "description": "Enable or disable traffic sign recognition"
+                ,"dbc": { "signal": "Enabled" },
+                "vss2dbc": { "signal": "Enabled" }
               },
               "DetectedSpeedLimit": {
                 "type": "sensor",
@@ -271,6 +291,8 @@
                 "type": "actuator",
                 "datatype": "boolean",
                 "description": "Enable or disable parking assist"
+                ,"dbc": { "signal": "Enabled" },
+                "vss2dbc": { "signal": "Enabled" }
               },
               "Active": {
                 "type": "sensor",
