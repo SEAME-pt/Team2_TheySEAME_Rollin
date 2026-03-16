@@ -1,0 +1,36 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+# Toolchain: GNU Tools for STM32 (13.3.rel1)
+################################################################################
+
+# Add inputs and outputs from these tool invocations to the build variables 
+C_SRCS += \
+../Middlewares/SEGGER/RTT/SEGGER_RTT.c 
+
+S_UPPER_SRCS += \
+../Middlewares/SEGGER/RTT/SEGGER_RTT_ASM_ARMv7M.S 
+
+OBJS += \
+./Middlewares/SEGGER/RTT/SEGGER_RTT.o \
+./Middlewares/SEGGER/RTT/SEGGER_RTT_ASM_ARMv7M.o 
+
+S_UPPER_DEPS += \
+./Middlewares/SEGGER/RTT/SEGGER_RTT_ASM_ARMv7M.d 
+
+C_DEPS += \
+./Middlewares/SEGGER/RTT/SEGGER_RTT.d 
+
+
+# Each subdirectory must supply rules for building sources it contributes
+Middlewares/SEGGER/RTT/%.o Middlewares/SEGGER/RTT/%.su Middlewares/SEGGER/RTT/%.cyclo: ../Middlewares/SEGGER/RTT/%.c Middlewares/SEGGER/RTT/subdir.mk
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m33 -std=gnu11 -g3 -DDEBUG -DUSE_FULL_LL_DRIVER -DUSE_HAL_DRIVER -DSTM32U585xx -DTX_INCLUDE_USER_DEFINE_FILE -DTX_SINGLE_MODE_NON_SECURE=1 -c -I../Core/Inc -I../Middlewares/SEGGER/RTT -I../Middlewares/SEGGER/SystemView -I../Middlewares/SEGGER/Config -I../Drivers/STM32U5xx_HAL_Driver/Inc -I../Drivers/STM32U5xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32U5xx/Include -I../Drivers/CMSIS/Include -I../AZURE_RTOS/App -I../Middlewares/ST/threadx/common/inc -I../Middlewares/ST/threadx/ports/cortex_m33/gnu/inc -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
+Middlewares/SEGGER/RTT/%.o: ../Middlewares/SEGGER/RTT/%.S Middlewares/SEGGER/RTT/subdir.mk
+	arm-none-eabi-gcc -mcpu=cortex-m33 -g3 -DDEBUG -DTX_SINGLE_MODE_NON_SECURE=1 -c -I../Core/Inc -I../AZURE_RTOS/App -I../Drivers/STM32U5xx_HAL_Driver/Inc -I../Drivers/STM32U5xx_HAL_Driver/Inc/Legacy -I../Middlewares/ST/threadx/common/inc -I../Drivers/CMSIS/Device/ST/STM32U5xx/Include -I../Middlewares/ST/threadx/ports/cortex_m33/gnu/inc -I../Drivers/CMSIS/Include -I../Middlewares/SEGGER/RTT -I../Middlewares/SEGGER/SystemView -I../Middlewares/SEGGER/Config -x assembler-with-cpp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -o "$@" "$<"
+
+clean: clean-Middlewares-2f-SEGGER-2f-RTT
+
+clean-Middlewares-2f-SEGGER-2f-RTT:
+	-$(RM) ./Middlewares/SEGGER/RTT/SEGGER_RTT.cyclo ./Middlewares/SEGGER/RTT/SEGGER_RTT.d ./Middlewares/SEGGER/RTT/SEGGER_RTT.o ./Middlewares/SEGGER/RTT/SEGGER_RTT.su ./Middlewares/SEGGER/RTT/SEGGER_RTT_ASM_ARMv7M.d ./Middlewares/SEGGER/RTT/SEGGER_RTT_ASM_ARMv7M.o
+
+.PHONY: clean-Middlewares-2f-SEGGER-2f-RTT
+

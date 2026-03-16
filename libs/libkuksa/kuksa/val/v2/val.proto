@@ -105,24 +105,6 @@ service VAL {
   //
   rpc Actuate(ActuateRequest) returns (ActuateResponse);
 
-  // Actuate a single actuator in a gRPC stream -> Use for low latency and high throughput
-  //
-  // Returns (GRPC error code):
-  //   NOT_FOUND if the actuator does not exist.
-  //   PERMISSION_DENIED if access is denied for the actuator.
-  //   UNAUTHENTICATED if no credentials provided or credentials has expired
-  //   UNAVAILABLE if there is no provider currently providing the actuator
-  //   DATA_LOSS is there is a internal TransmissionFailure
-  //   INVALID_ARGUMENT
-  //       - if the provided path is not an actuator.
-  //       - if the data type used in the request does not match
-  //            the data type of the addressed signal
-  //       - if the requested value is not accepted,
-  //            e.g. if sending an unsupported enum value
-  //       - if the provided value is out of the min/max range specified
-  //
-  rpc ActuateStream(stream ActuateRequest) returns (ActuateResponse);
-
   // Actuate simultaneously multiple actuators.
   // If any error occurs, the entire operation will be aborted
   // and no single actuator value will be forwarded to the provider.
@@ -177,48 +159,29 @@ service VAL {
   //
   // Errors:
   //    - Provider sends ProvideActuationRequest -> Databroker returns ProvideActuationResponse
-  //        - strict case
-  //            Returns (GRPC error code) and closes the stream call
-  //              NOT_FOUND if any of the signals are non-existant.
-  //              PERMISSION_DENIED if access is denied for any of the signals.
-  //              UNAUTHENTICATED if no credentials provided or credentials has expired
-  //              ALREADY_EXISTS if a provider already claimed the ownership of an actuator
+  //        Returns (GRPC error code) and closes the stream call (strict case).
+  //          NOT_FOUND if any of the signals are non-existant.
+  //          PERMISSION_DENIED if access is denied for any of the signals.
+  //          UNAUTHENTICATED if no credentials provided or credentials has expired
+  //          ALREADY_EXISTS if a provider already claimed the ownership of an actuator
   //
   //    - Provider sends PublishValuesRequest -> Databroker returns PublishValuesResponse upon error, and nothing upon success
-  //        - permissive case
-  //            GRPC errors are returned as messages in the stream
-  //            response with the signal id `map<int32, Error> status = 2;`
-  //              NOT_FOUND if a signal is non-existant.
-  //              PERMISSION_DENIED
-  //                  - if access is denied for a signal.
-  //              INVALID_ARGUMENT
-  //                  - if the data type used in the request does not match
-  //                       the data type of the addressed signal
-  //                  - if the published value is not accepted,
-  //                       e.g. if sending an unsupported enum value
-  //                  - if the published value is out of the min/max range specified
-  //        - strict case
-  //            Returns (GRPC error code) and closes the stream call.
-  //              ALREADY_EXISTS if a provider already claimed the ownership of the signals
-  //              ABORTED if provider has not claimed yet the signals
+  //        GRPC errors are returned as messages in the stream
+  //        response with the signal id `map<int32, Error> status = 2;` (permissive case)
+  //          NOT_FOUND if a signal is non-existant.
+  //          PERMISSION_DENIED
+  //              - if access is denied for a signal.
+  //          INVALID_ARGUMENT
+  //              - if the data type used in the request does not match
+  //                   the data type of the addressed signal
+  //              - if the published value is not accepted,
+  //                   e.g. if sending an unsupported enum value
+  //              - if the published value is out of the min/max range specified
   //
   //    - Databroker sends BatchActuateStreamRequest -> Provider shall return a BatchActuateStreamResponse,
   //        for every signal requested to indicate if the request was accepted or not.
   //        It is up to the provider to decide if the stream shall be closed,
   //        as of today Databroker will not react on the received error message.
-  //
-  //    - Provider sends ProvideSignalRequest -> Databroker returns ProvideSignalResponse
-  //        - strict case
-  //            Returns (GRPC error code) and closes the stream call.
-  //              NOT_FOUND if any of the signals are non-existant.
-  //              PERMISSION_DENIED if access is denied for any of the signals.
-  //              UNAUTHENTICATED if no credentials provided or credentials has expired
-  //              ALREADY_EXISTS if a provider already claimed the ownership of any signal.
-  //
-  //    - Provider sends ProviderErrorIndication
-  //        - strict case
-  //            Returns (GRPC error code) and closes the stream call.
-  //              ABORTED if provider has not claimed yet the signals
   //
   rpc OpenProviderStream(stream OpenProviderStreamRequest) returns (stream OpenProviderStreamResponse);
 
@@ -250,7 +213,6 @@ message SubscribeRequest {
   // Default (0) results in that only latest message is kept.
   // Maximum value supported is implementation dependent.
   uint32 buffer_size           = 2;
-  Filter filter                = 3;
 }
 
 message SubscribeResponse {
@@ -265,7 +227,6 @@ message SubscribeByIdRequest {
   // Default (0) results in that only latest message is kept.
   // Maximum value supported is implementation dependent.
   uint32 buffer_size        = 2;
-  Filter filter             = 3;
 }
 
 message SubscribeByIdResponse {
@@ -311,12 +272,12 @@ message PublishValueResponse {
 }
 
 message PublishValuesRequest {
-  uint32 request_id                 = 1; /// Unique request id for the stream that can be used to match the corresponding response.
+  int32 request_id                 = 1; /// Unique request id for the stream that can be used to identify the response.
   map<int32, Datapoint> data_points = 2;
 }
 
 message PublishValuesResponse {
-  uint32 request_id        = 1; /// Unique request id for the stream that can be used to match the corresponding request.
+  int32 request_id         = 1;
   map<int32, Error> status = 2;
 }
 
@@ -325,13 +286,6 @@ message ProvideActuationRequest {
 }
 
 message ProvideActuationResponse {
-}
-
-message ProvideSignalRequest {
-  map<int32, SampleInterval> signals_sample_intervals = 1;
-}
-
-message ProvideSignalResponse {
 }
 
 message BatchActuateStreamRequest {
@@ -344,36 +298,6 @@ message BatchActuateStreamResponse {
   Error error = 2;
 }
 
-message UpdateFilterRequest {
-  uint32 request_id                 = 1; /// Unique request id for the stream that can be used to match the corresponding response.
-  // Databroker sends filters to provider.
-  // In case provider restarts, databroker will send local filters stored
-  // to continue the provider sending same signals with same filter.
-  // Filter value could be None, meaning all subscriptions were removed for that SignalId
-  map<int32, Filter> filters_update = 2;
-}
-
-// Only returned if there is a filter error on provider side
-message UpdateFilterResponse {
-  uint32 request_id         = 1; /// Unique request id for the stream that can be used to match the corresponding request.
-  FilterError filter_error  = 2;
-}
-
-// Send to indicate an error on provider side
-message ProviderErrorIndication {
-  ProviderError provider_error = 1;
-}
-
-message GetProviderValueRequest {
-  uint32 request_id         = 1; /// Unique request id for the stream that can be used to match the corresponding response.
-  repeated int32 signal_ids = 2;
-}
-
-message GetProviderValueResponse {
-  uint32 request_id             = 1; /// Unique request id for the stream that can be used to match the corresponding request.
-  map<int32, Datapoint> entries = 2;
-}
-
 message OpenProviderStreamRequest {
   oneof action {
     // Inform server of an actuator this provider provides.
@@ -383,14 +307,6 @@ message OpenProviderStreamRequest {
     // Sent to acknowledge the acceptance of a batch actuate
     // request.
     BatchActuateStreamResponse batch_actuate_stream_response = 3;
-    // Inform server of a signal this provider provides.
-    ProvideSignalRequest provide_signal_request              = 4;
-    // Update filter response
-    UpdateFilterResponse update_filter_response              = 5;
-    // GetValue response
-    GetProviderValueResponse get_provider_value_response     = 6;
-    // Indication of error on provider side
-    ProviderErrorIndication provider_error_indication        = 7;
   }
 }
 
@@ -402,12 +318,6 @@ message OpenProviderStreamResponse {
     PublishValuesResponse publish_values_response          = 2;
     // Send a batch actuate request to a provider.
     BatchActuateStreamRequest batch_actuate_stream_request = 3;
-    // Response to a provide sensor request.
-    ProvideSignalResponse provide_signal_response          = 4;
-    // Filter request
-    UpdateFilterRequest update_filter_request              = 5;
-    // GetValue request from client forwarded to provider
-    GetProviderValueRequest get_provider_value_request     = 6;
   }
 }
 

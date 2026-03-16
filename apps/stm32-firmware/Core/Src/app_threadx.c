@@ -25,6 +25,11 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "Sensors/sensors.h"
+#include "SEGGER_SYSVIEW.h"
+
+/* Provided by SEGGER_SYSVIEW_ThreadX.c */
+extern void sysview_register_thread(TX_THREAD *thread);
+extern TX_THREAD _tx_timer_thread;
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -94,6 +99,9 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   /* USER CODE END App_ThreadX_MEM_POOL */
 
   /* USER CODE BEGIN App_ThreadX_Init */
+    // Initialize SEGGER SystemView for thread profiling
+    SEGGER_SYSVIEW_Conf();
+    
     // Initialize global command structure
     g_vehicle_command.driving_mode = 0;
     g_vehicle_command.gear = 3;  // Default to Drive
@@ -184,6 +192,15 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   if (status != TX_SUCCESS) {
       return TX_THREAD_ERROR;
   }
+
+  /* Register all threads with SEGGER SystemView for detailed profiling */
+  sysview_register_thread(&battery_thread);
+  sysview_register_thread(&communication_thread);
+  sysview_register_thread(&control_thread);
+  sysview_register_thread(&sensors_proc_thread);
+  sysview_register_thread(&speed_thread);
+  sysview_register_thread(&_tx_timer_thread);
+
   /* USER CODE END App_ThreadX_Init */
 
   return ret;
