@@ -16,6 +16,13 @@ The **hailo-pci** recipe is necesserary but it has a problem. Below is a fix and
 
 ## Common Problems
 
+### License Problem
+
+Theres a license problem in the **hailo-firmware** recipe.
+For this edit the original recipe or make a bbappend file with ```LICENSE = "CLOSED"```
+
+### Overlap Problem
+
 Theres an overlap problem with the **hailo-pci** and **linux-raspberrypi_6.12.bb** recipes.
 They try to add files with the same name to the same directorie resulting in an error.
 
