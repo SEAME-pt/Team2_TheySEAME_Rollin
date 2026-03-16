@@ -1,6 +1,6 @@
 #include "ActuatorDecorator.hpp"
 
-ActuatorDecorator::ActuatorDecorator(IActuator *car) : _car(car) {}
+ActuatorDecorator::ActuatorDecorator(CarActuator *car) : _car(car) {}
 
 ActuatorDecorator::~ActuatorDecorator() {
 	delete _car;
@@ -24,4 +24,8 @@ void ActuatorDecorator::brake() {
 
 short ActuatorDecorator::getGear() const {
 	return (_car->getGear());
+}
+
+void ActuatorDecorator::setCruiseControl(const bool flag, const int targetSpeed) {
+	_car->setCruiseControl(flag, targetSpeed);
 }

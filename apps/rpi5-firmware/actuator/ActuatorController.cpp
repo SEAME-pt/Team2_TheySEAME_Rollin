@@ -1,7 +1,7 @@
 #include "ActuatorController.hpp"
 #include <iostream>
 
-ActuatorController::ActuatorController(IActuator *car, RemoteControl &remote) : _car(car), _subject(remote) {}
+ActuatorController::ActuatorController(CarActuator *car, RemoteControl &remote) : _car(car), _subject(remote) {}
 
 ActuatorController::~ActuatorController() {}
 

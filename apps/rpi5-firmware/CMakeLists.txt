@@ -7,29 +7,19 @@ set(RPI_BIN_DIR ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(SOURCES
 	main.cpp
-	IActuator.hpp
-	ActuatorCAN.hpp
-	ActuatorCAN.cpp
-	ActuatorKuksa.hpp
-	ActuatorKuksa.cpp
-	ActuatorController.cpp
-	ActuatorController.hpp
-	ActuatorDecorator.cpp
-	ActuatorDecorator.hpp
-	ActuatorKuksa.cpp
-	ActuatorKuksa.hpp
 )
 
-include_directories(PUBLIC comms mode_manager/remote middleware)
+include_directories(comms mode_manager/remote middleware)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/../../libs/libkuksa ${CMAKE_BINARY_DIR}/libkuksa)
 add_subdirectory(mode_manager)
 add_subdirectory(middleware)
+add_subdirectory(actuator)
 
 if(CMAKE_CROSSCOMPILING)
 	add_subdirectory(comms)
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
-	target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC comms mode socketcan middleware kuksa)
+	target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC comms mode socketcan middleware kuksa actuator)
 	install(TARGETS CarControl DESTINATION ${RPI_BIN_DIR})
 else()
 	if(BUILD_TESTS)

@@ -29,7 +29,7 @@ int main() {
 	Evdev evdev("/dev/input/event6");
 	RemoteControl remote(evdev);
 	CAN can("can0", 500, 0, 0);
-	IActuator *car = new ActuatorKuksa(
+	CarActuator *car = new ActuatorKuksa(
 		new ActuatorCAN(can, remote)
 	);
 	ActuatorController ctrl(car, remote);

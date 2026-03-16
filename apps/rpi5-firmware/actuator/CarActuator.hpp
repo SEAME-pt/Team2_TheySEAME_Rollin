@@ -9,16 +9,16 @@ enum GearState {
 };
 
 /**
- * @interface IActuator
- * @brief IActuator interface
+ * @interface CarActuator
+ * @brief CarActuator interface
  *
- * The IActuator interface defines the contract to create a middleware 
- * between software and hardware 
+ * The CarActuator interface defines the contract to create a middleware 
+ * between software and hardware in a Car
  */
-class IActuator {
+class CarActuator {
 public:
 
-	virtual ~IActuator() {};
+	virtual ~CarActuator() {};
 
 	/**
 	 * @brief Set Car Throttle
@@ -60,4 +60,6 @@ public:
 	 * Get the current Gear in the Car
 	 */
 	virtual short getGear() const = 0;
+
+	virtual void setCruiseControl(const bool flag, const int targetSpeed) = 0;
 };

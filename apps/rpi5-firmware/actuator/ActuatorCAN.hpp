@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RemoteControl.hpp"
-#include "IActuator.hpp"
+#include "CarActuator.hpp"
 #include "ICAN.hpp"
 
 /// ID for the different CAN frames
@@ -11,6 +11,7 @@ enum CAN_ID {
 	STEERING = 0x102,
 	BRAKE = 0x103,
 	DRIVING_MODE = 0x104,
+	CRUISE_CONTROL = 0x212,
 };
 
 /**
@@ -20,7 +21,7 @@ enum CAN_ID {
  * The ActuatorCAN encapsulates the CAN communication between software and hardware
  * It implements IActuator interface
  */
-class ActuatorCAN : public IActuator {
+class ActuatorCAN : public CarActuator {
 public:
 
 	ActuatorCAN(ICAN &can, RemoteControl &remote);
@@ -32,17 +33,9 @@ public:
 	void setGear(const short gear);
 	void brake();
 	short getGear() const;
-
-	/**
-	 * Implmentation of interface Observer
-	 *
-	 * \copydoc Observer::update
-	 */
-	void update(Events event);
+	void setCruiseControl(const bool flag, const int targetSpeed);
 
 private:
-	int processThrottle(const int rawThrottle);
-	int processSteering(const int rawSteering);
 	ICAN &_can;
 	RemoteControl &_subject;
 	short _gear;

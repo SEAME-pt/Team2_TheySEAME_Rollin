@@ -1,6 +1,6 @@
 #include "ActuatorKuksa.hpp"
 
-ActuatorKuksa::ActuatorKuksa(IActuator *car) : ActuatorDecorator(car) {}
+ActuatorKuksa::ActuatorKuksa(CarActuator *car) : ActuatorDecorator(car) {}
 
 ActuatorKuksa::~ActuatorKuksa() {}
 
@@ -17,4 +17,10 @@ void ActuatorKuksa::setSteering(const int steering) {
 void ActuatorKuksa::setGear(const short gear) {
 	ActuatorDecorator::setGear(gear);
 	_kuksa.sendValueToKuksa("Vehicle.Control.Gear.Value", (uint8_t)gear);
+}
+
+void ActuatorKuksa::setCruiseControl(const bool flag, const int targetSpeed) {
+	ActuatorDecorator::setCruiseControl(flag, targetSpeed);
+	_kuksa.sendValueToKuksa("Vehicle.ADAS.CruiseControl.Enabled", (bool)flag);
+	_kuksa.sendValueToKuksa("Vehicle.ADAS.CruiseControl.TargetSpeed", (float)targetSpeed);
 }

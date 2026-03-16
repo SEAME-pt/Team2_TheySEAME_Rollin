@@ -10,14 +10,6 @@ ActuatorCAN::~ActuatorCAN() {
 	std::cout << "CarCAN destructor" << std::endl;
 }
 
-int ActuatorCAN::processThrottle(const int rawThrottle) {
-	return ((rawThrottle - 127) / 1.27);
-}
-
-int ActuatorCAN::processSteering(const int rawSteering) {
-	return ((rawSteering - 127) / 127);
-}
-
 void ActuatorCAN::setGear(const short gear) {
 	uint8_t data[1];
 
@@ -57,3 +49,11 @@ void ActuatorCAN::brake() {
 }
 
 short ActuatorCAN::getGear() const { return (_gear); }
+
+void ActuatorCAN::setCruiseControl(const bool flag, const int targetSpeed) {
+	uint8_t data[2];
+
+	data[0] = flag;
+	data[1] = targetSpeed;
+	_can.sendFrame(CRUISE_CONTROL, data, sizeof(data));
+}
