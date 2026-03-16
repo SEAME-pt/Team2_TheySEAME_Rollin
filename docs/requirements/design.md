@@ -404,8 +404,6 @@ Status: draft
 
 The PID controller shall implement integral anti-windup by suspending the accumulation of the integral term whenever the controller output is saturated (i.e., clamped at 0% or 100%) and the sign of the error would further increase the magnitude of the integrator.
 
-Rationale: Without anti-windup, the integrator continues to accumulate during saturation, causing a large overshoot or delayed response when the system leaves saturation.
-
 Covers:
 - `feat~cruise-control~1`
 
@@ -430,7 +428,7 @@ Needs: impl, itest
 
 Status: proposed
 
-The cruise control system shall only allow activation if all of the following conditions are simultaneously satisfied: vehicle speed is within the valid range [30, 180] hm/h, the brake pedal and accelerator pedal are not actuated, and no active fault codes related to the throttle actuator, vehicle speed sensor, or cruise-control communication bus are present.
+The cruise control system shall only allow activation if all of the following conditions are simultaneously satisfied: vehicle speed is within the valid range [30, 180] hm/h, the brake pedal and accelerator pedal are not actuated, and no active fault codes related to the throttle actuator, gear in driving mode, vehicle speed sensor, or cruise-control communication bus are present.
 
 Covers:
 - `feat~cruise-control~1`
@@ -457,7 +455,7 @@ Needs: impl, itest
 
 Status: proposed
 
-If the driver actuates the `+` cruise control command while cruise control is active, the system shall increase the active target speed by 1 km/h for each command actuation.
+If the driver actuates the `+` cruise control command while cruise control is active, the system shall increase the active target speed by 1 hm/h for each command actuation.
 
 Covers:
 - `feat~cruise-control~1`
@@ -470,20 +468,7 @@ Needs: impl, itest
 
 Status: proposed
 
-If the driver actuates the `-` cruise control command while cruise control is active, the system shall decrease the active target speed by 1 km/h for each command actuation.
-
-Covers:
-- `feat~cruise-control~1`
-
-Needs: impl, itest
-```
-
-```
-`dsn~cruise-control-speed-adjustment-without-deactivation~1`
-
-Status: proposed
-
-Actuation of the `+` or `-` cruise control command while cruise control is active shall modify the active target speed and shall not deactivate cruise control.
+If the driver actuates the `-` cruise control command while cruise control is active, the system shall decrease the active target speed by 1 hm/h for each command actuation.
 
 Covers:
 - `feat~cruise-control~1`
