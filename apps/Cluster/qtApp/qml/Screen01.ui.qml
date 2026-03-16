@@ -113,6 +113,17 @@ Rectangle {
             fillMode: Image.PreserveAspectFit
         }
 
+        Image {
+            id: cruiseIndicator
+            x: 389
+            y: 110
+            width: 80
+            height: 36
+            source: "images/CC.png"
+            fillMode: Image.PreserveAspectFit
+            visible: systemInfo ? systemInfo.cruiseActive : false
+        }
+
         Rectangle {
             id: maxBattery
             x: 1012
