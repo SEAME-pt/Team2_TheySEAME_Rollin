@@ -29,9 +29,10 @@ int main() {
 	Evdev evdev("/dev/input/event6");
 	RemoteControl remote(evdev);
 	CAN can("can0", 500, 0, 0);
-	CarActuator *car = new ActuatorKuksa(
-		new ActuatorCAN(can, remote)
-	);
+	CarActuator *car = new ActuatorCAN(can, remote);
+	//CarActuator *car = new ActuatorKuksa(
+	//	new ActuatorCAN(can, remote)
+	//);
 	ActuatorController ctrl(car, remote);
 
 	std::signal(SIGINT, signal_handler);

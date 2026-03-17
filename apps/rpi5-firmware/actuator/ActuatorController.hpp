@@ -18,4 +18,5 @@ private:
 	int processSteering(const int rawSteering);
 	CarActuator *_car;
 	RemoteControl &_subject;
+	int speed; // This is temporary until the Vehicle State class
 };

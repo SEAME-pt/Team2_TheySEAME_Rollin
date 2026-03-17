@@ -1,7 +1,10 @@
 #include "ActuatorController.hpp"
 #include <iostream>
 
-ActuatorController::ActuatorController(CarActuator *car, RemoteControl &remote) : _car(car), _subject(remote) {}
+ActuatorController::ActuatorController(CarActuator *car, RemoteControl &remote) : _car(car), _subject(remote) {
+	// This is temporary
+	speed = 30;
+}
 
 ActuatorController::~ActuatorController() {}
 
@@ -36,6 +39,14 @@ void ActuatorController::update(Events event) {
 			} else if (_subject.getkey(Keys::B)) {
 				_car->setGear(PARKING);
 			}
+			break;
+		case Events::CAR_CRUISE_CONTROL:
+			if (_subject.getkey(Keys::DpadY) == -1) {
+				_car->setCruiseControl(true, speed++);
+			} else if (_subject.getkey(Keys::DpadY) == 1) {
+				_car->setCruiseControl(true, speed--);
+			}
+			std::cout << "Cruise Control to " << speed << std::endl;
 			break;
 
 		default:
