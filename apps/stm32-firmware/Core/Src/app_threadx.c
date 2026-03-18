@@ -22,7 +22,6 @@
 #include "app_threadx.h"
 #include "Control/control_queue.h"
 #include "Sensors/sensors_queue.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "Sensors/sensors.h"
@@ -109,7 +108,8 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
     g_vehicle_command.throttle = 0;
     g_vehicle_command.steering_angle = 0;
     g_vehicle_command.command_valid = 0;
-    
+    g_vehicle_command.cruise_control_enabled = 0;
+    g_vehicle_command.cruise_control_target_speed = 0;
     // Initialize global vehicle data structure
     g_vehicle_data.battery_voltage = 0;
     g_vehicle_data.battery_percentage = 0.0f;

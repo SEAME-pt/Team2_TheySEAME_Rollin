@@ -1,13 +1,24 @@
 #include "control.h"
 #include "../Drivers/pca9685.h"
-#include "../Communication/comm.h"
-#include "cruise_control.h"
+#include "../Sensors/sensors.h"
 #include "control_queue.h"
 #include "../Sensors/sensors_queue.h"
+#include "cruise_control.h"
 #include <stdio.h>
 
 extern I2C_HandleTypeDef hi2c1;
 char control_uart_buf[128];
+
+/* Helper: safely snapshot global vehicle data with mutex protection */
+static int snapshot_vehicle_data(VehicleData_t *out) {
+    if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+        *out = g_vehicle_data;
+        tx_mutex_put(&g_vehicle_data_mutex);
+        return 1;  // Success
+    }
+    Debug_Print("[COMM] Failed to acquire vehicle data mutex\r\n");
+    return 0;  // Failure
+}
 
 void PCA9685_SetServoAngle(uint8_t channel, float angle) {
     // Implementation note: API documented in `control.h` (Doxygen comments live in header)
@@ -92,6 +103,7 @@ void Control_Thread_Entry(ULONG thread_input) {
     tx_thread_sleep(100);  // 1 second
     
     VehicleCommand_t local_cmd;
+    memset(&local_cmd, 0, sizeof(local_cmd));
     uint8_t last_mode = 0xFF;
     uint8_t last_gear = 0xFF;
     uint8_t last_throttle = 0xFF;
@@ -108,13 +120,16 @@ void Control_Thread_Entry(ULONG thread_input) {
     while(1) {
         VehicleCommand_t recv;
         memset(&recv, 0, sizeof(recv));
-        VehicleData_t vehicle_data;
-        memset(&vehicle_data, 0, sizeof(vehicle_data));
-        snapshot_vehicle_data(&vehicle_data);
-        UINT r = ControlQueue_Receive(&recv, cmd_wait_ticks);
-        if (local_cmd.cruise_control_enable) {
-            vehicle_data.cruise_control_active = cruise_control(local_cmd.cruise_control_target_speed, vehicle_data.vehicle_speed, 0.1f, local_cmd); // dt=100ms for PID    
+        VehicleData_t snapshot;
+        memset(&snapshot, 0, sizeof(snapshot));
+        if (!snapshot_vehicle_data(&snapshot)) {
+            Debug_Print("[CONTROL] No valid vehicle data for this loop\r\n");
         }
+        
+        if (local_cmd.cruise_control_enabled) {
+            Control_SetThrottle(cruise_control(local_cmd.cruise_control_target_speed, snapshot.vehicle_speed, 0.1), 3); // Ensure manual throttle is off when cruise control is active
+        }
+        UINT r = ControlQueue_Receive(&recv, cmd_wait_ticks);
         if (r == TX_SUCCESS) {
             // Got a command - reset timeout counter
             no_cmd_ticks = 0;
@@ -136,12 +151,11 @@ void Control_Thread_Entry(ULONG thread_input) {
                 g_vehicle_command = recv;
                 tx_mutex_put(&g_vehicle_command_mutex);
             }
-            
+
             local_cmd = recv;
 
-            if (local_cmd.command_valid && !vehicle_data.cruise_control_active) {
-                // Check if command changed (use small epsilon for float comparison)
-                const float VELOCITY_EPSILON = 0.01f;
+            if (local_cmd.command_valid) {
+                // Check if command changed
                 if (local_cmd.driving_mode != last_mode || 
                     local_cmd.gear != last_gear ||
                     local_cmd.throttle != last_throttle || 
@@ -150,7 +164,6 @@ void Control_Thread_Entry(ULONG thread_input) {
                     // Convert steering to normalized float
                     float steering_normalized = (float)local_cmd.steering_angle / 100.0f;
 
-                    // Apply commands
                     Control_SetSteering(steering_normalized);
                     Control_SetThrottle(local_cmd.throttle, local_cmd.gear);
 

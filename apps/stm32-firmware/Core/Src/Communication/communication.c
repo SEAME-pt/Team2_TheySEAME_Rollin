@@ -7,13 +7,19 @@
  */
 
 #include "comm.h"
+#include "mcp2515.h"
+#include "../Sensors/sensors.h"
+#include "main.h"
+#include "../Control/control_queue.h"
+#include "../Sensors/sensors_queue.h"
+#include <stdio.h>
+#include <string.h>
 
-
-// #ifdef COMM_DEBUG
-// extern void Debug_Print(const char *msg);
-// #else
-// #define Debug_Print(msg) ((void)0)
-// #endif
+#ifdef COMM_DEBUG
+extern void Debug_Print(const char *msg);
+#else
+#define Debug_Print(msg) ((void)0)
+#endif
 char comm_uart_buf[128];
 char rx_uart_buf[128];
 extern UART_HandleTypeDef huart1;
@@ -36,12 +42,14 @@ enum CAN_IDs {
     CAN_ID_CONTROLLER_COMBINED = 0x100,
     CAN_ID_THROTTLE            = 0x100,
     CAN_ID_GEAR                = 0x101,
+    CAN_ID_GEAR_DBC            = 0x105,
     CAN_ID_STEERING            = 0x102,
     CAN_ID_BRAKE               = 0x103,
+    CAN_ID_BRAKE_DBC           = 0x106,
     CAN_ID_DRIVING_MODE        = 0x104,
     CAN_ID_TX_SPEED            = 0x200,
     CAN_ID_TX_BATTERY          = 0x201,
-    CAN_ID_CRUISE_CONTROL      = 0x214,
+    CAN_ID_CRUISE_CONTROL      = 0x212,
 };
 
 static const uint32_t HEARTBEAT_MS = 1000; /* resend every 1s if no command seen */
@@ -49,8 +57,18 @@ static const uint32_t HEARTBEAT_MS = 1000; /* resend every 1s if no command seen
 /* Bus-off recovery counter (reset on successful TX) */
 static uint32_t busoff_count = 0;
 
+static uint8_t clamp_u8(uint16_t value, uint8_t max_value) {
+    return (uint8_t)((value > max_value) ? max_value : value);
+}
+
+static int8_t clamp_i8(int16_t value, int8_t min_value, int8_t max_value) {
+    if (value < min_value) return min_value;
+    if (value > max_value) return max_value;
+    return (int8_t)value;
+}
+
 /* Helper: safely snapshot global vehicle data with mutex protection */
-int snapshot_vehicle_data(VehicleData_t *out) {
+static int snapshot_vehicle_data(VehicleData_t *out) {
     if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
         *out = g_vehicle_data;
         tx_mutex_put(&g_vehicle_data_mutex);
@@ -128,8 +146,11 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
             Debug_Print(comm_uart_buf);
             updated = 1;
         } else if (dlc >= 1) {
-            /* Throttle-only message: byte0 = 0-100% */
-            uint8_t throttle = data[0] > 100 ? 100 : data[0];
+            /* Throttle-only message: supports 1-byte or 16-bit little-endian payload */
+            uint16_t throttle_raw = (dlc >= 2)
+                ? (uint16_t)data[0] | ((uint16_t)data[1] << 8)
+                : (uint16_t)data[0];
+            uint8_t throttle = clamp_u8(throttle_raw, 100);
             if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
                 g_vehicle_command.throttle = throttle;
                 g_vehicle_command.command_valid = 1;
@@ -144,7 +165,8 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
 
     /* Kuksa-style / per-message handling */
     switch (can_id) {
-        case CAN_ID_GEAR: /* Gear: 0=P,1=N,2=R,3=D */
+        case CAN_ID_GEAR:     /* Legacy Gear ID (0x101) */
+        case CAN_ID_GEAR_DBC: /* DBC Gear ID (0x105) */
             if (dlc >= 1) {
                 uint8_t gear = data[0];
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
@@ -159,10 +181,11 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
             }
             break;
 
-        case CAN_ID_STEERING: /* Steering: either 1-byte controller (-1/0/1) or Kuksa 8-byte */
+        case CAN_ID_STEERING: /* Steering: supports controller and DBC payload styles */
             if (dlc == 1) {
                 int8_t raw = (int8_t)data[0];
-                int8_t steering = raw * 100;
+                int16_t steering_scaled = (raw >= -1 && raw <= 1) ? (int16_t)raw * 100 : (int16_t)raw;
+                int8_t steering = clamp_i8(steering_scaled, -100, 100);
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
                     g_vehicle_command.steering_angle = steering;
                     g_vehicle_command.command_valid = 1;
@@ -171,20 +194,30 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
                 snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Steering=%d (raw=%d)\r\n", steering, raw);
                 Debug_Print(comm_uart_buf);
                 updated = 1;
-            } else if (dlc >= 8) {
-                int8_t steering = (int8_t)data[0];
+            } else if (dlc >= 2) {
+                int16_t raw16 = (int16_t)((uint16_t)data[0] | ((uint16_t)data[1] << 8));
+                int16_t steering_scaled = raw16;
+
+                /* DBC angle uses [-30..30] degrees; map to control scale [-100..100]. */
+                if (raw16 >= -30 && raw16 <= 30) {
+                    steering_scaled = (raw16 * 100) / 30;
+                }
+
+                int8_t steering = clamp_i8(steering_scaled, -100, 100);
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
                     g_vehicle_command.steering_angle = steering;
                     g_vehicle_command.command_valid = 1;
                     tx_mutex_put(&g_vehicle_command_mutex);
                 }
-                snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Steering=%d%%\r\n", steering);
+                snprintf(comm_uart_buf, sizeof(comm_uart_buf),
+                         "[CMD] Steering=%d%% (raw16=%d)\r\n", steering, raw16);
                 Debug_Print(comm_uart_buf);
                 updated = 1;
             }
             break;
 
-        case CAN_ID_BRAKE: /* Brake (logged only) */
+        case CAN_ID_BRAKE:     /* Legacy Brake ID (0x103) */
+        case CAN_ID_BRAKE_DBC: /* DBC Brake ID (0x106) */
             if (dlc >= 1) {
                 snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Brake=%d\r\n", data[0]);
                 Debug_Print(comm_uart_buf);
@@ -204,18 +237,19 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
                 updated = 1;
             }
             break;
-        case CAN_ID_CRUISE_CONTROL: /* Cruise control: byte0=enable(0/1), byte1=target speed in hm/h */
+            
+        case CAN_ID_CRUISE_CONTROL: /* Cruise control: byte0=enabled(0/1), byte1=target speed in hm/h */
             if (dlc >= 2) {
-                uint8_t enable = data[0] > 0 ? 1 : 0;
+                uint8_t enabled = data[0] > 0 ? 1 : 0;
                 uint8_t target_speed = data[1];
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                    g_vehicle_command.cruise_control_enable = enable;
-                    g_vehicle_command.cruise_control_target_speed = (float)target_speed / 36.0f; // convert hm/h to m/s
+                    g_vehicle_command.cruise_control_enabled = enabled;
+                    g_vehicle_command.cruise_control_target_speed = target_speed;
                     g_vehicle_command.command_valid = 1;
                     tx_mutex_put(&g_vehicle_command_mutex);
                 }
-                snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Cruise Control: %s, Target=%d hm/h\r\n",
-                         enable ? "ENABLED" : "DISABLED", target_speed);
+                snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Cruise Control: %s, Target=%u hm/h\r\n",
+                         enabled ? "ENABLED" : "DISABLED", target_speed);
                 Debug_Print(comm_uart_buf);
                 updated = 1;
             }
