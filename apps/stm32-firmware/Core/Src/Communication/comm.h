@@ -10,7 +10,12 @@
 #define COMM_H
 
 #include "main.h"
-
+#include "mcp2515.h"
+#include "../Sensors/sensors.h"
+#include "../Control/control_queue.h"
+#include "../Sensors/sensors_queue.h"
+#include <stdio.h>
+#include <string.h>
 /**
  * @brief Communication thread entry and main loop
  *
@@ -34,4 +39,5 @@
  */
 void Communication_Thread_Entry(ULONG thread_input);
 
+int snapshot_vehicle_data(VehicleData_t *out);
 #endif /* COMM_H */

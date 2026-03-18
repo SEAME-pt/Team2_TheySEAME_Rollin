@@ -21,6 +21,7 @@ typedef struct {
     float battery_current;         /**< Battery current in mA */
     float vehicle_speed;           /**< Vehicle speed in meters per second */
     uint8_t data_valid;            /**< Flag: 1 if data is valid, 0 if not updated yet */
+    uint8_t cruise_control_active;     /**< Flag: 1 if cruise control is active, 0 otherwise */
 } VehicleData_t;
 
 /**
@@ -36,8 +37,9 @@ typedef struct {
     uint8_t throttle;           /**< Throttle value 0-100 */
     int8_t steering_angle;      /**< Steering -100..+100 representing -1.0..+1.0 */
     float current_velocity;     /**< Current vehicle velocity in m/s (from speed sensor) */
-    uint8_t command_valid;  
-    bool cruise_control_active; /**< Flag: 1 if cruise control is active, 0 otherwise */
+    uint8_t command_valid;      /**< Flag: 1 if command received, 0 otherwise */
+    bool cruise_control_enable; /**< Flag: 1 if cruise control is enabled, 0 otherwise */
+    float cruise_control_target_speed; /**< Target speed for cruise control in m/s */
 } VehicleCommand_t;
 
 /**

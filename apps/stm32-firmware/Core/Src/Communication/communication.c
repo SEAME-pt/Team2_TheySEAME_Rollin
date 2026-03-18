@@ -7,18 +7,13 @@
  */
 
 #include "comm.h"
-#include "mcp2515.h"
-#include "../Sensors/sensors.h"
-#include "main.h"
-#include "../Control/control_queue.h"
-#include <stdio.h>
-#include <string.h>
 
-#ifdef COMM_DEBUG
-extern void Debug_Print(const char *msg);
-#else
-#define Debug_Print(msg) ((void)0)
-#endif
+
+// #ifdef COMM_DEBUG
+// extern void Debug_Print(const char *msg);
+// #else
+// #define Debug_Print(msg) ((void)0)
+// #endif
 char comm_uart_buf[128];
 char rx_uart_buf[128];
 extern UART_HandleTypeDef huart1;
@@ -46,6 +41,7 @@ enum CAN_IDs {
     CAN_ID_DRIVING_MODE        = 0x104,
     CAN_ID_TX_SPEED            = 0x200,
     CAN_ID_TX_BATTERY          = 0x201,
+    CAN_ID_CRUISE_CONTROL      = 0x214,
 };
 
 static const uint32_t HEARTBEAT_MS = 1000; /* resend every 1s if no command seen */
@@ -54,7 +50,7 @@ static const uint32_t HEARTBEAT_MS = 1000; /* resend every 1s if no command seen
 static uint32_t busoff_count = 0;
 
 /* Helper: safely snapshot global vehicle data with mutex protection */
-static int snapshot_vehicle_data(VehicleData_t *out) {
+int snapshot_vehicle_data(VehicleData_t *out) {
     if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
         *out = g_vehicle_data;
         tx_mutex_put(&g_vehicle_data_mutex);
@@ -208,7 +204,22 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
                 updated = 1;
             }
             break;
-
+        case CAN_ID_CRUISE_CONTROL: /* Cruise control: byte0=enable(0/1), byte1=target speed in hm/h */
+            if (dlc >= 2) {
+                uint8_t enable = data[0] > 0 ? 1 : 0;
+                uint8_t target_speed = data[1];
+                if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                    g_vehicle_command.cruise_control_enable = enable;
+                    g_vehicle_command.cruise_control_target_speed = (float)target_speed / 36.0f; // convert hm/h to m/s
+                    g_vehicle_command.command_valid = 1;
+                    tx_mutex_put(&g_vehicle_command_mutex);
+                }
+                snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Cruise Control: %s, Target=%d hm/h\r\n",
+                         enable ? "ENABLED" : "DISABLED", target_speed);
+                Debug_Print(comm_uart_buf);
+                updated = 1;
+            }
+            break;
         default:
             /* Unknown CAN ID - ignore */
             break;

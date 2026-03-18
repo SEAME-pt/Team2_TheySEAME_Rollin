@@ -57,16 +57,16 @@ bool cruise_control(float target_speed, float current_speed, float dt, VehicleCo
     uint16_t dir_high = 0;      // Swapped base values to match motor wiring
     uint16_t dir_low = 4095;
     
-    char buf[128];
-    snprintf(buf, sizeof(buf), "%d.%02d%%\r\n", (int)current_speed, (int)((current_speed - (int)current_speed) * 100));
-    Debug_Print("[CRUISE CONTROL](current_speed): ");
-    Debug_Print(buf);
-    snprintf(buf, sizeof(buf), "%d.%02d%%\r\n", (int)target_speed, (int)((target_speed - (int)target_speed) * 100));
-    Debug_Print("[CRUISE CONTROL](target_speed): ");
-    Debug_Print(buf);
-    snprintf(buf, sizeof(buf), "%d.%02d%%\r\n", (int)throttle, (int)((throttle - (int)throttle) * 100));
-    Debug_Print("[CRUISE CONTROL](throttle): ");
-    Debug_Print(buf);
+    // char buf[128];
+    // snprintf(buf, sizeof(buf), "%d.%02d%%\r\n", (int)current_speed, (int)((current_speed - (int)current_speed) * 100));
+    // Debug_Print("[CRUISE CONTROL](current_speed): ");
+    // Debug_Print(buf);
+    // snprintf(buf, sizeof(buf), "%d.%02d%%\r\n", (int)target_speed, (int)((target_speed - (int)target_speed) * 100));
+    // Debug_Print("[CRUISE CONTROL](target_speed): ");
+    // Debug_Print(buf);
+    // snprintf(buf, sizeof(buf), "%d.%02d%%\r\n", (int)throttle, (int)((throttle - (int)throttle) * 100));
+    // Debug_Print("[CRUISE CONTROL](throttle): ");
+    // Debug_Print(buf);
 
     // Motor 1 (channels 0,1,2,3)
     PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 0, 0, speed_pwm);  // M1 speed

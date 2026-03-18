@@ -1,6 +1,6 @@
 #include "control.h"
 #include "../Drivers/pca9685.h"
-#include "../Sensors/sensors.h"
+#include "../Communication/comm.h"
 #include "cruise_control.h"
 #include "control_queue.h"
 #include "../Sensors/sensors_queue.h"
@@ -107,7 +107,14 @@ void Control_Thread_Entry(ULONG thread_input) {
 
     while(1) {
         VehicleCommand_t recv;
+        memset(&recv, 0, sizeof(recv));
+        VehicleData_t vehicle_data;
+        memset(&vehicle_data, 0, sizeof(vehicle_data));
+        snapshot_vehicle_data(&vehicle_data);
         UINT r = ControlQueue_Receive(&recv, cmd_wait_ticks);
+        if (local_cmd.cruise_control_enable) {
+            vehicle_data.cruise_control_active = cruise_control(local_cmd.cruise_control_target_speed, vehicle_data.vehicle_speed, 0.1f, local_cmd); // dt=100ms for PID    
+        }
         if (r == TX_SUCCESS) {
             // Got a command - reset timeout counter
             no_cmd_ticks = 0;
@@ -131,14 +138,8 @@ void Control_Thread_Entry(ULONG thread_input) {
             }
             
             local_cmd = recv;
-            local_cmd.cruise_control_active = true; // Force cruise control active for testing
-            if (local_cmd.cruise_control_active) {
-                
-               local_cmd.cruise_control_active = cruise_control(local_cmd.desired_velocity, local_cmd.current_velocity, 0.1f, local_cmd); // dt=100ms for PID
-                
-            }
 
-            if (local_cmd.command_valid && !local_cmd.cruise_control_active) {
+            if (local_cmd.command_valid && !vehicle_data.cruise_control_active) {
                 // Check if command changed (use small epsilon for float comparison)
                 const float VELOCITY_EPSILON = 0.01f;
                 if (local_cmd.driving_mode != last_mode || 
