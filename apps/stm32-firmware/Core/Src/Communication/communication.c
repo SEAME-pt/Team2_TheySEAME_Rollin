@@ -1,15 +1,14 @@
 /**
  ******************************************************************************
  * @file    communication.c
- * @brief   CAN Communication Thread - Reads sensor queue and transmits
- * @note    This module reads sensor samples directly from the sensors queue
+ * @brief   CAN Communication Thread - Reads global vehicle data and transmits
+ * @note    This module is independent from sensors, reads from global variables
  ******************************************************************************
  */
 
 #include "comm.h"
 #include "mcp2515.h"
 #include "../Sensors/sensors.h"
-#include "../Sensors/sensors_queue.h"
 #include "main.h"
 #include "../Control/control_queue.h"
 #include <stdio.h>
@@ -310,7 +309,6 @@ void Communication_Thread_Entry(ULONG thread_input) {
         if (have_last_cmd) {
             uint32_t now = HAL_GetTick();
             if ((now - last_cmd_ts) > HEARTBEAT_MS) {
-                last_cmd.current_velocity = vehicle_speed;  // Update with current speed
                 if (ControlQueue_TrySend(&last_cmd)) {
                     Debug_Print("[COMM] Heartbeat: re-sent last command to Control queue\r\n");
                 } else {

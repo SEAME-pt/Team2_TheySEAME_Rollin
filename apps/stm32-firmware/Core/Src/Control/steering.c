@@ -5,7 +5,6 @@
 #include "control_queue.h"
 #include "../Sensors/sensors_queue.h"
 #include <stdio.h>
-#include <math.h>
 
 extern I2C_HandleTypeDef hi2c1;
 char control_uart_buf[128];
@@ -33,17 +32,9 @@ void Control_SetSteering(float steering_normalized) {
     PCA9685_SetServoAngle(0, angle);  // Channel 0 for steering servo
 }
 
-void Control_SetThrottle(float desired_velocity_ms, uint8_t gear) {
-    // Convert velocity (m/s) to throttle percentage (0-100%)
-    // MAX_VELOCITY_MS is 2.0 m/s from command specification
-    const float MAX_VELOCITY_MS = 2.0f;
-    float throttle_percent_f = (desired_velocity_ms / MAX_VELOCITY_MS) * 100.0f;
-    
-    // Clamp to 0-100%
-    if (throttle_percent_f < 0.0f) throttle_percent_f = 0.0f;
-    if (throttle_percent_f > 100.0f) throttle_percent_f = 100.0f;
-    
-    uint8_t throttle_percent = (uint8_t)throttle_percent_f;
+void Control_SetThrottle(uint8_t throttle_percent, uint8_t gear) {
+    // Clamp throttle to 0-100%
+    if (throttle_percent > 100) throttle_percent = 100;
     
     // Convert percentage to PWM value (0-4095)
     uint16_t speed_pwm = (uint16_t)((throttle_percent * 4095) / 100);
@@ -103,8 +94,7 @@ void Control_Thread_Entry(ULONG thread_input) {
     VehicleCommand_t local_cmd;
     uint8_t last_mode = 0xFF;
     uint8_t last_gear = 0xFF;
-    float last_desired_velocity = -1.0f;
-    float last_current_velocity = -1.0f;
+    uint8_t last_throttle = 0xFF;
     int8_t last_steering = 0x7F;
 
     const ULONG cmd_wait_ticks = 10; // 100ms wait for command before timeout handling
@@ -153,8 +143,7 @@ void Control_Thread_Entry(ULONG thread_input) {
                 const float VELOCITY_EPSILON = 0.01f;
                 if (local_cmd.driving_mode != last_mode || 
                     local_cmd.gear != last_gear ||
-                    fabsf(local_cmd.desired_velocity - last_desired_velocity) > VELOCITY_EPSILON || 
-                    fabsf(local_cmd.current_velocity - last_current_velocity) > VELOCITY_EPSILON ||
+                    local_cmd.throttle != last_throttle || 
                     local_cmd.steering_angle != last_steering) {
 
                     // Convert steering to normalized float
@@ -162,27 +151,23 @@ void Control_Thread_Entry(ULONG thread_input) {
 
                     // Apply commands
                     Control_SetSteering(steering_normalized);
-                    Control_SetThrottle(local_cmd.desired_velocity, local_cmd.gear);
+                    Control_SetThrottle(local_cmd.throttle, local_cmd.gear);
 
-                    // Print status with velocity information
+                    // Print status
                     const char* gear_names[] = {"P", "N", "R", "D"};
                     int steering_int = (int)(steering_normalized * 1000);
-                    int desired_vel_int = (int)(local_cmd.desired_velocity * 1000);
-                    int current_vel_int = (int)(local_cmd.current_velocity * 1000);
                     snprintf(control_uart_buf, sizeof(control_uart_buf),
-                            "[CONTROL] Mode=%d Gear=%s | Vel: %d.%03d→%d.%03d m/s | Steer=%d.%03d\r\n",
+                            "[CONTROL] Mode=%d Gear=%s | Throttle=%d%% | Steering=%d.%03d\r\n",
                             local_cmd.driving_mode, 
                             local_cmd.gear <= 3 ? gear_names[local_cmd.gear] : "?",
-                            current_vel_int/1000, abs(current_vel_int%1000),
-                            desired_vel_int/1000, abs(desired_vel_int%1000),
+                            local_cmd.throttle, 
                             steering_int/1000, abs(steering_int%1000));
                     Debug_Print(control_uart_buf);
 
                     // Update last values
                     last_mode = local_cmd.driving_mode;
                     last_gear = local_cmd.gear;
-                    last_desired_velocity = local_cmd.desired_velocity;
-                    last_current_velocity = local_cmd.current_velocity;
+                    last_throttle = local_cmd.throttle;
                     last_steering = local_cmd.steering_angle;
                 }
             }

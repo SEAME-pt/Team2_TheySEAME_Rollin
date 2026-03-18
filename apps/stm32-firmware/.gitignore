@@ -13,7 +13,6 @@ Debug/*.list
 .settings
 *.launch
 Core/Tests/build/*
-tests/build/
 *.SVDat
 *.bak
 Debug/build.log
