@@ -28,6 +28,7 @@ void ActuatorCAN::setThrottle(const int throttle) {
 	} else {
 		setGear(REVERSE);
 	}
+	setCruiseControl(false, 0);
 	data[0] = abs(throttle);
 	_can.sendFrame(THROTTLE, data, sizeof(data));
 	std::cout << "Changed Throttle" << std::endl;
@@ -56,4 +57,5 @@ void ActuatorCAN::setCruiseControl(const bool flag, const int targetSpeed) {
 	data[0] = flag;
 	data[1] = targetSpeed;
 	_can.sendFrame(CRUISE_CONTROL, data, sizeof(data));
+	std::cout << "Set Cruise Control to " << flag << std::endl;
 }
