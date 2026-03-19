@@ -3,10 +3,6 @@
 systemInfo::systemInfo(QObject *parent)
     : QObject(parent)
 {
-<<<<<<< HEAD
-    
-=======
->>>>>>> 92140775 (Release/1.0.0 (#335))
 }
 
 systemInfo::~systemInfo()
@@ -41,33 +37,36 @@ int systemInfo::getSpeed() const
     return _speed;
 }
 
+void systemInfo::setCruiseActive(bool active)
+{
+    if (_cruiseActive == active) return;
+    _cruiseActive = active;
+    emit cruiseActiveUpdated(active);
+}
+
+bool systemInfo::getCruiseActive() const
+{
+    return _cruiseActive;
+}
+
+void systemInfo::setLeftCarDistance(int distance)
+{
+    if (_leftCarDistance == distance) return;
+    _leftCarDistance = distance;
+    emit leftCarDistanceUpdated(distance);
+}
+
+int systemInfo::getLeftCarDistance() const
+{
+    return _leftCarDistance;
+}
+
 bool systemInfo::start()
 {
     if (_running) return true;
     _running = true;
 
     _thread = std::thread([this]() {
-<<<<<<< HEAD
-
-        std::thread subThread([this]() {
-            if (!_kuksa.subscribeFromKuksa()) {
-                qWarning() << "Failed to subscribe to Kuksa";
-            }
-        });
-
-        while (_running) {
-            setSpeed(static_cast<int>(_kuksa.getSpeed()));
-            setBattery(static_cast<int>(_kuksa.getBattery()));
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
-
-        subThread.join();
-    });
-
-    return true;
-}
-=======
         this->updateFromKuksa();
     });
 
@@ -145,4 +144,3 @@ bool systemInfo::valueToInt(const kuksa::val::v2::Value& v, int& out)
     }
 }
 
->>>>>>> 92140775 (Release/1.0.0 (#335))

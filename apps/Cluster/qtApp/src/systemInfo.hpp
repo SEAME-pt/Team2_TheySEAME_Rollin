@@ -11,11 +11,7 @@
 #include <atomic>
 #include "../../../middleware/kuksa/val/v2/val.grpc.pb.h"
 #include "../../../middleware/kuksa/val/v2/types.pb.h"
-<<<<<<< HEAD
 #include "../middleware/kuksa/val/v2/KuksaLib.hpp"
-=======
-
->>>>>>> 92140775 (Release/1.0.0 (#335))
 
 using kuksa::val::v2::VAL;
 
@@ -24,6 +20,8 @@ class systemInfo : public QObject
     Q_OBJECT
     Q_PROPERTY(int battery READ getBattery NOTIFY batteryUpdated)
     Q_PROPERTY(int speed READ getSpeed NOTIFY speedUpdated)
+    Q_PROPERTY(bool cruiseActive READ getCruiseActive NOTIFY cruiseActiveUpdated)
+    Q_PROPERTY(int leftCarDistance READ getLeftCarDistance NOTIFY leftCarDistanceUpdated)
 
 public:
     /**
@@ -31,11 +29,6 @@ public:
      * @param parent Optional parent QObject
      *
      * Requirement traceability:
-<<<<<<< HEAD
-=======
-     * [impl->dsn~cluster-battery~1]
-     * [impl->dsn~cluster-speed~1]
->>>>>>> 92140775 (Release/1.0.0 (#335))
      *
      */
     explicit systemInfo(QObject *parent = nullptr);
@@ -49,11 +42,6 @@ public:
      * @brief Initializes the data collection thread and starts listening for updates from Kuksa.
      *
      * Requirement traceability:
-<<<<<<< HEAD
-=======
-     * [impl->dsn~cluster-battery~1]
-     * [impl->dsn~cluster-speed~1]
->>>>>>> 92140775 (Release/1.0.0 (#335))
      *
      * @return true if started successfully, false otherwise
      */
@@ -65,11 +53,6 @@ public:
      * @param out Output integer
      *
      * Requirement traceability:
-<<<<<<< HEAD
-=======
-     * [impl->dsn~cluster-battery~1]
-     * [impl->dsn~cluster-speed~1]
->>>>>>> 92140775 (Release/1.0.0 (#335))
      *
      * @return true if conversion is successful
      */
@@ -80,10 +63,6 @@ public:
      * @param battery Battery value
      *
      * Requirement traceability:
-<<<<<<< HEAD
-=======
-     * [impl->dsn~cluster-battery~1]
->>>>>>> 92140775 (Release/1.0.0 (#335))
      *
      */
     void setBattery(int battery);
@@ -92,10 +71,6 @@ public:
      * @brief Returns the current battery value.
      *
      * Requirement traceability:
-<<<<<<< HEAD
-=======
-     * [impl->dsn~cluster-battery~1]
->>>>>>> 92140775 (Release/1.0.0 (#335))
      *
      * @return int battery value
      */
@@ -106,10 +81,6 @@ public:
      * @param speed Speed value
      *
      * Requirement traceability:
-<<<<<<< HEAD
-=======
-     * [impl->dsn~cluster-speed~1]
->>>>>>> 92140775 (Release/1.0.0 (#335))
      *
      */
     void setSpeed(int speed);
@@ -118,32 +89,59 @@ public:
      * @brief Returns the current speed value.
      *
      * Requirement traceability:
-<<<<<<< HEAD
-=======
-     * [impl->dsn~cluster-speed~1]
->>>>>>> 92140775 (Release/1.0.0 (#335))
      *
      * @return int speed value
      */
     int getSpeed() const;
+
+    /**
+     * @brief Sets the cruise control active state.
+     * @param active true if cruise control is engaged
+     *
+     * Requirement traceability:
+     *
+     */
+    void setCruiseActive(bool active);
+
+    /**
+     * @brief Returns whether cruise control is currently active.
+     *
+     * Requirement traceability:
+     *
+     * @return bool cruise control state
+     */
+    bool getCruiseActive() const;
+
+    /**
+     * @brief Sets the left lane car detection distance (0-100%).
+     * @param distance Distance value (0=farthest, 100=closest)
+     *
+     * Requirement traceability:
+     *
+     */
+    void setLeftCarDistance(int distance);
+
+    /**
+     * @brief Returns the left lane car detection distance.
+     *
+     * Requirement traceability:
+     *
+     * @return int left car distance (0-100%)
+     */
+    int getLeftCarDistance() const;
+
 signals:
     void speedUpdated(int speed);
     void batteryUpdated(int battery);
+    void cruiseActiveUpdated(bool active);
+    void leftCarDistanceUpdated(int distance);
 
-<<<<<<< HEAD
 private:
     std::atomic<int> _battery{0};
     std::atomic<int> _speed{0};
+    std::atomic<bool> _cruiseActive{false};
+    std::atomic<int> _leftCarDistance{0};
     kuksaLib _kuksa;
-=======
-public slots:
-    bool updateFromKuksa();
-
-private:
-    QString _server = "0.0.0.0:55555";
-    int _battery = -0;
-    int _speed = 0;
->>>>>>> 92140775 (Release/1.0.0 (#335))
     std::thread _thread;
     std::atomic_bool _running{false};
 };
