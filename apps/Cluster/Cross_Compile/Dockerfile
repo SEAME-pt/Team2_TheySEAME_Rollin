@@ -130,6 +130,7 @@ RUN cmake /build/qt-everywhere-src-6.7.3 -G Ninja \
     -DCMAKE_INSTALL_PREFIX=/build/qt-host-build \
     -DQT_BUILD_EXAMPLES=OFF \
     -DQT_BUILD_TESTS=OFF \
+    -DBUILD_qtquick3d=ON \
     -DFEATURE_system_protobuf=ON \
     -DFEATURE_system_grpc=ON
     
@@ -153,6 +154,7 @@ RUN set -e && \
     -DFEATURE_wayland=ON \
     -DFEATURE_eglfs=ON \
     -DSKIP_qtwebengine=ON \
+    -DBUILD_qtquick3d=ON \
     -DBUILD_qtnetwork=ON \
     -DBUILD_qtnetworkauth=ON \
     -DBUILD_qtpositioning=ON \

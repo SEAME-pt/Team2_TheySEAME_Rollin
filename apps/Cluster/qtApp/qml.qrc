@@ -13,6 +13,9 @@
         <file>qml/images/thunderstorm-256.png</file>
         <file>qml/images/snow-256.png</file>
         <file>qml/images/CC.png</file>
+        <file>qml/images/leftCar.png.png</file>
+        <file>qml/images/frontCar.png.png</file>
+        <file>qml/images/rightCar.png</file>
         <file>qml/images/logo.png</file>
         
         <file>qml/fonts/BaseNeueTrial-Bold.ttf</file>

@@ -1,0 +1,8 @@
+<RCC>
+    <qresource>
+        <file>Constants.qml</file>
+        <file>Main.qml</file>
+        <file>Screen01.ui.qml</file>
+        <file>TestCarAnimation.qml</file>
+    </qresource>
+</RCC>

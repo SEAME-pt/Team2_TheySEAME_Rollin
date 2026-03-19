@@ -9,7 +9,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick QuickControls2 Core Positioning Test)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick QuickControls2 Quick3D Core Positioning Test)
 
 find_package(Protobuf CONFIG REQUIRED)
 
@@ -76,6 +76,7 @@ target_link_libraries(qtAppExec
     qtAppLib
     Qt6::Quick
     Qt6::QuickControls2
+  Qt6::Quick3D
     Qt6::Core
     Qt6::Gui
     Qt6::Qml
