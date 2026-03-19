@@ -30,6 +30,8 @@ Rectangle {
     // Preview mode properties for systemInfo
     property int previewSpeed: 85
     property int previewBattery: 78
+    property bool previewCruiseActive: true
+    property int previewTargetSpeed: 130
 
     // Auto-animate in a loop
     SequentialAnimation {
@@ -162,7 +164,27 @@ Rectangle {
             height: 36
             source: "images/CC.png"
             fillMode: Image.PreserveAspectFit
-            visible: systemInfo ? systemInfo.cruiseActive : false
+            visible: rectangle.previewMode ? rectangle.previewCruiseActive : (systemInfo ? systemInfo.cruiseActive : false)
+        }
+
+        Text {
+            id: targetSpeedDisplay
+            x: 389
+            y: 155
+            width: 120
+            color: "#47473f"
+            text: {
+                var isActive = rectangle.previewMode ? rectangle.previewCruiseActive : (systemInfo ? systemInfo.cruiseActive : false);
+                if (isActive) {
+                    var targetSpeed = rectangle.previewMode ? rectangle.previewTargetSpeed : (systemInfo ? systemInfo.targetSpeed : 0);
+                    return targetSpeed.toString() + " hm/h";
+                }
+                return "---";
+            }
+            font.pixelSize: 16
+            font.family: "BaseNeueTrial-Bold"
+            font.bold: true
+            horizontalAlignment: Text.AlignHCenter
         }
 
         // Detected vehicles overlays (left lane)

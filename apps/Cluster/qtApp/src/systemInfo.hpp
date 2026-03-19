@@ -22,6 +22,7 @@ class systemInfo : public QObject
     Q_PROPERTY(int speed READ getSpeed NOTIFY speedUpdated)
     Q_PROPERTY(bool cruiseActive READ getCruiseActive NOTIFY cruiseActiveUpdated)
     Q_PROPERTY(int leftCarDistance READ getLeftCarDistance NOTIFY leftCarDistanceUpdated)
+    Q_PROPERTY(int targetSpeed READ getTargetSpeed NOTIFY targetSpeedUpdated)
 
 public:
     /**
@@ -130,17 +131,32 @@ public:
      */
     int getLeftCarDistance() const;
 
+    /**
+     * @brief Sets the cruise control target speed.
+     * @param speed Target speed in hm/h
+     */
+    void setTargetSpeed(int speed);
+
+    /**
+     * @brief Returns the cruise control target speed.
+     *
+     * @return int target speed in hm/h
+     */
+    int getTargetSpeed() const;
+
 signals:
     void speedUpdated(int speed);
     void batteryUpdated(int battery);
     void cruiseActiveUpdated(bool active);
     void leftCarDistanceUpdated(int distance);
+    void targetSpeedUpdated(int speed);
 
 private:
     std::atomic<int> _battery{0};
     std::atomic<int> _speed{0};
     std::atomic<bool> _cruiseActive{false};
     std::atomic<int> _leftCarDistance{0};
+    std::atomic<int> _targetSpeed{0};
     kuksaLib _kuksa;
     std::thread _thread;
     std::atomic_bool _running{false};

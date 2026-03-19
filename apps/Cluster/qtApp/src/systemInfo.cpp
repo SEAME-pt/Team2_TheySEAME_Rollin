@@ -61,6 +61,18 @@ int systemInfo::getLeftCarDistance() const
     return _leftCarDistance;
 }
 
+void systemInfo::setTargetSpeed(int speed)
+{
+    if (_targetSpeed == speed) return;
+    _targetSpeed = speed;
+    emit targetSpeedUpdated(speed);
+}
+
+int systemInfo::getTargetSpeed() const
+{
+    return _targetSpeed;
+}
+
 bool systemInfo::start()
 {
     if (_running) return true;
@@ -83,6 +95,8 @@ bool systemInfo::updateFromKuksa()
 
     req.add_signal_paths("Vehicle.Speed");
     req.add_signal_paths("Vehicle.Powertrain.Battery.StateOfCharge");
+    req.add_signal_paths("Vehicle.ADAS.CruiseControl.Active");
+    req.add_signal_paths("Vehicle.ADAS.CruiseControl.TargetSpeed");
 
     grpc::ClientContext ctx;
     auto stream = stub->Subscribe(&ctx, req);
@@ -110,6 +124,10 @@ bool systemInfo::updateFromKuksa()
                 setSpeed(vInt);
             } else if (path == "Vehicle.Powertrain.Battery.StateOfCharge") {
                 setBattery(vInt);
+            } else if (path == "Vehicle.ADAS.CruiseControl.Active") {
+                setCruiseActive(vInt != 0);
+            } else if (path == "Vehicle.ADAS.CruiseControl.TargetSpeed") {
+                setTargetSpeed(vInt);
             }
         }
     }
