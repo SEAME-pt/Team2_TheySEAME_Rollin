@@ -173,14 +173,7 @@ Rectangle {
             y: 155
             width: 120
             color: "#47473f"
-            text: {
-                var isActive = rectangle.previewMode ? rectangle.previewCruiseActive : (systemInfo ? systemInfo.cruiseActive : false);
-                if (isActive) {
-                    var targetSpeed = rectangle.previewMode ? rectangle.previewTargetSpeed : (systemInfo ? systemInfo.targetSpeed : 0);
-                    return targetSpeed.toString() + " hm/h";
-                }
-                return "---";
-            }
+            text: rectangle.previewMode ? (rectangle.previewCruiseActive ? rectangle.previewTargetSpeed.toString() + " hm/h" : "---") : (systemInfo ? systemInfo.targetSpeedDisplay : "---")
             font.pixelSize: 16
             font.family: "BaseNeueTrial-Bold"
             font.bold: true

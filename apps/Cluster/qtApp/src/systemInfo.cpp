@@ -73,6 +73,12 @@ int systemInfo::getTargetSpeed() const
     return _targetSpeed;
 }
 
+QString systemInfo::getTargetSpeedDisplay() const
+{
+    if (!_cruiseActive) return "---";
+    return QString::number(_targetSpeed) + " hm/h";
+}
+
 bool systemInfo::start()
 {
     if (_running) return true;

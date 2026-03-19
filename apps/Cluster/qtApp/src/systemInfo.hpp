@@ -23,6 +23,7 @@ class systemInfo : public QObject
     Q_PROPERTY(bool cruiseActive READ getCruiseActive NOTIFY cruiseActiveUpdated)
     Q_PROPERTY(int leftCarDistance READ getLeftCarDistance NOTIFY leftCarDistanceUpdated)
     Q_PROPERTY(int targetSpeed READ getTargetSpeed NOTIFY targetSpeedUpdated)
+    Q_PROPERTY(QString targetSpeedDisplay READ getTargetSpeedDisplay NOTIFY targetSpeedUpdated)
 
 public:
     /**
@@ -142,7 +143,13 @@ public:
      *
      * @return int target speed in hm/h
      */
-    int getTargetSpeed() const;
+    /**
+     * @brief Returns the cruise control target speed display text (formatted).
+     * Returns "---" if inactive, or "XXX hm/h" if active.
+     *
+     * @return QString formatted target speed display
+     */
+    QString getTargetSpeedDisplay() const;
 
 signals:
     void speedUpdated(int speed);
