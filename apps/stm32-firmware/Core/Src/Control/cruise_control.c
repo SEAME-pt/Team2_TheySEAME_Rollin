@@ -69,7 +69,7 @@ bool cruise_control(uint8_t target_speed, float current_speed, bool enabled)
     }
     last_tick = now;
     float throttle = 0.0f;
-    if (enabled && current_speed > 0.416f && current_speed < 3.61f) // Only enable if target or current speed is above ~3 km/h to prevent trying to maintain 0 speed
+    if (enabled && (target_speed > 0.416f || target_speed < 3.61f))
         throttle = PID(set_point, current_speed, dt);
     else
     {
