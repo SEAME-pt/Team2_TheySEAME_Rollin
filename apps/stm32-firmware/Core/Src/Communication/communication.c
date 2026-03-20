@@ -122,49 +122,64 @@ static void enqueue_command_or_log(const VehicleCommand_t *cmd) {
 /* Convert raw RX frame into updates to g_vehicle_command and return whether updated */
 static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
     int updated = 0;
-
     /* Handle CAN ID 0x100: Controller combined (DLC=3) or Throttle-only (DLC=1) */
-    if (can_id == CAN_ID_CONTROLLER_COMBINED) {
-        if (dlc == 3) {
-            /* Controller combined: [mode, throttle, steering(-1/0/1)] */
-            uint8_t mode = data[0] > 0 ? 1 : 0;
-            uint8_t throttle = data[1] > 100 ? 100 : data[1];
-            int8_t steering = ((int8_t)data[2]) * 100;
+    // if (can_id == CAN_ID_CONTROLLER_COMBINED) {
+    //     if (dlc == 3) {
+    //         /* Controller combined: [mode, throttle, steering(-1/0/1)] */
+    //         uint8_t mode = data[0] > 0 ? 1 : 0;
+    //         uint8_t throttle = data[1] > 100 ? 100 : data[1];
+    //         int8_t steering = ((int8_t)data[2]) * 100;
 
-            if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                g_vehicle_command.driving_mode = mode;
-                g_vehicle_command.gear = 3; /* default to Drive when controller omits gear */
-                g_vehicle_command.throttle = throttle;
-                g_vehicle_command.steering_angle = steering;
-                g_vehicle_command.command_valid = 1;
-                tx_mutex_put(&g_vehicle_command_mutex);
-            }
+    //         if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+    //             g_vehicle_command.driving_mode = mode;
+    //             g_vehicle_command.gear = 3; /* default to Drive when controller omits gear */
+    //             g_vehicle_command.throttle = throttle;
+    //             g_vehicle_command.steering_angle = steering;
+    //             g_vehicle_command.command_valid = 1;
+    //             g_vehicle_command.cruise_control_enabled = false;
+    //             tx_mutex_put(&g_vehicle_command_mutex);
+    //         }
 
-            snprintf(comm_uart_buf, sizeof(comm_uart_buf),
-                    "[CMD] Controller: Mode=%s Throttle=%d%% Steering=%d\r\n",
-                    mode ? "AI" : "MAN", throttle, steering);
-            Debug_Print(comm_uart_buf);
-            updated = 1;
-        } else if (dlc >= 1) {
-            /* Throttle-only message: supports 1-byte or 16-bit little-endian payload */
-            uint16_t throttle_raw = (dlc >= 2)
-                ? (uint16_t)data[0] | ((uint16_t)data[1] << 8)
-                : (uint16_t)data[0];
-            uint8_t throttle = clamp_u8(throttle_raw, 100);
-            if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                g_vehicle_command.throttle = throttle;
-                g_vehicle_command.command_valid = 1;
-                tx_mutex_put(&g_vehicle_command_mutex);
-            }
-            snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Throttle=%d%%\r\n", throttle);
-            Debug_Print(comm_uart_buf);
-            updated = 1;
-        }
-        return updated;
-    }
+    //         snprintf(comm_uart_buf, sizeof(comm_uart_buf),
+    //                 "[CMD] Controller: Mode=%s Throttle=%d%% Steering=%d\r\n",
+    //                 mode ? "AI" : "MAN", throttle, steering);
+    //         Debug_Print(comm_uart_buf);
+    //         updated = 1;
+    //     } else if (dlc >= 1) {
+    //         /* Throttle-only message: supports 1-byte or 16-bit little-endian payload */
+    //         uint16_t throttle_raw = (dlc >= 2)
+    //             ? (uint16_t)data[0] | ((uint16_t)data[1] << 8)
+    //             : (uint16_t)data[0];
+    //         uint8_t throttle = clamp_u8(throttle_raw, 100);
+    //         if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+    //             g_vehicle_command.throttle = throttle;
+    //             g_vehicle_command.command_valid = 1;
+    //             g_vehicle_command.cruise_control_enabled = false;
+    //             tx_mutex_put(&g_vehicle_command_mutex);
+    //         }
+    //         snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Throttle=%d%%\r\n", throttle);
+    //         Debug_Print(comm_uart_buf);
+    //         updated = 1;
+    //     }
+    //     return updated;
+    // }
 
     /* Kuksa-style / per-message handling */
     switch (can_id) {
+        case CAN_ID_THROTTLE: /* Legacy Throttle ID (0x100) */
+            if (dlc >= 1) {
+                uint8_t throttle = data[0] > 100 ? 100 : data[0];
+                if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                    g_vehicle_command.throttle = throttle;
+                    g_vehicle_command.command_valid = 1;
+                    g_vehicle_command.cruise_control_enabled = false; /* Disable cruise control on manual throttle input */
+                    tx_mutex_put(&g_vehicle_command_mutex);
+                }
+                snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Throttle=%d%%\r\n", throttle);
+                Debug_Print(comm_uart_buf);
+                updated = 1;
+            }
+            break;
         case CAN_ID_GEAR:     /* Legacy Gear ID (0x101) */
         case CAN_ID_GEAR_DBC: /* DBC Gear ID (0x105) */
             if (dlc >= 1) {
@@ -243,7 +258,9 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
                 uint8_t enabled = data[0] > 0 ? 1 : 0;
                 uint8_t target_speed = data[1];
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                    g_vehicle_command.cruise_control_enabled = enabled;
+                    if (enabled) {
+                        g_vehicle_command.cruise_control_enabled = true; /* Force AI_ASSIST mode when cruise control is enabled */
+                    }
                     g_vehicle_command.cruise_control_target_speed = target_speed;
                     g_vehicle_command.command_valid = 1;
                     tx_mutex_put(&g_vehicle_command_mutex);

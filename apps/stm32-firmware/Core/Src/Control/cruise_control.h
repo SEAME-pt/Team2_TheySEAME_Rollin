@@ -11,19 +11,19 @@
 
 
 /*----------------------------------------PID --------------------------------------------*/
-#define PID_KP 15.0f
-#define PID_KI 3.5f
-#define PID_KD 0.3f
+#define PID_KP 22.0f
+#define PID_KI 1.2f
+#define PID_KD 0.0f
 
 #define PID_OUTPUT_MAX 100.0f
-#define PID_OUTPUT_MIN 7.0f
-#define PID_INTEGRAL_MAX 40.0f
-#define PID_INTEGRAL_MIN -40.0f
+#define PID_OUTPUT_MIN 0.0f
+#define PID_INTEGRAL_MAX 100.0f
+#define PID_INTEGRAL_MIN -100.0f
 #define FEED_FORWARD_GAIN 18.0f
 
 float PID(float target_speed, float current_speed, float dt);
 float clamp(float value);
-float cruise_control(uint8_t target_speed, float current_speed, float dt);
+float cruise_control(uint8_t target_speed, float current_speed, float dt, bool enabled);
 /* test helpers */
 void PID_Reset(void);
 float PID_GetIntegral(void);

@@ -119,17 +119,15 @@ void Control_Thread_Entry(ULONG thread_input) {
 
     while(1) {
         VehicleCommand_t recv;
-        memset(&recv, 0, sizeof(recv));
-        VehicleData_t snapshot;
-        memset(&snapshot, 0, sizeof(snapshot));
-        if (!snapshot_vehicle_data(&snapshot)) {
-            Debug_Print("[CONTROL] No valid vehicle data for this loop\r\n");
-        }
-        
-        if (local_cmd.cruise_control_enabled) {
-            Control_SetThrottle(cruise_control(local_cmd.cruise_control_target_speed, snapshot.vehicle_speed, 0.1), 3); // Ensure manual throttle is off when cruise control is active
-        }
+        VehicleData_t recvs;
         UINT r = ControlQueue_Receive(&recv, cmd_wait_ticks);
+        float current_speed = 0.0f;
+
+        if (snapshot_vehicle_data(&recvs))
+            current_speed = recvs.vehicle_speed;
+        if (recv.cruise_control_enabled == true) {
+            Control_SetThrottle(cruise_control(recv.cruise_control_target_speed, current_speed, 0.1, recv.cruise_control_enabled), 3); // Ensure manual throttle is off when cruise control is active
+        }
         if (r == TX_SUCCESS) {
             // Got a command - reset timeout counter
             no_cmd_ticks = 0;
@@ -170,13 +168,13 @@ void Control_Thread_Entry(ULONG thread_input) {
                     // Print status
                     const char* gear_names[] = {"P", "N", "R", "D"};
                     int steering_int = (int)(steering_normalized * 1000);
-                    snprintf(control_uart_buf, sizeof(control_uart_buf),
-                            "[CONTROL] Mode=%d Gear=%s | Throttle=%d%% | Steering=%d.%03d\r\n",
-                            local_cmd.driving_mode, 
-                            local_cmd.gear <= 3 ? gear_names[local_cmd.gear] : "?",
-                            local_cmd.throttle, 
-                            steering_int/1000, abs(steering_int%1000));
-                    Debug_Print(control_uart_buf);
+                    // snprintf(control_uart_buf, sizeof(control_uart_buf),
+                    //         "[CONTROL] Mode=%d Gear=%s | Throttle=%d%% | Steering=%d.%03d\r\n",
+                    //         local_cmd.driving_mode, 
+                    //         local_cmd.gear <= 3 ? gear_names[local_cmd.gear] : "?",
+                    //         local_cmd.throttle, 
+                    //         steering_int/1000, abs(steering_int%1000));
+                    // Debug_Print(control_uart_buf);
 
                     // Update last values
                     last_mode = local_cmd.driving_mode;

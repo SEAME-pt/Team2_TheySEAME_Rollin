@@ -19,14 +19,15 @@ float PID(float set_point, float current_value, float dt)
     float error = set_point - current_value;
     float derivative = 0.0f;
     float output = 0.0f;
+    float ff;
 
     if (dt <= 0.0f) {
         return 0.0f;
     }
-
+    
     derivative = (error - prev_error) / dt;
-
-    output = PID_KP * error + PID_KI * integral + PID_KD * derivative;
+    ff = set_point * FEED_FORWARD_GAIN; // Simple feed-forward term proportional to target speed
+    output = ff +PID_KP * error + PID_KI * integral + PID_KD * derivative;
 
     if (!((output >= PID_OUTPUT_MAX && error > 0.f) ||
           (output <= PID_OUTPUT_MIN && error < 0.f)))
@@ -34,10 +35,14 @@ float PID(float set_point, float current_value, float dt)
         integral += error * dt;
         if (integral > PID_INTEGRAL_MAX) integral = PID_INTEGRAL_MAX;
         if (integral < PID_INTEGRAL_MIN) integral = PID_INTEGRAL_MIN;
-        output = PID_KP * error + PID_KI * integral + PID_KD * derivative;
+        output = ff + PID_KP * error + PID_KI * integral + PID_KD * derivative;
     }
     prev_error = error;
 
+    char buf[128];
+    snprintf(buf, sizeof(buf), "[PID] error=%.2f deriv=%.2f integ=%.2f output=%.2f\r\n",
+            error, derivative, integral, output);
+    Debug_Print(buf);
     return output;
 }
 
@@ -51,22 +56,30 @@ float clamp(float value)
     return value;
 }
 
-float cruise_control(uint8_t target_speed, float current_speed, float dt)
+float cruise_control(uint8_t target_speed, float current_speed, float dt, bool enabled)
 {
     float set_point = (float)target_speed / 36.0f; // Convert hm/h to m/s
-    float throttle = PID(set_point, current_speed, dt);
-    
-    char buf[128];
-    snprintf(buf, sizeof(buf), "%d.%02d\r\n", (int)current_speed, (int)((current_speed - (int)current_speed) * 100));
-    Debug_Print("[CRUISE CONTROL](current_speed): ");
-    Debug_Print(buf);
-    snprintf(buf, sizeof(buf), "%d.%02d\r\n", (int)set_point, (int)((set_point - (int)set_point) * 100));
-    Debug_Print("[CRUISE CONTROL](target_speed): ");
-    Debug_Print(buf);
-    snprintf(buf, sizeof(buf), "%d.%02d\r\n", (int)throttle, (int)((throttle - (int)throttle) * 100));
-    Debug_Print("[CRUISE CONTROL](throttle): ");
-    Debug_Print(buf);
-    
+    static uint32_t last_tick = 0;
+    uint32_t now = HAL_GetTick();
+    dt = 0.1f;
+
+    if (last_tick != 0) {
+        dt = (now - last_tick) / 1000.0f;
+    }
+    last_tick = now;
+    float throttle = 0.0f;
+    if (enabled)
+        throttle = PID(set_point, current_speed, dt);
+    else
+    {
+        PID_Reset(); // Reset PID state when cruise control is disabled to prevent windup on next enable
+        throttle = 0.0f; // No throttle when cruise control is disabled
+    }
     throttle = clamp(throttle);
+    char buf[128];
+    snprintf(buf, sizeof(buf), "[CC] current=%.2f target=%.2f throttle=%.2f%% dt=%.2f\r\n",
+            current_speed, set_point, throttle, dt);
+    Debug_Print(buf);
+    
     return throttle;
 }
