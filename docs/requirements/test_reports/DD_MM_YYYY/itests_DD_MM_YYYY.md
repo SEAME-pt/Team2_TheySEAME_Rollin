@@ -259,33 +259,31 @@ Test Steps:
     Expected:   Cruise control activates only after `+` is actuated and all activation conditions are satisfied
 3. - [ ] Verify the initial target speed after activation
     Expected:   Initial target speed equals the current vehicle speed at the instant of activation
-4. - [ ] While cruise control is active, actuate the `+` command once
+4. - [x] While cruise control is active, actuate the `+` command once
     Expected:   Active target speed increases by 1 hm/h
-5. - [ ] While cruise control is active, actuate the `+` command two additional times
+5. - [x] While cruise control is active, actuate the `+` command two additional times
     Expected:   Active target speed increases by 1 hm/h for each command actuation
-6. - [ ] While cruise control is active, actuate the `-` command once
+6. - [x] While cruise control is active, actuate the `-` command once
     Expected:   Active target speed decreases by 1 hm/h
 8. - [ ] Allow the vehicle to reach steady-state operation at the active target speed under stable road-load or simulated-load conditions
     Expected:   Vehicle speed is regulated to within ±2 hm/h of the active target speed
 9. - [ ] Actuate the brake pedal while cruise control is active
     Expected:   Cruise control deactivates and throttle authority transfers back to the driver
-10. - [ ] While cruise control is active, actuate the accelerator pedal
+10. - [x] While cruise control is active, actuate the accelerator pedal
     Expected:   Cruise control deactivates and throttle authority transfers back to the driver
-11. - [ ] Re-establish valid activation conditions and reactivate cruise control using the `+` command
+11. - [x] Re-establish valid activation conditions and reactivate cruise control using the `+` command
     Expected:   Cruise control activates again correctly and stores the current speed as the new target speed
-12. - [ ] Re-establish valid activation conditions and reactivate cruise control using the `+` command
-    Expected:   Cruise control activates again correctly
-13. - [ ] Inject a cruise-control communication fault while cruise control is active
+12. - [ ] Inject a cruise-control communication fault while cruise control is active
     Expected:   Cruise control deactivates and throttle authority transfers back to the driver
-14. - [ ] Attempt to activate cruise control with target speed below 15 hm/h
+13. - [x] Attempt to activate cruise control with target speed below 15 hm/h
     Expected:   Cruise control does not activate
-15. - [ ] Attempt to activate cruise control with target speed above 130 hm/h
+14. - [x] Attempt to activate cruise control with target speed above 130 hm/h
     Expected:   Cruise control does not activate
-16. - [ ] Attempt to activate cruise control with brake pedal actuated
+15. - [ ] Attempt to activate cruise control with brake pedal actuated
     Expected:   Cruise control does not activate
-17. - [ ] Attempt to activate cruise control with accelerator pedal actuated
+16. - [x] Attempt to activate cruise control with accelerator pedal actuated
     Expected:   Cruise control does not activate
-18. - [ ] Attempt to activate cruise control with an active vehicle-speed-sensor-related fault code present
+17. - [ ] Attempt to activate cruise control with an active vehicle-speed-sensor-related fault code present
     Expected:   Cruise control does not activate
 
 Postconditions:
