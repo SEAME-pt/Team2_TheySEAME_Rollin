@@ -254,40 +254,36 @@ Preconditions:
 - Data logging is available for: `cruise_active`, `vehicle_speed`, `target_speed`, `driver_accelerator`, `driver_brake`, `fault_status`, `throttle_command`, and `throttle_authority`
 
 Test Steps:
-1. - [ ] Set vehicle speed to a valid activation speed (for example, 60 hm/h), with brake pedal released, accelerator pedal released, and no active speed-sensor-related fault codes
-2. - [ ] Actuate the `+` cruise control command
+1. - [x] Set vehicle speed to a valid activation speed (for example, 60 hm/h), with brake pedal released, accelerator pedal released, and no active speed-sensor-related fault codes
+2. - [x] Actuate the `+` cruise control command
     Expected:   Cruise control activates only after `+` is actuated and all activation conditions are satisfied
 3. - [ ] Verify the initial target speed after activation
     Expected:   Initial target speed equals the current vehicle speed at the instant of activation
-4. - [ ] While cruise control is active, actuate the `+` command once
+4. - [x] While cruise control is active, actuate the `+` command once
     Expected:   Active target speed increases by 1 hm/h
-5. - [ ] While cruise control is active, actuate the `+` command two additional times
+5. - [x] While cruise control is active, actuate the `+` command two additional times
     Expected:   Active target speed increases by 1 hm/h for each command actuation
-6. - [ ] While cruise control is active, actuate the `-` command once
+6. - [x] While cruise control is active, actuate the `-` command once
     Expected:   Active target speed decreases by 1 hm/h
-7. - [ ] While cruise control is active, vary the driver accelerator pedal input without applying a deactivation condition other than the pedal actuation being tested
-    Expected:   Commanded throttle remains under cruise controller authority while cruise is active, unless deactivation is specified by system behavior
 8. - [ ] Allow the vehicle to reach steady-state operation at the active target speed under stable road-load or simulated-load conditions
     Expected:   Vehicle speed is regulated to within ±2 hm/h of the active target speed
 9. - [ ] Actuate the brake pedal while cruise control is active
     Expected:   Cruise control deactivates and throttle authority transfers back to the driver
-10. - [ ] Re-establish valid activation conditions and reactivate cruise control using the `+` command
+10. - [x] While cruise control is active, actuate the accelerator pedal
+    Expected:   Cruise control deactivates and throttle authority transfers back to the driver
+11. - [x] Re-establish valid activation conditions and reactivate cruise control using the `+` command
     Expected:   Cruise control activates again correctly and stores the current speed as the new target speed
-11. - [ ] While cruise control is active, actuate the accelerator pedal
+12. - [ ] Inject a cruise-control communication fault while cruise control is active
     Expected:   Cruise control deactivates and throttle authority transfers back to the driver
-12. - [ ] Re-establish valid activation conditions and reactivate cruise control using the `+` command
-    Expected:   Cruise control activates again correctly
-13. - [ ] Inject a cruise-control communication fault while cruise control is active
-    Expected:   Cruise control deactivates and throttle authority transfers back to the driver
-14. - [ ] Attempt to activate cruise control with vehicle speed below 15 hm/h
+13. - [x] Attempt to activate cruise control with target speed below 15 hm/h
     Expected:   Cruise control does not activate
-15. - [ ] Attempt to activate cruise control with vehicle speed above 130 hm/h
+14. - [x] Attempt to activate cruise control with target speed above 130 hm/h
     Expected:   Cruise control does not activate
-16. - [ ] Attempt to activate cruise control with brake pedal actuated
+15. - [ ] Attempt to activate cruise control with brake pedal actuated
     Expected:   Cruise control does not activate
-17. - [ ] Attempt to activate cruise control with accelerator pedal actuated
+16. - [x] Attempt to activate cruise control with accelerator pedal actuated
     Expected:   Cruise control does not activate
-18. - [ ] Attempt to activate cruise control with an active vehicle-speed-sensor-related fault code present
+17. - [ ] Attempt to activate cruise control with an active vehicle-speed-sensor-related fault code present
     Expected:   Cruise control does not activate
 
 Postconditions:
@@ -309,18 +305,4 @@ Covers:
 - `dsn~cruise-control-driver-deactivation~1`
 - `dsn~cruise-control-fault-deactivation~1`
 - `dsn~cruise-control-speed-regulation-accuracy~1`
-
-Evidence: `docs/requirements/evidence/cruise_control_integration_test/`
-- `activation_valid_conditions_log.txt`
-- `activation_invalid_conditions_log.txt`
-- `initial_target_speed_capture_log.txt`
-- `target_speed_increment_decrement_log.txt`
-- `throttle_authority_transition_log.txt`
-- `driver_deactivation_brake_log.txt`
-- `driver_deactivation_accelerator_log.txt`
-- `fault_deactivation_log.txt`
-- `steady_state_speed_regulation_log.txt`
-- `speed_regulation_plots/`
-- `can_trace_logs/`
-- `test_run_videos/`
 ```

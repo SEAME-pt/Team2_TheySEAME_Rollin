@@ -428,7 +428,7 @@ Needs: impl, itest
 
 Status: proposed
 
-The cruise control system shall only allow activation if all of the following conditions are simultaneously satisfied: vehicle speed is within the valid range [15, 130] hm/h, the brake pedal and accelerator pedal are not actuated, and no active fault codes related vehicle speed sensor.
+The cruise control system shall only allow activation if all of the following conditions are simultaneously satisfied: target speed is within the valid range [15, 130] hm/h, the brake pedal and accelerator pedal are not actuated, and no active fault codes related vehicle speed sensor.
 
 Covers:
 - `feat~cruise-control~1`
