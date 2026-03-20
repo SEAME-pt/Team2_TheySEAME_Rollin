@@ -21,6 +21,7 @@ typedef struct {
     float battery_current;         /**< Battery current in mA */
     float vehicle_speed;           /**< Vehicle speed in meters per second */
     uint8_t data_valid;            /**< Flag: 1 if data is valid, 0 if not updated yet */
+    bool cruise_control_active;     /**< Flag: 1 if cruise control is currently active, 0 otherwise */
 } VehicleData_t;
 
 /**

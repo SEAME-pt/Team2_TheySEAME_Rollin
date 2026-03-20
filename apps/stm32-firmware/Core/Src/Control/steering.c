@@ -122,11 +122,22 @@ void Control_Thread_Entry(ULONG thread_input) {
         VehicleData_t recvs;
         UINT r = ControlQueue_Receive(&recv, cmd_wait_ticks);
         float current_speed = 0.0f;
+        bool active_cruise_control = false;
 
         if (snapshot_vehicle_data(&recvs))
             current_speed = recvs.vehicle_speed;
         if (recv.cruise_control_enabled == true) {
-            Control_SetThrottle(cruise_control(recv.cruise_control_target_speed, current_speed, 0.1, recv.cruise_control_enabled), 3); // Ensure manual throttle is off when cruise control is active
+            active_cruise_control = cruise_control(recv.cruise_control_target_speed, current_speed, recv.cruise_control_enabled); // Ensure manual throttle is off when cruise control is active
+            if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                g_vehicle_data.cruise_control_active = active_cruise_control;
+                tx_mutex_put(&g_vehicle_data_mutex);
+            }
+        }
+        else {
+            if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                g_vehicle_data.cruise_control_active = false;
+                tx_mutex_put(&g_vehicle_data_mutex);
+            }
         }
         if (r == TX_SUCCESS) {
             // Got a command - reset timeout counter

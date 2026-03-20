@@ -56,22 +56,24 @@ float clamp(float value)
     return value;
 }
 
-float cruise_control(uint8_t target_speed, float current_speed, float dt, bool enabled)
+bool cruise_control(uint8_t target_speed, float current_speed, bool enabled)
 {
     float set_point = (float)target_speed / 36.0f; // Convert hm/h to m/s
     static uint32_t last_tick = 0;
     uint32_t now = HAL_GetTick();
-    dt = 0.1f;
+    bool active = true;
+    float dt = 0.1f;
 
     if (last_tick != 0) {
         dt = (now - last_tick) / 1000.0f;
     }
     last_tick = now;
     float throttle = 0.0f;
-    if (enabled)
+    if (enabled && current_speed > 0.416f && current_speed < 3.61f) // Only enable if target or current speed is above ~3 km/h to prevent trying to maintain 0 speed
         throttle = PID(set_point, current_speed, dt);
     else
     {
+        active = false;
         PID_Reset(); // Reset PID state when cruise control is disabled to prevent windup on next enable
         throttle = 0.0f; // No throttle when cruise control is disabled
     }
@@ -80,6 +82,6 @@ float cruise_control(uint8_t target_speed, float current_speed, float dt, bool e
     snprintf(buf, sizeof(buf), "[CC] current=%.2f target=%.2f throttle=%.2f%% dt=%.2f\r\n",
             current_speed, set_point, throttle, dt);
     Debug_Print(buf);
-    
-    return throttle;
+    Control_SetThrottle(throttle, 3); // Ensure manual throttle is off when cruise control is active
+    return active;
 }

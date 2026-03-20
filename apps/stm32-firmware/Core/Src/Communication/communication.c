@@ -172,7 +172,9 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
                     g_vehicle_command.throttle = throttle;
                     g_vehicle_command.command_valid = 1;
-                    g_vehicle_command.cruise_control_enabled = false; /* Disable cruise control on manual throttle input */
+                    if (g_vehicle_command.cruise_control_enabled) {
+                        g_vehicle_command.cruise_control_enabled = false; /* Disable cruise control on manual throttle input */
+                    }
                     tx_mutex_put(&g_vehicle_command_mutex);
                 }
                 snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Throttle=%d%%\r\n", throttle);
@@ -348,6 +350,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
         if ((loop_counter % STATUS_TX_INTERVAL_LOOPS) == 0) {
             if (snapshot_vehicle_data(&snapshot)) {
                 send_battery_and_speed(&snapshot);
+                MCP2515_SendMessage(531, (uint8_t*)&snapshot.cruise_control_active, sizeof(bool));
             } else {
                 Debug_Print("[COMM] Skipping TX - no valid data\r\n");
             }

@@ -23,7 +23,7 @@
 
 float PID(float target_speed, float current_speed, float dt);
 float clamp(float value);
-float cruise_control(uint8_t target_speed, float current_speed, float dt, bool enabled);
+bool cruise_control(uint8_t target_speed, float current_speed, bool enabled);
 /* test helpers */
 void PID_Reset(void);
 float PID_GetIntegral(void);
