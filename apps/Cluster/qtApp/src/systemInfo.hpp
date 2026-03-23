@@ -11,7 +11,7 @@
 #include <atomic>
 #include "../../../middleware/kuksa/val/v2/val.grpc.pb.h"
 #include "../../../middleware/kuksa/val/v2/types.pb.h"
-#include "../middleware/kuksa/val/v2/KuksaLib.hpp"
+#include "../../../libs/libkuksa/KuksaLib.hpp"
 
 using kuksa::val::v2::VAL;
 
