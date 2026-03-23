@@ -1,5 +1,6 @@
 #include "ActuatorController.hpp"
 #include <iostream>
+#include <algorithm>
 
 ActuatorController::ActuatorController(CarActuator *car, RemoteControl &remote, kuksaLib &kuksa) : _car(car), _subject(remote), _kuksa(kuksa) {
 }
@@ -11,7 +12,8 @@ int ActuatorController::processThrottle(const int rawThrottle) {
 }
 
 int ActuatorController::processSteering(const int rawSteering) {
-	return ((rawSteering - 127) / 127);
+	int angle = std::clamp(((rawSteering - 127) / 1.27), -30.0, 30.0);
+	return (angle);
 }
 
 void ActuatorController::update(Events event) {

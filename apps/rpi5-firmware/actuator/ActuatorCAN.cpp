@@ -39,7 +39,7 @@ void ActuatorCAN::setSteering(const int steering) {
 
 	data[0] = steering;
 	_can.sendFrame(STEERING, data, sizeof(data));
-	std::cout << "Changed Steering" << std::endl;
+	std::cout << "Changed Steering " << steering << std::endl;
 }
 
 void ActuatorCAN::brake() {
