@@ -15,11 +15,11 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifdef COMM_DEBUG
-extern void Debug_Print(const char *msg);
-#else
-#define Debug_Print(msg) ((void)0)
-#endif
+// #ifdef COMM_DEBUG
+// extern void Debug_Print(const char *msg);
+// #else
+// #define Debug_Print(msg) ((void)0)
+// #endif
 char comm_uart_buf[128];
 char rx_uart_buf[128];
 extern UART_HandleTypeDef huart1;
@@ -350,7 +350,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
         if ((loop_counter % STATUS_TX_INTERVAL_LOOPS) == 0) {
             if (snapshot_vehicle_data(&snapshot)) {
                 send_battery_and_speed(&snapshot);
-                MCP2515_SendMessage(531, (uint8_t*)&snapshot.cruise_control_active, sizeof(bool));
+                MCP2515_SendMessage(531, (uint8_t*)&snapshot.cruise_control_active, sizeof(uint8_t));
             } else {
                 Debug_Print("[COMM] Skipping TX - no valid data\r\n");
             }

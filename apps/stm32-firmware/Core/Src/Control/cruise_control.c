@@ -19,6 +19,7 @@ float PID(float set_point, float current_value, float dt)
     float error = set_point - current_value;
     float derivative = 0.0f;
     float output = 0.0f;
+    float u_unsat = 0.0f;
     float ff;
 
     if (dt <= 0.0f) {
@@ -27,21 +28,33 @@ float PID(float set_point, float current_value, float dt)
     
     derivative = (error - prev_error) / dt;
     ff = set_point * FEED_FORWARD_GAIN; // Simple feed-forward term proportional to target speed
-    output = ff +PID_KP * error + PID_KI * integral + PID_KD * derivative;
+    u_unsat = ff + PID_KP * error + PID_KI * integral + PID_KD * derivative;
+    output = clamp(u_unsat);
 
-    if (!((output >= PID_OUTPUT_MAX && error > 0.f) ||
-          (output <= PID_OUTPUT_MIN && error < 0.f)))
+    if (!((output >= PID_OUTPUT_MAX && error > 0.0f) ||
+        (output <= PID_OUTPUT_MIN && error < 0.0f)))
     {
         integral += error * dt;
+
         if (integral > PID_INTEGRAL_MAX) integral = PID_INTEGRAL_MAX;
         if (integral < PID_INTEGRAL_MIN) integral = PID_INTEGRAL_MIN;
-        output = ff + PID_KP * error + PID_KI * integral + PID_KD * derivative;
     }
+
+    u_unsat = ff + PID_KP * error + PID_KI * integral + PID_KD * derivative;
+    output = clamp(u_unsat);
     prev_error = error;
 
-    char buf[128];
-    snprintf(buf, sizeof(buf), "[PID] error=%.2f deriv=%.2f integ=%.2f output=%.2f\r\n",
-            error, derivative, integral, output);
+    char buf[160];
+    snprintf(buf, sizeof(buf),
+             "[PID] sp=%.2f pv=%.2f err=%.2f ff=%.2f p=%.2f i=%.2f d=%.2f out=%.2f\r\n",
+             set_point,
+             current_value,
+             error,
+             ff,
+             PID_KP * error,
+             PID_KI * integral,
+             PID_KD * derivative,
+             output);
     Debug_Print(buf);
     return output;
 }
@@ -67,9 +80,11 @@ bool cruise_control(uint8_t target_speed, float current_speed, bool enabled)
     if (last_tick != 0) {
         dt = (now - last_tick) / 1000.0f;
     }
+    if (dt < 0.01f) dt = 0.01f;
+    if (dt > 0.20f) dt = 0.20f;
     last_tick = now;
     float throttle = 0.0f;
-    if (enabled && (target_speed > 0.416f || target_speed < 3.61f))
+    if (enabled && (set_point > 0.416f && set_point < 3.61f))
         throttle = PID(set_point, current_speed, dt);
     else
     {
