@@ -3,6 +3,7 @@
 systemInfo::systemInfo(QObject *parent)
     : QObject(parent)
 {
+    
 }
 
 systemInfo::~systemInfo()
@@ -49,18 +50,6 @@ bool systemInfo::getCruiseActive() const
     return _cruiseActive;
 }
 
-void systemInfo::setLeftCarDistance(int distance)
-{
-    if (_leftCarDistance == distance) return;
-    _leftCarDistance = distance;
-    emit leftCarDistanceUpdated(distance);
-}
-
-int systemInfo::getLeftCarDistance() const
-{
-    return _leftCarDistance;
-}
-
 void systemInfo::setTargetSpeed(int speed)
 {
     if (_targetSpeed == speed) return;
@@ -85,67 +74,27 @@ bool systemInfo::start()
     _running = true;
 
     _thread = std::thread([this]() {
-        this->updateFromKuksa();
+
+        std::thread subThread([this]() {
+            if (!_kuksa.subscribeFromKuksa()) {
+                qWarning() << "Failed to subscribe to Kuksa";
+            }
+        });
+
+        while (_running) {
+            setSpeed(static_cast<int>(_kuksa.getSpeed()));
+            setBattery(static_cast<int>(_kuksa.getBattery()));
+            setCruiseActive(_kuksa.getCruiseActive());
+            setTargetSpeed(static_cast<int>(_kuksa.getTargetSpeed()));
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+
+        subThread.join();
     });
 
-    _thread.detach();
     return true;
 }
-
-bool systemInfo::updateFromKuksa()
-{
-    auto channel = grpc::CreateChannel(_server.toStdString(), grpc::InsecureChannelCredentials());
-    std::unique_ptr<VAL::Stub> stub = VAL::NewStub(channel);
-
-    kuksa::val::v2::SubscribeRequest req;
-
-    req.add_signal_paths("Vehicle.Speed");
-    req.add_signal_paths("Vehicle.Powertrain.Battery.StateOfCharge");
-    req.add_signal_paths("Vehicle.ADAS.CruiseControl.Active");
-    req.add_signal_paths("Vehicle.ADAS.CruiseControl.TargetSpeed");
-
-    grpc::ClientContext ctx;
-    auto stream = stub->Subscribe(&ctx, req);
-
-    kuksa::val::v2::SubscribeResponse resp;
-    while (stream->Read(&resp)) {
-
-        const auto& entries = resp.entries();
-        for (auto it = entries.begin(); it != entries.end(); ++it) {
-            const std::string& path = it->first;
-            const auto& datapoint = it->second;
-
-            if (!datapoint.has_value()) {
-                qDebug() << "[READER]" << QString::fromStdString(path) << "= <no value>";
-                continue;
-            }
-
-            int vInt = 0;
-            if (!valueToInt(datapoint.value(), vInt)) {
-                qWarning() << "[READER]" << QString::fromStdString(path) << "value type not int-compatible";
-                continue;
-            }
-
-            if (path == "Vehicle.Speed") {
-                setSpeed(vInt);
-            } else if (path == "Vehicle.Powertrain.Battery.StateOfCharge") {
-                setBattery(vInt);
-            } else if (path == "Vehicle.ADAS.CruiseControl.Active") {
-                setCruiseActive(vInt != 0);
-            } else if (path == "Vehicle.ADAS.CruiseControl.TargetSpeed") {
-                setTargetSpeed(vInt);
-            }
-        }
-    }
-
-    auto status = stream->Finish();
-    if (!status.ok()) {
-        qWarning() << "gRPC Subscribe failed:" << QString::fromStdString(status.error_message());
-        return false;
-    }
-    return true;
-}
-
 
 bool systemInfo::valueToInt(const kuksa::val::v2::Value& v, int& out)
 {

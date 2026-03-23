@@ -21,7 +21,6 @@ class systemInfo : public QObject
     Q_PROPERTY(int battery READ getBattery NOTIFY batteryUpdated)
     Q_PROPERTY(int speed READ getSpeed NOTIFY speedUpdated)
     Q_PROPERTY(bool cruiseActive READ getCruiseActive NOTIFY cruiseActiveUpdated)
-    Q_PROPERTY(int leftCarDistance READ getLeftCarDistance NOTIFY leftCarDistanceUpdated)
     Q_PROPERTY(int targetSpeed READ getTargetSpeed NOTIFY targetSpeedUpdated)
     Q_PROPERTY(QString targetSpeedDisplay READ getTargetSpeedDisplay NOTIFY targetSpeedUpdated)
 
@@ -115,24 +114,6 @@ public:
     bool getCruiseActive() const;
 
     /**
-     * @brief Sets the left lane car detection distance (0-100%).
-     * @param distance Distance value (0=farthest, 100=closest)
-     *
-     * Requirement traceability:
-     *
-     */
-    void setLeftCarDistance(int distance);
-
-    /**
-     * @brief Returns the left lane car detection distance.
-     *
-     * Requirement traceability:
-     *
-     * @return int left car distance (0-100%)
-     */
-    int getLeftCarDistance() const;
-
-    /**
      * @brief Sets the cruise control target speed.
      * @param speed Target speed in hm/h
      */
@@ -143,6 +124,8 @@ public:
      *
      * @return int target speed in hm/h
      */
+    int getTargetSpeed() const;
+
     /**
      * @brief Returns the cruise control target speed display text (formatted).
      * Returns "---" if inactive, or "XXX hm/h" if active.
@@ -155,14 +138,12 @@ signals:
     void speedUpdated(int speed);
     void batteryUpdated(int battery);
     void cruiseActiveUpdated(bool active);
-    void leftCarDistanceUpdated(int distance);
     void targetSpeedUpdated(int speed);
 
 private:
     std::atomic<int> _battery{0};
     std::atomic<int> _speed{0};
     std::atomic<bool> _cruiseActive{false};
-    std::atomic<int> _leftCarDistance{0};
     std::atomic<int> _targetSpeed{0};
     kuksaLib _kuksa;
     std::thread _thread;
