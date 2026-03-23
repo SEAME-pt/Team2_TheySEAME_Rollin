@@ -36,7 +36,6 @@ void RemoteControl::getEvent() {
 				} else if (event.code == JoyZ) {
 					notify(Events::CAR_STEERING);
 				} else if (event.code == DpadY) {
-					printf("Value: %d\n", event.value);
 					notify(Events::CAR_CRUISE_CONTROL);
 				}
 				break;

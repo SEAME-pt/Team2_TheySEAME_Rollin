@@ -3,11 +3,12 @@
 #include "Observer.hpp"
 #include "CarActuator.hpp"
 #include "RemoteControl.hpp"
+#include "KuksaLib.hpp"
 
 class ActuatorController : public Observer {
 public:
 
-	ActuatorController(CarActuator *_car, RemoteControl &remote);
+	ActuatorController(CarActuator *_car, RemoteControl &remote, kuksaLib &kuksa);
 	~ActuatorController();
 
 	void update(Events event);
@@ -18,5 +19,5 @@ private:
 	int processSteering(const int rawSteering);
 	CarActuator *_car;
 	RemoteControl &_subject;
-	int speed; // This is temporary until the Vehicle State class
+	kuksaLib &_kuksa;
 };

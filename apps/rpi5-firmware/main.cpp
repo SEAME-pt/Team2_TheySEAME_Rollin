@@ -7,22 +7,14 @@
 #include <stdlib.h>
 #include <poll.h>
 #include <csignal>
+#include <thread>
 #include "ActuatorController.hpp"
 
-bool run = true;
+std::atomic<bool> run = true;
 
 void signal_handler(int signal) {
-	run = false;
+	run.store(false);
 }
-
-//int main() {
-//	CAN can("can0", 500, 0, 0);
-//	Evdev evdev("/dev/input/event6");
-//	RemoteControl remote(evdev);
-//	ICar *carKuksa = new CarKuksa(new CarCAN(can, remote));
-//
-//	carKuksa->setThrottle(100);
-//}
 
 int main() {
 	struct pollfd fds[2];
@@ -33,14 +25,16 @@ int main() {
 	//CarActuator *car = new ActuatorKuksa(
 	//	new ActuatorCAN(can, remote)
 	//);
-	ActuatorController ctrl(car, remote);
+	kuksaLib kuksa;
+	ActuatorController ctrl(car, remote, kuksa);
+	std::thread vhState(&kuksaLib::subscribeFromKuksa, &kuksa);
 
 	std::signal(SIGINT, signal_handler);
 	remote.attach(&ctrl);
 
 	fds[0].fd = evdev.getfd();
 	fds[0].events = POLLIN;
-	while (run) {
+	while (run.load()) {
 		if (poll(fds, 2, 0) < 0) {
 			perror("Error in poll:");
 			break;
@@ -50,5 +44,7 @@ int main() {
 			remote.getEvent();
 		}
 	}
+
+	vhState.join();
 	return (0);
 }

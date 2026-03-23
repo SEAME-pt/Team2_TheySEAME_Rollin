@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cmath> 
 #include <grpcpp/grpcpp.h>
 #include <thread>
@@ -32,6 +34,8 @@ private:
 public:
     kuksaLib();
     ~kuksaLib();
+
+	void asyncSub();
 
     bool subscribeFromKuksa();
     template<typename T>
