@@ -69,20 +69,15 @@ float clamp(float value)
     return value;
 }
 
-bool cruise_control(uint8_t target_speed, float current_speed, bool enabled)
+bool cruise_control(uint8_t target_speed, float current_speed, bool enabled, float dt)
 {
     float set_point = (float)target_speed / 36.0f; // Convert hm/h to m/s
-    static uint32_t last_tick = 0;
-    uint32_t now = HAL_GetTick();
     bool active = true;
-    float dt = 0.1f;
 
-    if (last_tick != 0) {
-        dt = (now - last_tick) / 1000.0f;
-    }
+    // Guard dt so PID remains stable if scheduler jitter or delayed loop occurs.
     if (dt < 0.01f) dt = 0.01f;
     if (dt > 0.20f) dt = 0.20f;
-    last_tick = now;
+
     float throttle = 0.0f;
     if (enabled && (set_point > 0.416f && set_point < 3.61f))
         throttle = PID(set_point, current_speed, dt);

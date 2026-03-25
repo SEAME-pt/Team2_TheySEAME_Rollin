@@ -112,6 +112,8 @@ void Control_Thread_Entry(ULONG thread_input) {
     const ULONG cmd_wait_ticks = 10; // 100ms wait for command before timeout handling
     ULONG no_cmd_ticks = 0;
     const ULONG no_cmd_threshold = 10; // 10 * 100ms = 1s without command -> stop motors
+    const float tx_tick_s = 1.0f / (float)TX_TIMER_TICKS_PER_SECOND;
+    ULONG last_cc_tick = 0;
 
     /* Rate limit safety prints so operator can read them (ms) */
     const uint32_t SAFETY_PRINT_MS = 5000; // 5 seconds
@@ -123,11 +125,28 @@ void Control_Thread_Entry(ULONG thread_input) {
         UINT r = ControlQueue_Receive(&recv, cmd_wait_ticks);
         float current_speed = 0.0f;
         bool active_cruise_control = false;
+        ULONG now_cc_tick = tx_time_get();
+        ULONG dt_ticks = (last_cc_tick == 0U) ? cmd_wait_ticks : (now_cc_tick - last_cc_tick);
+        float cc_dt = (float)dt_ticks * tx_tick_s;
+        last_cc_tick = now_cc_tick;
 
         if (snapshot_vehicle_data(&recvs))
             current_speed = recvs.vehicle_speed;
-        if (recv.cruise_control_enabled == true) {
-            active_cruise_control = cruise_control(recv.cruise_control_target_speed, current_speed, recv.cruise_control_enabled); // Ensure manual throttle is off when cruise control is active
+        if (r == TX_SUCCESS) {
+            local_cmd = recv;
+
+            // Update global copy for diagnostics/backwards compatibility
+            if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                g_vehicle_command = recv;
+                tx_mutex_put(&g_vehicle_command_mutex);
+            }
+        }
+
+        if (local_cmd.cruise_control_enabled == true) {
+            active_cruise_control = cruise_control(local_cmd.cruise_control_target_speed,
+                                                   current_speed,
+                                                   local_cmd.cruise_control_enabled,
+                                                   cc_dt);
             if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
                 g_vehicle_data.cruise_control_active = active_cruise_control;
                 tx_mutex_put(&g_vehicle_data_mutex);
@@ -139,6 +158,7 @@ void Control_Thread_Entry(ULONG thread_input) {
                 tx_mutex_put(&g_vehicle_data_mutex);
             }
         }
+
         if (r == TX_SUCCESS) {
             // Got a command - reset timeout counter
             no_cmd_ticks = 0;
