@@ -6,6 +6,8 @@ TOOLCHAIN=$(CURDIR)/ToolChain.cmake
 KUKSADIR=$(CURDIR)/kuksa
 LIBKUKSADIR=$(CURDIR)/libkuksa
 KUKSABUILDDIR=$(LIBKUKSADIR)/build
+OPENCV_LIBS  := $(shell pkg-config --libs opencv4)
+OPENCV_FLAGS := $(shell pkg-config --cflags opencv4)
 
 CC=/usr/bin/gcc
 CXX=/usr/bin/g++
@@ -32,6 +34,14 @@ run.only:
 	$(call log,Running C++ Client...)
 	@$(BINDIR)/cpp_client $(ARGS)
 
+run.only-auto:
+	$(call log,Running C++ Client [AUTOPILOT]...)
+	@$(BINDIR)/cpp_client --auto
+
+run.only-manual:
+	$(call log,Running C++ Client [MANUAL]...)
+	@$(BINDIR)/cpp_client --manual
+
 re: 
 	rm -rf $(BINDIR)/cpp_client
 	$(MAKE) build
@@ -41,7 +51,7 @@ build: $(BINDIR)/cpp_client
 $(BINDIR)/cpp_client: | build_libcarla build_libkuksa
 	$(call log,Compiling C++ Client...)
 	@mkdir -p $(BINDIR)
-	@$(CXX) $(CXXFLAGS) -I . -I$(INSTALLDIR)/include -isystem $(INSTALLDIR)/include/system -L$(INSTALLDIR)/lib \
+	@$(CXX) $(CXXFLAGS) $(OPENCV_FLAGS) -I . -I$(INSTALLDIR)/include -isystem $(INSTALLDIR)/include/system -L$(INSTALLDIR)/lib \
 		-o $(BINDIR)/cpp_client src/main.cpp \
 		$(KUKSADIR)/val/v2/*.cc $(KUKSADIR)/val/v2/*.cpp \
 		-Wl,-Bstatic -lcarla_client -lrpc -lboost_filesystem -Wl,-Bdynamic \
@@ -61,8 +71,9 @@ $(BINDIR)/cpp_client: | build_libcarla build_libkuksa
 		$(ABSL_LIBS) \
 		-Wl,--end-group \
 		-lz -lssl -lcrypto -ldl -lpthread \
-		-lpng -ltiff -ljpeg -lRecast -lDetour -lDetourCrowd
-
+		-lpng -ltiff -ljpeg -lRecast -lDetour -lDetourCrowd \
+		$(OPENCV_LIBS)
+		
 build_libcarla: $(TOOLCHAIN)
 	@cd $(CARLADIR); make setup
 	@mkdir -p $(BUILDDIR)
