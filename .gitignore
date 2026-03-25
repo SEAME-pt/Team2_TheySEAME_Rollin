@@ -14,3 +14,6 @@ latex/
 
 #kuksa
 .venv
+
+# Datasets
+datasets/*
