@@ -20,7 +20,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "app_threadx.h"
-#include "Control/control_queue.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -51,6 +50,7 @@ extern TX_THREAD _tx_timer_thread;
 /* USER CODE BEGIN PV */
 TX_THREAD communication_thread;
 TX_THREAD battery_thread;
+TX_THREAD imu_thread;
 TX_THREAD speed_thread;
 TX_THREAD sensors_proc_thread;
 TX_THREAD test_thread;
@@ -60,10 +60,12 @@ UCHAR sensors_proc_thread_stack[2048];
 UCHAR test_thread_stack[2048];
 UCHAR speed_thread_stack[2048];
 UCHAR battery_thread_stack[2048];
+UCHAR imu_thread_stack[2048];
 UCHAR communication_thread_stack[2048];
 UCHAR control_thread_stack[2048];
 
 extern void Battery_Thread_Entry(ULONG thread_input);
+extern void IMU_Thread_Entry(ULONG thread_input);
 extern void Communication_Thread_Entry(ULONG thread_input);
 extern void Control_Thread_Entry(ULONG thread_input);
 extern void Test_Thread_Entry(ULONG thread_input);
@@ -153,6 +155,15 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   status = tx_thread_create(&battery_thread, "Battery Thread",
                             Battery_Thread_Entry, 0,
                             battery_thread_stack, sizeof(battery_thread_stack),
+                            10, 10, TX_NO_TIME_SLICE, TX_AUTO_START);
+  if (status != TX_SUCCESS) {
+      return TX_THREAD_ERROR;
+  }
+
+    // Create the imu monitoring thread
+  status = tx_thread_create(&imu_thread, "IMU Thread",
+                            IMU_Thread_Entry, 0,
+                            imu_thread_stack, sizeof(imu_thread_stack),
                             10, 10, TX_NO_TIME_SLICE, TX_AUTO_START);
   if (status != TX_SUCCESS) {
       return TX_THREAD_ERROR;

@@ -71,6 +71,10 @@
 									<listOptionValue builtIn="false" value="../AZURE_RTOS/App"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/threadx/common/inc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/threadx/ports/cortex_m33/gnu/inc"/>
+									<listOptionValue builtIn="false" value="../Drivers/BSP/B-U585I-IOT02A"/>
+									<listOptionValue builtIn="false" value="../Drivers/BSP/Components/iis2mdc"/>
+									<listOptionValue builtIn="false" value="../Drivers/BSP/Components/ism330dhcx"/>
+									<listOptionValue builtIn="false" value="/Drivers/BSP/Components/Common"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.204398873" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -102,7 +106,7 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="AZURE_RTOS"/>
 						<entry excluding="Tests/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Core"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
+						<entry excluding="BSP/B-U585I-IOT02A/b_u585i_iot02a_audio.c|BSP/U-U585I-IOT02A/b-u585i_iot02a_audio.h|BSP/B-U585I-IOT02A/b_u585i_iot02a_audio.h|BSP/B-U585I-IOT02A/b_u585i_iot02a_bus.c|BSP/B-U585I-IOT02A/b_u585i_iot02a_bus.h|BSP/B-U585I-IOT02A/b_u585i_iot02a_camera.c|BSP/B-U585I-IOT02A/b_u585i_iot02a_camera.h|BSP/B-U585I-IOT02A/b_u585i_iot02a_eeprom.c|BSP/B-U585I-IOT02A/b_u585i_iot02a_eeprom.h|BSP/B-U585I-IOT02A/b_u585i_iot02a_env_sensors.c|BSP/B-U585I-IOT02A/b_u585i_iot02a_env_sensors.h|BSP/B-U585I-IOT02A/b_u585i_iot02a_light_sensor.c|BSP/B-U585I-IOT02A/b_u585i_iot02a_light_sensor.h|BSP/B-U585I-IOT02A/b_u585i_iot02a_ospi.c|BSP/B-U585I-IOT02A/b_u585i_iot02a_ospi.h|BSP/B-U585I-IOT02A/b_u585i_iot02a_ranging_sensor.c|BSP/B-U585I-IOT02A/b_u585i_iot02a_ranging_sensor.h|BSP/B-U585I-IOT02A/b_u585i_iot02a_usbpd_pwr.c|BSP/B-U585I-IOT02A/b_u585i_iot02a_usbpd_pwr.h" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Drivers"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
 					</sourceEntries>
 				</configuration>
@@ -202,8 +206,8 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="AZURE_RTOS"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
+						<entry excluding="BSP/B-U585I-IOT02A/b_u585i_iot02a_audio.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -303,8 +307,8 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="AZURE_RTOS"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
+						<entry excluding="BSP/B-U585I-IOT02A/b_u585i_iot02a_audio.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -402,8 +406,8 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="AZURE_RTOS"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
+						<entry excluding="BSP/B-U585I-IOT02A/b_u585i_iot02a_audio.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

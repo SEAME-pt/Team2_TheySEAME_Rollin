@@ -54,6 +54,8 @@ extern "C" {
 #include "../Src/Sensors/sensors.h"
 #include "../Src/Communication/mcp2515.h"
 
+#include "b_u585i_iot02a.h"
+#include "b_u585i_iot02a_motion_sensors.h"
 
 /* USER CODE END Includes */
 
