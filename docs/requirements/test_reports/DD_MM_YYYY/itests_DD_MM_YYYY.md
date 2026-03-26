@@ -265,9 +265,9 @@ Test Steps:
     Expected:   Active target speed increases by 1 hm/h for each command actuation
 6. - [x] While cruise control is active, actuate the `-` command once
     Expected:   Active target speed decreases by 1 hm/h
-8. - [ ] Allow the vehicle to reach steady-state operation at the active target speed under stable road-load or simulated-load conditions
+8. - [x] Allow the vehicle to reach steady-state operation at the active target speed under stable road-load or simulated-load conditions
     Expected:   Vehicle speed is regulated to within ±2 hm/h of the active target speed
-9. - [ ] Actuate the brake pedal while cruise control is active
+9. - [x] Actuate the brake pedal while cruise control is active
     Expected:   Cruise control deactivates and throttle authority transfers back to the driver
 10. - [x] While cruise control is active, actuate the accelerator pedal
     Expected:   Cruise control deactivates and throttle authority transfers back to the driver
@@ -279,7 +279,7 @@ Test Steps:
     Expected:   Cruise control does not activate
 14. - [x] Attempt to activate cruise control with target speed above 130 hm/h
     Expected:   Cruise control does not activate
-15. - [ ] Attempt to activate cruise control with brake pedal actuated
+15. - [x] Attempt to activate cruise control with brake pedal actuated
     Expected:   Cruise control does not activate
 16. - [x] Attempt to activate cruise control with accelerator pedal actuated
     Expected:   Cruise control does not activate
