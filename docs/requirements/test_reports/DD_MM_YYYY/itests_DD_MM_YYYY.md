@@ -257,7 +257,7 @@ Test Steps:
 1. - [x] Set vehicle speed to a valid activation speed (for example, 60 hm/h), with brake pedal released, accelerator pedal released, and no active speed-sensor-related fault codes
 2. - [x] Actuate the `+` cruise control command
     Expected:   Cruise control activates only after `+` is actuated and all activation conditions are satisfied
-3. - [ ] Verify the initial target speed after activation
+3. - [X] Verify the initial target speed after activation
     Expected:   Initial target speed equals the current vehicle speed at the instant of activation
 4. - [x] While cruise control is active, actuate the `+` command once
     Expected:   Active target speed increases by 1 hm/h
