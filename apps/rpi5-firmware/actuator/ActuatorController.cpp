@@ -41,10 +41,17 @@ void ActuatorController::update(Events event) {
 			}
 			break;
 		case Events::CAR_CRUISE_CONTROL:
-			if (_subject.getkey(Keys::DpadY) == -1) {
+			if (_kuksa.getCcActive()) {
+				if (_subject.getkey(Keys::DpadY) == -1) {
+					_car->setCruiseControl(true, (int)_kuksa.getCcTargetSpeed() + 1);
+				} else if (_subject.getkey(Keys::DpadY) == 1) {
+					_car->setCruiseControl(true, (int)_kuksa.getCcTargetSpeed() - 1);
+				}
+				std::cout << "Target Speed to " << _kuksa.getCcTargetSpeed() << std::endl;
+			} else if (_subject.getkey(Keys::DpadY) == -1) {
 				_car->setCruiseControl(true, (int)_kuksa.getSpeed());
+				std::cout << "Cruise Control Active to " << _kuksa.getSpeed() << std::endl;
 			}
-			std::cout << "Cruise Control to " << (int)_kuksa.getSpeed() << std::endl;
 			break;
 
 		default:
