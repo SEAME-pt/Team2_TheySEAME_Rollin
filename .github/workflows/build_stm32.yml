@@ -1,6 +1,7 @@
 name: Build_STM32
 
 on:
+  workflow_call:
   workflow_dispatch:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -10,9 +11,6 @@ on:
     branches:
       - 'feature/stm32**'
       - 'fix/stm32**'
-
-permissions:
-  contents: write
 
 jobs:
   build:
@@ -57,23 +55,10 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: stm32-firmware-${{ github.sha }}
+          name: stm32-firmware
           path: |
             ${{ env.BUILD_DIR }}/STM32.elf
             ${{ env.BUILD_DIR }}/STM32.bin
             ${{ env.BUILD_DIR }}/STM32.hex
             ${{ env.BUILD_DIR }}/STM32.map
           retention-days: 30
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: stm32
-          name: STM32_Firmware
-          files: |
-            ${{ env.BUILD_DIR }}/STM32.elf
-            ${{ env.BUILD_DIR }}/STM32.bin
-            ${{ env.BUILD_DIR }}/STM32.hex
-            ${{ env.BUILD_DIR }}/STM32.map
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

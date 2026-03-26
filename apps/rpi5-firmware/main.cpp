@@ -18,7 +18,7 @@ void signal_handler(int signal) {
 
 int main() {
 	struct pollfd fds[2];
-	Evdev evdev("/dev/input/event6");
+	Evdev evdev("/dev/input/event4");
 	RemoteControl remote(evdev);
 	CAN can("can0", 500, 0, 0);
 	CarActuator *car = new ActuatorCAN(can, remote);

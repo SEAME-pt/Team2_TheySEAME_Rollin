@@ -12,8 +12,8 @@ int ActuatorController::processThrottle(const int rawThrottle) {
 }
 
 int ActuatorController::processSteering(const int rawSteering) {
-	int angle = std::clamp(((rawSteering - 127) / 1.27), -30.0, 30.0);
-	return (angle);
+	//int angle = std::clamp(((rawSteering - 127) / 1.27), -30.0, 30.0);
+	return (((rawSteering - 127) / 127));
 }
 
 void ActuatorController::update(Events event) {

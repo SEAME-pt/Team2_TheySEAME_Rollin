@@ -92,16 +92,32 @@ uint16_t INA219_ReadPower(INA219_t *ina219)
 /*
  * @brief:		This takes a minimum and maximum value an turn the current voltage
  * 				level into a percentage to give you a reference on how much battery life is left on your device.
+ * 				Uses exponential moving average (EMA) filtering to prevent voltage sag under load
+ * 				from causing rapid fluctuations in the battery percentage reading.
  * @param:	<object pointer> <maximum mili-voltage level> <minumum mili-voltage level>
  * @retval: 	Percentage floating point value
  * @example: 	GetBatteryLife(&ina219, 6000, 4000)
  * 				returns 75.02%
  */
+static float filteredVoltage = 0.0f;
+static bool voltageFilterInitialized = false;
+#define BATTERY_EMA_ALPHA 0.05f  // Low alpha = more smoothing (0.05 = ~20 samples to reach 63% of new value)
+
 float INA219_GetBatteryLife(INA219_t *ina219,float batteryMax, float batteryMin)
 {
 	float  percentageLife = 0.0f;
 	uint16_t vbus = INA219_ReadBusVoltage(ina219);
-	percentageLife = (vbus - batteryMin) / (batteryMax - batteryMin);
+	
+	// Apply exponential moving average filter to smooth voltage readings
+	// This prevents voltage sag under load from causing rapid battery % fluctuations
+	if (!voltageFilterInitialized) {
+		filteredVoltage = (float)vbus;
+		voltageFilterInitialized = true;
+	} else {
+		filteredVoltage = BATTERY_EMA_ALPHA * (float)vbus + (1.0f - BATTERY_EMA_ALPHA) * filteredVoltage;
+	}
+	
+	percentageLife = (filteredVoltage - batteryMin) / (batteryMax - batteryMin);
 	if(percentageLife >= 0 )
 	{
 		return percentageLife * 100;
