@@ -20,6 +20,8 @@ set(PKG_CONFIG_USE_CMAKE_PREFIX_PATH OFF)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GRPC REQUIRED IMPORTED_TARGET grpc++ grpc)
 pkg_check_modules(PROTOBUF REQUIRED IMPORTED_TARGET protobuf)
+pkg_check_modules(ZLIB REQUIRED IMPORTED_TARGET zlib)
+pkg_check_modules(SYSTEMD REQUIRED IMPORTED_TARGET libsystemd)
 
 add_library(qtAppLib
     src/generalInfo.cpp
@@ -35,6 +37,8 @@ target_link_libraries(qtAppLib
         Qt6::Positioning
         PkgConfig::GRPC
         PkgConfig::PROTOBUF
+        PkgConfig::ZLIB
+        PkgConfig::SYSTEMD
 )
 
 target_sources(qtAppLib PRIVATE
@@ -70,6 +74,8 @@ target_link_libraries(qtAppExec
     Qt6::Positioning
     PkgConfig::GRPC
     PkgConfig::PROTOBUF
+    PkgConfig::ZLIB
+    PkgConfig::SYSTEMD
     qtAppLib
 )
 

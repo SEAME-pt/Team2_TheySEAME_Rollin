@@ -84,8 +84,8 @@ bool systemInfo::start()
         while (_running) {
             setSpeed(static_cast<int>(_kuksa.getSpeed()));
             setBattery(static_cast<int>(_kuksa.getBattery()));
-            setCruiseActive(_kuksa.getCruiseActive());
-            setTargetSpeed(static_cast<int>(_kuksa.getTargetSpeed()));
+            setCruiseActive(_kuksa.getCcActive());
+            setTargetSpeed(static_cast<int>(_kuksa.getCcTargetSpeed()));
 
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }

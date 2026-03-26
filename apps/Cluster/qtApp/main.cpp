@@ -19,12 +19,6 @@ int main(int argc, char *argv[])
         std::cerr << "Failed to communicate with kuksa" << std::endl;
     }
 
-    // Enable test mode if TEST_ANIMATION environment variable is set
-    if (std::getenv("TEST_ANIMATION")) {
-        sysInfo.setTestMode(true);
-        std::cout << "Test mode enabled: car distance will animate automatically" << std::endl;
-    }
-
     engine.rootContext()->setContextProperty("generalInfo", &info);
     engine.rootContext()->setContextProperty("systemInfo", &sysInfo);
     engine.addImportPath("qrc:/qml");

@@ -29,7 +29,6 @@ static const char* VAL_method_names[] = {
   "/kuksa.val.v2.VAL/Subscribe",
   "/kuksa.val.v2.VAL/SubscribeById",
   "/kuksa.val.v2.VAL/Actuate",
-  "/kuksa.val.v2.VAL/ActuateStream",
   "/kuksa.val.v2.VAL/BatchActuate",
   "/kuksa.val.v2.VAL/ListMetadata",
   "/kuksa.val.v2.VAL/PublishValue",
@@ -49,12 +48,11 @@ VAL::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const
   , rpcmethod_Subscribe_(VAL_method_names[2], options.suffix_for_stats(),::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
   , rpcmethod_SubscribeById_(VAL_method_names[3], options.suffix_for_stats(),::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
   , rpcmethod_Actuate_(VAL_method_names[4], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_ActuateStream_(VAL_method_names[5], options.suffix_for_stats(),::grpc::internal::RpcMethod::CLIENT_STREAMING, channel)
-  , rpcmethod_BatchActuate_(VAL_method_names[6], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_ListMetadata_(VAL_method_names[7], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_PublishValue_(VAL_method_names[8], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_OpenProviderStream_(VAL_method_names[9], options.suffix_for_stats(),::grpc::internal::RpcMethod::BIDI_STREAMING, channel)
-  , rpcmethod_GetServerInfo_(VAL_method_names[10], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_BatchActuate_(VAL_method_names[5], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_ListMetadata_(VAL_method_names[6], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_PublishValue_(VAL_method_names[7], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_OpenProviderStream_(VAL_method_names[8], options.suffix_for_stats(),::grpc::internal::RpcMethod::BIDI_STREAMING, channel)
+  , rpcmethod_GetServerInfo_(VAL_method_names[9], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status VAL::Stub::GetValue(::grpc::ClientContext* context, const ::kuksa::val::v2::GetValueRequest& request, ::kuksa::val::v2::GetValueResponse* response) {
@@ -156,22 +154,6 @@ void VAL::Stub::async::Actuate(::grpc::ClientContext* context, const ::kuksa::va
     this->PrepareAsyncActuateRaw(context, request, cq);
   result->StartCall();
   return result;
-}
-
-::grpc::ClientWriter< ::kuksa::val::v2::ActuateRequest>* VAL::Stub::ActuateStreamRaw(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response) {
-  return ::grpc::internal::ClientWriterFactory< ::kuksa::val::v2::ActuateRequest>::Create(channel_.get(), rpcmethod_ActuateStream_, context, response);
-}
-
-void VAL::Stub::async::ActuateStream(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response, ::grpc::ClientWriteReactor< ::kuksa::val::v2::ActuateRequest>* reactor) {
-  ::grpc::internal::ClientCallbackWriterFactory< ::kuksa::val::v2::ActuateRequest>::Create(stub_->channel_.get(), stub_->rpcmethod_ActuateStream_, context, response, reactor);
-}
-
-::grpc::ClientAsyncWriter< ::kuksa::val::v2::ActuateRequest>* VAL::Stub::AsyncActuateStreamRaw(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response, ::grpc::CompletionQueue* cq, void* tag) {
-  return ::grpc::internal::ClientAsyncWriterFactory< ::kuksa::val::v2::ActuateRequest>::Create(channel_.get(), cq, rpcmethod_ActuateStream_, context, response, true, tag);
-}
-
-::grpc::ClientAsyncWriter< ::kuksa::val::v2::ActuateRequest>* VAL::Stub::PrepareAsyncActuateStreamRaw(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response, ::grpc::CompletionQueue* cq) {
-  return ::grpc::internal::ClientAsyncWriterFactory< ::kuksa::val::v2::ActuateRequest>::Create(channel_.get(), cq, rpcmethod_ActuateStream_, context, response, false, nullptr);
 }
 
 ::grpc::Status VAL::Stub::BatchActuate(::grpc::ClientContext* context, const ::kuksa::val::v2::BatchActuateRequest& request, ::kuksa::val::v2::BatchActuateResponse* response) {
@@ -335,16 +317,6 @@ VAL::Service::Service() {
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       VAL_method_names[5],
-      ::grpc::internal::RpcMethod::CLIENT_STREAMING,
-      new ::grpc::internal::ClientStreamingHandler< VAL::Service, ::kuksa::val::v2::ActuateRequest, ::kuksa::val::v2::ActuateResponse>(
-          [](VAL::Service* service,
-             ::grpc::ServerContext* ctx,
-             ::grpc::ServerReader<::kuksa::val::v2::ActuateRequest>* reader,
-             ::kuksa::val::v2::ActuateResponse* resp) {
-               return service->ActuateStream(ctx, reader, resp);
-             }, this)));
-  AddMethod(new ::grpc::internal::RpcServiceMethod(
-      VAL_method_names[6],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< VAL::Service, ::kuksa::val::v2::BatchActuateRequest, ::kuksa::val::v2::BatchActuateResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
           [](VAL::Service* service,
@@ -354,7 +326,7 @@ VAL::Service::Service() {
                return service->BatchActuate(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      VAL_method_names[7],
+      VAL_method_names[6],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< VAL::Service, ::kuksa::val::v2::ListMetadataRequest, ::kuksa::val::v2::ListMetadataResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
           [](VAL::Service* service,
@@ -364,7 +336,7 @@ VAL::Service::Service() {
                return service->ListMetadata(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      VAL_method_names[8],
+      VAL_method_names[7],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< VAL::Service, ::kuksa::val::v2::PublishValueRequest, ::kuksa::val::v2::PublishValueResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
           [](VAL::Service* service,
@@ -374,7 +346,7 @@ VAL::Service::Service() {
                return service->PublishValue(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      VAL_method_names[9],
+      VAL_method_names[8],
       ::grpc::internal::RpcMethod::BIDI_STREAMING,
       new ::grpc::internal::BidiStreamingHandler< VAL::Service, ::kuksa::val::v2::OpenProviderStreamRequest, ::kuksa::val::v2::OpenProviderStreamResponse>(
           [](VAL::Service* service,
@@ -384,7 +356,7 @@ VAL::Service::Service() {
                return service->OpenProviderStream(ctx, stream);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      VAL_method_names[10],
+      VAL_method_names[9],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< VAL::Service, ::kuksa::val::v2::GetServerInfoRequest, ::kuksa::val::v2::GetServerInfoResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
           [](VAL::Service* service,
@@ -429,13 +401,6 @@ VAL::Service::~Service() {
 ::grpc::Status VAL::Service::Actuate(::grpc::ServerContext* context, const ::kuksa::val::v2::ActuateRequest* request, ::kuksa::val::v2::ActuateResponse* response) {
   (void) context;
   (void) request;
-  (void) response;
-  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-}
-
-::grpc::Status VAL::Service::ActuateStream(::grpc::ServerContext* context, ::grpc::ServerReader< ::kuksa::val::v2::ActuateRequest>* reader, ::kuksa::val::v2::ActuateResponse* response) {
-  (void) context;
-  (void) reader;
   (void) response;
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }

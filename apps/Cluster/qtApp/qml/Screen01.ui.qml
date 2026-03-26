@@ -20,13 +20,13 @@ Rectangle {
     // TEST MODE: Set to true to test without systemInfo (for Qt Design Studio preview)
     property bool previewMode: true
     property real previewLeftCarDistance: 100  // Start at closest position
-    
+
     // Preview mode properties for generalInfo (date/time/weather)
     property string previewDate: "19/03/2026"
     property string previewTime: "14:30"
     property string previewTemperature: "22"
     property string previewWeatherInfo: "sun"
-    
+
     // Preview mode properties for systemInfo
     property int previewSpeed: 85
     property int previewBattery: 78
@@ -164,7 +164,7 @@ Rectangle {
             height: 36
             source: "images/CC.png"
             fillMode: Image.PreserveAspectFit
-            visible: rectangle.previewMode ? rectangle.previewCruiseActive : (systemInfo ? systemInfo.cruiseActive : false)
+            visible: rectangle.previewMode ? rectangle.previewCruiseActive : (systemInfo ? systemInfo._cruiseActive : false)
         }
 
         Text {
@@ -173,7 +173,7 @@ Rectangle {
             y: 155
             width: 120
             color: "#47473f"
-            text: rectangle.previewMode ? (rectangle.previewCruiseActive ? rectangle.previewTargetSpeed.toString() + " hm/h" : "---") : (systemInfo ? systemInfo.targetSpeedDisplay : "---")
+            text: rectangle.previewMode ? (rectangle.previewCruiseActive ? rectangle._targetSpeed.toString() + " hm/h" : "---") : (systemInfo ? systemInfo.targetSpeedDisplay : "---")
             font.pixelSize: 16
             font.family: "BaseNeueTrial-Bold"
             font.bold: true
@@ -190,7 +190,7 @@ Rectangle {
             height: 52 + 80 * (distance / 100)
             source: "images/leftCar.png.png"
             fillMode: Image.PreserveAspectFit
-            visible: true
+            visible: false
             opacity: 0.85
 
             Behavior on x { NumberAnimation { duration: 300; easing.type: Easing.InOutQuad } }
@@ -208,7 +208,7 @@ Rectangle {
             height: 80
             source: "images/frontCar.png.png"
             fillMode: Image.PreserveAspectFit
-            visible: true  // Test: visible to preview layout
+            visible: false  // Test: visible to preview layout
             opacity: 0.85
         }
 
@@ -221,7 +221,7 @@ Rectangle {
             height: 80
             source: "images/rightCar.png"
             fillMode: Image.PreserveAspectFit
-            visible: true  // Test: visible to preview layout
+            visible: false  // Test: visible to preview layout
             opacity: 0.85
         }
 

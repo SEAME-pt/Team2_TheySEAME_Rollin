@@ -24,25 +24,46 @@ namespace kuksa {
 namespace val {
 namespace v2 {
 
-inline constexpr UpdateFilterResponse::Impl_::Impl_(
+inline constexpr SubscribeRequest::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
-      : request_id_{0u},
-        filter_error_{static_cast< ::kuksa::val::v2::FilterError >(0)},
+      : signal_paths_{},
+        buffer_size_{0u},
         _cached_size_{0} {}
 
 template <typename>
-PROTOBUF_CONSTEXPR UpdateFilterResponse::UpdateFilterResponse(::_pbi::ConstantInitialized)
+PROTOBUF_CONSTEXPR SubscribeRequest::SubscribeRequest(::_pbi::ConstantInitialized)
     : _impl_(::_pbi::ConstantInitialized()) {}
-struct UpdateFilterResponseDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR UpdateFilterResponseDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~UpdateFilterResponseDefaultTypeInternal() {}
+struct SubscribeRequestDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR SubscribeRequestDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~SubscribeRequestDefaultTypeInternal() {}
   union {
-    UpdateFilterResponse _instance;
+    SubscribeRequest _instance;
   };
 };
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 UpdateFilterResponseDefaultTypeInternal _UpdateFilterResponse_default_instance_;
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SubscribeRequestDefaultTypeInternal _SubscribeRequest_default_instance_;
+
+inline constexpr SubscribeByIdRequest::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : signal_ids_{},
+        _signal_ids_cached_byte_size_{0},
+        buffer_size_{0u},
+        _cached_size_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR SubscribeByIdRequest::SubscribeByIdRequest(::_pbi::ConstantInitialized)
+    : _impl_(::_pbi::ConstantInitialized()) {}
+struct SubscribeByIdRequestDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR SubscribeByIdRequestDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~SubscribeByIdRequestDefaultTypeInternal() {}
+  union {
+    SubscribeByIdRequest _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SubscribeByIdRequestDefaultTypeInternal _SubscribeByIdRequest_default_instance_;
       template <typename>
 PROTOBUF_CONSTEXPR PublishValueResponse::PublishValueResponse(::_pbi::ConstantInitialized) {}
 struct PublishValueResponseDefaultTypeInternal {
@@ -55,37 +76,6 @@ struct PublishValueResponseDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PublishValueResponseDefaultTypeInternal _PublishValueResponse_default_instance_;
-
-inline constexpr ProviderErrorIndication::Impl_::Impl_(
-    ::_pbi::ConstantInitialized) noexcept
-      : provider_error_{static_cast< ::kuksa::val::v2::ProviderError >(0)},
-        _cached_size_{0} {}
-
-template <typename>
-PROTOBUF_CONSTEXPR ProviderErrorIndication::ProviderErrorIndication(::_pbi::ConstantInitialized)
-    : _impl_(::_pbi::ConstantInitialized()) {}
-struct ProviderErrorIndicationDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR ProviderErrorIndicationDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~ProviderErrorIndicationDefaultTypeInternal() {}
-  union {
-    ProviderErrorIndication _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ProviderErrorIndicationDefaultTypeInternal _ProviderErrorIndication_default_instance_;
-      template <typename>
-PROTOBUF_CONSTEXPR ProvideSignalResponse::ProvideSignalResponse(::_pbi::ConstantInitialized) {}
-struct ProvideSignalResponseDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR ProvideSignalResponseDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~ProvideSignalResponseDefaultTypeInternal() {}
-  union {
-    ProvideSignalResponse _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ProvideSignalResponseDefaultTypeInternal _ProvideSignalResponse_default_instance_;
       template <typename>
 PROTOBUF_CONSTEXPR ProvideActuationResponse::ProvideActuationResponse(::_pbi::ConstantInitialized) {}
 struct ProvideActuationResponseDefaultTypeInternal {
@@ -161,27 +151,6 @@ struct GetServerInfoRequestDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetServerInfoRequestDefaultTypeInternal _GetServerInfoRequest_default_instance_;
-
-inline constexpr GetProviderValueRequest::Impl_::Impl_(
-    ::_pbi::ConstantInitialized) noexcept
-      : signal_ids_{},
-        _signal_ids_cached_byte_size_{0},
-        request_id_{0u},
-        _cached_size_{0} {}
-
-template <typename>
-PROTOBUF_CONSTEXPR GetProviderValueRequest::GetProviderValueRequest(::_pbi::ConstantInitialized)
-    : _impl_(::_pbi::ConstantInitialized()) {}
-struct GetProviderValueRequestDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR GetProviderValueRequestDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~GetProviderValueRequestDefaultTypeInternal() {}
-  union {
-    GetProviderValueRequest _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetProviderValueRequestDefaultTypeInternal _GetProviderValueRequest_default_instance_;
       template <typename>
 PROTOBUF_CONSTEXPR BatchActuateResponse::BatchActuateResponse(::_pbi::ConstantInitialized) {}
 struct BatchActuateResponseDefaultTypeInternal {
@@ -218,18 +187,6 @@ struct PublishValuesResponse_StatusEntry_DoNotUseDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PublishValuesResponse_StatusEntry_DoNotUseDefaultTypeInternal _PublishValuesResponse_StatusEntry_DoNotUse_default_instance_;
-      template <typename>
-PROTOBUF_CONSTEXPR ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse::ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse(::_pbi::ConstantInitialized) {}
-struct ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUseDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUseDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUseDefaultTypeInternal() {}
-  union {
-    ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUseDefaultTypeInternal _ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse_default_instance_;
 
 inline constexpr ProvideActuationRequest::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -307,66 +264,11 @@ struct BatchActuateStreamResponseDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 BatchActuateStreamResponseDefaultTypeInternal _BatchActuateStreamResponse_default_instance_;
-      template <typename>
-PROTOBUF_CONSTEXPR UpdateFilterRequest_FiltersUpdateEntry_DoNotUse::UpdateFilterRequest_FiltersUpdateEntry_DoNotUse(::_pbi::ConstantInitialized) {}
-struct UpdateFilterRequest_FiltersUpdateEntry_DoNotUseDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR UpdateFilterRequest_FiltersUpdateEntry_DoNotUseDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~UpdateFilterRequest_FiltersUpdateEntry_DoNotUseDefaultTypeInternal() {}
-  union {
-    UpdateFilterRequest_FiltersUpdateEntry_DoNotUse _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 UpdateFilterRequest_FiltersUpdateEntry_DoNotUseDefaultTypeInternal _UpdateFilterRequest_FiltersUpdateEntry_DoNotUse_default_instance_;
-
-inline constexpr SubscribeRequest::Impl_::Impl_(
-    ::_pbi::ConstantInitialized) noexcept
-      : _cached_size_{0},
-        signal_paths_{},
-        filter_{nullptr},
-        buffer_size_{0u} {}
-
-template <typename>
-PROTOBUF_CONSTEXPR SubscribeRequest::SubscribeRequest(::_pbi::ConstantInitialized)
-    : _impl_(::_pbi::ConstantInitialized()) {}
-struct SubscribeRequestDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR SubscribeRequestDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~SubscribeRequestDefaultTypeInternal() {}
-  union {
-    SubscribeRequest _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SubscribeRequestDefaultTypeInternal _SubscribeRequest_default_instance_;
-
-inline constexpr SubscribeByIdRequest::Impl_::Impl_(
-    ::_pbi::ConstantInitialized) noexcept
-      : _cached_size_{0},
-        signal_ids_{},
-        _signal_ids_cached_byte_size_{0},
-        filter_{nullptr},
-        buffer_size_{0u} {}
-
-template <typename>
-PROTOBUF_CONSTEXPR SubscribeByIdRequest::SubscribeByIdRequest(::_pbi::ConstantInitialized)
-    : _impl_(::_pbi::ConstantInitialized()) {}
-struct SubscribeByIdRequestDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR SubscribeByIdRequestDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~SubscribeByIdRequestDefaultTypeInternal() {}
-  union {
-    SubscribeByIdRequest _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SubscribeByIdRequestDefaultTypeInternal _SubscribeByIdRequest_default_instance_;
 
 inline constexpr PublishValuesResponse::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : status_{},
-        request_id_{0u},
+        request_id_{0},
         _cached_size_{0} {}
 
 template <typename>
@@ -382,25 +284,6 @@ struct PublishValuesResponseDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PublishValuesResponseDefaultTypeInternal _PublishValuesResponse_default_instance_;
-
-inline constexpr ProvideSignalRequest::Impl_::Impl_(
-    ::_pbi::ConstantInitialized) noexcept
-      : signals_sample_intervals_{},
-        _cached_size_{0} {}
-
-template <typename>
-PROTOBUF_CONSTEXPR ProvideSignalRequest::ProvideSignalRequest(::_pbi::ConstantInitialized)
-    : _impl_(::_pbi::ConstantInitialized()) {}
-struct ProvideSignalRequestDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR ProvideSignalRequestDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~ProvideSignalRequestDefaultTypeInternal() {}
-  union {
-    ProvideSignalRequest _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ProvideSignalRequestDefaultTypeInternal _ProvideSignalRequest_default_instance_;
 
 inline constexpr ActuateRequest::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -421,26 +304,6 @@ struct ActuateRequestDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ActuateRequestDefaultTypeInternal _ActuateRequest_default_instance_;
-
-inline constexpr UpdateFilterRequest::Impl_::Impl_(
-    ::_pbi::ConstantInitialized) noexcept
-      : filters_update_{},
-        request_id_{0u},
-        _cached_size_{0} {}
-
-template <typename>
-PROTOBUF_CONSTEXPR UpdateFilterRequest::UpdateFilterRequest(::_pbi::ConstantInitialized)
-    : _impl_(::_pbi::ConstantInitialized()) {}
-struct UpdateFilterRequestDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR UpdateFilterRequestDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~UpdateFilterRequestDefaultTypeInternal() {}
-  union {
-    UpdateFilterRequest _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 UpdateFilterRequestDefaultTypeInternal _UpdateFilterRequest_default_instance_;
       template <typename>
 PROTOBUF_CONSTEXPR SubscribeResponse_EntriesEntry_DoNotUse::SubscribeResponse_EntriesEntry_DoNotUse(::_pbi::ConstantInitialized) {}
 struct SubscribeResponse_EntriesEntry_DoNotUseDefaultTypeInternal {
@@ -554,18 +417,6 @@ struct GetValueResponseDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetValueResponseDefaultTypeInternal _GetValueResponse_default_instance_;
-      template <typename>
-PROTOBUF_CONSTEXPR GetProviderValueResponse_EntriesEntry_DoNotUse::GetProviderValueResponse_EntriesEntry_DoNotUse(::_pbi::ConstantInitialized) {}
-struct GetProviderValueResponse_EntriesEntry_DoNotUseDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR GetProviderValueResponse_EntriesEntry_DoNotUseDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~GetProviderValueResponse_EntriesEntry_DoNotUseDefaultTypeInternal() {}
-  union {
-    GetProviderValueResponse_EntriesEntry_DoNotUse _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetProviderValueResponse_EntriesEntry_DoNotUseDefaultTypeInternal _GetProviderValueResponse_EntriesEntry_DoNotUse_default_instance_;
 
 inline constexpr BatchActuateStreamRequest::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -646,7 +497,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
 inline constexpr PublishValuesRequest::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : data_points_{},
-        request_id_{0u},
+        request_id_{0},
         _cached_size_{0} {}
 
 template <typename>
@@ -683,26 +534,6 @@ struct OpenProviderStreamResponseDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 OpenProviderStreamResponseDefaultTypeInternal _OpenProviderStreamResponse_default_instance_;
 
-inline constexpr GetProviderValueResponse::Impl_::Impl_(
-    ::_pbi::ConstantInitialized) noexcept
-      : entries_{},
-        request_id_{0u},
-        _cached_size_{0} {}
-
-template <typename>
-PROTOBUF_CONSTEXPR GetProviderValueResponse::GetProviderValueResponse(::_pbi::ConstantInitialized)
-    : _impl_(::_pbi::ConstantInitialized()) {}
-struct GetProviderValueResponseDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR GetProviderValueResponseDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~GetProviderValueResponseDefaultTypeInternal() {}
-  union {
-    GetProviderValueResponse _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetProviderValueResponseDefaultTypeInternal _GetProviderValueResponse_default_instance_;
-
 inline constexpr OpenProviderStreamRequest::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : action_{},
@@ -725,7 +556,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
 }  // namespace v2
 }  // namespace val
 }  // namespace kuksa
-static ::_pb::Metadata file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[40];
+static ::_pb::Metadata file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[30];
 static constexpr const ::_pb::EnumDescriptor**
     file_level_enum_descriptors_kuksa_2fval_2fv2_2fval_2eproto = nullptr;
 static constexpr const ::_pb::ServiceDescriptor**
@@ -770,7 +601,7 @@ const ::uint32_t TableStruct_kuksa_2fval_2fv2_2fval_2eproto::offsets[] PROTOBUF_
     ~0u,  // no _split_
     ~0u,  // no sizeof(Split)
     PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::GetValuesResponse, _impl_.data_points_),
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::SubscribeRequest, _impl_._has_bits_),
+    ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::SubscribeRequest, _internal_metadata_),
     ~0u,  // no _extensions_
     ~0u,  // no _oneof_case_
@@ -780,10 +611,6 @@ const ::uint32_t TableStruct_kuksa_2fval_2fv2_2fval_2eproto::offsets[] PROTOBUF_
     ~0u,  // no sizeof(Split)
     PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::SubscribeRequest, _impl_.signal_paths_),
     PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::SubscribeRequest, _impl_.buffer_size_),
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::SubscribeRequest, _impl_.filter_),
-    ~0u,
-    ~0u,
-    0,
     PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::SubscribeResponse_EntriesEntry_DoNotUse, _has_bits_),
     PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::SubscribeResponse_EntriesEntry_DoNotUse, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -805,7 +632,7 @@ const ::uint32_t TableStruct_kuksa_2fval_2fv2_2fval_2eproto::offsets[] PROTOBUF_
     ~0u,  // no _split_
     ~0u,  // no sizeof(Split)
     PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::SubscribeResponse, _impl_.entries_),
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::SubscribeByIdRequest, _impl_._has_bits_),
+    ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::SubscribeByIdRequest, _internal_metadata_),
     ~0u,  // no _extensions_
     ~0u,  // no _oneof_case_
@@ -815,10 +642,6 @@ const ::uint32_t TableStruct_kuksa_2fval_2fv2_2fval_2eproto::offsets[] PROTOBUF_
     ~0u,  // no sizeof(Split)
     PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::SubscribeByIdRequest, _impl_.signal_ids_),
     PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::SubscribeByIdRequest, _impl_.buffer_size_),
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::SubscribeByIdRequest, _impl_.filter_),
-    ~0u,
-    ~0u,
-    0,
     PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::SubscribeByIdResponse_EntriesEntry_DoNotUse, _has_bits_),
     PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::SubscribeByIdResponse_EntriesEntry_DoNotUse, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -977,35 +800,6 @@ const ::uint32_t TableStruct_kuksa_2fval_2fv2_2fval_2eproto::offsets[] PROTOBUF_
     ~0u,  // no _inlined_string_donated_
     ~0u,  // no _split_
     ~0u,  // no sizeof(Split)
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse, _has_bits_),
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse, _internal_metadata_),
-    ~0u,  // no _extensions_
-    ~0u,  // no _oneof_case_
-    ~0u,  // no _weak_field_map_
-    ~0u,  // no _inlined_string_donated_
-    ~0u,  // no _split_
-    ~0u,  // no sizeof(Split)
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse, key_),
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse, value_),
-    0,
-    1,
-    ~0u,  // no _has_bits_
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::ProvideSignalRequest, _internal_metadata_),
-    ~0u,  // no _extensions_
-    ~0u,  // no _oneof_case_
-    ~0u,  // no _weak_field_map_
-    ~0u,  // no _inlined_string_donated_
-    ~0u,  // no _split_
-    ~0u,  // no sizeof(Split)
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::ProvideSignalRequest, _impl_.signals_sample_intervals_),
-    ~0u,  // no _has_bits_
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::ProvideSignalResponse, _internal_metadata_),
-    ~0u,  // no _extensions_
-    ~0u,  // no _oneof_case_
-    ~0u,  // no _weak_field_map_
-    ~0u,  // no _inlined_string_donated_
-    ~0u,  // no _split_
-    ~0u,  // no sizeof(Split)
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::BatchActuateStreamRequest, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -1027,79 +821,6 @@ const ::uint32_t TableStruct_kuksa_2fval_2fv2_2fval_2eproto::offsets[] PROTOBUF_
     PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::BatchActuateStreamResponse, _impl_.error_),
     0,
     1,
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::UpdateFilterRequest_FiltersUpdateEntry_DoNotUse, _has_bits_),
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::UpdateFilterRequest_FiltersUpdateEntry_DoNotUse, _internal_metadata_),
-    ~0u,  // no _extensions_
-    ~0u,  // no _oneof_case_
-    ~0u,  // no _weak_field_map_
-    ~0u,  // no _inlined_string_donated_
-    ~0u,  // no _split_
-    ~0u,  // no sizeof(Split)
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::UpdateFilterRequest_FiltersUpdateEntry_DoNotUse, key_),
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::UpdateFilterRequest_FiltersUpdateEntry_DoNotUse, value_),
-    0,
-    1,
-    ~0u,  // no _has_bits_
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::UpdateFilterRequest, _internal_metadata_),
-    ~0u,  // no _extensions_
-    ~0u,  // no _oneof_case_
-    ~0u,  // no _weak_field_map_
-    ~0u,  // no _inlined_string_donated_
-    ~0u,  // no _split_
-    ~0u,  // no sizeof(Split)
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::UpdateFilterRequest, _impl_.request_id_),
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::UpdateFilterRequest, _impl_.filters_update_),
-    ~0u,  // no _has_bits_
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::UpdateFilterResponse, _internal_metadata_),
-    ~0u,  // no _extensions_
-    ~0u,  // no _oneof_case_
-    ~0u,  // no _weak_field_map_
-    ~0u,  // no _inlined_string_donated_
-    ~0u,  // no _split_
-    ~0u,  // no sizeof(Split)
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::UpdateFilterResponse, _impl_.request_id_),
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::UpdateFilterResponse, _impl_.filter_error_),
-    ~0u,  // no _has_bits_
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::ProviderErrorIndication, _internal_metadata_),
-    ~0u,  // no _extensions_
-    ~0u,  // no _oneof_case_
-    ~0u,  // no _weak_field_map_
-    ~0u,  // no _inlined_string_donated_
-    ~0u,  // no _split_
-    ~0u,  // no sizeof(Split)
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::ProviderErrorIndication, _impl_.provider_error_),
-    ~0u,  // no _has_bits_
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::GetProviderValueRequest, _internal_metadata_),
-    ~0u,  // no _extensions_
-    ~0u,  // no _oneof_case_
-    ~0u,  // no _weak_field_map_
-    ~0u,  // no _inlined_string_donated_
-    ~0u,  // no _split_
-    ~0u,  // no sizeof(Split)
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::GetProviderValueRequest, _impl_.request_id_),
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::GetProviderValueRequest, _impl_.signal_ids_),
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::GetProviderValueResponse_EntriesEntry_DoNotUse, _has_bits_),
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::GetProviderValueResponse_EntriesEntry_DoNotUse, _internal_metadata_),
-    ~0u,  // no _extensions_
-    ~0u,  // no _oneof_case_
-    ~0u,  // no _weak_field_map_
-    ~0u,  // no _inlined_string_donated_
-    ~0u,  // no _split_
-    ~0u,  // no sizeof(Split)
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::GetProviderValueResponse_EntriesEntry_DoNotUse, key_),
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::GetProviderValueResponse_EntriesEntry_DoNotUse, value_),
-    0,
-    1,
-    ~0u,  // no _has_bits_
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::GetProviderValueResponse, _internal_metadata_),
-    ~0u,  // no _extensions_
-    ~0u,  // no _oneof_case_
-    ~0u,  // no _weak_field_map_
-    ~0u,  // no _inlined_string_donated_
-    ~0u,  // no _split_
-    ~0u,  // no sizeof(Split)
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::GetProviderValueResponse, _impl_.request_id_),
-    PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::GetProviderValueResponse, _impl_.entries_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::kuksa::val::v2::OpenProviderStreamRequest, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -1108,10 +829,6 @@ const ::uint32_t TableStruct_kuksa_2fval_2fv2_2fval_2eproto::offsets[] PROTOBUF_
     ~0u,  // no _inlined_string_donated_
     ~0u,  // no _split_
     ~0u,  // no sizeof(Split)
-    ::_pbi::kInvalidFieldOffsetTag,
-    ::_pbi::kInvalidFieldOffsetTag,
-    ::_pbi::kInvalidFieldOffsetTag,
-    ::_pbi::kInvalidFieldOffsetTag,
     ::_pbi::kInvalidFieldOffsetTag,
     ::_pbi::kInvalidFieldOffsetTag,
     ::_pbi::kInvalidFieldOffsetTag,
@@ -1124,9 +841,6 @@ const ::uint32_t TableStruct_kuksa_2fval_2fv2_2fval_2eproto::offsets[] PROTOBUF_
     ~0u,  // no _inlined_string_donated_
     ~0u,  // no _split_
     ~0u,  // no sizeof(Split)
-    ::_pbi::kInvalidFieldOffsetTag,
-    ::_pbi::kInvalidFieldOffsetTag,
-    ::_pbi::kInvalidFieldOffsetTag,
     ::_pbi::kInvalidFieldOffsetTag,
     ::_pbi::kInvalidFieldOffsetTag,
     ::_pbi::kInvalidFieldOffsetTag,
@@ -1158,42 +872,32 @@ static const ::_pbi::MigrationSchema
         {10, 19, -1, sizeof(::kuksa::val::v2::GetValueResponse)},
         {20, -1, -1, sizeof(::kuksa::val::v2::GetValuesRequest)},
         {29, -1, -1, sizeof(::kuksa::val::v2::GetValuesResponse)},
-        {38, 49, -1, sizeof(::kuksa::val::v2::SubscribeRequest)},
-        {52, 62, -1, sizeof(::kuksa::val::v2::SubscribeResponse_EntriesEntry_DoNotUse)},
-        {64, -1, -1, sizeof(::kuksa::val::v2::SubscribeResponse)},
-        {73, 84, -1, sizeof(::kuksa::val::v2::SubscribeByIdRequest)},
-        {87, 97, -1, sizeof(::kuksa::val::v2::SubscribeByIdResponse_EntriesEntry_DoNotUse)},
-        {99, -1, -1, sizeof(::kuksa::val::v2::SubscribeByIdResponse)},
-        {108, 118, -1, sizeof(::kuksa::val::v2::ActuateRequest)},
-        {120, -1, -1, sizeof(::kuksa::val::v2::ActuateResponse)},
-        {128, -1, -1, sizeof(::kuksa::val::v2::BatchActuateRequest)},
-        {137, -1, -1, sizeof(::kuksa::val::v2::BatchActuateResponse)},
-        {145, -1, -1, sizeof(::kuksa::val::v2::ListMetadataRequest)},
-        {155, -1, -1, sizeof(::kuksa::val::v2::ListMetadataResponse)},
-        {164, 174, -1, sizeof(::kuksa::val::v2::PublishValueRequest)},
-        {176, -1, -1, sizeof(::kuksa::val::v2::PublishValueResponse)},
-        {184, 194, -1, sizeof(::kuksa::val::v2::PublishValuesRequest_DataPointsEntry_DoNotUse)},
-        {196, -1, -1, sizeof(::kuksa::val::v2::PublishValuesRequest)},
-        {206, 216, -1, sizeof(::kuksa::val::v2::PublishValuesResponse_StatusEntry_DoNotUse)},
-        {218, -1, -1, sizeof(::kuksa::val::v2::PublishValuesResponse)},
-        {228, -1, -1, sizeof(::kuksa::val::v2::ProvideActuationRequest)},
-        {237, -1, -1, sizeof(::kuksa::val::v2::ProvideActuationResponse)},
-        {245, 255, -1, sizeof(::kuksa::val::v2::ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse)},
-        {257, -1, -1, sizeof(::kuksa::val::v2::ProvideSignalRequest)},
-        {266, -1, -1, sizeof(::kuksa::val::v2::ProvideSignalResponse)},
-        {274, -1, -1, sizeof(::kuksa::val::v2::BatchActuateStreamRequest)},
-        {283, 293, -1, sizeof(::kuksa::val::v2::BatchActuateStreamResponse)},
-        {295, 305, -1, sizeof(::kuksa::val::v2::UpdateFilterRequest_FiltersUpdateEntry_DoNotUse)},
-        {307, -1, -1, sizeof(::kuksa::val::v2::UpdateFilterRequest)},
-        {317, -1, -1, sizeof(::kuksa::val::v2::UpdateFilterResponse)},
-        {327, -1, -1, sizeof(::kuksa::val::v2::ProviderErrorIndication)},
-        {336, -1, -1, sizeof(::kuksa::val::v2::GetProviderValueRequest)},
-        {346, 356, -1, sizeof(::kuksa::val::v2::GetProviderValueResponse_EntriesEntry_DoNotUse)},
-        {358, -1, -1, sizeof(::kuksa::val::v2::GetProviderValueResponse)},
-        {368, -1, -1, sizeof(::kuksa::val::v2::OpenProviderStreamRequest)},
-        {384, -1, -1, sizeof(::kuksa::val::v2::OpenProviderStreamResponse)},
-        {399, -1, -1, sizeof(::kuksa::val::v2::GetServerInfoRequest)},
-        {407, -1, -1, sizeof(::kuksa::val::v2::GetServerInfoResponse)},
+        {38, -1, -1, sizeof(::kuksa::val::v2::SubscribeRequest)},
+        {48, 58, -1, sizeof(::kuksa::val::v2::SubscribeResponse_EntriesEntry_DoNotUse)},
+        {60, -1, -1, sizeof(::kuksa::val::v2::SubscribeResponse)},
+        {69, -1, -1, sizeof(::kuksa::val::v2::SubscribeByIdRequest)},
+        {79, 89, -1, sizeof(::kuksa::val::v2::SubscribeByIdResponse_EntriesEntry_DoNotUse)},
+        {91, -1, -1, sizeof(::kuksa::val::v2::SubscribeByIdResponse)},
+        {100, 110, -1, sizeof(::kuksa::val::v2::ActuateRequest)},
+        {112, -1, -1, sizeof(::kuksa::val::v2::ActuateResponse)},
+        {120, -1, -1, sizeof(::kuksa::val::v2::BatchActuateRequest)},
+        {129, -1, -1, sizeof(::kuksa::val::v2::BatchActuateResponse)},
+        {137, -1, -1, sizeof(::kuksa::val::v2::ListMetadataRequest)},
+        {147, -1, -1, sizeof(::kuksa::val::v2::ListMetadataResponse)},
+        {156, 166, -1, sizeof(::kuksa::val::v2::PublishValueRequest)},
+        {168, -1, -1, sizeof(::kuksa::val::v2::PublishValueResponse)},
+        {176, 186, -1, sizeof(::kuksa::val::v2::PublishValuesRequest_DataPointsEntry_DoNotUse)},
+        {188, -1, -1, sizeof(::kuksa::val::v2::PublishValuesRequest)},
+        {198, 208, -1, sizeof(::kuksa::val::v2::PublishValuesResponse_StatusEntry_DoNotUse)},
+        {210, -1, -1, sizeof(::kuksa::val::v2::PublishValuesResponse)},
+        {220, -1, -1, sizeof(::kuksa::val::v2::ProvideActuationRequest)},
+        {229, -1, -1, sizeof(::kuksa::val::v2::ProvideActuationResponse)},
+        {237, -1, -1, sizeof(::kuksa::val::v2::BatchActuateStreamRequest)},
+        {246, 256, -1, sizeof(::kuksa::val::v2::BatchActuateStreamResponse)},
+        {258, -1, -1, sizeof(::kuksa::val::v2::OpenProviderStreamRequest)},
+        {270, -1, -1, sizeof(::kuksa::val::v2::OpenProviderStreamResponse)},
+        {282, -1, -1, sizeof(::kuksa::val::v2::GetServerInfoRequest)},
+        {290, -1, -1, sizeof(::kuksa::val::v2::GetServerInfoResponse)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -1221,18 +925,8 @@ static const ::_pb::Message* const file_default_instances[] = {
     &::kuksa::val::v2::_PublishValuesResponse_default_instance_._instance,
     &::kuksa::val::v2::_ProvideActuationRequest_default_instance_._instance,
     &::kuksa::val::v2::_ProvideActuationResponse_default_instance_._instance,
-    &::kuksa::val::v2::_ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse_default_instance_._instance,
-    &::kuksa::val::v2::_ProvideSignalRequest_default_instance_._instance,
-    &::kuksa::val::v2::_ProvideSignalResponse_default_instance_._instance,
     &::kuksa::val::v2::_BatchActuateStreamRequest_default_instance_._instance,
     &::kuksa::val::v2::_BatchActuateStreamResponse_default_instance_._instance,
-    &::kuksa::val::v2::_UpdateFilterRequest_FiltersUpdateEntry_DoNotUse_default_instance_._instance,
-    &::kuksa::val::v2::_UpdateFilterRequest_default_instance_._instance,
-    &::kuksa::val::v2::_UpdateFilterResponse_default_instance_._instance,
-    &::kuksa::val::v2::_ProviderErrorIndication_default_instance_._instance,
-    &::kuksa::val::v2::_GetProviderValueRequest_default_instance_._instance,
-    &::kuksa::val::v2::_GetProviderValueResponse_EntriesEntry_DoNotUse_default_instance_._instance,
-    &::kuksa::val::v2::_GetProviderValueResponse_default_instance_._instance,
     &::kuksa::val::v2::_OpenProviderStreamRequest_default_instance_._instance,
     &::kuksa::val::v2::_OpenProviderStreamResponse_default_instance_._instance,
     &::kuksa::val::v2::_GetServerInfoRequest_default_instance_._instance,
@@ -1247,123 +941,85 @@ const char descriptor_table_protodef_kuksa_2fval_2fv2_2fval_2eproto[] PROTOBUF_S
     "luesRequest\022*\n\nsignal_ids\030\001 \003(\0132\026.kuksa."
     "val.v2.SignalID\"A\n\021GetValuesResponse\022,\n\013"
     "data_points\030\001 \003(\0132\027.kuksa.val.v2.Datapoi"
-    "nt\"c\n\020SubscribeRequest\022\024\n\014signal_paths\030\001"
-    " \003(\t\022\023\n\013buffer_size\030\002 \001(\r\022$\n\006filter\030\003 \001("
-    "\0132\024.kuksa.val.v2.Filter\"\233\001\n\021SubscribeRes"
-    "ponse\022=\n\007entries\030\001 \003(\0132,.kuksa.val.v2.Su"
-    "bscribeResponse.EntriesEntry\032G\n\014EntriesE"
-    "ntry\022\013\n\003key\030\001 \001(\t\022&\n\005value\030\002 \001(\0132\027.kuksa"
-    ".val.v2.Datapoint:\0028\001\"e\n\024SubscribeByIdRe"
-    "quest\022\022\n\nsignal_ids\030\001 \003(\005\022\023\n\013buffer_size"
-    "\030\002 \001(\r\022$\n\006filter\030\003 \001(\0132\024.kuksa.val.v2.Fi"
-    "lter\"\243\001\n\025SubscribeByIdResponse\022A\n\007entrie"
-    "s\030\001 \003(\01320.kuksa.val.v2.SubscribeByIdResp"
-    "onse.EntriesEntry\032G\n\014EntriesEntry\022\013\n\003key"
-    "\030\001 \001(\005\022&\n\005value\030\002 \001(\0132\027.kuksa.val.v2.Dat"
-    "apoint:\0028\001\"_\n\016ActuateRequest\022)\n\tsignal_i"
-    "d\030\001 \001(\0132\026.kuksa.val.v2.SignalID\022\"\n\005value"
-    "\030\002 \001(\0132\023.kuksa.val.v2.Value\"\021\n\017ActuateRe"
-    "sponse\"M\n\023BatchActuateRequest\0226\n\020actuate"
-    "_requests\030\001 \003(\0132\034.kuksa.val.v2.ActuateRe"
-    "quest\"\026\n\024BatchActuateResponse\"3\n\023ListMet"
-    "adataRequest\022\014\n\004root\030\001 \001(\t\022\016\n\006filter\030\002 \001"
-    "(\t\"@\n\024ListMetadataResponse\022(\n\010metadata\030\001"
-    " \003(\0132\026.kuksa.val.v2.Metadata\"m\n\023PublishV"
-    "alueRequest\022)\n\tsignal_id\030\001 \001(\0132\026.kuksa.v"
-    "al.v2.SignalID\022+\n\ndata_point\030\002 \001(\0132\027.kuk"
-    "sa.val.v2.Datapoint\"\026\n\024PublishValueRespo"
-    "nse\"\277\001\n\024PublishValuesRequest\022\022\n\nrequest_"
-    "id\030\001 \001(\r\022G\n\013data_points\030\002 \003(\01322.kuksa.va"
-    "l.v2.PublishValuesRequest.DataPointsEntr"
-    "y\032J\n\017DataPointsEntry\022\013\n\003key\030\001 \001(\005\022&\n\005val"
-    "ue\030\002 \001(\0132\027.kuksa.val.v2.Datapoint:\0028\001\"\260\001"
-    "\n\025PublishValuesResponse\022\022\n\nrequest_id\030\001 "
-    "\001(\r\022\?\n\006status\030\002 \003(\0132/.kuksa.val.v2.Publi"
-    "shValuesResponse.StatusEntry\032B\n\013StatusEn"
-    "try\022\013\n\003key\030\001 \001(\005\022\"\n\005value\030\002 \001(\0132\023.kuksa."
-    "val.v2.Error:\0028\001\"O\n\027ProvideActuationRequ"
-    "est\0224\n\024actuator_identifiers\030\001 \003(\0132\026.kuks"
-    "a.val.v2.SignalID\"\032\n\030ProvideActuationRes"
-    "ponse\"\325\001\n\024ProvideSignalRequest\022`\n\030signal"
-    "s_sample_intervals\030\001 \003(\0132>.kuksa.val.v2."
-    "ProvideSignalRequest.SignalsSampleInterv"
-    "alsEntry\032[\n\033SignalsSampleIntervalsEntry\022"
-    "\013\n\003key\030\001 \001(\005\022+\n\005value\030\002 \001(\0132\034.kuksa.val."
-    "v2.SampleInterval:\0028\001\"\027\n\025ProvideSignalRe"
-    "sponse\"S\n\031BatchActuateStreamRequest\0226\n\020a"
-    "ctuate_requests\030\001 \003(\0132\034.kuksa.val.v2.Act"
-    "uateRequest\"k\n\032BatchActuateStreamRespons"
-    "e\022)\n\tsignal_id\030\001 \001(\0132\026.kuksa.val.v2.Sign"
-    "alID\022\"\n\005error\030\002 \001(\0132\023.kuksa.val.v2.Error"
-    "\"\303\001\n\023UpdateFilterRequest\022\022\n\nrequest_id\030\001"
-    " \001(\r\022L\n\016filters_update\030\002 \003(\01324.kuksa.val"
-    ".v2.UpdateFilterRequest.FiltersUpdateEnt"
-    "ry\032J\n\022FiltersUpdateEntry\022\013\n\003key\030\001 \001(\005\022#\n"
-    "\005value\030\002 \001(\0132\024.kuksa.val.v2.Filter:\0028\001\"["
-    "\n\024UpdateFilterResponse\022\022\n\nrequest_id\030\001 \001"
-    "(\r\022/\n\014filter_error\030\002 \001(\0162\031.kuksa.val.v2."
-    "FilterError\"N\n\027ProviderErrorIndication\0223"
-    "\n\016provider_error\030\001 \001(\0162\033.kuksa.val.v2.Pr"
-    "oviderError\"A\n\027GetProviderValueRequest\022\022"
-    "\n\nrequest_id\030\001 \001(\r\022\022\n\nsignal_ids\030\002 \003(\005\"\275"
-    "\001\n\030GetProviderValueResponse\022\022\n\nrequest_i"
-    "d\030\001 \001(\r\022D\n\007entries\030\002 \003(\01323.kuksa.val.v2."
-    "GetProviderValueResponse.EntriesEntry\032G\n"
-    "\014EntriesEntry\022\013\n\003key\030\001 \001(\005\022&\n\005value\030\002 \001("
-    "\0132\027.kuksa.val.v2.Datapoint:\0028\001\"\261\004\n\031OpenP"
-    "roviderStreamRequest\022J\n\031provide_actuatio"
-    "n_request\030\001 \001(\0132%.kuksa.val.v2.ProvideAc"
-    "tuationRequestH\000\022D\n\026publish_values_reque"
-    "st\030\002 \001(\0132\".kuksa.val.v2.PublishValuesReq"
-    "uestH\000\022Q\n\035batch_actuate_stream_response\030"
-    "\003 \001(\0132(.kuksa.val.v2.BatchActuateStreamR"
-    "esponseH\000\022D\n\026provide_signal_request\030\004 \001("
-    "\0132\".kuksa.val.v2.ProvideSignalRequestH\000\022"
-    "D\n\026update_filter_response\030\005 \001(\0132\".kuksa."
-    "val.v2.UpdateFilterResponseH\000\022M\n\033get_pro"
-    "vider_value_response\030\006 \001(\0132&.kuksa.val.v"
-    "2.GetProviderValueResponseH\000\022J\n\031provider"
-    "_error_indication\030\007 \001(\0132%.kuksa.val.v2.P"
-    "roviderErrorIndicationH\000B\010\n\006action\"\346\003\n\032O"
-    "penProviderStreamResponse\022L\n\032provide_act"
-    "uation_response\030\001 \001(\0132&.kuksa.val.v2.Pro"
-    "videActuationResponseH\000\022F\n\027publish_value"
-    "s_response\030\002 \001(\0132#.kuksa.val.v2.PublishV"
-    "aluesResponseH\000\022O\n\034batch_actuate_stream_"
-    "request\030\003 \001(\0132\'.kuksa.val.v2.BatchActuat"
-    "eStreamRequestH\000\022F\n\027provide_signal_respo"
-    "nse\030\004 \001(\0132#.kuksa.val.v2.ProvideSignalRe"
-    "sponseH\000\022B\n\025update_filter_request\030\005 \001(\0132"
-    "!.kuksa.val.v2.UpdateFilterRequestH\000\022K\n\032"
-    "get_provider_value_request\030\006 \001(\0132%.kuksa"
-    ".val.v2.GetProviderValueRequestH\000B\010\n\006act"
-    "ion\"\026\n\024GetServerInfoRequest\"K\n\025GetServer"
-    "InfoResponse\022\014\n\004name\030\001 \001(\t\022\017\n\007version\030\002 "
-    "\001(\t\022\023\n\013commit_hash\030\003 \001(\t2\256\007\n\003VAL\022I\n\010GetV"
-    "alue\022\035.kuksa.val.v2.GetValueRequest\032\036.ku"
-    "ksa.val.v2.GetValueResponse\022L\n\tGetValues"
-    "\022\036.kuksa.val.v2.GetValuesRequest\032\037.kuksa"
-    ".val.v2.GetValuesResponse\022N\n\tSubscribe\022\036"
-    ".kuksa.val.v2.SubscribeRequest\032\037.kuksa.v"
-    "al.v2.SubscribeResponse0\001\022Z\n\rSubscribeBy"
-    "Id\022\".kuksa.val.v2.SubscribeByIdRequest\032#"
-    ".kuksa.val.v2.SubscribeByIdResponse0\001\022F\n"
-    "\007Actuate\022\034.kuksa.val.v2.ActuateRequest\032\035"
-    ".kuksa.val.v2.ActuateResponse\022N\n\rActuate"
-    "Stream\022\034.kuksa.val.v2.ActuateRequest\032\035.k"
-    "uksa.val.v2.ActuateResponse(\001\022U\n\014BatchAc"
-    "tuate\022!.kuksa.val.v2.BatchActuateRequest"
-    "\032\".kuksa.val.v2.BatchActuateResponse\022U\n\014"
-    "ListMetadata\022!.kuksa.val.v2.ListMetadata"
-    "Request\032\".kuksa.val.v2.ListMetadataRespo"
-    "nse\022U\n\014PublishValue\022!.kuksa.val.v2.Publi"
-    "shValueRequest\032\".kuksa.val.v2.PublishVal"
-    "ueResponse\022k\n\022OpenProviderStream\022\'.kuksa"
-    ".val.v2.OpenProviderStreamRequest\032(.kuks"
-    "a.val.v2.OpenProviderStreamResponse(\0010\001\022"
-    "X\n\rGetServerInfo\022\".kuksa.val.v2.GetServe"
-    "rInfoRequest\032#.kuksa.val.v2.GetServerInf"
-    "oResponseB\016Z\014kuksa/val/v2b\006proto3"
+    "nt\"=\n\020SubscribeRequest\022\024\n\014signal_paths\030\001"
+    " \003(\t\022\023\n\013buffer_size\030\002 \001(\r\"\233\001\n\021SubscribeR"
+    "esponse\022=\n\007entries\030\001 \003(\0132,.kuksa.val.v2."
+    "SubscribeResponse.EntriesEntry\032G\n\014Entrie"
+    "sEntry\022\013\n\003key\030\001 \001(\t\022&\n\005value\030\002 \001(\0132\027.kuk"
+    "sa.val.v2.Datapoint:\0028\001\"\?\n\024SubscribeById"
+    "Request\022\022\n\nsignal_ids\030\001 \003(\005\022\023\n\013buffer_si"
+    "ze\030\002 \001(\r\"\243\001\n\025SubscribeByIdResponse\022A\n\007en"
+    "tries\030\001 \003(\01320.kuksa.val.v2.SubscribeById"
+    "Response.EntriesEntry\032G\n\014EntriesEntry\022\013\n"
+    "\003key\030\001 \001(\005\022&\n\005value\030\002 \001(\0132\027.kuksa.val.v2"
+    ".Datapoint:\0028\001\"_\n\016ActuateRequest\022)\n\tsign"
+    "al_id\030\001 \001(\0132\026.kuksa.val.v2.SignalID\022\"\n\005v"
+    "alue\030\002 \001(\0132\023.kuksa.val.v2.Value\"\021\n\017Actua"
+    "teResponse\"M\n\023BatchActuateRequest\0226\n\020act"
+    "uate_requests\030\001 \003(\0132\034.kuksa.val.v2.Actua"
+    "teRequest\"\026\n\024BatchActuateResponse\"3\n\023Lis"
+    "tMetadataRequest\022\014\n\004root\030\001 \001(\t\022\016\n\006filter"
+    "\030\002 \001(\t\"@\n\024ListMetadataResponse\022(\n\010metada"
+    "ta\030\001 \003(\0132\026.kuksa.val.v2.Metadata\"m\n\023Publ"
+    "ishValueRequest\022)\n\tsignal_id\030\001 \001(\0132\026.kuk"
+    "sa.val.v2.SignalID\022+\n\ndata_point\030\002 \001(\0132\027"
+    ".kuksa.val.v2.Datapoint\"\026\n\024PublishValueR"
+    "esponse\"\277\001\n\024PublishValuesRequest\022\022\n\nrequ"
+    "est_id\030\001 \001(\005\022G\n\013data_points\030\002 \003(\01322.kuks"
+    "a.val.v2.PublishValuesRequest.DataPoints"
+    "Entry\032J\n\017DataPointsEntry\022\013\n\003key\030\001 \001(\005\022&\n"
+    "\005value\030\002 \001(\0132\027.kuksa.val.v2.Datapoint:\0028"
+    "\001\"\260\001\n\025PublishValuesResponse\022\022\n\nrequest_i"
+    "d\030\001 \001(\005\022\?\n\006status\030\002 \003(\0132/.kuksa.val.v2.P"
+    "ublishValuesResponse.StatusEntry\032B\n\013Stat"
+    "usEntry\022\013\n\003key\030\001 \001(\005\022\"\n\005value\030\002 \001(\0132\023.ku"
+    "ksa.val.v2.Error:\0028\001\"O\n\027ProvideActuation"
+    "Request\0224\n\024actuator_identifiers\030\001 \003(\0132\026."
+    "kuksa.val.v2.SignalID\"\032\n\030ProvideActuatio"
+    "nResponse\"S\n\031BatchActuateStreamRequest\0226"
+    "\n\020actuate_requests\030\001 \003(\0132\034.kuksa.val.v2."
+    "ActuateRequest\"k\n\032BatchActuateStreamResp"
+    "onse\022)\n\tsignal_id\030\001 \001(\0132\026.kuksa.val.v2.S"
+    "ignalID\022\"\n\005error\030\002 \001(\0132\023.kuksa.val.v2.Er"
+    "ror\"\212\002\n\031OpenProviderStreamRequest\022J\n\031pro"
+    "vide_actuation_request\030\001 \001(\0132%.kuksa.val"
+    ".v2.ProvideActuationRequestH\000\022D\n\026publish"
+    "_values_request\030\002 \001(\0132\".kuksa.val.v2.Pub"
+    "lishValuesRequestH\000\022Q\n\035batch_actuate_str"
+    "eam_response\030\003 \001(\0132(.kuksa.val.v2.BatchA"
+    "ctuateStreamResponseH\000B\010\n\006action\"\215\002\n\032Ope"
+    "nProviderStreamResponse\022L\n\032provide_actua"
+    "tion_response\030\001 \001(\0132&.kuksa.val.v2.Provi"
+    "deActuationResponseH\000\022F\n\027publish_values_"
+    "response\030\002 \001(\0132#.kuksa.val.v2.PublishVal"
+    "uesResponseH\000\022O\n\034batch_actuate_stream_re"
+    "quest\030\003 \001(\0132\'.kuksa.val.v2.BatchActuateS"
+    "treamRequestH\000B\010\n\006action\"\026\n\024GetServerInf"
+    "oRequest\"K\n\025GetServerInfoResponse\022\014\n\004nam"
+    "e\030\001 \001(\t\022\017\n\007version\030\002 \001(\t\022\023\n\013commit_hash\030"
+    "\003 \001(\t2\336\006\n\003VAL\022I\n\010GetValue\022\035.kuksa.val.v2"
+    ".GetValueRequest\032\036.kuksa.val.v2.GetValue"
+    "Response\022L\n\tGetValues\022\036.kuksa.val.v2.Get"
+    "ValuesRequest\032\037.kuksa.val.v2.GetValuesRe"
+    "sponse\022N\n\tSubscribe\022\036.kuksa.val.v2.Subsc"
+    "ribeRequest\032\037.kuksa.val.v2.SubscribeResp"
+    "onse0\001\022Z\n\rSubscribeById\022\".kuksa.val.v2.S"
+    "ubscribeByIdRequest\032#.kuksa.val.v2.Subsc"
+    "ribeByIdResponse0\001\022F\n\007Actuate\022\034.kuksa.va"
+    "l.v2.ActuateRequest\032\035.kuksa.val.v2.Actua"
+    "teResponse\022U\n\014BatchActuate\022!.kuksa.val.v"
+    "2.BatchActuateRequest\032\".kuksa.val.v2.Bat"
+    "chActuateResponse\022U\n\014ListMetadata\022!.kuks"
+    "a.val.v2.ListMetadataRequest\032\".kuksa.val"
+    ".v2.ListMetadataResponse\022U\n\014PublishValue"
+    "\022!.kuksa.val.v2.PublishValueRequest\032\".ku"
+    "ksa.val.v2.PublishValueResponse\022k\n\022OpenP"
+    "roviderStream\022\'.kuksa.val.v2.OpenProvide"
+    "rStreamRequest\032(.kuksa.val.v2.OpenProvid"
+    "erStreamResponse(\0010\001\022X\n\rGetServerInfo\022\"."
+    "kuksa.val.v2.GetServerInfoRequest\032#.kuks"
+    "a.val.v2.GetServerInfoResponseB\016Z\014kuksa/"
+    "val/v2b\006proto3"
 };
 static const ::_pbi::DescriptorTable* const descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_deps[1] =
     {
@@ -1373,13 +1029,13 @@ static ::absl::once_flag descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_kuksa_2fval_2fv2_2fval_2eproto = {
     false,
     false,
-    4993,
+    3454,
     descriptor_table_protodef_kuksa_2fval_2fv2_2fval_2eproto,
     "kuksa/val/v2/val.proto",
     &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once,
     descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_deps,
     1,
-    40,
+    30,
     schemas,
     file_default_instances,
     TableStruct_kuksa_2fval_2fv2_2fval_2eproto::offsets,
@@ -2210,23 +1866,8 @@ void GetValuesResponse::InternalSwap(GetValuesResponse* PROTOBUF_RESTRICT other)
 
 class SubscribeRequest::_Internal {
  public:
-  using HasBits = decltype(std::declval<SubscribeRequest>()._impl_._has_bits_);
-  static constexpr ::int32_t kHasBitsOffset =
-    8 * PROTOBUF_FIELD_OFFSET(SubscribeRequest, _impl_._has_bits_);
-  static const ::kuksa::val::v2::Filter& filter(const SubscribeRequest* msg);
-  static void set_has_filter(HasBits* has_bits) {
-    (*has_bits)[0] |= 1u;
-  }
 };
 
-const ::kuksa::val::v2::Filter& SubscribeRequest::_Internal::filter(const SubscribeRequest* msg) {
-  return *msg->_impl_.filter_;
-}
-void SubscribeRequest::clear_filter() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (_impl_.filter_ != nullptr) _impl_.filter_->Clear();
-  _impl_._has_bits_[0] &= ~0x00000001u;
-}
 SubscribeRequest::SubscribeRequest(::google::protobuf::Arena* arena)
     : ::google::protobuf::Message(arena) {
   SharedCtor(arena);
@@ -2235,9 +1876,8 @@ SubscribeRequest::SubscribeRequest(::google::protobuf::Arena* arena)
 inline PROTOBUF_NDEBUG_INLINE SubscribeRequest::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
     const Impl_& from)
-      : _has_bits_{from._has_bits_},
-        _cached_size_{0},
-        signal_paths_{visibility, arena, from.signal_paths_} {}
+      : signal_paths_{visibility, arena, from.signal_paths_},
+        _cached_size_{0} {}
 
 SubscribeRequest::SubscribeRequest(
     ::google::protobuf::Arena* arena,
@@ -2248,10 +1888,6 @@ SubscribeRequest::SubscribeRequest(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_);
-  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
-  _impl_.filter_ = (cached_has_bits & 0x00000001u)
-                ? CreateMaybeMessage<::kuksa::val::v2::Filter>(arena, *from._impl_.filter_)
-                : nullptr;
   _impl_.buffer_size_ = from._impl_.buffer_size_;
 
   // @@protoc_insertion_point(copy_constructor:kuksa.val.v2.SubscribeRequest)
@@ -2259,17 +1895,12 @@ SubscribeRequest::SubscribeRequest(
 inline PROTOBUF_NDEBUG_INLINE SubscribeRequest::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
-      : _cached_size_{0},
-        signal_paths_{visibility, arena} {}
+      : signal_paths_{visibility, arena},
+        _cached_size_{0} {}
 
 inline void SubscribeRequest::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  ::memset(reinterpret_cast<char *>(&_impl_) +
-               offsetof(Impl_, filter_),
-           0,
-           offsetof(Impl_, buffer_size_) -
-               offsetof(Impl_, filter_) +
-               sizeof(Impl_::buffer_size_));
+  _impl_.buffer_size_ = {};
 }
 SubscribeRequest::~SubscribeRequest() {
   // @@protoc_insertion_point(destructor:kuksa.val.v2.SubscribeRequest)
@@ -2278,7 +1909,6 @@ SubscribeRequest::~SubscribeRequest() {
 }
 inline void SubscribeRequest::SharedDtor() {
   ABSL_DCHECK(GetArena() == nullptr);
-  delete _impl_.filter_;
   _impl_.~Impl_();
 }
 
@@ -2290,13 +1920,7 @@ PROTOBUF_NOINLINE void SubscribeRequest::Clear() {
   (void) cached_has_bits;
 
   _impl_.signal_paths_.Clear();
-  cached_has_bits = _impl_._has_bits_[0];
-  if (cached_has_bits & 0x00000001u) {
-    ABSL_DCHECK(_impl_.filter_ != nullptr);
-    _impl_.filter_->Clear();
-  }
   _impl_.buffer_size_ = 0u;
-  _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -2308,45 +1932,38 @@ const char* SubscribeRequest::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 3, 1, 50, 2> SubscribeRequest::_table_ = {
+const ::_pbi::TcParseTable<1, 2, 0, 50, 2> SubscribeRequest::_table_ = {
   {
-    PROTOBUF_FIELD_OFFSET(SubscribeRequest, _impl_._has_bits_),
+    0,  // no _has_bits_
     0, // no _extensions_
-    3, 24,  // max_field_number, fast_idx_mask
+    2, 8,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967288,  // skipmap
+    4294967292,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    3,  // num_field_entries
-    1,  // num_aux_entries
-    offsetof(decltype(_table_), aux_entries),
+    2,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
     &_SubscribeRequest_default_instance_._instance,
     ::_pbi::TcParser::GenericFallback,  // fallback
   }, {{
-    {::_pbi::TcParser::MiniParse, {}},
-    // repeated string signal_paths = 1;
-    {::_pbi::TcParser::FastUR1,
-     {10, 63, 0, PROTOBUF_FIELD_OFFSET(SubscribeRequest, _impl_.signal_paths_)}},
     // uint32 buffer_size = 2;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SubscribeRequest, _impl_.buffer_size_), 63>(),
      {16, 63, 0, PROTOBUF_FIELD_OFFSET(SubscribeRequest, _impl_.buffer_size_)}},
-    // .kuksa.val.v2.Filter filter = 3;
-    {::_pbi::TcParser::FastMtS1,
-     {26, 0, 0, PROTOBUF_FIELD_OFFSET(SubscribeRequest, _impl_.filter_)}},
+    // repeated string signal_paths = 1;
+    {::_pbi::TcParser::FastUR1,
+     {10, 63, 0, PROTOBUF_FIELD_OFFSET(SubscribeRequest, _impl_.signal_paths_)}},
   }}, {{
     65535, 65535
   }}, {{
     // repeated string signal_paths = 1;
-    {PROTOBUF_FIELD_OFFSET(SubscribeRequest, _impl_.signal_paths_), -1, 0,
+    {PROTOBUF_FIELD_OFFSET(SubscribeRequest, _impl_.signal_paths_), 0, 0,
     (0 | ::_fl::kFcRepeated | ::_fl::kUtf8String | ::_fl::kRepSString)},
     // uint32 buffer_size = 2;
-    {PROTOBUF_FIELD_OFFSET(SubscribeRequest, _impl_.buffer_size_), -1, 0,
+    {PROTOBUF_FIELD_OFFSET(SubscribeRequest, _impl_.buffer_size_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
-    // .kuksa.val.v2.Filter filter = 3;
-    {PROTOBUF_FIELD_OFFSET(SubscribeRequest, _impl_.filter_), _Internal::kHasBitsOffset + 0, 0,
-    (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-  }}, {{
-    {::_pbi::TcParser::GetTable<::kuksa::val::v2::Filter>()},
-  }}, {{
+  }},
+  // no aux_entries
+  {{
     "\35\14\0\0\0\0\0\0"
     "kuksa.val.v2.SubscribeRequest"
     "signal_paths"
@@ -2375,14 +1992,6 @@ const ::_pbi::TcParseTable<2, 3, 1, 50, 2> SubscribeRequest::_table_ = {
         2, this->_internal_buffer_size(), target);
   }
 
-  cached_has_bits = _impl_._has_bits_[0];
-  // .kuksa.val.v2.Filter filter = 3;
-  if (cached_has_bits & 0x00000001u) {
-    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-        3, _Internal::filter(this),
-        _Internal::filter(this).GetCachedSize(), target, stream);
-  }
-
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -2406,13 +2015,6 @@ const ::_pbi::TcParseTable<2, 3, 1, 50, 2> SubscribeRequest::_table_ = {
     total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
         _internal_signal_paths().Get(i));
   }
-  // .kuksa.val.v2.Filter filter = 3;
-  cached_has_bits = _impl_._has_bits_[0];
-  if (cached_has_bits & 0x00000001u) {
-    total_size +=
-        1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.filter_);
-  }
-
   // uint32 buffer_size = 2;
   if (this->_internal_buffer_size() != 0) {
     total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
@@ -2439,10 +2041,6 @@ void SubscribeRequest::MergeImpl(::google::protobuf::Message& to_msg, const ::go
   (void) cached_has_bits;
 
   _this->_internal_mutable_signal_paths()->MergeFrom(from._internal_signal_paths());
-  if ((from._impl_._has_bits_[0] & 0x00000001u) != 0) {
-    _this->_internal_mutable_filter()->::kuksa::val::v2::Filter::MergeFrom(
-        from._internal_filter());
-  }
   if (from._internal_buffer_size() != 0) {
     _this->_internal_set_buffer_size(from._internal_buffer_size());
   }
@@ -2466,14 +2064,8 @@ PROTOBUF_NOINLINE bool SubscribeRequest::IsInitialized() const {
 void SubscribeRequest::InternalSwap(SubscribeRequest* PROTOBUF_RESTRICT other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   _impl_.signal_paths_.InternalSwap(&other->_impl_.signal_paths_);
-  ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(SubscribeRequest, _impl_.buffer_size_)
-      + sizeof(SubscribeRequest::_impl_.buffer_size_)
-      - PROTOBUF_FIELD_OFFSET(SubscribeRequest, _impl_.filter_)>(
-          reinterpret_cast<char*>(&_impl_.filter_),
-          reinterpret_cast<char*>(&other->_impl_.filter_));
+        swap(_impl_.buffer_size_, other->_impl_.buffer_size_);
 }
 
 ::google::protobuf::Metadata SubscribeRequest::GetMetadata() const {
@@ -2706,23 +2298,8 @@ void SubscribeResponse::InternalSwap(SubscribeResponse* PROTOBUF_RESTRICT other)
 
 class SubscribeByIdRequest::_Internal {
  public:
-  using HasBits = decltype(std::declval<SubscribeByIdRequest>()._impl_._has_bits_);
-  static constexpr ::int32_t kHasBitsOffset =
-    8 * PROTOBUF_FIELD_OFFSET(SubscribeByIdRequest, _impl_._has_bits_);
-  static const ::kuksa::val::v2::Filter& filter(const SubscribeByIdRequest* msg);
-  static void set_has_filter(HasBits* has_bits) {
-    (*has_bits)[0] |= 1u;
-  }
 };
 
-const ::kuksa::val::v2::Filter& SubscribeByIdRequest::_Internal::filter(const SubscribeByIdRequest* msg) {
-  return *msg->_impl_.filter_;
-}
-void SubscribeByIdRequest::clear_filter() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (_impl_.filter_ != nullptr) _impl_.filter_->Clear();
-  _impl_._has_bits_[0] &= ~0x00000001u;
-}
 SubscribeByIdRequest::SubscribeByIdRequest(::google::protobuf::Arena* arena)
     : ::google::protobuf::Message(arena) {
   SharedCtor(arena);
@@ -2731,10 +2308,9 @@ SubscribeByIdRequest::SubscribeByIdRequest(::google::protobuf::Arena* arena)
 inline PROTOBUF_NDEBUG_INLINE SubscribeByIdRequest::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
     const Impl_& from)
-      : _has_bits_{from._has_bits_},
-        _cached_size_{0},
-        signal_ids_{visibility, arena, from.signal_ids_},
-        _signal_ids_cached_byte_size_{0} {}
+      : signal_ids_{visibility, arena, from.signal_ids_},
+        _signal_ids_cached_byte_size_{0},
+        _cached_size_{0} {}
 
 SubscribeByIdRequest::SubscribeByIdRequest(
     ::google::protobuf::Arena* arena,
@@ -2745,10 +2321,6 @@ SubscribeByIdRequest::SubscribeByIdRequest(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_);
-  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
-  _impl_.filter_ = (cached_has_bits & 0x00000001u)
-                ? CreateMaybeMessage<::kuksa::val::v2::Filter>(arena, *from._impl_.filter_)
-                : nullptr;
   _impl_.buffer_size_ = from._impl_.buffer_size_;
 
   // @@protoc_insertion_point(copy_constructor:kuksa.val.v2.SubscribeByIdRequest)
@@ -2756,18 +2328,13 @@ SubscribeByIdRequest::SubscribeByIdRequest(
 inline PROTOBUF_NDEBUG_INLINE SubscribeByIdRequest::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
-      : _cached_size_{0},
-        signal_ids_{visibility, arena},
-        _signal_ids_cached_byte_size_{0} {}
+      : signal_ids_{visibility, arena},
+        _signal_ids_cached_byte_size_{0},
+        _cached_size_{0} {}
 
 inline void SubscribeByIdRequest::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  ::memset(reinterpret_cast<char *>(&_impl_) +
-               offsetof(Impl_, filter_),
-           0,
-           offsetof(Impl_, buffer_size_) -
-               offsetof(Impl_, filter_) +
-               sizeof(Impl_::buffer_size_));
+  _impl_.buffer_size_ = {};
 }
 SubscribeByIdRequest::~SubscribeByIdRequest() {
   // @@protoc_insertion_point(destructor:kuksa.val.v2.SubscribeByIdRequest)
@@ -2776,7 +2343,6 @@ SubscribeByIdRequest::~SubscribeByIdRequest() {
 }
 inline void SubscribeByIdRequest::SharedDtor() {
   ABSL_DCHECK(GetArena() == nullptr);
-  delete _impl_.filter_;
   _impl_.~Impl_();
 }
 
@@ -2788,13 +2354,7 @@ PROTOBUF_NOINLINE void SubscribeByIdRequest::Clear() {
   (void) cached_has_bits;
 
   _impl_.signal_ids_.Clear();
-  cached_has_bits = _impl_._has_bits_[0];
-  if (cached_has_bits & 0x00000001u) {
-    ABSL_DCHECK(_impl_.filter_ != nullptr);
-    _impl_.filter_->Clear();
-  }
   _impl_.buffer_size_ = 0u;
-  _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -2806,45 +2366,38 @@ const char* SubscribeByIdRequest::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 3, 1, 0, 2> SubscribeByIdRequest::_table_ = {
+const ::_pbi::TcParseTable<1, 2, 0, 0, 2> SubscribeByIdRequest::_table_ = {
   {
-    PROTOBUF_FIELD_OFFSET(SubscribeByIdRequest, _impl_._has_bits_),
+    0,  // no _has_bits_
     0, // no _extensions_
-    3, 24,  // max_field_number, fast_idx_mask
+    2, 8,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967288,  // skipmap
+    4294967292,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    3,  // num_field_entries
-    1,  // num_aux_entries
-    offsetof(decltype(_table_), aux_entries),
+    2,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
     &_SubscribeByIdRequest_default_instance_._instance,
     ::_pbi::TcParser::GenericFallback,  // fallback
   }, {{
-    {::_pbi::TcParser::MiniParse, {}},
-    // repeated int32 signal_ids = 1;
-    {::_pbi::TcParser::FastV32P1,
-     {10, 63, 0, PROTOBUF_FIELD_OFFSET(SubscribeByIdRequest, _impl_.signal_ids_)}},
     // uint32 buffer_size = 2;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SubscribeByIdRequest, _impl_.buffer_size_), 63>(),
      {16, 63, 0, PROTOBUF_FIELD_OFFSET(SubscribeByIdRequest, _impl_.buffer_size_)}},
-    // .kuksa.val.v2.Filter filter = 3;
-    {::_pbi::TcParser::FastMtS1,
-     {26, 0, 0, PROTOBUF_FIELD_OFFSET(SubscribeByIdRequest, _impl_.filter_)}},
+    // repeated int32 signal_ids = 1;
+    {::_pbi::TcParser::FastV32P1,
+     {10, 63, 0, PROTOBUF_FIELD_OFFSET(SubscribeByIdRequest, _impl_.signal_ids_)}},
   }}, {{
     65535, 65535
   }}, {{
     // repeated int32 signal_ids = 1;
-    {PROTOBUF_FIELD_OFFSET(SubscribeByIdRequest, _impl_.signal_ids_), -1, 0,
+    {PROTOBUF_FIELD_OFFSET(SubscribeByIdRequest, _impl_.signal_ids_), 0, 0,
     (0 | ::_fl::kFcRepeated | ::_fl::kPackedInt32)},
     // uint32 buffer_size = 2;
-    {PROTOBUF_FIELD_OFFSET(SubscribeByIdRequest, _impl_.buffer_size_), -1, 0,
+    {PROTOBUF_FIELD_OFFSET(SubscribeByIdRequest, _impl_.buffer_size_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
-    // .kuksa.val.v2.Filter filter = 3;
-    {PROTOBUF_FIELD_OFFSET(SubscribeByIdRequest, _impl_.filter_), _Internal::kHasBitsOffset + 0, 0,
-    (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-  }}, {{
-    {::_pbi::TcParser::GetTable<::kuksa::val::v2::Filter>()},
-  }}, {{
+  }},
+  // no aux_entries
+  {{
   }},
 };
 
@@ -2869,14 +2422,6 @@ const ::_pbi::TcParseTable<2, 3, 1, 0, 2> SubscribeByIdRequest::_table_ = {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
         2, this->_internal_buffer_size(), target);
-  }
-
-  cached_has_bits = _impl_._has_bits_[0];
-  // .kuksa.val.v2.Filter filter = 3;
-  if (cached_has_bits & 0x00000001u) {
-    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-        3, _Internal::filter(this),
-        _Internal::filter(this).GetCachedSize(), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -2909,13 +2454,6 @@ const ::_pbi::TcParseTable<2, 3, 1, 0, 2> SubscribeByIdRequest::_table_ = {
     ;
     total_size += tag_size + data_size;
   }
-  // .kuksa.val.v2.Filter filter = 3;
-  cached_has_bits = _impl_._has_bits_[0];
-  if (cached_has_bits & 0x00000001u) {
-    total_size +=
-        1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.filter_);
-  }
-
   // uint32 buffer_size = 2;
   if (this->_internal_buffer_size() != 0) {
     total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
@@ -2942,10 +2480,6 @@ void SubscribeByIdRequest::MergeImpl(::google::protobuf::Message& to_msg, const 
   (void) cached_has_bits;
 
   _this->_internal_mutable_signal_ids()->MergeFrom(from._internal_signal_ids());
-  if ((from._impl_._has_bits_[0] & 0x00000001u) != 0) {
-    _this->_internal_mutable_filter()->::kuksa::val::v2::Filter::MergeFrom(
-        from._internal_filter());
-  }
   if (from._internal_buffer_size() != 0) {
     _this->_internal_set_buffer_size(from._internal_buffer_size());
   }
@@ -2969,14 +2503,8 @@ PROTOBUF_NOINLINE bool SubscribeByIdRequest::IsInitialized() const {
 void SubscribeByIdRequest::InternalSwap(SubscribeByIdRequest* PROTOBUF_RESTRICT other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   _impl_.signal_ids_.InternalSwap(&other->_impl_.signal_ids_);
-  ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(SubscribeByIdRequest, _impl_.buffer_size_)
-      + sizeof(SubscribeByIdRequest::_impl_.buffer_size_)
-      - PROTOBUF_FIELD_OFFSET(SubscribeByIdRequest, _impl_.filter_)>(
-          reinterpret_cast<char*>(&_impl_.filter_),
-          reinterpret_cast<char*>(&other->_impl_.filter_));
+        swap(_impl_.buffer_size_, other->_impl_.buffer_size_);
 }
 
 ::google::protobuf::Metadata SubscribeByIdRequest::GetMetadata() const {
@@ -4508,7 +4036,7 @@ PROTOBUF_NOINLINE void PublishValuesRequest::Clear() {
   (void) cached_has_bits;
 
   _impl_.data_points_.Clear();
-  _impl_.request_id_ = 0u;
+  _impl_.request_id_ = 0;
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -4534,15 +4062,15 @@ const ::_pbi::TcParseTable<0, 2, 2, 0, 2> PublishValuesRequest::_table_ = {
     &_PublishValuesRequest_default_instance_._instance,
     ::_pbi::TcParser::GenericFallback,  // fallback
   }, {{
-    // uint32 request_id = 1;
+    // int32 request_id = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(PublishValuesRequest, _impl_.request_id_), 63>(),
      {8, 63, 0, PROTOBUF_FIELD_OFFSET(PublishValuesRequest, _impl_.request_id_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // uint32 request_id = 1;
+    // int32 request_id = 1;
     {PROTOBUF_FIELD_OFFSET(PublishValuesRequest, _impl_.request_id_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
+    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
     // map<int32, .kuksa.val.v2.Datapoint> data_points = 2;
     {PROTOBUF_FIELD_OFFSET(PublishValuesRequest, _impl_.data_points_), 0, 0,
     (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
@@ -4563,11 +4091,11 @@ const ::_pbi::TcParseTable<0, 2, 2, 0, 2> PublishValuesRequest::_table_ = {
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  // uint32 request_id = 1;
+  // int32 request_id = 1;
   if (this->_internal_request_id() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
-        1, this->_internal_request_id(), target);
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt32ToArrayWithField<1>(
+            stream, this->_internal_request_id(), target);
   }
 
   // map<int32, .kuksa.val.v2.Datapoint> data_points = 2;
@@ -4615,9 +4143,9 @@ const ::_pbi::TcParseTable<0, 2, 2, 0, 2> PublishValuesRequest::_table_ = {
                                    _pbi::WireFormatLite::TYPE_INT32,
                                    _pbi::WireFormatLite::TYPE_MESSAGE>::ByteSizeLong(entry.first, entry.second);
   }
-  // uint32 request_id = 1;
+  // int32 request_id = 1;
   if (this->_internal_request_id() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
         this->_internal_request_id());
   }
 
@@ -4745,7 +4273,7 @@ PROTOBUF_NOINLINE void PublishValuesResponse::Clear() {
   (void) cached_has_bits;
 
   _impl_.status_.Clear();
-  _impl_.request_id_ = 0u;
+  _impl_.request_id_ = 0;
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -4771,15 +4299,15 @@ const ::_pbi::TcParseTable<0, 2, 2, 0, 2> PublishValuesResponse::_table_ = {
     &_PublishValuesResponse_default_instance_._instance,
     ::_pbi::TcParser::GenericFallback,  // fallback
   }, {{
-    // uint32 request_id = 1;
+    // int32 request_id = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(PublishValuesResponse, _impl_.request_id_), 63>(),
      {8, 63, 0, PROTOBUF_FIELD_OFFSET(PublishValuesResponse, _impl_.request_id_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // uint32 request_id = 1;
+    // int32 request_id = 1;
     {PROTOBUF_FIELD_OFFSET(PublishValuesResponse, _impl_.request_id_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
+    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
     // map<int32, .kuksa.val.v2.Error> status = 2;
     {PROTOBUF_FIELD_OFFSET(PublishValuesResponse, _impl_.status_), 0, 0,
     (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
@@ -4800,11 +4328,11 @@ const ::_pbi::TcParseTable<0, 2, 2, 0, 2> PublishValuesResponse::_table_ = {
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  // uint32 request_id = 1;
+  // int32 request_id = 1;
   if (this->_internal_request_id() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
-        1, this->_internal_request_id(), target);
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt32ToArrayWithField<1>(
+            stream, this->_internal_request_id(), target);
   }
 
   // map<int32, .kuksa.val.v2.Error> status = 2;
@@ -4852,9 +4380,9 @@ const ::_pbi::TcParseTable<0, 2, 2, 0, 2> PublishValuesResponse::_table_ = {
                                    _pbi::WireFormatLite::TYPE_INT32,
                                    _pbi::WireFormatLite::TYPE_MESSAGE>::ByteSizeLong(entry.first, entry.second);
   }
-  // uint32 request_id = 1;
+  // int32 request_id = 1;
   if (this->_internal_request_id() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
         this->_internal_request_id());
   }
 
@@ -5134,253 +4662,6 @@ ProvideActuationResponse::ProvideActuationResponse(
 }
 // ===================================================================
 
-ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse::ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse() {}
-ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse::ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse(::google::protobuf::Arena* arena)
-    : SuperType(arena) {}
-::google::protobuf::Metadata ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_getter, &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once,
-      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[24]);
-}
-// ===================================================================
-
-class ProvideSignalRequest::_Internal {
- public:
-};
-
-void ProvideSignalRequest::clear_signals_sample_intervals() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.signals_sample_intervals_.Clear();
-}
-ProvideSignalRequest::ProvideSignalRequest(::google::protobuf::Arena* arena)
-    : ::google::protobuf::Message(arena) {
-  SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:kuksa.val.v2.ProvideSignalRequest)
-}
-inline PROTOBUF_NDEBUG_INLINE ProvideSignalRequest::Impl_::Impl_(
-    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
-    const Impl_& from)
-      : signals_sample_intervals_{visibility, arena, from.signals_sample_intervals_},
-        _cached_size_{0} {}
-
-ProvideSignalRequest::ProvideSignalRequest(
-    ::google::protobuf::Arena* arena,
-    const ProvideSignalRequest& from)
-    : ::google::protobuf::Message(arena) {
-  ProvideSignalRequest* const _this = this;
-  (void)_this;
-  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
-      from._internal_metadata_);
-  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_);
-
-  // @@protoc_insertion_point(copy_constructor:kuksa.val.v2.ProvideSignalRequest)
-}
-inline PROTOBUF_NDEBUG_INLINE ProvideSignalRequest::Impl_::Impl_(
-    ::google::protobuf::internal::InternalVisibility visibility,
-    ::google::protobuf::Arena* arena)
-      : signals_sample_intervals_{visibility, arena},
-        _cached_size_{0} {}
-
-inline void ProvideSignalRequest::SharedCtor(::_pb::Arena* arena) {
-  new (&_impl_) Impl_(internal_visibility(), arena);
-}
-ProvideSignalRequest::~ProvideSignalRequest() {
-  // @@protoc_insertion_point(destructor:kuksa.val.v2.ProvideSignalRequest)
-  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
-  SharedDtor();
-}
-inline void ProvideSignalRequest::SharedDtor() {
-  ABSL_DCHECK(GetArena() == nullptr);
-  _impl_.~Impl_();
-}
-
-PROTOBUF_NOINLINE void ProvideSignalRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:kuksa.val.v2.ProvideSignalRequest)
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  _impl_.signals_sample_intervals_.Clear();
-  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
-}
-
-const char* ProvideSignalRequest::_InternalParse(
-    const char* ptr, ::_pbi::ParseContext* ctx) {
-  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
-  return ptr;
-}
-
-
-PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 2, 0, 2> ProvideSignalRequest::_table_ = {
-  {
-    0,  // no _has_bits_
-    0, // no _extensions_
-    1, 0,  // max_field_number, fast_idx_mask
-    offsetof(decltype(_table_), field_lookup_table),
-    4294967294,  // skipmap
-    offsetof(decltype(_table_), field_entries),
-    1,  // num_field_entries
-    2,  // num_aux_entries
-    offsetof(decltype(_table_), aux_entries),
-    &_ProvideSignalRequest_default_instance_._instance,
-    ::_pbi::TcParser::GenericFallback,  // fallback
-  }, {{
-    {::_pbi::TcParser::MiniParse, {}},
-  }}, {{
-    65535, 65535
-  }}, {{
-    // map<int32, .kuksa.val.v2.SampleInterval> signals_sample_intervals = 1;
-    {PROTOBUF_FIELD_OFFSET(ProvideSignalRequest, _impl_.signals_sample_intervals_), 0, 0,
-    (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
-  }}, {{
-    {::_pbi::TcParser::GetMapAuxInfo<
-        decltype(ProvideSignalRequest()._impl_.signals_sample_intervals_)>(
-        1, 0, 0, 5,
-        11)},
-    {::_pbi::TcParser::CreateInArenaStorageCb<::kuksa::val::v2::SampleInterval>},
-  }}, {{
-  }},
-};
-
-::uint8_t* ProvideSignalRequest::_InternalSerialize(
-    ::uint8_t* target,
-    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:kuksa.val.v2.ProvideSignalRequest)
-  ::uint32_t cached_has_bits = 0;
-  (void)cached_has_bits;
-
-  // map<int32, .kuksa.val.v2.SampleInterval> signals_sample_intervals = 1;
-  if (!_internal_signals_sample_intervals().empty()) {
-    using MapType = ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::SampleInterval>;
-    using WireHelper = _pbi::MapEntryFuncs<::int32_t, ::kuksa::val::v2::SampleInterval,
-                                   _pbi::WireFormatLite::TYPE_INT32,
-                                   _pbi::WireFormatLite::TYPE_MESSAGE>;
-    const auto& field = _internal_signals_sample_intervals();
-
-    if (stream->IsSerializationDeterministic() && field.size() > 1) {
-      for (const auto& entry : ::google::protobuf::internal::MapSorterFlat<MapType>(field)) {
-        target = WireHelper::InternalSerialize(
-            1, entry.first, entry.second, target, stream);
-      }
-    } else {
-      for (const auto& entry : field) {
-        target = WireHelper::InternalSerialize(
-            1, entry.first, entry.second, target, stream);
-      }
-    }
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target =
-        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:kuksa.val.v2.ProvideSignalRequest)
-  return target;
-}
-
-::size_t ProvideSignalRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:kuksa.val.v2.ProvideSignalRequest)
-  ::size_t total_size = 0;
-
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // map<int32, .kuksa.val.v2.SampleInterval> signals_sample_intervals = 1;
-  total_size += 1 * ::google::protobuf::internal::FromIntSize(_internal_signals_sample_intervals_size());
-  for (const auto& entry : _internal_signals_sample_intervals()) {
-    total_size += _pbi::MapEntryFuncs<::int32_t, ::kuksa::val::v2::SampleInterval,
-                                   _pbi::WireFormatLite::TYPE_INT32,
-                                   _pbi::WireFormatLite::TYPE_MESSAGE>::ByteSizeLong(entry.first, entry.second);
-  }
-  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
-}
-
-const ::google::protobuf::Message::ClassData ProvideSignalRequest::_class_data_ = {
-    ProvideSignalRequest::MergeImpl,
-    nullptr,  // OnDemandRegisterArenaDtor
-};
-const ::google::protobuf::Message::ClassData* ProvideSignalRequest::GetClassData() const {
-  return &_class_data_;
-}
-
-void ProvideSignalRequest::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
-  auto* const _this = static_cast<ProvideSignalRequest*>(&to_msg);
-  auto& from = static_cast<const ProvideSignalRequest&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:kuksa.val.v2.ProvideSignalRequest)
-  ABSL_DCHECK_NE(&from, _this);
-  ::uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  _this->_impl_.signals_sample_intervals_.MergeFrom(from._impl_.signals_sample_intervals_);
-  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
-}
-
-void ProvideSignalRequest::CopyFrom(const ProvideSignalRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:kuksa.val.v2.ProvideSignalRequest)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-PROTOBUF_NOINLINE bool ProvideSignalRequest::IsInitialized() const {
-  return true;
-}
-
-::_pbi::CachedSize* ProvideSignalRequest::AccessCachedSize() const {
-  return &_impl_._cached_size_;
-}
-void ProvideSignalRequest::InternalSwap(ProvideSignalRequest* PROTOBUF_RESTRICT other) {
-  using std::swap;
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  _impl_.signals_sample_intervals_.InternalSwap(&other->_impl_.signals_sample_intervals_);
-}
-
-::google::protobuf::Metadata ProvideSignalRequest::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_getter, &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once,
-      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[25]);
-}
-// ===================================================================
-
-class ProvideSignalResponse::_Internal {
- public:
-};
-
-ProvideSignalResponse::ProvideSignalResponse(::google::protobuf::Arena* arena)
-    : ::google::protobuf::internal::ZeroFieldsBase(arena) {
-  // @@protoc_insertion_point(arena_constructor:kuksa.val.v2.ProvideSignalResponse)
-}
-ProvideSignalResponse::ProvideSignalResponse(
-    ::google::protobuf::Arena* arena,
-    const ProvideSignalResponse& from)
-    : ::google::protobuf::internal::ZeroFieldsBase(arena) {
-  ProvideSignalResponse* const _this = this;
-  (void)_this;
-  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
-      from._internal_metadata_);
-
-  // @@protoc_insertion_point(copy_constructor:kuksa.val.v2.ProvideSignalResponse)
-}
-
-
-
-
-
-
-
-
-
-::google::protobuf::Metadata ProvideSignalResponse::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_getter, &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once,
-      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[26]);
-}
-// ===================================================================
-
 class BatchActuateStreamRequest::_Internal {
  public:
 };
@@ -5560,7 +4841,7 @@ void BatchActuateStreamRequest::InternalSwap(BatchActuateStreamRequest* PROTOBUF
 ::google::protobuf::Metadata BatchActuateStreamRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_getter, &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once,
-      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[27]);
+      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[24]);
 }
 // ===================================================================
 
@@ -5833,1073 +5114,7 @@ void BatchActuateStreamResponse::InternalSwap(BatchActuateStreamResponse* PROTOB
 ::google::protobuf::Metadata BatchActuateStreamResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_getter, &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once,
-      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[28]);
-}
-// ===================================================================
-
-UpdateFilterRequest_FiltersUpdateEntry_DoNotUse::UpdateFilterRequest_FiltersUpdateEntry_DoNotUse() {}
-UpdateFilterRequest_FiltersUpdateEntry_DoNotUse::UpdateFilterRequest_FiltersUpdateEntry_DoNotUse(::google::protobuf::Arena* arena)
-    : SuperType(arena) {}
-::google::protobuf::Metadata UpdateFilterRequest_FiltersUpdateEntry_DoNotUse::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_getter, &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once,
-      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[29]);
-}
-// ===================================================================
-
-class UpdateFilterRequest::_Internal {
- public:
-};
-
-void UpdateFilterRequest::clear_filters_update() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.filters_update_.Clear();
-}
-UpdateFilterRequest::UpdateFilterRequest(::google::protobuf::Arena* arena)
-    : ::google::protobuf::Message(arena) {
-  SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:kuksa.val.v2.UpdateFilterRequest)
-}
-inline PROTOBUF_NDEBUG_INLINE UpdateFilterRequest::Impl_::Impl_(
-    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
-    const Impl_& from)
-      : filters_update_{visibility, arena, from.filters_update_},
-        _cached_size_{0} {}
-
-UpdateFilterRequest::UpdateFilterRequest(
-    ::google::protobuf::Arena* arena,
-    const UpdateFilterRequest& from)
-    : ::google::protobuf::Message(arena) {
-  UpdateFilterRequest* const _this = this;
-  (void)_this;
-  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
-      from._internal_metadata_);
-  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_);
-  _impl_.request_id_ = from._impl_.request_id_;
-
-  // @@protoc_insertion_point(copy_constructor:kuksa.val.v2.UpdateFilterRequest)
-}
-inline PROTOBUF_NDEBUG_INLINE UpdateFilterRequest::Impl_::Impl_(
-    ::google::protobuf::internal::InternalVisibility visibility,
-    ::google::protobuf::Arena* arena)
-      : filters_update_{visibility, arena},
-        _cached_size_{0} {}
-
-inline void UpdateFilterRequest::SharedCtor(::_pb::Arena* arena) {
-  new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.request_id_ = {};
-}
-UpdateFilterRequest::~UpdateFilterRequest() {
-  // @@protoc_insertion_point(destructor:kuksa.val.v2.UpdateFilterRequest)
-  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
-  SharedDtor();
-}
-inline void UpdateFilterRequest::SharedDtor() {
-  ABSL_DCHECK(GetArena() == nullptr);
-  _impl_.~Impl_();
-}
-
-PROTOBUF_NOINLINE void UpdateFilterRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:kuksa.val.v2.UpdateFilterRequest)
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  _impl_.filters_update_.Clear();
-  _impl_.request_id_ = 0u;
-  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
-}
-
-const char* UpdateFilterRequest::_InternalParse(
-    const char* ptr, ::_pbi::ParseContext* ctx) {
-  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
-  return ptr;
-}
-
-
-PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 2, 2, 0, 2> UpdateFilterRequest::_table_ = {
-  {
-    0,  // no _has_bits_
-    0, // no _extensions_
-    2, 0,  // max_field_number, fast_idx_mask
-    offsetof(decltype(_table_), field_lookup_table),
-    4294967292,  // skipmap
-    offsetof(decltype(_table_), field_entries),
-    2,  // num_field_entries
-    2,  // num_aux_entries
-    offsetof(decltype(_table_), aux_entries),
-    &_UpdateFilterRequest_default_instance_._instance,
-    ::_pbi::TcParser::GenericFallback,  // fallback
-  }, {{
-    // uint32 request_id = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(UpdateFilterRequest, _impl_.request_id_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(UpdateFilterRequest, _impl_.request_id_)}},
-  }}, {{
-    65535, 65535
-  }}, {{
-    // uint32 request_id = 1;
-    {PROTOBUF_FIELD_OFFSET(UpdateFilterRequest, _impl_.request_id_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
-    // map<int32, .kuksa.val.v2.Filter> filters_update = 2;
-    {PROTOBUF_FIELD_OFFSET(UpdateFilterRequest, _impl_.filters_update_), 0, 0,
-    (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
-  }}, {{
-    {::_pbi::TcParser::GetMapAuxInfo<
-        decltype(UpdateFilterRequest()._impl_.filters_update_)>(
-        1, 0, 0, 5,
-        11)},
-    {::_pbi::TcParser::CreateInArenaStorageCb<::kuksa::val::v2::Filter>},
-  }}, {{
-  }},
-};
-
-::uint8_t* UpdateFilterRequest::_InternalSerialize(
-    ::uint8_t* target,
-    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:kuksa.val.v2.UpdateFilterRequest)
-  ::uint32_t cached_has_bits = 0;
-  (void)cached_has_bits;
-
-  // uint32 request_id = 1;
-  if (this->_internal_request_id() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
-        1, this->_internal_request_id(), target);
-  }
-
-  // map<int32, .kuksa.val.v2.Filter> filters_update = 2;
-  if (!_internal_filters_update().empty()) {
-    using MapType = ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Filter>;
-    using WireHelper = _pbi::MapEntryFuncs<::int32_t, ::kuksa::val::v2::Filter,
-                                   _pbi::WireFormatLite::TYPE_INT32,
-                                   _pbi::WireFormatLite::TYPE_MESSAGE>;
-    const auto& field = _internal_filters_update();
-
-    if (stream->IsSerializationDeterministic() && field.size() > 1) {
-      for (const auto& entry : ::google::protobuf::internal::MapSorterFlat<MapType>(field)) {
-        target = WireHelper::InternalSerialize(
-            2, entry.first, entry.second, target, stream);
-      }
-    } else {
-      for (const auto& entry : field) {
-        target = WireHelper::InternalSerialize(
-            2, entry.first, entry.second, target, stream);
-      }
-    }
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target =
-        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:kuksa.val.v2.UpdateFilterRequest)
-  return target;
-}
-
-::size_t UpdateFilterRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:kuksa.val.v2.UpdateFilterRequest)
-  ::size_t total_size = 0;
-
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // map<int32, .kuksa.val.v2.Filter> filters_update = 2;
-  total_size += 1 * ::google::protobuf::internal::FromIntSize(_internal_filters_update_size());
-  for (const auto& entry : _internal_filters_update()) {
-    total_size += _pbi::MapEntryFuncs<::int32_t, ::kuksa::val::v2::Filter,
-                                   _pbi::WireFormatLite::TYPE_INT32,
-                                   _pbi::WireFormatLite::TYPE_MESSAGE>::ByteSizeLong(entry.first, entry.second);
-  }
-  // uint32 request_id = 1;
-  if (this->_internal_request_id() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
-        this->_internal_request_id());
-  }
-
-  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
-}
-
-const ::google::protobuf::Message::ClassData UpdateFilterRequest::_class_data_ = {
-    UpdateFilterRequest::MergeImpl,
-    nullptr,  // OnDemandRegisterArenaDtor
-};
-const ::google::protobuf::Message::ClassData* UpdateFilterRequest::GetClassData() const {
-  return &_class_data_;
-}
-
-void UpdateFilterRequest::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
-  auto* const _this = static_cast<UpdateFilterRequest*>(&to_msg);
-  auto& from = static_cast<const UpdateFilterRequest&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:kuksa.val.v2.UpdateFilterRequest)
-  ABSL_DCHECK_NE(&from, _this);
-  ::uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  _this->_impl_.filters_update_.MergeFrom(from._impl_.filters_update_);
-  if (from._internal_request_id() != 0) {
-    _this->_internal_set_request_id(from._internal_request_id());
-  }
-  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
-}
-
-void UpdateFilterRequest::CopyFrom(const UpdateFilterRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:kuksa.val.v2.UpdateFilterRequest)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-PROTOBUF_NOINLINE bool UpdateFilterRequest::IsInitialized() const {
-  return true;
-}
-
-::_pbi::CachedSize* UpdateFilterRequest::AccessCachedSize() const {
-  return &_impl_._cached_size_;
-}
-void UpdateFilterRequest::InternalSwap(UpdateFilterRequest* PROTOBUF_RESTRICT other) {
-  using std::swap;
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  _impl_.filters_update_.InternalSwap(&other->_impl_.filters_update_);
-        swap(_impl_.request_id_, other->_impl_.request_id_);
-}
-
-::google::protobuf::Metadata UpdateFilterRequest::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_getter, &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once,
-      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[30]);
-}
-// ===================================================================
-
-class UpdateFilterResponse::_Internal {
- public:
-};
-
-UpdateFilterResponse::UpdateFilterResponse(::google::protobuf::Arena* arena)
-    : ::google::protobuf::Message(arena) {
-  SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:kuksa.val.v2.UpdateFilterResponse)
-}
-UpdateFilterResponse::UpdateFilterResponse(
-    ::google::protobuf::Arena* arena, const UpdateFilterResponse& from)
-    : UpdateFilterResponse(arena) {
-  MergeFrom(from);
-}
-inline PROTOBUF_NDEBUG_INLINE UpdateFilterResponse::Impl_::Impl_(
-    ::google::protobuf::internal::InternalVisibility visibility,
-    ::google::protobuf::Arena* arena)
-      : _cached_size_{0} {}
-
-inline void UpdateFilterResponse::SharedCtor(::_pb::Arena* arena) {
-  new (&_impl_) Impl_(internal_visibility(), arena);
-  ::memset(reinterpret_cast<char *>(&_impl_) +
-               offsetof(Impl_, request_id_),
-           0,
-           offsetof(Impl_, filter_error_) -
-               offsetof(Impl_, request_id_) +
-               sizeof(Impl_::filter_error_));
-}
-UpdateFilterResponse::~UpdateFilterResponse() {
-  // @@protoc_insertion_point(destructor:kuksa.val.v2.UpdateFilterResponse)
-  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
-  SharedDtor();
-}
-inline void UpdateFilterResponse::SharedDtor() {
-  ABSL_DCHECK(GetArena() == nullptr);
-  _impl_.~Impl_();
-}
-
-PROTOBUF_NOINLINE void UpdateFilterResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:kuksa.val.v2.UpdateFilterResponse)
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  ::memset(&_impl_.request_id_, 0, static_cast<::size_t>(
-      reinterpret_cast<char*>(&_impl_.filter_error_) -
-      reinterpret_cast<char*>(&_impl_.request_id_)) + sizeof(_impl_.filter_error_));
-  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
-}
-
-const char* UpdateFilterResponse::_InternalParse(
-    const char* ptr, ::_pbi::ParseContext* ctx) {
-  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
-  return ptr;
-}
-
-
-PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<1, 2, 0, 0, 2> UpdateFilterResponse::_table_ = {
-  {
-    0,  // no _has_bits_
-    0, // no _extensions_
-    2, 8,  // max_field_number, fast_idx_mask
-    offsetof(decltype(_table_), field_lookup_table),
-    4294967292,  // skipmap
-    offsetof(decltype(_table_), field_entries),
-    2,  // num_field_entries
-    0,  // num_aux_entries
-    offsetof(decltype(_table_), field_names),  // no aux_entries
-    &_UpdateFilterResponse_default_instance_._instance,
-    ::_pbi::TcParser::GenericFallback,  // fallback
-  }, {{
-    // .kuksa.val.v2.FilterError filter_error = 2;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(UpdateFilterResponse, _impl_.filter_error_), 63>(),
-     {16, 63, 0, PROTOBUF_FIELD_OFFSET(UpdateFilterResponse, _impl_.filter_error_)}},
-    // uint32 request_id = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(UpdateFilterResponse, _impl_.request_id_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(UpdateFilterResponse, _impl_.request_id_)}},
-  }}, {{
-    65535, 65535
-  }}, {{
-    // uint32 request_id = 1;
-    {PROTOBUF_FIELD_OFFSET(UpdateFilterResponse, _impl_.request_id_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
-    // .kuksa.val.v2.FilterError filter_error = 2;
-    {PROTOBUF_FIELD_OFFSET(UpdateFilterResponse, _impl_.filter_error_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kOpenEnum)},
-  }},
-  // no aux_entries
-  {{
-  }},
-};
-
-::uint8_t* UpdateFilterResponse::_InternalSerialize(
-    ::uint8_t* target,
-    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:kuksa.val.v2.UpdateFilterResponse)
-  ::uint32_t cached_has_bits = 0;
-  (void)cached_has_bits;
-
-  // uint32 request_id = 1;
-  if (this->_internal_request_id() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
-        1, this->_internal_request_id(), target);
-  }
-
-  // .kuksa.val.v2.FilterError filter_error = 2;
-  if (this->_internal_filter_error() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteEnumToArray(
-        2, this->_internal_filter_error(), target);
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target =
-        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:kuksa.val.v2.UpdateFilterResponse)
-  return target;
-}
-
-::size_t UpdateFilterResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:kuksa.val.v2.UpdateFilterResponse)
-  ::size_t total_size = 0;
-
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // uint32 request_id = 1;
-  if (this->_internal_request_id() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
-        this->_internal_request_id());
-  }
-
-  // .kuksa.val.v2.FilterError filter_error = 2;
-  if (this->_internal_filter_error() != 0) {
-    total_size += 1 +
-                  ::_pbi::WireFormatLite::EnumSize(this->_internal_filter_error());
-  }
-
-  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
-}
-
-const ::google::protobuf::Message::ClassData UpdateFilterResponse::_class_data_ = {
-    UpdateFilterResponse::MergeImpl,
-    nullptr,  // OnDemandRegisterArenaDtor
-};
-const ::google::protobuf::Message::ClassData* UpdateFilterResponse::GetClassData() const {
-  return &_class_data_;
-}
-
-void UpdateFilterResponse::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
-  auto* const _this = static_cast<UpdateFilterResponse*>(&to_msg);
-  auto& from = static_cast<const UpdateFilterResponse&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:kuksa.val.v2.UpdateFilterResponse)
-  ABSL_DCHECK_NE(&from, _this);
-  ::uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (from._internal_request_id() != 0) {
-    _this->_internal_set_request_id(from._internal_request_id());
-  }
-  if (from._internal_filter_error() != 0) {
-    _this->_internal_set_filter_error(from._internal_filter_error());
-  }
-  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
-}
-
-void UpdateFilterResponse::CopyFrom(const UpdateFilterResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:kuksa.val.v2.UpdateFilterResponse)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-PROTOBUF_NOINLINE bool UpdateFilterResponse::IsInitialized() const {
-  return true;
-}
-
-::_pbi::CachedSize* UpdateFilterResponse::AccessCachedSize() const {
-  return &_impl_._cached_size_;
-}
-void UpdateFilterResponse::InternalSwap(UpdateFilterResponse* PROTOBUF_RESTRICT other) {
-  using std::swap;
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(UpdateFilterResponse, _impl_.filter_error_)
-      + sizeof(UpdateFilterResponse::_impl_.filter_error_)
-      - PROTOBUF_FIELD_OFFSET(UpdateFilterResponse, _impl_.request_id_)>(
-          reinterpret_cast<char*>(&_impl_.request_id_),
-          reinterpret_cast<char*>(&other->_impl_.request_id_));
-}
-
-::google::protobuf::Metadata UpdateFilterResponse::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_getter, &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once,
-      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[31]);
-}
-// ===================================================================
-
-class ProviderErrorIndication::_Internal {
- public:
-};
-
-ProviderErrorIndication::ProviderErrorIndication(::google::protobuf::Arena* arena)
-    : ::google::protobuf::Message(arena) {
-  SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:kuksa.val.v2.ProviderErrorIndication)
-}
-ProviderErrorIndication::ProviderErrorIndication(
-    ::google::protobuf::Arena* arena, const ProviderErrorIndication& from)
-    : ProviderErrorIndication(arena) {
-  MergeFrom(from);
-}
-inline PROTOBUF_NDEBUG_INLINE ProviderErrorIndication::Impl_::Impl_(
-    ::google::protobuf::internal::InternalVisibility visibility,
-    ::google::protobuf::Arena* arena)
-      : _cached_size_{0} {}
-
-inline void ProviderErrorIndication::SharedCtor(::_pb::Arena* arena) {
-  new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.provider_error_ = {};
-}
-ProviderErrorIndication::~ProviderErrorIndication() {
-  // @@protoc_insertion_point(destructor:kuksa.val.v2.ProviderErrorIndication)
-  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
-  SharedDtor();
-}
-inline void ProviderErrorIndication::SharedDtor() {
-  ABSL_DCHECK(GetArena() == nullptr);
-  _impl_.~Impl_();
-}
-
-PROTOBUF_NOINLINE void ProviderErrorIndication::Clear() {
-// @@protoc_insertion_point(message_clear_start:kuksa.val.v2.ProviderErrorIndication)
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  _impl_.provider_error_ = 0;
-  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
-}
-
-const char* ProviderErrorIndication::_InternalParse(
-    const char* ptr, ::_pbi::ParseContext* ctx) {
-  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
-  return ptr;
-}
-
-
-PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 0, 0, 2> ProviderErrorIndication::_table_ = {
-  {
-    0,  // no _has_bits_
-    0, // no _extensions_
-    1, 0,  // max_field_number, fast_idx_mask
-    offsetof(decltype(_table_), field_lookup_table),
-    4294967294,  // skipmap
-    offsetof(decltype(_table_), field_entries),
-    1,  // num_field_entries
-    0,  // num_aux_entries
-    offsetof(decltype(_table_), field_names),  // no aux_entries
-    &_ProviderErrorIndication_default_instance_._instance,
-    ::_pbi::TcParser::GenericFallback,  // fallback
-  }, {{
-    // .kuksa.val.v2.ProviderError provider_error = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(ProviderErrorIndication, _impl_.provider_error_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(ProviderErrorIndication, _impl_.provider_error_)}},
-  }}, {{
-    65535, 65535
-  }}, {{
-    // .kuksa.val.v2.ProviderError provider_error = 1;
-    {PROTOBUF_FIELD_OFFSET(ProviderErrorIndication, _impl_.provider_error_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kOpenEnum)},
-  }},
-  // no aux_entries
-  {{
-  }},
-};
-
-::uint8_t* ProviderErrorIndication::_InternalSerialize(
-    ::uint8_t* target,
-    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:kuksa.val.v2.ProviderErrorIndication)
-  ::uint32_t cached_has_bits = 0;
-  (void)cached_has_bits;
-
-  // .kuksa.val.v2.ProviderError provider_error = 1;
-  if (this->_internal_provider_error() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteEnumToArray(
-        1, this->_internal_provider_error(), target);
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target =
-        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:kuksa.val.v2.ProviderErrorIndication)
-  return target;
-}
-
-::size_t ProviderErrorIndication::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:kuksa.val.v2.ProviderErrorIndication)
-  ::size_t total_size = 0;
-
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // .kuksa.val.v2.ProviderError provider_error = 1;
-  if (this->_internal_provider_error() != 0) {
-    total_size += 1 +
-                  ::_pbi::WireFormatLite::EnumSize(this->_internal_provider_error());
-  }
-
-  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
-}
-
-const ::google::protobuf::Message::ClassData ProviderErrorIndication::_class_data_ = {
-    ProviderErrorIndication::MergeImpl,
-    nullptr,  // OnDemandRegisterArenaDtor
-};
-const ::google::protobuf::Message::ClassData* ProviderErrorIndication::GetClassData() const {
-  return &_class_data_;
-}
-
-void ProviderErrorIndication::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
-  auto* const _this = static_cast<ProviderErrorIndication*>(&to_msg);
-  auto& from = static_cast<const ProviderErrorIndication&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:kuksa.val.v2.ProviderErrorIndication)
-  ABSL_DCHECK_NE(&from, _this);
-  ::uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (from._internal_provider_error() != 0) {
-    _this->_internal_set_provider_error(from._internal_provider_error());
-  }
-  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
-}
-
-void ProviderErrorIndication::CopyFrom(const ProviderErrorIndication& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:kuksa.val.v2.ProviderErrorIndication)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-PROTOBUF_NOINLINE bool ProviderErrorIndication::IsInitialized() const {
-  return true;
-}
-
-::_pbi::CachedSize* ProviderErrorIndication::AccessCachedSize() const {
-  return &_impl_._cached_size_;
-}
-void ProviderErrorIndication::InternalSwap(ProviderErrorIndication* PROTOBUF_RESTRICT other) {
-  using std::swap;
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(_impl_.provider_error_, other->_impl_.provider_error_);
-}
-
-::google::protobuf::Metadata ProviderErrorIndication::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_getter, &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once,
-      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[32]);
-}
-// ===================================================================
-
-class GetProviderValueRequest::_Internal {
- public:
-};
-
-GetProviderValueRequest::GetProviderValueRequest(::google::protobuf::Arena* arena)
-    : ::google::protobuf::Message(arena) {
-  SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:kuksa.val.v2.GetProviderValueRequest)
-}
-inline PROTOBUF_NDEBUG_INLINE GetProviderValueRequest::Impl_::Impl_(
-    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
-    const Impl_& from)
-      : signal_ids_{visibility, arena, from.signal_ids_},
-        _signal_ids_cached_byte_size_{0},
-        _cached_size_{0} {}
-
-GetProviderValueRequest::GetProviderValueRequest(
-    ::google::protobuf::Arena* arena,
-    const GetProviderValueRequest& from)
-    : ::google::protobuf::Message(arena) {
-  GetProviderValueRequest* const _this = this;
-  (void)_this;
-  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
-      from._internal_metadata_);
-  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_);
-  _impl_.request_id_ = from._impl_.request_id_;
-
-  // @@protoc_insertion_point(copy_constructor:kuksa.val.v2.GetProviderValueRequest)
-}
-inline PROTOBUF_NDEBUG_INLINE GetProviderValueRequest::Impl_::Impl_(
-    ::google::protobuf::internal::InternalVisibility visibility,
-    ::google::protobuf::Arena* arena)
-      : signal_ids_{visibility, arena},
-        _signal_ids_cached_byte_size_{0},
-        _cached_size_{0} {}
-
-inline void GetProviderValueRequest::SharedCtor(::_pb::Arena* arena) {
-  new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.request_id_ = {};
-}
-GetProviderValueRequest::~GetProviderValueRequest() {
-  // @@protoc_insertion_point(destructor:kuksa.val.v2.GetProviderValueRequest)
-  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
-  SharedDtor();
-}
-inline void GetProviderValueRequest::SharedDtor() {
-  ABSL_DCHECK(GetArena() == nullptr);
-  _impl_.~Impl_();
-}
-
-PROTOBUF_NOINLINE void GetProviderValueRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:kuksa.val.v2.GetProviderValueRequest)
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  _impl_.signal_ids_.Clear();
-  _impl_.request_id_ = 0u;
-  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
-}
-
-const char* GetProviderValueRequest::_InternalParse(
-    const char* ptr, ::_pbi::ParseContext* ctx) {
-  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
-  return ptr;
-}
-
-
-PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<1, 2, 0, 0, 2> GetProviderValueRequest::_table_ = {
-  {
-    0,  // no _has_bits_
-    0, // no _extensions_
-    2, 8,  // max_field_number, fast_idx_mask
-    offsetof(decltype(_table_), field_lookup_table),
-    4294967292,  // skipmap
-    offsetof(decltype(_table_), field_entries),
-    2,  // num_field_entries
-    0,  // num_aux_entries
-    offsetof(decltype(_table_), field_names),  // no aux_entries
-    &_GetProviderValueRequest_default_instance_._instance,
-    ::_pbi::TcParser::GenericFallback,  // fallback
-  }, {{
-    // repeated int32 signal_ids = 2;
-    {::_pbi::TcParser::FastV32P1,
-     {18, 63, 0, PROTOBUF_FIELD_OFFSET(GetProviderValueRequest, _impl_.signal_ids_)}},
-    // uint32 request_id = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(GetProviderValueRequest, _impl_.request_id_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(GetProviderValueRequest, _impl_.request_id_)}},
-  }}, {{
-    65535, 65535
-  }}, {{
-    // uint32 request_id = 1;
-    {PROTOBUF_FIELD_OFFSET(GetProviderValueRequest, _impl_.request_id_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
-    // repeated int32 signal_ids = 2;
-    {PROTOBUF_FIELD_OFFSET(GetProviderValueRequest, _impl_.signal_ids_), 0, 0,
-    (0 | ::_fl::kFcRepeated | ::_fl::kPackedInt32)},
-  }},
-  // no aux_entries
-  {{
-  }},
-};
-
-::uint8_t* GetProviderValueRequest::_InternalSerialize(
-    ::uint8_t* target,
-    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:kuksa.val.v2.GetProviderValueRequest)
-  ::uint32_t cached_has_bits = 0;
-  (void)cached_has_bits;
-
-  // uint32 request_id = 1;
-  if (this->_internal_request_id() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
-        1, this->_internal_request_id(), target);
-  }
-
-  // repeated int32 signal_ids = 2;
-  {
-    int byte_size = _impl_._signal_ids_cached_byte_size_.Get();
-    if (byte_size > 0) {
-      target = stream->WriteInt32Packed(
-          2, _internal_signal_ids(), byte_size, target);
-    }
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target =
-        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:kuksa.val.v2.GetProviderValueRequest)
-  return target;
-}
-
-::size_t GetProviderValueRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:kuksa.val.v2.GetProviderValueRequest)
-  ::size_t total_size = 0;
-
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // repeated int32 signal_ids = 2;
-  {
-    std::size_t data_size = ::_pbi::WireFormatLite::Int32Size(
-        this->_internal_signal_ids())
-    ;
-    _impl_._signal_ids_cached_byte_size_.Set(::_pbi::ToCachedSize(data_size));
-    std::size_t tag_size = data_size == 0
-        ? 0
-        : 1 + ::_pbi::WireFormatLite::Int32Size(
-                            static_cast<int32_t>(data_size))
-    ;
-    total_size += tag_size + data_size;
-  }
-  // uint32 request_id = 1;
-  if (this->_internal_request_id() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
-        this->_internal_request_id());
-  }
-
-  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
-}
-
-const ::google::protobuf::Message::ClassData GetProviderValueRequest::_class_data_ = {
-    GetProviderValueRequest::MergeImpl,
-    nullptr,  // OnDemandRegisterArenaDtor
-};
-const ::google::protobuf::Message::ClassData* GetProviderValueRequest::GetClassData() const {
-  return &_class_data_;
-}
-
-void GetProviderValueRequest::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
-  auto* const _this = static_cast<GetProviderValueRequest*>(&to_msg);
-  auto& from = static_cast<const GetProviderValueRequest&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:kuksa.val.v2.GetProviderValueRequest)
-  ABSL_DCHECK_NE(&from, _this);
-  ::uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  _this->_internal_mutable_signal_ids()->MergeFrom(from._internal_signal_ids());
-  if (from._internal_request_id() != 0) {
-    _this->_internal_set_request_id(from._internal_request_id());
-  }
-  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
-}
-
-void GetProviderValueRequest::CopyFrom(const GetProviderValueRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:kuksa.val.v2.GetProviderValueRequest)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-PROTOBUF_NOINLINE bool GetProviderValueRequest::IsInitialized() const {
-  return true;
-}
-
-::_pbi::CachedSize* GetProviderValueRequest::AccessCachedSize() const {
-  return &_impl_._cached_size_;
-}
-void GetProviderValueRequest::InternalSwap(GetProviderValueRequest* PROTOBUF_RESTRICT other) {
-  using std::swap;
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  _impl_.signal_ids_.InternalSwap(&other->_impl_.signal_ids_);
-        swap(_impl_.request_id_, other->_impl_.request_id_);
-}
-
-::google::protobuf::Metadata GetProviderValueRequest::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_getter, &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once,
-      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[33]);
-}
-// ===================================================================
-
-GetProviderValueResponse_EntriesEntry_DoNotUse::GetProviderValueResponse_EntriesEntry_DoNotUse() {}
-GetProviderValueResponse_EntriesEntry_DoNotUse::GetProviderValueResponse_EntriesEntry_DoNotUse(::google::protobuf::Arena* arena)
-    : SuperType(arena) {}
-::google::protobuf::Metadata GetProviderValueResponse_EntriesEntry_DoNotUse::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_getter, &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once,
-      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[34]);
-}
-// ===================================================================
-
-class GetProviderValueResponse::_Internal {
- public:
-};
-
-void GetProviderValueResponse::clear_entries() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.entries_.Clear();
-}
-GetProviderValueResponse::GetProviderValueResponse(::google::protobuf::Arena* arena)
-    : ::google::protobuf::Message(arena) {
-  SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:kuksa.val.v2.GetProviderValueResponse)
-}
-inline PROTOBUF_NDEBUG_INLINE GetProviderValueResponse::Impl_::Impl_(
-    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
-    const Impl_& from)
-      : entries_{visibility, arena, from.entries_},
-        _cached_size_{0} {}
-
-GetProviderValueResponse::GetProviderValueResponse(
-    ::google::protobuf::Arena* arena,
-    const GetProviderValueResponse& from)
-    : ::google::protobuf::Message(arena) {
-  GetProviderValueResponse* const _this = this;
-  (void)_this;
-  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
-      from._internal_metadata_);
-  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_);
-  _impl_.request_id_ = from._impl_.request_id_;
-
-  // @@protoc_insertion_point(copy_constructor:kuksa.val.v2.GetProviderValueResponse)
-}
-inline PROTOBUF_NDEBUG_INLINE GetProviderValueResponse::Impl_::Impl_(
-    ::google::protobuf::internal::InternalVisibility visibility,
-    ::google::protobuf::Arena* arena)
-      : entries_{visibility, arena},
-        _cached_size_{0} {}
-
-inline void GetProviderValueResponse::SharedCtor(::_pb::Arena* arena) {
-  new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.request_id_ = {};
-}
-GetProviderValueResponse::~GetProviderValueResponse() {
-  // @@protoc_insertion_point(destructor:kuksa.val.v2.GetProviderValueResponse)
-  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
-  SharedDtor();
-}
-inline void GetProviderValueResponse::SharedDtor() {
-  ABSL_DCHECK(GetArena() == nullptr);
-  _impl_.~Impl_();
-}
-
-PROTOBUF_NOINLINE void GetProviderValueResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:kuksa.val.v2.GetProviderValueResponse)
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  _impl_.entries_.Clear();
-  _impl_.request_id_ = 0u;
-  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
-}
-
-const char* GetProviderValueResponse::_InternalParse(
-    const char* ptr, ::_pbi::ParseContext* ctx) {
-  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
-  return ptr;
-}
-
-
-PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 2, 2, 0, 2> GetProviderValueResponse::_table_ = {
-  {
-    0,  // no _has_bits_
-    0, // no _extensions_
-    2, 0,  // max_field_number, fast_idx_mask
-    offsetof(decltype(_table_), field_lookup_table),
-    4294967292,  // skipmap
-    offsetof(decltype(_table_), field_entries),
-    2,  // num_field_entries
-    2,  // num_aux_entries
-    offsetof(decltype(_table_), aux_entries),
-    &_GetProviderValueResponse_default_instance_._instance,
-    ::_pbi::TcParser::GenericFallback,  // fallback
-  }, {{
-    // uint32 request_id = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(GetProviderValueResponse, _impl_.request_id_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(GetProviderValueResponse, _impl_.request_id_)}},
-  }}, {{
-    65535, 65535
-  }}, {{
-    // uint32 request_id = 1;
-    {PROTOBUF_FIELD_OFFSET(GetProviderValueResponse, _impl_.request_id_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
-    // map<int32, .kuksa.val.v2.Datapoint> entries = 2;
-    {PROTOBUF_FIELD_OFFSET(GetProviderValueResponse, _impl_.entries_), 0, 0,
-    (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
-  }}, {{
-    {::_pbi::TcParser::GetMapAuxInfo<
-        decltype(GetProviderValueResponse()._impl_.entries_)>(
-        1, 0, 0, 5,
-        11)},
-    {::_pbi::TcParser::CreateInArenaStorageCb<::kuksa::val::v2::Datapoint>},
-  }}, {{
-  }},
-};
-
-::uint8_t* GetProviderValueResponse::_InternalSerialize(
-    ::uint8_t* target,
-    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:kuksa.val.v2.GetProviderValueResponse)
-  ::uint32_t cached_has_bits = 0;
-  (void)cached_has_bits;
-
-  // uint32 request_id = 1;
-  if (this->_internal_request_id() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
-        1, this->_internal_request_id(), target);
-  }
-
-  // map<int32, .kuksa.val.v2.Datapoint> entries = 2;
-  if (!_internal_entries().empty()) {
-    using MapType = ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Datapoint>;
-    using WireHelper = _pbi::MapEntryFuncs<::int32_t, ::kuksa::val::v2::Datapoint,
-                                   _pbi::WireFormatLite::TYPE_INT32,
-                                   _pbi::WireFormatLite::TYPE_MESSAGE>;
-    const auto& field = _internal_entries();
-
-    if (stream->IsSerializationDeterministic() && field.size() > 1) {
-      for (const auto& entry : ::google::protobuf::internal::MapSorterFlat<MapType>(field)) {
-        target = WireHelper::InternalSerialize(
-            2, entry.first, entry.second, target, stream);
-      }
-    } else {
-      for (const auto& entry : field) {
-        target = WireHelper::InternalSerialize(
-            2, entry.first, entry.second, target, stream);
-      }
-    }
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target =
-        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:kuksa.val.v2.GetProviderValueResponse)
-  return target;
-}
-
-::size_t GetProviderValueResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:kuksa.val.v2.GetProviderValueResponse)
-  ::size_t total_size = 0;
-
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // map<int32, .kuksa.val.v2.Datapoint> entries = 2;
-  total_size += 1 * ::google::protobuf::internal::FromIntSize(_internal_entries_size());
-  for (const auto& entry : _internal_entries()) {
-    total_size += _pbi::MapEntryFuncs<::int32_t, ::kuksa::val::v2::Datapoint,
-                                   _pbi::WireFormatLite::TYPE_INT32,
-                                   _pbi::WireFormatLite::TYPE_MESSAGE>::ByteSizeLong(entry.first, entry.second);
-  }
-  // uint32 request_id = 1;
-  if (this->_internal_request_id() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
-        this->_internal_request_id());
-  }
-
-  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
-}
-
-const ::google::protobuf::Message::ClassData GetProviderValueResponse::_class_data_ = {
-    GetProviderValueResponse::MergeImpl,
-    nullptr,  // OnDemandRegisterArenaDtor
-};
-const ::google::protobuf::Message::ClassData* GetProviderValueResponse::GetClassData() const {
-  return &_class_data_;
-}
-
-void GetProviderValueResponse::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
-  auto* const _this = static_cast<GetProviderValueResponse*>(&to_msg);
-  auto& from = static_cast<const GetProviderValueResponse&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:kuksa.val.v2.GetProviderValueResponse)
-  ABSL_DCHECK_NE(&from, _this);
-  ::uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  _this->_impl_.entries_.MergeFrom(from._impl_.entries_);
-  if (from._internal_request_id() != 0) {
-    _this->_internal_set_request_id(from._internal_request_id());
-  }
-  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
-}
-
-void GetProviderValueResponse::CopyFrom(const GetProviderValueResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:kuksa.val.v2.GetProviderValueResponse)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-PROTOBUF_NOINLINE bool GetProviderValueResponse::IsInitialized() const {
-  return true;
-}
-
-::_pbi::CachedSize* GetProviderValueResponse::AccessCachedSize() const {
-  return &_impl_._cached_size_;
-}
-void GetProviderValueResponse::InternalSwap(GetProviderValueResponse* PROTOBUF_RESTRICT other) {
-  using std::swap;
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  _impl_.entries_.InternalSwap(&other->_impl_.entries_);
-        swap(_impl_.request_id_, other->_impl_.request_id_);
-}
-
-::google::protobuf::Metadata GetProviderValueResponse::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_getter, &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once,
-      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[35]);
+      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[25]);
 }
 // ===================================================================
 
@@ -6910,10 +5125,6 @@ class OpenProviderStreamRequest::_Internal {
   static const ::kuksa::val::v2::ProvideActuationRequest& provide_actuation_request(const OpenProviderStreamRequest* msg);
   static const ::kuksa::val::v2::PublishValuesRequest& publish_values_request(const OpenProviderStreamRequest* msg);
   static const ::kuksa::val::v2::BatchActuateStreamResponse& batch_actuate_stream_response(const OpenProviderStreamRequest* msg);
-  static const ::kuksa::val::v2::ProvideSignalRequest& provide_signal_request(const OpenProviderStreamRequest* msg);
-  static const ::kuksa::val::v2::UpdateFilterResponse& update_filter_response(const OpenProviderStreamRequest* msg);
-  static const ::kuksa::val::v2::GetProviderValueResponse& get_provider_value_response(const OpenProviderStreamRequest* msg);
-  static const ::kuksa::val::v2::ProviderErrorIndication& provider_error_indication(const OpenProviderStreamRequest* msg);
 };
 
 const ::kuksa::val::v2::ProvideActuationRequest& OpenProviderStreamRequest::_Internal::provide_actuation_request(const OpenProviderStreamRequest* msg) {
@@ -6924,18 +5135,6 @@ const ::kuksa::val::v2::PublishValuesRequest& OpenProviderStreamRequest::_Intern
 }
 const ::kuksa::val::v2::BatchActuateStreamResponse& OpenProviderStreamRequest::_Internal::batch_actuate_stream_response(const OpenProviderStreamRequest* msg) {
   return *msg->_impl_.action_.batch_actuate_stream_response_;
-}
-const ::kuksa::val::v2::ProvideSignalRequest& OpenProviderStreamRequest::_Internal::provide_signal_request(const OpenProviderStreamRequest* msg) {
-  return *msg->_impl_.action_.provide_signal_request_;
-}
-const ::kuksa::val::v2::UpdateFilterResponse& OpenProviderStreamRequest::_Internal::update_filter_response(const OpenProviderStreamRequest* msg) {
-  return *msg->_impl_.action_.update_filter_response_;
-}
-const ::kuksa::val::v2::GetProviderValueResponse& OpenProviderStreamRequest::_Internal::get_provider_value_response(const OpenProviderStreamRequest* msg) {
-  return *msg->_impl_.action_.get_provider_value_response_;
-}
-const ::kuksa::val::v2::ProviderErrorIndication& OpenProviderStreamRequest::_Internal::provider_error_indication(const OpenProviderStreamRequest* msg) {
-  return *msg->_impl_.action_.provider_error_indication_;
 }
 void OpenProviderStreamRequest::set_allocated_provide_actuation_request(::kuksa::val::v2::ProvideActuationRequest* provide_actuation_request) {
   ::google::protobuf::Arena* message_arena = GetArena();
@@ -6976,58 +5175,6 @@ void OpenProviderStreamRequest::set_allocated_batch_actuate_stream_response(::ku
   }
   // @@protoc_insertion_point(field_set_allocated:kuksa.val.v2.OpenProviderStreamRequest.batch_actuate_stream_response)
 }
-void OpenProviderStreamRequest::set_allocated_provide_signal_request(::kuksa::val::v2::ProvideSignalRequest* provide_signal_request) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  clear_action();
-  if (provide_signal_request) {
-    ::google::protobuf::Arena* submessage_arena = provide_signal_request->GetArena();
-    if (message_arena != submessage_arena) {
-      provide_signal_request = ::google::protobuf::internal::GetOwnedMessage(message_arena, provide_signal_request, submessage_arena);
-    }
-    set_has_provide_signal_request();
-    _impl_.action_.provide_signal_request_ = provide_signal_request;
-  }
-  // @@protoc_insertion_point(field_set_allocated:kuksa.val.v2.OpenProviderStreamRequest.provide_signal_request)
-}
-void OpenProviderStreamRequest::set_allocated_update_filter_response(::kuksa::val::v2::UpdateFilterResponse* update_filter_response) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  clear_action();
-  if (update_filter_response) {
-    ::google::protobuf::Arena* submessage_arena = update_filter_response->GetArena();
-    if (message_arena != submessage_arena) {
-      update_filter_response = ::google::protobuf::internal::GetOwnedMessage(message_arena, update_filter_response, submessage_arena);
-    }
-    set_has_update_filter_response();
-    _impl_.action_.update_filter_response_ = update_filter_response;
-  }
-  // @@protoc_insertion_point(field_set_allocated:kuksa.val.v2.OpenProviderStreamRequest.update_filter_response)
-}
-void OpenProviderStreamRequest::set_allocated_get_provider_value_response(::kuksa::val::v2::GetProviderValueResponse* get_provider_value_response) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  clear_action();
-  if (get_provider_value_response) {
-    ::google::protobuf::Arena* submessage_arena = get_provider_value_response->GetArena();
-    if (message_arena != submessage_arena) {
-      get_provider_value_response = ::google::protobuf::internal::GetOwnedMessage(message_arena, get_provider_value_response, submessage_arena);
-    }
-    set_has_get_provider_value_response();
-    _impl_.action_.get_provider_value_response_ = get_provider_value_response;
-  }
-  // @@protoc_insertion_point(field_set_allocated:kuksa.val.v2.OpenProviderStreamRequest.get_provider_value_response)
-}
-void OpenProviderStreamRequest::set_allocated_provider_error_indication(::kuksa::val::v2::ProviderErrorIndication* provider_error_indication) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  clear_action();
-  if (provider_error_indication) {
-    ::google::protobuf::Arena* submessage_arena = provider_error_indication->GetArena();
-    if (message_arena != submessage_arena) {
-      provider_error_indication = ::google::protobuf::internal::GetOwnedMessage(message_arena, provider_error_indication, submessage_arena);
-    }
-    set_has_provider_error_indication();
-    _impl_.action_.provider_error_indication_ = provider_error_indication;
-  }
-  // @@protoc_insertion_point(field_set_allocated:kuksa.val.v2.OpenProviderStreamRequest.provider_error_indication)
-}
 OpenProviderStreamRequest::OpenProviderStreamRequest(::google::protobuf::Arena* arena)
     : ::google::protobuf::Message(arena) {
   SharedCtor(arena);
@@ -7060,18 +5207,6 @@ OpenProviderStreamRequest::OpenProviderStreamRequest(
         break;
       case kBatchActuateStreamResponse:
         _impl_.action_.batch_actuate_stream_response_ = CreateMaybeMessage<::kuksa::val::v2::BatchActuateStreamResponse>(arena, *from._impl_.action_.batch_actuate_stream_response_);
-        break;
-      case kProvideSignalRequest:
-        _impl_.action_.provide_signal_request_ = CreateMaybeMessage<::kuksa::val::v2::ProvideSignalRequest>(arena, *from._impl_.action_.provide_signal_request_);
-        break;
-      case kUpdateFilterResponse:
-        _impl_.action_.update_filter_response_ = CreateMaybeMessage<::kuksa::val::v2::UpdateFilterResponse>(arena, *from._impl_.action_.update_filter_response_);
-        break;
-      case kGetProviderValueResponse:
-        _impl_.action_.get_provider_value_response_ = CreateMaybeMessage<::kuksa::val::v2::GetProviderValueResponse>(arena, *from._impl_.action_.get_provider_value_response_);
-        break;
-      case kProviderErrorIndication:
-        _impl_.action_.provider_error_indication_ = CreateMaybeMessage<::kuksa::val::v2::ProviderErrorIndication>(arena, *from._impl_.action_.provider_error_indication_);
         break;
   }
 
@@ -7122,30 +5257,6 @@ void OpenProviderStreamRequest::clear_action() {
       }
       break;
     }
-    case kProvideSignalRequest: {
-      if (GetArena() == nullptr) {
-        delete _impl_.action_.provide_signal_request_;
-      }
-      break;
-    }
-    case kUpdateFilterResponse: {
-      if (GetArena() == nullptr) {
-        delete _impl_.action_.update_filter_response_;
-      }
-      break;
-    }
-    case kGetProviderValueResponse: {
-      if (GetArena() == nullptr) {
-        delete _impl_.action_.get_provider_value_response_;
-      }
-      break;
-    }
-    case kProviderErrorIndication: {
-      if (GetArena() == nullptr) {
-        delete _impl_.action_.provider_error_indication_;
-      }
-      break;
-    }
     case ACTION_NOT_SET: {
       break;
     }
@@ -7173,16 +5284,16 @@ const char* OpenProviderStreamRequest::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 7, 7, 0, 2> OpenProviderStreamRequest::_table_ = {
+const ::_pbi::TcParseTable<0, 3, 3, 0, 2> OpenProviderStreamRequest::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    7, 0,  // max_field_number, fast_idx_mask
+    3, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967168,  // skipmap
+    4294967288,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    7,  // num_field_entries
-    7,  // num_aux_entries
+    3,  // num_field_entries
+    3,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     &_OpenProviderStreamRequest_default_instance_._instance,
     ::_pbi::TcParser::GenericFallback,  // fallback
@@ -7200,26 +5311,10 @@ const ::_pbi::TcParseTable<0, 7, 7, 0, 2> OpenProviderStreamRequest::_table_ = {
     // .kuksa.val.v2.BatchActuateStreamResponse batch_actuate_stream_response = 3;
     {PROTOBUF_FIELD_OFFSET(OpenProviderStreamRequest, _impl_.action_.batch_actuate_stream_response_), _Internal::kOneofCaseOffset + 0, 2,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .kuksa.val.v2.ProvideSignalRequest provide_signal_request = 4;
-    {PROTOBUF_FIELD_OFFSET(OpenProviderStreamRequest, _impl_.action_.provide_signal_request_), _Internal::kOneofCaseOffset + 0, 3,
-    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .kuksa.val.v2.UpdateFilterResponse update_filter_response = 5;
-    {PROTOBUF_FIELD_OFFSET(OpenProviderStreamRequest, _impl_.action_.update_filter_response_), _Internal::kOneofCaseOffset + 0, 4,
-    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .kuksa.val.v2.GetProviderValueResponse get_provider_value_response = 6;
-    {PROTOBUF_FIELD_OFFSET(OpenProviderStreamRequest, _impl_.action_.get_provider_value_response_), _Internal::kOneofCaseOffset + 0, 5,
-    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .kuksa.val.v2.ProviderErrorIndication provider_error_indication = 7;
-    {PROTOBUF_FIELD_OFFSET(OpenProviderStreamRequest, _impl_.action_.provider_error_indication_), _Internal::kOneofCaseOffset + 0, 6,
-    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }}, {{
     {::_pbi::TcParser::GetTable<::kuksa::val::v2::ProvideActuationRequest>()},
     {::_pbi::TcParser::GetTable<::kuksa::val::v2::PublishValuesRequest>()},
     {::_pbi::TcParser::GetTable<::kuksa::val::v2::BatchActuateStreamResponse>()},
-    {::_pbi::TcParser::GetTable<::kuksa::val::v2::ProvideSignalRequest>()},
-    {::_pbi::TcParser::GetTable<::kuksa::val::v2::UpdateFilterResponse>()},
-    {::_pbi::TcParser::GetTable<::kuksa::val::v2::GetProviderValueResponse>()},
-    {::_pbi::TcParser::GetTable<::kuksa::val::v2::ProviderErrorIndication>()},
   }}, {{
   }},
 };
@@ -7248,30 +5343,6 @@ const ::_pbi::TcParseTable<0, 7, 7, 0, 2> OpenProviderStreamRequest::_table_ = {
       target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
           3, _Internal::batch_actuate_stream_response(this),
           _Internal::batch_actuate_stream_response(this).GetCachedSize(), target, stream);
-      break;
-    }
-    case kProvideSignalRequest: {
-      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          4, _Internal::provide_signal_request(this),
-          _Internal::provide_signal_request(this).GetCachedSize(), target, stream);
-      break;
-    }
-    case kUpdateFilterResponse: {
-      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          5, _Internal::update_filter_response(this),
-          _Internal::update_filter_response(this).GetCachedSize(), target, stream);
-      break;
-    }
-    case kGetProviderValueResponse: {
-      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          6, _Internal::get_provider_value_response(this),
-          _Internal::get_provider_value_response(this).GetCachedSize(), target, stream);
-      break;
-    }
-    case kProviderErrorIndication: {
-      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          7, _Internal::provider_error_indication(this),
-          _Internal::provider_error_indication(this).GetCachedSize(), target, stream);
       break;
     }
     default:
@@ -7313,30 +5384,6 @@ const ::_pbi::TcParseTable<0, 7, 7, 0, 2> OpenProviderStreamRequest::_table_ = {
           1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.action_.batch_actuate_stream_response_);
       break;
     }
-    // .kuksa.val.v2.ProvideSignalRequest provide_signal_request = 4;
-    case kProvideSignalRequest: {
-      total_size +=
-          1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.action_.provide_signal_request_);
-      break;
-    }
-    // .kuksa.val.v2.UpdateFilterResponse update_filter_response = 5;
-    case kUpdateFilterResponse: {
-      total_size +=
-          1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.action_.update_filter_response_);
-      break;
-    }
-    // .kuksa.val.v2.GetProviderValueResponse get_provider_value_response = 6;
-    case kGetProviderValueResponse: {
-      total_size +=
-          1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.action_.get_provider_value_response_);
-      break;
-    }
-    // .kuksa.val.v2.ProviderErrorIndication provider_error_indication = 7;
-    case kProviderErrorIndication: {
-      total_size +=
-          1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.action_.provider_error_indication_);
-      break;
-    }
     case ACTION_NOT_SET: {
       break;
     }
@@ -7376,26 +5423,6 @@ void OpenProviderStreamRequest::MergeImpl(::google::protobuf::Message& to_msg, c
           from._internal_batch_actuate_stream_response());
       break;
     }
-    case kProvideSignalRequest: {
-      _this->_internal_mutable_provide_signal_request()->::kuksa::val::v2::ProvideSignalRequest::MergeFrom(
-          from._internal_provide_signal_request());
-      break;
-    }
-    case kUpdateFilterResponse: {
-      _this->_internal_mutable_update_filter_response()->::kuksa::val::v2::UpdateFilterResponse::MergeFrom(
-          from._internal_update_filter_response());
-      break;
-    }
-    case kGetProviderValueResponse: {
-      _this->_internal_mutable_get_provider_value_response()->::kuksa::val::v2::GetProviderValueResponse::MergeFrom(
-          from._internal_get_provider_value_response());
-      break;
-    }
-    case kProviderErrorIndication: {
-      _this->_internal_mutable_provider_error_indication()->::kuksa::val::v2::ProviderErrorIndication::MergeFrom(
-          from._internal_provider_error_indication());
-      break;
-    }
     case ACTION_NOT_SET: {
       break;
     }
@@ -7427,7 +5454,7 @@ void OpenProviderStreamRequest::InternalSwap(OpenProviderStreamRequest* PROTOBUF
 ::google::protobuf::Metadata OpenProviderStreamRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_getter, &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once,
-      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[36]);
+      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[26]);
 }
 // ===================================================================
 
@@ -7438,9 +5465,6 @@ class OpenProviderStreamResponse::_Internal {
   static const ::kuksa::val::v2::ProvideActuationResponse& provide_actuation_response(const OpenProviderStreamResponse* msg);
   static const ::kuksa::val::v2::PublishValuesResponse& publish_values_response(const OpenProviderStreamResponse* msg);
   static const ::kuksa::val::v2::BatchActuateStreamRequest& batch_actuate_stream_request(const OpenProviderStreamResponse* msg);
-  static const ::kuksa::val::v2::ProvideSignalResponse& provide_signal_response(const OpenProviderStreamResponse* msg);
-  static const ::kuksa::val::v2::UpdateFilterRequest& update_filter_request(const OpenProviderStreamResponse* msg);
-  static const ::kuksa::val::v2::GetProviderValueRequest& get_provider_value_request(const OpenProviderStreamResponse* msg);
 };
 
 const ::kuksa::val::v2::ProvideActuationResponse& OpenProviderStreamResponse::_Internal::provide_actuation_response(const OpenProviderStreamResponse* msg) {
@@ -7451,15 +5475,6 @@ const ::kuksa::val::v2::PublishValuesResponse& OpenProviderStreamResponse::_Inte
 }
 const ::kuksa::val::v2::BatchActuateStreamRequest& OpenProviderStreamResponse::_Internal::batch_actuate_stream_request(const OpenProviderStreamResponse* msg) {
   return *msg->_impl_.action_.batch_actuate_stream_request_;
-}
-const ::kuksa::val::v2::ProvideSignalResponse& OpenProviderStreamResponse::_Internal::provide_signal_response(const OpenProviderStreamResponse* msg) {
-  return *msg->_impl_.action_.provide_signal_response_;
-}
-const ::kuksa::val::v2::UpdateFilterRequest& OpenProviderStreamResponse::_Internal::update_filter_request(const OpenProviderStreamResponse* msg) {
-  return *msg->_impl_.action_.update_filter_request_;
-}
-const ::kuksa::val::v2::GetProviderValueRequest& OpenProviderStreamResponse::_Internal::get_provider_value_request(const OpenProviderStreamResponse* msg) {
-  return *msg->_impl_.action_.get_provider_value_request_;
 }
 void OpenProviderStreamResponse::set_allocated_provide_actuation_response(::kuksa::val::v2::ProvideActuationResponse* provide_actuation_response) {
   ::google::protobuf::Arena* message_arena = GetArena();
@@ -7500,45 +5515,6 @@ void OpenProviderStreamResponse::set_allocated_batch_actuate_stream_request(::ku
   }
   // @@protoc_insertion_point(field_set_allocated:kuksa.val.v2.OpenProviderStreamResponse.batch_actuate_stream_request)
 }
-void OpenProviderStreamResponse::set_allocated_provide_signal_response(::kuksa::val::v2::ProvideSignalResponse* provide_signal_response) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  clear_action();
-  if (provide_signal_response) {
-    ::google::protobuf::Arena* submessage_arena = provide_signal_response->GetArena();
-    if (message_arena != submessage_arena) {
-      provide_signal_response = ::google::protobuf::internal::GetOwnedMessage(message_arena, provide_signal_response, submessage_arena);
-    }
-    set_has_provide_signal_response();
-    _impl_.action_.provide_signal_response_ = provide_signal_response;
-  }
-  // @@protoc_insertion_point(field_set_allocated:kuksa.val.v2.OpenProviderStreamResponse.provide_signal_response)
-}
-void OpenProviderStreamResponse::set_allocated_update_filter_request(::kuksa::val::v2::UpdateFilterRequest* update_filter_request) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  clear_action();
-  if (update_filter_request) {
-    ::google::protobuf::Arena* submessage_arena = update_filter_request->GetArena();
-    if (message_arena != submessage_arena) {
-      update_filter_request = ::google::protobuf::internal::GetOwnedMessage(message_arena, update_filter_request, submessage_arena);
-    }
-    set_has_update_filter_request();
-    _impl_.action_.update_filter_request_ = update_filter_request;
-  }
-  // @@protoc_insertion_point(field_set_allocated:kuksa.val.v2.OpenProviderStreamResponse.update_filter_request)
-}
-void OpenProviderStreamResponse::set_allocated_get_provider_value_request(::kuksa::val::v2::GetProviderValueRequest* get_provider_value_request) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  clear_action();
-  if (get_provider_value_request) {
-    ::google::protobuf::Arena* submessage_arena = get_provider_value_request->GetArena();
-    if (message_arena != submessage_arena) {
-      get_provider_value_request = ::google::protobuf::internal::GetOwnedMessage(message_arena, get_provider_value_request, submessage_arena);
-    }
-    set_has_get_provider_value_request();
-    _impl_.action_.get_provider_value_request_ = get_provider_value_request;
-  }
-  // @@protoc_insertion_point(field_set_allocated:kuksa.val.v2.OpenProviderStreamResponse.get_provider_value_request)
-}
 OpenProviderStreamResponse::OpenProviderStreamResponse(::google::protobuf::Arena* arena)
     : ::google::protobuf::Message(arena) {
   SharedCtor(arena);
@@ -7571,15 +5547,6 @@ OpenProviderStreamResponse::OpenProviderStreamResponse(
         break;
       case kBatchActuateStreamRequest:
         _impl_.action_.batch_actuate_stream_request_ = CreateMaybeMessage<::kuksa::val::v2::BatchActuateStreamRequest>(arena, *from._impl_.action_.batch_actuate_stream_request_);
-        break;
-      case kProvideSignalResponse:
-        _impl_.action_.provide_signal_response_ = CreateMaybeMessage<::kuksa::val::v2::ProvideSignalResponse>(arena, *from._impl_.action_.provide_signal_response_);
-        break;
-      case kUpdateFilterRequest:
-        _impl_.action_.update_filter_request_ = CreateMaybeMessage<::kuksa::val::v2::UpdateFilterRequest>(arena, *from._impl_.action_.update_filter_request_);
-        break;
-      case kGetProviderValueRequest:
-        _impl_.action_.get_provider_value_request_ = CreateMaybeMessage<::kuksa::val::v2::GetProviderValueRequest>(arena, *from._impl_.action_.get_provider_value_request_);
         break;
   }
 
@@ -7630,24 +5597,6 @@ void OpenProviderStreamResponse::clear_action() {
       }
       break;
     }
-    case kProvideSignalResponse: {
-      if (GetArena() == nullptr) {
-        delete _impl_.action_.provide_signal_response_;
-      }
-      break;
-    }
-    case kUpdateFilterRequest: {
-      if (GetArena() == nullptr) {
-        delete _impl_.action_.update_filter_request_;
-      }
-      break;
-    }
-    case kGetProviderValueRequest: {
-      if (GetArena() == nullptr) {
-        delete _impl_.action_.get_provider_value_request_;
-      }
-      break;
-    }
     case ACTION_NOT_SET: {
       break;
     }
@@ -7675,16 +5624,16 @@ const char* OpenProviderStreamResponse::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 6, 6, 0, 2> OpenProviderStreamResponse::_table_ = {
+const ::_pbi::TcParseTable<0, 3, 3, 0, 2> OpenProviderStreamResponse::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    6, 0,  // max_field_number, fast_idx_mask
+    3, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967232,  // skipmap
+    4294967288,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    6,  // num_field_entries
-    6,  // num_aux_entries
+    3,  // num_field_entries
+    3,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     &_OpenProviderStreamResponse_default_instance_._instance,
     ::_pbi::TcParser::GenericFallback,  // fallback
@@ -7702,22 +5651,10 @@ const ::_pbi::TcParseTable<0, 6, 6, 0, 2> OpenProviderStreamResponse::_table_ = 
     // .kuksa.val.v2.BatchActuateStreamRequest batch_actuate_stream_request = 3;
     {PROTOBUF_FIELD_OFFSET(OpenProviderStreamResponse, _impl_.action_.batch_actuate_stream_request_), _Internal::kOneofCaseOffset + 0, 2,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .kuksa.val.v2.ProvideSignalResponse provide_signal_response = 4;
-    {PROTOBUF_FIELD_OFFSET(OpenProviderStreamResponse, _impl_.action_.provide_signal_response_), _Internal::kOneofCaseOffset + 0, 3,
-    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvDefault)},
-    // .kuksa.val.v2.UpdateFilterRequest update_filter_request = 5;
-    {PROTOBUF_FIELD_OFFSET(OpenProviderStreamResponse, _impl_.action_.update_filter_request_), _Internal::kOneofCaseOffset + 0, 4,
-    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .kuksa.val.v2.GetProviderValueRequest get_provider_value_request = 6;
-    {PROTOBUF_FIELD_OFFSET(OpenProviderStreamResponse, _impl_.action_.get_provider_value_request_), _Internal::kOneofCaseOffset + 0, 5,
-    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }}, {{
     {::_pbi::FieldAuxDefaultMessage{}, &::kuksa::val::v2::_ProvideActuationResponse_default_instance_},
     {::_pbi::TcParser::GetTable<::kuksa::val::v2::PublishValuesResponse>()},
     {::_pbi::TcParser::GetTable<::kuksa::val::v2::BatchActuateStreamRequest>()},
-    {::_pbi::FieldAuxDefaultMessage{}, &::kuksa::val::v2::_ProvideSignalResponse_default_instance_},
-    {::_pbi::TcParser::GetTable<::kuksa::val::v2::UpdateFilterRequest>()},
-    {::_pbi::TcParser::GetTable<::kuksa::val::v2::GetProviderValueRequest>()},
   }}, {{
   }},
 };
@@ -7746,24 +5683,6 @@ const ::_pbi::TcParseTable<0, 6, 6, 0, 2> OpenProviderStreamResponse::_table_ = 
       target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
           3, _Internal::batch_actuate_stream_request(this),
           _Internal::batch_actuate_stream_request(this).GetCachedSize(), target, stream);
-      break;
-    }
-    case kProvideSignalResponse: {
-      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          4, _Internal::provide_signal_response(this),
-          _Internal::provide_signal_response(this).GetCachedSize(), target, stream);
-      break;
-    }
-    case kUpdateFilterRequest: {
-      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          5, _Internal::update_filter_request(this),
-          _Internal::update_filter_request(this).GetCachedSize(), target, stream);
-      break;
-    }
-    case kGetProviderValueRequest: {
-      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          6, _Internal::get_provider_value_request(this),
-          _Internal::get_provider_value_request(this).GetCachedSize(), target, stream);
       break;
     }
     default:
@@ -7805,24 +5724,6 @@ const ::_pbi::TcParseTable<0, 6, 6, 0, 2> OpenProviderStreamResponse::_table_ = 
           1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.action_.batch_actuate_stream_request_);
       break;
     }
-    // .kuksa.val.v2.ProvideSignalResponse provide_signal_response = 4;
-    case kProvideSignalResponse: {
-      total_size +=
-          1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.action_.provide_signal_response_);
-      break;
-    }
-    // .kuksa.val.v2.UpdateFilterRequest update_filter_request = 5;
-    case kUpdateFilterRequest: {
-      total_size +=
-          1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.action_.update_filter_request_);
-      break;
-    }
-    // .kuksa.val.v2.GetProviderValueRequest get_provider_value_request = 6;
-    case kGetProviderValueRequest: {
-      total_size +=
-          1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.action_.get_provider_value_request_);
-      break;
-    }
     case ACTION_NOT_SET: {
       break;
     }
@@ -7862,21 +5763,6 @@ void OpenProviderStreamResponse::MergeImpl(::google::protobuf::Message& to_msg, 
           from._internal_batch_actuate_stream_request());
       break;
     }
-    case kProvideSignalResponse: {
-      _this->_internal_mutable_provide_signal_response()->::kuksa::val::v2::ProvideSignalResponse::MergeFrom(
-          from._internal_provide_signal_response());
-      break;
-    }
-    case kUpdateFilterRequest: {
-      _this->_internal_mutable_update_filter_request()->::kuksa::val::v2::UpdateFilterRequest::MergeFrom(
-          from._internal_update_filter_request());
-      break;
-    }
-    case kGetProviderValueRequest: {
-      _this->_internal_mutable_get_provider_value_request()->::kuksa::val::v2::GetProviderValueRequest::MergeFrom(
-          from._internal_get_provider_value_request());
-      break;
-    }
     case ACTION_NOT_SET: {
       break;
     }
@@ -7908,7 +5794,7 @@ void OpenProviderStreamResponse::InternalSwap(OpenProviderStreamResponse* PROTOB
 ::google::protobuf::Metadata OpenProviderStreamResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_getter, &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once,
-      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[37]);
+      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[27]);
 }
 // ===================================================================
 
@@ -7943,7 +5829,7 @@ GetServerInfoRequest::GetServerInfoRequest(
 ::google::protobuf::Metadata GetServerInfoRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_getter, &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once,
-      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[38]);
+      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[28]);
 }
 // ===================================================================
 
@@ -8192,7 +6078,7 @@ void GetServerInfoResponse::InternalSwap(GetServerInfoResponse* PROTOBUF_RESTRIC
 ::google::protobuf::Metadata GetServerInfoResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_getter, &descriptor_table_kuksa_2fval_2fv2_2fval_2eproto_once,
-      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[39]);
+      file_level_metadata_kuksa_2fval_2fv2_2fval_2eproto[29]);
 }
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace v2

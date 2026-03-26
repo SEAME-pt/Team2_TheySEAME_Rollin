@@ -108,7 +108,7 @@ RUN mkdir -p build_arm && cd build_arm \
 
 # Copy KUKSA protobuf definitions.
 RUN mkdir -p /middleware/kuksa/proto
-COPY apps/middleware/kuksa/proto/ /middleware/kuksa/proto/
+COPY libs/libkuksa/ /middleware/kuksa/proto/
 
 # Generate KUKSA protobuf and gRPC sources.
 RUN set -e && \
