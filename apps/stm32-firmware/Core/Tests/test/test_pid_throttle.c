@@ -9,19 +9,18 @@
  * Build alongside cruise_control.c (with stubs below) and link Unity.
  */
 
+#include "unity.h"
 #include "../../Src/Control/cruise_control.h"
+#include <stdbool.h>
+#include "Sensors/sensors.h"
+TEST_SOURCE_FILE("../Src/Control/cruise_control.c")
 
 /* -----------------------------------------------------------------------
  * Minimal stubs – replace platform calls that are unavailable in host
  * test environment.
  * --------------------------------------------------------------------- */
 
-/* HAL_GetTick: return a monotonically increasing value so dt is stable */
-static uint32_t fake_tick = 0;
-uint32_t HAL_GetTick(void) { return fake_tick; }
-
-/* Debug_Print: swallow trace strings */
-void Debug_Print(const char *s) { (void)s; }
+/* ...existing code... */
 
 /* Control_SetThrottle: capture the last throttle value set */
 static float last_throttle = -1.0f;
@@ -36,7 +35,6 @@ void Control_SetThrottle(float throttle, int channel)
  * --------------------------------------------------------------------- */
 
 /** Advance the fake HAL tick by @p ms milliseconds. */
-static void tick_advance(uint32_t ms) { fake_tick += ms; }
 
 /* -----------------------------------------------------------------------
  * setUp / tearDown
@@ -44,7 +42,6 @@ static void tick_advance(uint32_t ms) { fake_tick += ms; }
 
 void setUp(void)
 {
-    fake_tick   = 0;
     last_throttle = -1.0f;
     PID_Reset();
 }
@@ -266,36 +263,4 @@ void test_PID_NegativeDt_ReturnsZero(void)
 {
     float out = PID(1.0f, 0.5f, -0.05f);
     TEST_ASSERT_EQUAL_FLOAT(0.0f, out);
-}
-
-/* =======================================================================
- * main
- * ===================================================================== */
-
-int main(void)
-{
-    UNITY_BEGIN();
-
-    /* dsn~pid-output-clamping~1 */
-    RUN_TEST(test_PID_OutputClampedToMax);
-    RUN_TEST(test_Clamp_AboveMax_ReturnsMax);
-    RUN_TEST(test_Clamp_BelowMin_ReturnsMin);
-    RUN_TEST(test_Clamp_InsideRange_ReturnsUnchanged);
-    RUN_TEST(test_PID_OutputNeverNegative);
-
-    /* dsn~pid-anti-windup~1 */
-    RUN_TEST(test_AntiWindup_IntegralFrozenAtUpperSaturation);
-    RUN_TEST(test_AntiWindup_IntegralFrozenAtLowerSaturation);
-    RUN_TEST(test_AntiWindup_IntegralAccumulatesWhenUnsaturated);
-    RUN_TEST(test_AntiWindup_IntegralAllowedToDecreaseWhenOutputHighButErrorNegative);
-    RUN_TEST(test_PID_Reset_ClearsIntegral);
-    RUN_TEST(test_AntiWindup_IntegralBoundedByMax);
-    RUN_TEST(test_AntiWindup_IntegralBoundedByMin);
-
-    /* dt guard */
-    RUN_TEST(test_PID_ZeroDt_ReturnsZero);
-    RUN_TEST(test_PID_NegativeDt_ReturnsZero);
-
-    
-    return UNITY_END();
 }

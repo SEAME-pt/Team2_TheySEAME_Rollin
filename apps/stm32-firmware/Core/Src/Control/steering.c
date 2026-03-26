@@ -43,7 +43,8 @@ void Control_SetSteering(float steering_normalized) {
     PCA9685_SetServoAngle(0, angle);  // Channel 0 for steering servo
 }
 
-void Control_SetThrottle(uint8_t throttle_percent, uint8_t gear) {
+void Control_SetThrottle(uint8_t throttle_percent, uint8_t gear, bool brake) {
+    
     // Clamp throttle to 0-100%
     if (throttle_percent > 100) throttle_percent = 100;
     
@@ -58,14 +59,16 @@ void Control_SetThrottle(uint8_t throttle_percent, uint8_t gear) {
         dir_high = dir_low;
         dir_low = temp;
     }
-    
+    if (brake) {
+        speed_pwm = 0;
+    }
     if (throttle_percent > 0 && gear != 0 && gear != 1) { // Don't move if P or N
         // Motor 1 (channels 0,1,2,3)
         PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 0, 0, speed_pwm);  // M1 speed
         PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 1, 0, dir_high);   // M1 DIR1
         PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 2, 0, dir_low);    // M1 DIR2
         PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 3, 0, 0);          // Unused
-        
+
         // Motor 2 (channels 4,5,6,7)
         PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 4, 0, speed_pwm);  // M2 speed
         PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 5, 0, dir_low);    // M2 DIR2
@@ -105,6 +108,7 @@ void Control_Thread_Entry(ULONG thread_input) {
     VehicleCommand_t local_cmd;
     memset(&local_cmd, 0, sizeof(local_cmd));
     uint8_t last_mode = 0xFF;
+    uint8_t last_brake = 0xFF;
     uint8_t last_gear = 0xFF;
     uint8_t last_throttle = 0xFF;
     int8_t last_steering = 0x7F;
@@ -129,7 +133,6 @@ void Control_Thread_Entry(ULONG thread_input) {
         ULONG dt_ticks = (last_cc_tick == 0U) ? cmd_wait_ticks : (now_cc_tick - last_cc_tick);
         float cc_dt = (float)dt_ticks * tx_tick_s;
         last_cc_tick = now_cc_tick;
-
         if (snapshot_vehicle_data(&recvs))
             current_speed = recvs.vehicle_speed;
         if (r == TX_SUCCESS) {
@@ -142,7 +145,7 @@ void Control_Thread_Entry(ULONG thread_input) {
             }
         }
 
-        if (local_cmd.cruise_control_enabled == true) {
+        if (local_cmd.cruise_control_enabled == true && local_cmd.brake == false) {
             active_cruise_control = cruise_control(local_cmd.cruise_control_target_speed,
                                                    current_speed,
                                                    local_cmd.cruise_control_enabled,
@@ -188,13 +191,14 @@ void Control_Thread_Entry(ULONG thread_input) {
                 if (local_cmd.driving_mode != last_mode || 
                     local_cmd.gear != last_gear ||
                     local_cmd.throttle != last_throttle || 
-                    local_cmd.steering_angle != last_steering) {
+                    local_cmd.steering_angle != last_steering ||
+                    local_cmd.brake != last_brake) {
 
                     // Convert steering to normalized float
                     float steering_normalized = (float)local_cmd.steering_angle / 100.0f;
 
                     Control_SetSteering(steering_normalized);
-                    Control_SetThrottle(local_cmd.throttle, local_cmd.gear);
+                    Control_SetThrottle(local_cmd.throttle, local_cmd.gear, local_cmd.brake);
 
                     // Print status
                     const char* gear_names[] = {"P", "N", "R", "D"};
@@ -212,6 +216,7 @@ void Control_Thread_Entry(ULONG thread_input) {
                     last_gear = local_cmd.gear;
                     last_throttle = local_cmd.throttle;
                     last_steering = local_cmd.steering_angle;
+                    last_brake = local_cmd.brake;
                 }
             }
         } else {

@@ -90,7 +90,7 @@ void Control_SetSteering(float steering_normalized);  // -1.0 to +1.0
  *
  * @return void
  */
-void Control_SetThrottle(uint8_t throttle_percent, uint8_t gear);   // 0-100%
+void Control_SetThrottle(uint8_t throttle_percent, uint8_t gear, bool brake);   // 0-100%
 
 /**
  * @brief Emergency stop — stop all motors immediately

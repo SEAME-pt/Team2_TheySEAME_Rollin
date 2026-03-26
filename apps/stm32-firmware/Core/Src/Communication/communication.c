@@ -15,11 +15,11 @@
 #include <stdio.h>
 #include <string.h>
 
-// #ifdef COMM_DEBUG
-// extern void Debug_Print(const char *msg);
-// #else
-// #define Debug_Print(msg) ((void)0)
-// #endif
+#ifdef COMM_DEBUG
+extern void Debug_Print(const char *msg);
+#else
+#define Debug_Print(msg) ((void)0)
+#endif
 char comm_uart_buf[128];
 char rx_uart_buf[128];
 extern UART_HandleTypeDef huart1;
@@ -234,10 +234,20 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
             break;
 
         case CAN_ID_BRAKE:     /* Legacy Brake ID (0x103) */
-        case CAN_ID_BRAKE_DBC: /* DBC Brake ID (0x106) */
             if (dlc >= 1) {
-                snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Brake=%d\r\n", data[0]);
+                uint8_t brake_raw = data[0];
+                bool brake = brake_raw > 0;
+                if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                    g_vehicle_command.brake = brake;
+                    g_vehicle_command.command_valid = 1;
+                    if (brake) {
+                        g_vehicle_command.cruise_control_enabled = false; /* Disable cruise control on brake */
+                    }
+                    tx_mutex_put(&g_vehicle_command_mutex);
+                }
+                snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Brake=%s\r\n", brake ? "ON" : "OFF");
                 Debug_Print(comm_uart_buf);
+                updated = 1;
             }
             break;
 

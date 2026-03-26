@@ -92,6 +92,6 @@ bool cruise_control(uint8_t target_speed, float current_speed, bool enabled, flo
     snprintf(buf, sizeof(buf), "[CC] current=%.2f target=%.2f throttle=%.2f%% dt=%.2f\r\n",
             current_speed, set_point, throttle, dt);
     Debug_Print(buf);
-    Control_SetThrottle(throttle, 3); // Ensure manual throttle is off when cruise control is active
+    Control_SetThrottle(throttle, 3, false); // Ensure manual throttle is off when cruise control is active
     return active;
 }
