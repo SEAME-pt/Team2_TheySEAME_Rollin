@@ -8,7 +8,6 @@
 #include <../carla/image/ImageIO.h>
 #include <../carla/image/ImageView.h>
 #include <../carla/sensor/data/Image.h>
-
 #include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <mutex>
@@ -18,224 +17,218 @@
 #include "piracer_config.hpp"
 #include <algorithm>
 #include <opencv2/opencv.hpp>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 using namespace std::chrono_literals;
-
-
 namespace cc = carla::client;
 namespace cg = carla::geom;
 namespace csd = carla::sensor::data;
 
+// --- Globals ---
 boost::shared_ptr<cc::Vehicle> g_vehicle;
-
-static std::mutex g_img_mtx;
+static std::mutex               g_img_mtx;
 static boost::shared_ptr<cc::Sensor> g_rgb_camera;
 static std::optional<carla::SharedPtr<csd::Image>> g_last_rgb;
-
 static int         g_sock   = -1;
 static std::string RPI_IP   = "10.21.221.17";
 static int         RPI_PORT = 22;
 
 void handle_sigint(int) {
-  if (g_vehicle) {
-    std::cout << "\nSIGINT received: destroying vehicle..." << std::endl;
-    if (g_vehicle)    
-      g_vehicle->Destroy();
-    if (g_rgb_camera)
-      g_rgb_camera->Destroy();
-    g_vehicle->Destroy();
-    if (g_sock >= 0)
-      close(g_sock);
-  }
-  std::exit(0);
+    std::cout << "\nSIGINT received: destroying vehicle...\n";
+    if (g_rgb_camera) g_rgb_camera->Destroy();
+    if (g_vehicle)    g_vehicle->Destroy();
+    if (g_sock >= 0)  close(g_sock);
+    std::exit(0);
 }
 
-  
 static float Slew(float cur, float target, float max_delta) {
-  float d = target - cur;
-  if (d >  max_delta) return cur + max_delta;
-  if (d < -max_delta) return cur - max_delta;
-  return target;
+    float d = target - cur;
+    if (d >  max_delta) return cur + max_delta;
+    if (d < -max_delta) return cur - max_delta;
+    return target;
 }
 
-int main(int argc, char* argv[]) {
-
-    bool autopilot_mode = false;
-    for (int i = 1; i < argc; ++i) {
-        if (std::string(argv[i]) == "--auto")   autopilot_mode = true;
-        if (std::string(argv[i]) == "--manual") autopilot_mode = false;
-    }
-  std::cout << "Mode: " << (autopilot_mode ? "AUTOPILOT" : "MANUAL") << "\n";
-  signal(SIGINT, handle_sigint);
-
-  try {
-    kuksaLib kuksaCtrl;
-    std::thread kuksaThread([&](){kuksaCtrl.subscribeFromKuksa();});
-    kuksaThread.detach();
-
-    cc::Client client("localhost", 2000);
-
-    auto world = client.GetWorld();
-
+cc::World setup_world(cc::Client& client) {
+    auto world    = client.GetWorld();
     auto settings = world.GetSettings();
-    settings.synchronous_mode = true;
+    settings.synchronous_mode   = true;
     settings.fixed_delta_seconds = piracer::WORLD_DT_S;
     world.ApplySettings(settings, 10s);
+    return world;
+}
 
-    // Connect to our ADAS (Kuksa) receiver
-    g_sock = socket(AF_INET, SOCK_STREAM, 0);
-    sockaddr_in rpi_addr{};
-    rpi_addr.sin_family = AF_INET;
-    rpi_addr.sin_port   = htons(RPI_PORT);
-    inet_pton(AF_INET, RPI_IP.c_str(), &rpi_addr.sin_addr);
+int connect_rpi(const std::string& ip, int port) {
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    sockaddr_in addr{};
+    addr.sin_family = AF_INET;
+    addr.sin_port   = htons(port);
+    inet_pton(AF_INET, ip.c_str(), &addr.sin_addr);
 
-    if (connect(g_sock, (sockaddr*)&rpi_addr, sizeof(rpi_addr)) < 0) {
+    if (connect(sock, (sockaddr*)&addr, sizeof(addr)) < 0) {
         std::cerr << "Error connecting to RPi!\n";
-        return 1;
+        return -1;
     }
-    std::cout << "ConnectedRPi!\n";
+    std::cout << "Connected to RPi!\n";
+    return sock;
+}
 
-    // Base vehicle (small)
+boost::shared_ptr<cc::Vehicle> spawn_vehicle(cc::World& world) {
     auto blueprints = world.GetBlueprintLibrary();
-
     auto vehicle_bp = blueprints->Find("vehicle.nissan.micra");
-    if (!vehicle_bp) { std::cerr << "vehicle bp not found\n"; return 1; }
+    if (!vehicle_bp) throw std::runtime_error("vehicle blueprint not found");
 
     auto spawn_points = world.GetMap()->GetRecommendedSpawnPoints();
-    if (spawn_points.empty()) { std::cerr << "no spawn points\n"; return 1; }
+    if (spawn_points.empty()) throw std::runtime_error("no spawn points available");
 
     auto actor = world.SpawnActor(*vehicle_bp, spawn_points[1]);
-    if (!actor) { std::cerr << "failed to spawn vehicle\n"; return 1; }
+    if (!actor) throw std::runtime_error("failed to spawn vehicle");
+
     auto vehicle = boost::static_pointer_cast<cc::Vehicle>(actor);
-    g_vehicle = vehicle;
+    vehicle->ApplyPhysicsControl(vehicle->GetPhysicsControl());
+    return vehicle;
+}
 
-    auto phys = vehicle->GetPhysicsControl();
-
-    vehicle->ApplyPhysicsControl(phys);
-
-    // Configure traffic manager for our vehicle
-    auto traffic_manager = client.GetInstanceTM(8000);
-    traffic_manager.SetGlobalDistanceToLeadingVehicle(2.0f);
-    traffic_manager.SetRandomLeftLaneChangePercentage(vehicle, 0);
-
-    vehicle->SetAutopilot(true, 8000);
-
-    // RGB camera
+boost::shared_ptr<cc::Sensor> setup_camera(
+    cc::World& world,
+    boost::shared_ptr<cc::Vehicle> vehicle,
+    int sock)
+{
+    auto blueprints = world.GetBlueprintLibrary();
     auto rgb_bp_ptr = blueprints->Find("sensor.camera.rgb");
-    if (!rgb_bp_ptr) { std::cerr << "RGB camera bp not found\n"; return 1; }
+    if (!rgb_bp_ptr) throw std::runtime_error("camera blueprint not found");
 
     auto rgb_bp = *rgb_bp_ptr;
-
     rgb_bp.SetAttribute("image_size_x", "1640");
     rgb_bp.SetAttribute("image_size_y", "1232");
     rgb_bp.SetAttribute("fov",          "62");
     rgb_bp.SetAttribute("sensor_tick",  "0.0");
 
     cg::Transform cam_transform(
-        cg::Location {2.0f, 0.0f, 0.8f},
+        cg::Location{2.0f, 0.0f, 0.8f},
         cg::Rotation{-5.0f, 0.0f, 0.0f}
     );
 
     auto cam_actor = world.SpawnActor(rgb_bp, cam_transform, vehicle.get());
-    g_rgb_camera   = boost::static_pointer_cast<cc::Sensor>(cam_actor);
+    auto camera    = boost::static_pointer_cast<cc::Sensor>(cam_actor);
 
-    g_rgb_camera->Listen([](auto data) {
+    camera->Listen([sock](auto data) {
         auto img = boost::static_pointer_cast<csd::Image>(data);
 
         cv::Mat raw(img->GetHeight(), img->GetWidth(), CV_8UC4,
                     const_cast<void*>(static_cast<const void*>(img->data())));
         cv::Mat frame;
         cv::cvtColor(raw, frame, cv::COLOR_BGRA2BGR);
-
         cv::imshow("PiRacer Camera", frame);
         cv::waitKey(1);
 
-        if (g_sock >= 0) {
-          std::vector<uchar> buf;
-          cv::imencode(".jpg", frame, buf, {cv::IMWRITE_JPEG_QUALITY, 80});
-
-          uint32_t size = htonl(buf.size());
-          send(g_sock, &size, 4, 0);
-          send(g_sock, buf.data(), buf.size(), 0);
+        if (sock >= 0) {
+            std::vector<uchar> buf;
+            cv::imencode(".jpg", frame, buf, {cv::IMWRITE_JPEG_QUALITY, 80});
+            uint32_t size = htonl(buf.size());
+            send(sock, &size, 4, 0);
+            send(sock, buf.data(), buf.size(), 0);
         }
     });
 
-    carla::rpc::VehicleControl carlaCtrl;
-    float cur_throttle = 0.0f;
-    float cur_steer = 0.0f;
-    
-    // Main loop
-    while (1)
-    {
-      // advance simulation
-      world.Tick(10s);
-      static carla::geom::Location smooth_loc = vehicle->GetTransform().location;
+    return camera;
+}
 
-      auto vt  = vehicle->GetTransform();
-      auto fwd = vt.GetForwardVector();
+void update_spectator(cc::World& world, boost::shared_ptr<cc::Vehicle> vehicle) {
+    static carla::geom::Location smooth_loc = vehicle->GetTransform().location;
 
-      carla::geom::Location target = vt.location;
-      target.x -= fwd.x * 6.0f;
-      target.y -= fwd.y * 6.0f;
-      target.z += 2.5f;
+    auto vt  = vehicle->GetTransform();
+    auto fwd = vt.GetForwardVector();
 
-      float alpha = 0.1f;
-      smooth_loc.x = (1 - alpha) * smooth_loc.x + alpha * target.x;
-      smooth_loc.y = (1 - alpha) * smooth_loc.y + alpha * target.y;
-      smooth_loc.z = (1 - alpha) * smooth_loc.z + alpha * target.z;
+    carla::geom::Location target = vt.location;
+    target.x -= fwd.x * 6.0f;
+    target.y -= fwd.y * 6.0f;
+    target.z += 2.5f;
 
-      carla::geom::Rotation cam_rot = vt.rotation;
-      cam_rot.pitch = -12.0f;
+    const float alpha = 0.1f;
+    smooth_loc.x = (1 - alpha) * smooth_loc.x + alpha * target.x;
+    smooth_loc.y = (1 - alpha) * smooth_loc.y + alpha * target.y;
+    smooth_loc.z = (1 - alpha) * smooth_loc.z + alpha * target.z;
 
-      world.GetSpectator()->SetTransform({smooth_loc, cam_rot});
+    carla::geom::Rotation cam_rot = vt.rotation;
+    cam_rot.pitch = -12.0f;
+    world.GetSpectator()->SetTransform({smooth_loc, cam_rot});
+}
 
-      // placeholder: target command from our ADAS
-      auto vel = vehicle->GetVelocity();
-      float speed_ms = std::sqrt(vel.x*vel.x + vel.y*vel.y + vel.z*vel.z);
-      if (autopilot_mode) {
-        // autopilot mode: let the traffic manager control the vehicle
-        continue;
-      } else {
-        const float V_MAX = 6.0f;
-        float target_speed_hmh = kuksaCtrl.getSpeed();
-        float target_speed_ms  = target_speed_hmh / 3.6f;
-        float target_steer = kuksaCtrl.getSteering() / 5.0f;
-        carlaCtrl.steer = std::clamp(target_steer, -1.0f, 1.0f);
-              
-        float target_throttle = kuksaCtrl.getThrottle() / 100.0f;
-        
-        carlaCtrl.throttle = std::clamp(target_throttle, 0.0f, 1.0f);
-        carlaCtrl.steer = std::clamp(target_steer, -1.0f, 1.0f);
-        
-        const float V_HYST = 0.3f;
-        const float KP_BRAKE = 0.25f;
-        
-        float throttle_cmd = std::clamp(target_throttle, 0.0f, 1.0f);
-        float brake_cmd = 0.0f;
-        
-        carlaCtrl.throttle = throttle_cmd;
-        carlaCtrl.brake = brake_cmd;
-        carlaCtrl.hand_brake = false;
-        
-        carlaCtrl.reverse = (kuksaCtrl.getGear() == 2);
-      }
-      vehicle->ApplyControl(carlaCtrl);
-      std::cout << "VehicleControl: "
-            << "throttle=" << carlaCtrl.throttle
-            << ", steer=" << carlaCtrl.steer
-            << ", brake=" << carlaCtrl.brake
-            << ", hand_brake=" << (carlaCtrl.hand_brake ? "true" : "false")
-            << ", reverse=" << (carlaCtrl.reverse ? "true" : "false")
-            << ", manual_gear_shift=" << (carlaCtrl.manual_gear_shift ? "true" : "false")
-            << ", gear=" << carlaCtrl.gear
-            << std::endl;
+void apply_control(
+    boost::shared_ptr<cc::Vehicle> vehicle,
+    kuksaLib& kuksa)
+{
+    carla::rpc::VehicleControl ctrl;
+
+    float target_steer    = kuksa.getSteering()  / 5.0f;
+    float target_throttle = kuksa.getThrottle()  / 100.0f;
+
+    ctrl.throttle   = std::clamp(target_throttle, 0.0f, 1.0f);
+    ctrl.steer      = std::clamp(target_steer,    -1.0f, 1.0f);
+    ctrl.brake      = 0.0f;
+    ctrl.hand_brake = false;
+    ctrl.reverse    = (kuksa.getGear() == 2);
+
+    vehicle->ApplyControl(ctrl);
+
+    std::cout << "VehicleControl: "
+              << "throttle=" << ctrl.throttle
+              << ", steer="  << ctrl.steer
+              << ", brake="  << ctrl.brake
+              << ", reverse=" << (ctrl.reverse ? "true" : "false")
+              << "\n";
+}
+
+// ---------------------------------------------------------------
+// main
+// ---------------------------------------------------------------
+int main(int argc, char* argv[]) {
+    bool autopilot_mode = false;
+    for (int i = 1; i < argc; ++i) {
+        if (std::string(argv[i]) == "--auto")   autopilot_mode = true;
+        if (std::string(argv[i]) == "--manual") autopilot_mode = false;
     }
-  } catch (const cc::TimeoutException &e) {
-    std::cout << '\n' << e.what() << std::endl;
-    return 1;
-  } catch (const std::exception &e) {
-    std::cout << "\nException: " << e.what() << std::endl;
-    return 2;
-  }
-  return 0;
+    std::cout << "Mode: " << (autopilot_mode ? "AUTOPILOT" : "MANUAL") << "\n";
+    signal(SIGINT, handle_sigint);
+
+    try {
+        kuksaLib kuksaCtrl;
+        std::thread kuksaThread([&]{ kuksaCtrl.subscribeFromKuksa(); });
+        kuksaThread.detach();
+
+        cc::Client client("localhost", 2000);
+        auto world = setup_world(client);
+
+        g_sock = connect_rpi(RPI_IP, RPI_PORT);
+        if (g_sock < 0) return 1;
+
+        g_vehicle    = spawn_vehicle(world);
+        g_rgb_camera = setup_camera(world, g_vehicle, g_sock);
+
+        // Traffic Manager setup
+        auto tm = client.GetInstanceTM(8000);
+        tm.SetGlobalDistanceToLeadingVehicle(2.0f);
+        tm.SetRandomLeftLaneChangePercentage(g_vehicle, 0);
+        tm.SetSynchronousMode(true);
+        g_vehicle->SetAutopilot(autopilot_mode, 8000);
+
+        // Main loop
+        while (true) {
+            world.Tick(10s);
+            update_spectator(world, g_vehicle);
+
+            if (!autopilot_mode)
+                apply_control(g_vehicle, kuksaCtrl);
+        }
+
+    } catch (const cc::TimeoutException& e) {
+        std::cout << "\nTimeoutException: " << e.what() << '\n';
+        return 1;
+    } catch (const std::exception& e) {
+        std::cout << "\nException: " << e.what() << '\n';
+        return 2;
+    }
+    return 0;
 }
