@@ -12,10 +12,10 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 | Field | Details |
 |-------|----------|
-| **Sprint Number** | Sprint 10 |
-| **Sprint Goal** | Exploring models for Lane Perception and implementing a PID Controller. |
-| **Sprint Duration** | Mar 9 – Mar 22, 2026 |
-| **Focus Areas** | PID, OpenCV, CARLA Setup |
+| **Sprint Number** | Sprint 11 |
+| **Sprint Goal** | Achieve full PID control and integrate/train YOLO detection model with HAILO. |
+| **Sprint Duration** | Mar 23 – Apr 3 2026 |
+| **Focus Areas** | PID, YOLO, CARLA, Deep Learning |
 
 
 ## 📅 Scrum Team

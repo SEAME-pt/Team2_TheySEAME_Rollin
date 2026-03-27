@@ -1,139 +1,291 @@
-#include "tx_api.h"
+#include "tx_api.h"  // For tx_thread_sleep
 #include <stdio.h>
 #include <stdint.h>
 #include "pca9685.h"
 
 extern char uart_buf[64];
 
-static HAL_StatusTypeDef PCA9685_SoftwareReset(I2C_HandleTypeDef *hi2c)
-{
-	uint8_t reset_cmd = 0x06;
-	HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(hi2c, 0x00, &reset_cmd, 1, 500);
-	tx_thread_sleep(1);
-	return status;
+#define PCA9685_PRESCALE_SERVO_50HZ      121U
+#define PCA9685_PRESCALE_DC_1017HZ       5U
+
+static const char *PCA9685_PrescaleDescription(uint8_t prescale) {
+    if (prescale == PCA9685_PRESCALE_SERVO_50HZ) {
+        return "50Hz";
+    }
+
+    if (prescale == PCA9685_PRESCALE_DC_1017HZ) {
+        return "~1017Hz";
+    }
+
+    return "custom";
 }
 
-static HAL_StatusTypeDef PCA9685_WriteReg(I2C_HandleTypeDef *hi2c, uint8_t device_addr, uint8_t reg, uint8_t val)
-{
-	uint8_t data[2] = {reg, val};
-	HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(hi2c, device_addr, data, 2, 500);
-
-	if (status != HAL_OK)
-		status = HAL_I2C_Mem_Write(hi2c, device_addr, reg, I2C_MEMADD_SIZE_8BIT, &val, 1, 500);
-
-	tx_thread_sleep(2);
-	return status;
+// Software reset routine used internally by the driver. API documented in header.
+static HAL_StatusTypeDef PCA9685_SoftwareReset(I2C_HandleTypeDef *hi2c) {
+    uint8_t reset_cmd = 0x06;  // SWRST command
+    // Send to General Call address (0x00) - affects ALL PCA9685 on bus
+    HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(hi2c, 0x00, &reset_cmd, 1, 500);
+    tx_thread_sleep(1);  // 10ms for reset to complete
+    return status;
 }
 
-static HAL_StatusTypeDef PCA9685_ReadReg(I2C_HandleTypeDef *hi2c, uint8_t device_addr, uint8_t reg, uint8_t *val)
-{
-	HAL_StatusTypeDef status = HAL_I2C_Mem_Read(hi2c, device_addr, reg, I2C_MEMADD_SIZE_8BIT, val, 1, 500);
+// Low-level register write helper (internal). Header contains public API docs.
+static HAL_StatusTypeDef PCA9685_WriteReg(I2C_HandleTypeDef *hi2c, uint8_t device_addr, uint8_t reg, uint8_t val) {
 
-	if (status != HAL_OK)
-	{
-		status = HAL_I2C_Master_Transmit(hi2c, device_addr, &reg, 1, 500);
-		if (status == HAL_OK)
-			status = HAL_I2C_Master_Receive(hi2c, device_addr, val, 1, 500);
-	}
-
-	return status;
+    // Method 1: Single transaction with register + data
+    uint8_t data[2] = {reg, val};
+    HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(hi2c, device_addr, data, 2, 500);
+    
+    if (status != HAL_OK) {
+        // Method 2: Try with Mem_Write as fallback
+        status = HAL_I2C_Mem_Write(hi2c, device_addr, reg, I2C_MEMADD_SIZE_8BIT, &val, 1, 500);
+    }
+    
+    tx_thread_sleep(2);  // 20ms delay after each write
+    return status;
 }
 
-static HAL_StatusTypeDef PCA9685_Init_Device_NoReset(I2C_HandleTypeDef *hi2c, uint8_t addr, const char *name)
-{
-	HAL_StatusTypeDef ret;
-
-	ret = PCA9685_WriteReg(hi2c, addr, PCA9685_MODE1, 0x31);
-	if (ret != HAL_OK)
-		return ret;
-
-	ret = PCA9685_WriteReg(hi2c, addr, PCA9685_PRESCALE, 121);
-	if (ret != HAL_OK)
-		return ret;
-
-	ret = PCA9685_WriteReg(hi2c, addr, PCA9685_MODE1, 0x21);
-	if (ret != HAL_OK)
-		return ret;
-
-	tx_thread_sleep(5);
-
-	ret = PCA9685_WriteReg(hi2c, addr, PCA9685_MODE2, 0x04);
-	if (ret != HAL_OK)
-		return HAL_OK;
-
-	return HAL_OK;
+// Low-level register read helper (internal).
+static HAL_StatusTypeDef PCA9685_ReadReg(I2C_HandleTypeDef *hi2c, uint8_t device_addr, uint8_t reg, uint8_t *val) {
+	 HAL_StatusTypeDef status = HAL_I2C_Mem_Read(hi2c, device_addr, reg, I2C_MEMADD_SIZE_8BIT, val, 1, 500);
+    
+    if (status != HAL_OK) {
+        // Alternative: Write register address, then read
+        status = HAL_I2C_Master_Transmit(hi2c, device_addr, &reg, 1, 500);
+        if (status == HAL_OK) {
+            status = HAL_I2C_Master_Receive(hi2c, device_addr, val, 1, 500);
+        }
+    }
+    
+    return status;
 }
 
-HAL_StatusTypeDef PCA9685_Init_Multiple(I2C_HandleTypeDef *hi2c, uint8_t addr1, const char *name1, uint8_t addr2, const char *name2)
-{
-	HAL_StatusTypeDef ret;
-
-	PCA9685_SoftwareReset(hi2c);
-	tx_thread_sleep(5);
-
-	ret = PCA9685_Init_Device_NoReset(hi2c, addr1, name1);
-	if (ret != HAL_OK)
-		return ret;
-
-	ret = PCA9685_Init_Device_NoReset(hi2c, addr2, name2);
-	if (ret != HAL_OK)
-		return ret;
-
-	return HAL_OK;
+// Initialize PCA9685 device without software reset (for multiple devices)
+static HAL_StatusTypeDef PCA9685_Init_Device_NoReset(I2C_HandleTypeDef *hi2c, uint8_t addr, const char* name, uint8_t prescale) {
+    HAL_StatusTypeDef ret;
+    char msg[80];
+    
+    snprintf(msg, sizeof(msg), "Init %s PCA9685 at 0x%02X (no reset)\r\n", name, addr);
+    Debug_Print(msg);
+    
+    // Step 1: Set MODE1 with Sleep + Auto-Increment
+    Debug_Print("  Step 1: MODE1=0x31 (Sleep + AI)...\r\n");
+    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_MODE1, 0x31);
+    if (ret != HAL_OK) {
+        snprintf(msg, sizeof(msg), "  FAILED: %d\r\n", ret);
+        Debug_Print(msg);
+        return ret;
+    }
+    
+    // Step 2: Set prescaler while the oscillator is stopped.
+    snprintf(msg, sizeof(msg), "  Step 2: PRESCALE=%u (%s)...\r\n", prescale, PCA9685_PrescaleDescription(prescale));
+    Debug_Print(msg);
+    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_PRESCALE, prescale);
+    if (ret != HAL_OK) {
+        snprintf(msg, sizeof(msg), "  FAILED: %d\r\n", ret);
+        Debug_Print(msg);
+        return ret;
+    }
+    
+    // Step 3: Wake up with Auto-Increment enabled
+    Debug_Print("  Step 3: MODE1=0x21 (Wake + AI)...\r\n");
+    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_MODE1, 0x21);
+    if (ret != HAL_OK) {
+        snprintf(msg, sizeof(msg), "  FAILED: %d\r\n", ret);
+        Debug_Print(msg);
+        return ret;
+    }
+    tx_thread_sleep(5);  // 50ms for oscillator to stabilize after wake
+    
+    // Step 4: Set MODE2
+    Debug_Print("  Step 4: MODE2=0x04...\r\n");
+    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_MODE2, 0x04);
+    if (ret != HAL_OK) {
+        snprintf(msg, sizeof(msg), "  MODE2 write FAILED: %d (continuing anyway)\r\n", ret);
+        Debug_Print(msg);
+        return HAL_OK;  // Continue anyway
+    }
+    
+    Debug_Print("  SUCCESS! Device initialized!\r\n");
+    return HAL_OK;
 }
 
-HAL_StatusTypeDef PCA9685_Init_Device(I2C_HandleTypeDef *hi2c, uint8_t addr, const char *name)
-{
-	HAL_StatusTypeDef ret;
-
-	PCA9685_SoftwareReset(hi2c);
-	tx_thread_sleep(5);
-
-	ret = PCA9685_WriteReg(hi2c, addr, PCA9685_MODE1, 0x31);
-	if (ret != HAL_OK)
-		return ret;
-
-	ret = PCA9685_WriteReg(hi2c, addr, PCA9685_PRESCALE, 121);
-	if (ret != HAL_OK)
-		return ret;
-
-	ret = PCA9685_WriteReg(hi2c, addr, PCA9685_MODE1, 0x21);
-	if (ret != HAL_OK)
-		return ret;
-
-	tx_thread_sleep(5);
-
-	ret = PCA9685_WriteReg(hi2c, addr, PCA9685_MODE2, 0x04);
-	if (ret != HAL_OK)
-		return HAL_OK;
-
-	return HAL_OK;
+// Initialize multiple PCA9685 devices with single software reset
+HAL_StatusTypeDef PCA9685_Init_Multiple(I2C_HandleTypeDef *hi2c, uint8_t addr1, const char* name1, uint8_t addr2, const char* name2) {
+    HAL_StatusTypeDef ret;
+    
+    Debug_Print("Initializing multiple PCA9685 devices with single SWRST\r\n");
+    
+    // CRITICAL: Software Reset via General Call to unstick all chips
+    Debug_Print("  Issuing Software Reset (SWRST) for all devices...\r\n");
+    ret = PCA9685_SoftwareReset(hi2c);
+    if (ret != HAL_OK) {
+        Debug_Print("  SWRST failed (continuing anyway)\r\n");
+    } else {
+        Debug_Print("  SWRST OK!\r\n");
+    }
+    tx_thread_sleep(5);  // 50ms for all PCA9685 chips to reset
+    
+    // Steering servo must run at 50Hz, while the DC throttle controller can use a higher PWM frequency.
+    ret = PCA9685_Init_Device_NoReset(hi2c, addr1, name1, PCA9685_PRESCALE_SERVO_50HZ);
+    if (ret != HAL_OK) {
+        return ret;
+    }
+    
+    ret = PCA9685_Init_Device_NoReset(hi2c, addr2, name2, PCA9685_PRESCALE_DC_1017HZ);
+    if (ret != HAL_OK) {
+        return ret;
+    }
+    
+    Debug_Print("Multiple PCA9685 initialization complete!\r\n");
+    return HAL_OK;
 }
 
-HAL_StatusTypeDef PCA9685_SetPWM(I2C_HandleTypeDef *hi2c, uint8_t device_addr, uint8_t channel, uint16_t on, uint16_t off)
-{
-	uint8_t reg_base = PCA9685_LED0_ON_L + 4 * channel;
-	uint8_t cmd[2];
-	HAL_StatusTypeDef status;
+// Initialize PCA9685 with Software Reset to clear "zombie" state
+// Public API documented in pca9685.h
+HAL_StatusTypeDef PCA9685_Init_Device(I2C_HandleTypeDef *hi2c, uint8_t addr, const char* name) {
 
-	cmd[0] = reg_base;
-	cmd[1] = on & 0xFF;
-	status = HAL_I2C_Master_Transmit(hi2c, device_addr, cmd, 2, 500);
-	if (status != HAL_OK) return status;
-
-	cmd[0] = reg_base + 1;
-	cmd[1] = on >> 8;
-	status = HAL_I2C_Master_Transmit(hi2c, device_addr, cmd, 2, 500);
-	if (status != HAL_OK) return status;
-
-	cmd[0] = reg_base + 2;
-	cmd[1] = off & 0xFF;
-	status = HAL_I2C_Master_Transmit(hi2c, device_addr, cmd, 2, 500);
-	if (status != HAL_OK) return status;
-
-	cmd[0] = reg_base + 3;
-	cmd[1] = off >> 8;
-	status = HAL_I2C_Master_Transmit(hi2c, device_addr, cmd, 2, 500);
-
-	return status;
+    HAL_StatusTypeDef ret;
+    char msg[80];
+    
+    snprintf(msg, sizeof(msg), "Init %s PCA9685 at 0x%02X with SWRST\r\n", name, addr);
+    Debug_Print(msg);
+    
+    // CRITICAL: Software Reset via General Call to unstick chip
+    Debug_Print("  Issuing Software Reset (SWRST)...\r\n");
+    ret = PCA9685_SoftwareReset(hi2c);
+    if (ret != HAL_OK) {
+        snprintf(msg, sizeof(msg), "  SWRST failed: %d (continuing anyway)\r\n", ret);
+        Debug_Print(msg);
+        // Continue - SWRST to general call might fail if no devices respond
+    } else {
+        Debug_Print("  SWRST OK!\r\n");
+    }
+    tx_thread_sleep(5);  // 50ms for all PCA9685 chips to reset
+    
+    // Step 1: Set MODE1 with Sleep + Auto-Increment
+    Debug_Print("  Step 1: MODE1=0x31 (Sleep + AI)...\r\n");
+    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_MODE1, 0x31);
+    if (ret != HAL_OK) {
+        snprintf(msg, sizeof(msg), "  FAILED: %d\r\n", ret);
+        Debug_Print(msg);
+        return ret;
+    }
+    
+    // Step 2: Default single-device init stays at 50Hz, which is correct for servos.
+    Debug_Print("  Step 2: PRESCALE=121 (50Hz)...\r\n");
+    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_PRESCALE, PCA9685_PRESCALE_SERVO_50HZ);
+    if (ret != HAL_OK) {
+        snprintf(msg, sizeof(msg), "  FAILED: %d\r\n", ret);
+        Debug_Print(msg);
+        return ret;
+    }
+    
+    // Step 3: Wake up with Auto-Increment enabled
+    Debug_Print("  Step 3: MODE1=0x21 (Wake + AI)...\r\n");
+    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_MODE1, 0x21);
+    if (ret != HAL_OK) {
+        snprintf(msg, sizeof(msg), "  FAILED: %d\r\n", ret);
+        Debug_Print(msg);
+        return ret;
+    }
+    tx_thread_sleep(5);  // 50ms for oscillator to stabilize after wake
+    
+    // Diagnostic: Try reading MODE2 with alternative method
+    uint8_t mode2_read = 0;
+    Debug_Print("  Diagnostic: Reading MODE2 with Master_Transmit/Receive...\r\n");
+    ret = PCA9685_ReadReg(hi2c, addr, PCA9685_MODE2, &mode2_read);
+    if (ret == HAL_OK) {
+        snprintf(msg, sizeof(msg), "  MODE2 current value: 0x%02X\r\n", mode2_read);
+        Debug_Print(msg);
+    } else {
+        snprintf(msg, sizeof(msg), "  MODE2 read still FAILED: %d\r\n", ret);
+        Debug_Print(msg);
+    }
+    
+    // Step 4: Set MODE2 using raw Master_Transmit method
+    Debug_Print("  Step 4: MODE2=0x04 with Master_Transmit...\r\n");
+    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_MODE2, 0x04);
+    if (ret != HAL_OK) {
+        snprintf(msg, sizeof(msg), "  MODE2 write still FAILED: %d\r\n", ret);
+        Debug_Print(msg);
+        
+        Debug_Print("  HARDWARE ISSUE CONFIRMED: PCA9685 only responds to registers 0x00 and 0xFE\r\n");
+        Debug_Print("  Skipping MODE2 - will attempt PWM write anyway\r\n");
+        return HAL_OK;  // Continue to test PWM
+    }
+    
+    Debug_Print("  SUCCESS! All registers initialized!\r\n");
+    return HAL_OK;
 }
+
+/*
+ * @brief
+ *
+ * Description
+ *
+ * ====================== Requirement Traceability ===========================
+ *
+ * ==========================================================================
+ *
+ * @param name         Function
+ *
+ * @return HAL_StatusTypeDef
+ *         - HAL_OK     : Write successful
+ *         - HAL_ERROR  : Transmission failed
+ *         - HAL_BUSY   : I2C peripheral is busy
+ *         - HAL_TIMEOUT: Communication timeout
+ *
+ */
+HAL_StatusTypeDef PCA9685_SetPWM(I2C_HandleTypeDef *hi2c, uint8_t device_addr, uint8_t channel, uint16_t on, uint16_t off) {
+	/*
+	 * @brief
+	 *
+	 * Description
+	 *
+	 * ====================== Requirement Traceability ===========================
+	 *
+	 * ==========================================================================
+	 *
+	 * @param name         Function
+	 *
+	 * @return HAL_StatusTypeDef
+	 *         - HAL_OK     : Write successful
+	 *         - HAL_ERROR  : Transmission failed
+	 *         - HAL_BUSY   : I2C peripheral is busy
+	 *         - HAL_TIMEOUT: Communication timeout
+	 *
+	 */
+
+    uint8_t reg_base = 0x06 + 4 * channel;
+    
+    // Write each register individually (matches working C++ code)
+    uint8_t cmd[2];
+    HAL_StatusTypeDef status;
+    
+    // Write ON_L
+    cmd[0] = reg_base;
+    cmd[1] = on & 0xFF;
+    status = HAL_I2C_Master_Transmit(hi2c, device_addr, cmd, 2, 500);
+    if (status != HAL_OK) return status;
+    
+    // Write ON_H
+    cmd[0] = reg_base + 1;
+    cmd[1] = on >> 8;
+    status = HAL_I2C_Master_Transmit(hi2c, device_addr, cmd, 2, 500);
+    if (status != HAL_OK) return status;
+    
+    // Write OFF_L
+    cmd[0] = reg_base + 2;
+    cmd[1] = off & 0xFF;
+    status = HAL_I2C_Master_Transmit(hi2c, device_addr, cmd, 2, 500);
+    if (status != HAL_OK) return status;
+    
+    // Write OFF_H
+    cmd[0] = reg_base + 3;
+    cmd[1] = off >> 8;
+    status = HAL_I2C_Master_Transmit(hi2c, device_addr, cmd, 2, 500);
+    
+    return status;
+}
+
