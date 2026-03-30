@@ -175,18 +175,18 @@ runner.save_har('yolo_tusimple.har')
 import numpy as np
 import cv2
 from pathlib import Path
+from hailo_sdk_client import ClientRunner
 
+runner = ClientRunner(hw_arch='hailo8', har='yolo_tusimple.har')
 calib_images = []
-for img_path in list(Path('convertedYolo/images/val').glob('*.jpg'))[:200]:
+for img_path in list(Path('../../../datasets/convertedYolo/images/val').glob('*.jpg'))[:200]:
     img = cv2.imread(str(img_path))
     img = cv2.resize(img, (640, 640))
     img = img.astype(np.float32) / 255.0
-    img = np.transpose(img, (2, 0, 1))
     calib_images.append(img)
 
 calib_dataset = np.array(calib_images)
 
-runner.load_har('yolo_tusimple.har')
 runner.optimize(calib_dataset)
 runner.save_har('yolo_tusimple_quantized.har')
 ```
