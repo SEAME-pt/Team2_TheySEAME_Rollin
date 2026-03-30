@@ -21,7 +21,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "app_threadx.h"
 #include "Control/control_queue.h"
-
+#include "Sensors/sensors_queue.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "Sensors/sensors.h"
@@ -106,16 +106,18 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
     g_vehicle_command.driving_mode = 0;
     g_vehicle_command.gear = 3;  // Default to Drive
     g_vehicle_command.throttle = 0;
+    g_vehicle_command.brake = 0;
     g_vehicle_command.steering_angle = 0;
     g_vehicle_command.command_valid = 0;
-    
+    g_vehicle_command.cruise_control_enabled = 0;
+    g_vehicle_command.cruise_control_target_speed = 0;
     // Initialize global vehicle data structure
     g_vehicle_data.battery_voltage = 0;
     g_vehicle_data.battery_percentage = 0.0f;
     g_vehicle_data.battery_current = 0.0f;
     g_vehicle_data.vehicle_speed = 0.0f;
     g_vehicle_data.data_valid = 0;
-    
+    g_vehicle_data.cruise_control_active = 0;
     // Create mutex for protecting global vehicle data
     UINT status = tx_mutex_create(&g_vehicle_data_mutex, "VehicleData Mutex", TX_NO_INHERIT);
     if (status != TX_SUCCESS) {
