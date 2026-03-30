@@ -161,8 +161,7 @@ void Control_Thread_Entry(ULONG thread_input) {
                 tx_mutex_put(&g_vehicle_data_mutex);
             }
         }
-
-        steer_control(0, recvs.lane_pos, dt_ticks);
+        steer_control(0, recvs.lane_pos, cc_dt);
         if (r == TX_SUCCESS) {
             // Got a command - reset timeout counter
             no_cmd_ticks = 0;

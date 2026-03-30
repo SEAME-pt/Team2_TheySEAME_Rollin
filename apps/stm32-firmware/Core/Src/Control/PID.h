@@ -36,7 +36,7 @@ float clamp(float value);
 void PID_Reset(void);
 float PID_GetIntegral(void);
 
-void steer_control(float lane_center, float lane_position, float dt);
+void steer_control(int target_pos, float lane_position, float dt);
 bool cruise_control(uint8_t target_speed, float current_speed, bool enabled, float dt);
 /*----------------------------------------   --------------------------------------------*/
 

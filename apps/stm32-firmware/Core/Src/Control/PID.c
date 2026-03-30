@@ -25,7 +25,7 @@ float PID(float set_point, float current_value, float dt, PID_Mode_t mode)
     float ff = 0.0f;
 
     PID_Gains_t cruise_gains = {50.0f, 12.3f, 0.0f};
-    PID_Gains_t steering_gains = {2.0f, 0.0f, 6.0f};
+    PID_Gains_t steering_gains = {10.0f, 0.0f, 1.0f};
 
     // CRUISE
     if (mode == PID_MODE_CRUISE)
@@ -59,10 +59,11 @@ float PID(float set_point, float current_value, float dt, PID_Mode_t mode)
         output = steering_gains.kp * error +
                 steering_gains.kd * derivative;
 
-        if (output > 70.0f) output = 70.0f;
-        if (output < -70.0f) output = -70.0f;
-
         prev_error_steering = error;
+        // char buf[128];
+        // snprintf(buf, sizeof(buf), "[PID] set_point=%.2f current=%.2f error=%.2f output=%.2f dt=%.2f\r\n",
+        //         set_point, current_value, error, output, dt);
+        // Debug_Print(buf);
     }
 
     return output;
@@ -105,13 +106,13 @@ bool cruise_control(uint8_t target_speed, float current_speed, bool enabled, flo
     return active;
 }
 
-void steer_control(float lane_center, float lane_position, float dt)
+void steer_control(int target_pos, float lane_position, float dt)
 {
-    float target_angle = lane_center - lane_position;
-    float steering_output = PID(target_angle, current_angle, dt, PID_MODE_STEERING);
+    dt = 0.1;
+    float steering_output = PID(target_pos, lane_position, dt, PID_MODE_STEERING);
     char buf[128];
-    snprintf(buf, sizeof(buf), "[STEER] current=%.2f target=%.2f output=%.2f%% dt=%.2f\r\n",
-            current_angle, target_angle, steering_output, dt);
-    Debug_Print(buf);
+    snprintf(buf, sizeof(buf), "[STEER] target_pos=%d lane_pos=%.2f output=%.2f%% dt=%.2f\r\n",
+            target_pos, lane_position, steering_output, dt);
+    // Debug_Print(buf);
     Control_SetSteering(steering_output / 100.0f);
 }
