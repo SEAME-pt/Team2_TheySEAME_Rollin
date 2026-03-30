@@ -208,7 +208,7 @@ Needs: dsn
 ```
 `feat~cruise-control~1`
 
-Status: proposed
+Status: draft
 
 The system shall provide a cruise control feature that automatically maintains a user-defined target vehicle speed without requiring continuous driver throttle input.
 
