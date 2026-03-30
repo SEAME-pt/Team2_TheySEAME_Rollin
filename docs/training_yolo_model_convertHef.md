@@ -152,15 +152,18 @@ https://developer.hailo.ai
 from hailo_sdk_client import ClientRunner
 
 runner = ClientRunner(hw_arch='hailo8')
-
 runner.translate_onnx_model(
-    'best_simplified.onnx',
+    'yolo11n-seg.onnx',
     'yolo_tusimple',
     start_node_names=['images'],
-    end_node_names=['output0', 'output1'],
+    end_node_names=[
+        '/model.23/Concat',
+        '/model.23/proto/cv3/act/Mul',
+        '/model.23/Sigmoid',
+        '/model.23/Concat_2'
+    ],
     net_input_shapes={'images': [1, 3, 640, 640]}
 )
-
 runner.save_har('yolo_tusimple.har')
 ```
 
