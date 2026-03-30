@@ -12,10 +12,10 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 | Field | Details |
 |-------|----------|
-| **Sprint Number** | Sprint 9 |
-| **Sprint Goal** | Research about new Tecnologies and start STM Code Refactor |
-| **Sprint Duration** | Feb 23 – Mar 06, 2026 |
-| **Focus Areas** | Car Control, Carla, STM32 |
+| **Sprint Number** | Sprint 11 |
+| **Sprint Goal** | Achieve full PID control and integrate/train YOLO detection model with HAILO. |
+| **Sprint Duration** | Mar 23 – Apr 3 2026 |
+| **Focus Areas** | PID, YOLO, CARLA, Deep Learning |
 
 
 ## 📅 Scrum Team
