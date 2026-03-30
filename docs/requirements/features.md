@@ -215,6 +215,16 @@ The system shall provide a cruise control feature that automatically maintains a
 Needs: dsn
 ```
 
+```
+`feat~pid-steering~1`
+
+Status: draft
+
+The system shall implement a PID-based steering controller for the autonomous vehicle.
+
+Needs: dsn
+```
+
 ---
 
 ## Notes: 
