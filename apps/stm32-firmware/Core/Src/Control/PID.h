@@ -13,17 +13,31 @@
 
 #define PID_OUTPUT_MAX 100.0f
 #define PID_OUTPUT_MIN 0.0f
+
 #define PID_INTEGRAL_MAX 100.0f
 #define PID_INTEGRAL_MIN -100.0f
+
 #define FEED_FORWARD_GAIN 33.0f
 
-float PID(float target_speed, float current_speed, float dt);
+typedef struct {
+    float kp;
+    float ki;
+    float kd;
+} PID_Gains_t;
+
+typedef enum {
+    PID_MODE_CRUISE,
+    PID_MODE_STEERING
+} PID_Mode_t;
+
+float PID(float set_point, float current_value, float dt, PID_Mode_t mode);
 float clamp(float value);
-bool cruise_control(uint8_t target_speed, float current_speed, bool enabled, float dt);
 /* test helpers */
 void PID_Reset(void);
 float PID_GetIntegral(void);
 
+void steer_control(float lane_center, float lane_position, float dt);
+bool cruise_control(uint8_t target_speed, float current_speed, bool enabled, float dt);
 /*----------------------------------------   --------------------------------------------*/
 
 #endif /* CRUISE_CONTROL_H */

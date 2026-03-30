@@ -3,7 +3,7 @@
 #include "../Sensors/sensors.h"
 #include "control_queue.h"
 #include "../Sensors/sensors_queue.h"
-#include "cruise_control.h"
+#include "PID.h"
 #include <stdio.h>
 
 extern I2C_HandleTypeDef hi2c1;
@@ -162,6 +162,7 @@ void Control_Thread_Entry(ULONG thread_input) {
             }
         }
 
+        steer_control(0, recvs.lane_pos, dt_ticks);
         if (r == TX_SUCCESS) {
             // Got a command - reset timeout counter
             no_cmd_ticks = 0;
