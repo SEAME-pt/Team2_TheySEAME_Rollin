@@ -527,3 +527,30 @@ Covers:
 
 Needs: impl, itest
 ```
+
+## PID Steering
+```
+`dsn~pid-steering-output-clamping~1`
+
+Status: draft
+
+The steering controller output shall be clamped to the valid steering angle range before being applied as a steering command.
+
+Covers:
+- `feat~pid-steering~1`
+
+Needs: impl, utest
+```
+
+```
+`dsn~pid-steering-tracking-accuracy~1`
+
+Status: draft
+
+When the steering controller is active and no deactivation condition is present, the system shall maintain the vehicle within a defined lateral offset of the reference trajectory under steady-state conditions.
+
+Covers:
+- `feat~pid-steering~1`
+
+Needs: impl, itest
+```
