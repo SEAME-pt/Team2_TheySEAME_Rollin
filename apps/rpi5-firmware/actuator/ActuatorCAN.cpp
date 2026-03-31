@@ -42,10 +42,11 @@ void ActuatorCAN::setSteering(const int steering) {
 	std::cout << "Changed Steering " << steering << std::endl;
 }
 
-void ActuatorCAN::brake() {
+void ActuatorCAN::brake(const bool flag) {
 	uint8_t data[1];
 
-	data[0] = 0x01;
+	data[0] = flag;
+	setCruiseControl(false, 0);
 	_can.sendFrame(BRAKE, data, sizeof(data));
 }
 

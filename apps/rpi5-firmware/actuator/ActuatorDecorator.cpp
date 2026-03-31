@@ -18,8 +18,8 @@ void ActuatorDecorator::setGear(const short gear) {
 	_car->setGear(gear);
 }
 
-void ActuatorDecorator::brake() {
-	_car->brake();
+void ActuatorDecorator::brake(const bool flag) {
+	_car->brake(flag);
 }
 
 short ActuatorDecorator::getGear() const {

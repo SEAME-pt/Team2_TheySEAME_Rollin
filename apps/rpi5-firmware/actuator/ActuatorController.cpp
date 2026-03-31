@@ -26,8 +26,8 @@ void ActuatorController::update(Events event) {
 			_car->setSteering(processSteering(_subject.getkey(Keys::JoyZ)));
 			break;
 		case Events::CAR_BRAKE:
-			_car->brake();
-			std::cout << "L2 Pressed" << std::endl;
+			_car->brake(_subject.getkey(Keys::L2));
+			std::cout << "Brake " << _subject.getkey(Keys::L2) << std::endl;
 			break;
 		case Events::CAR_GEAR:
 			if (_subject.getkey(Keys::X)) {

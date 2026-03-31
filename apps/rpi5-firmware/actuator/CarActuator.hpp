@@ -52,7 +52,7 @@ public:
 	 *
 	 * Send a msg to brake the Car
 	 */
-	virtual void brake() = 0;
+	virtual void brake(const bool flag) = 0;
 
 	/**
 	 * @brief Get Gear
