@@ -287,39 +287,7 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
         case CAN_ID_LANE_POSITION:
             if (dlc >= 1) {
                 int8_t lane_pos_raw = (int8_t)data[0];
-                float lane_pos = 0.0f;
-                switch (lane_pos_raw)
-                {
-                    case 10:
-                        lane_pos = 0.1;
-                        break;
-                    case 32:
-                        lane_pos = 0.2;
-                        break;
-                    case 48:
-                        lane_pos = 0.3;
-                        break;
-                    case 64:
-                        lane_pos = 0.4;
-                        break;
-                    case 80:
-                        lane_pos = 0.5;
-                        break;
-                    case 96:
-                        lane_pos = 0.6;
-                        break;
-                    case 112:
-                        lane_pos = 0.7;
-                        break;
-                    case 128:
-                        lane_pos = 0.8;
-                        break;
-                    case 144:
-                        lane_pos = 0.9;
-                        break;
-                    default:
-                        break;
-                }
+                float lane_pos = (float)lane_pos_raw / 100.0f;
                 if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
                     g_vehicle_data.lane_pos = lane_pos;
                     tx_mutex_put(&g_vehicle_data_mutex);

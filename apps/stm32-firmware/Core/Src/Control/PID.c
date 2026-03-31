@@ -23,7 +23,7 @@ float PID(float set_point, float current_value, float dt, PID_Mode_t mode)
     float ff = 0.0f;
     
     PID_Gains_t cruise_gains = {50.0f, 12.3f, 0.0f};
-    PID_Gains_t steering_gains = {50.0f, 0.0f, 8.0f};
+    PID_Gains_t steering_gains = {30.0f, 0.0f, 3.0f};
     
     if (dt <= 0.0f) 
         return 0.0f;
@@ -59,11 +59,13 @@ float PID(float set_point, float current_value, float dt, PID_Mode_t mode)
         output = steering_gains.kp * error +
                 steering_gains.kd * derivative;
 
+        if (output > 30.0f) output = 30.0f;
+        if (output < -30.0f) output = -30.0f;
         prev_error_steering = error;
-        // char buf[128];
-        // snprintf(buf, sizeof(buf), "[PID] set_point=%.2f current=%.2f error=%.2f output=%.2f dt=%.2f\r\n",
-        //         set_point, current_value, error, output, dt);
-        // Debug_Print(buf);
+        char buf[128];
+        snprintf(buf, sizeof(buf), "[PID] set_point=%.2f current=%.2f error=%.2f output=%.2f dt=%.2f\r\n",
+                set_point, current_value, error, output, dt);
+        Debug_Print(buf);
     }
 
     return output;
@@ -110,9 +112,9 @@ void steer_control(int target_pos, float lane_position, float dt)
 {
     dt = 0.1;
     float steering_output = PID(target_pos, lane_position, dt, PID_MODE_STEERING);
-    char buf[128];
-    snprintf(buf, sizeof(buf), "[STEER] target_pos=%d lane_pos=%.2f output=%.2f%% dt=%.2f\r\n",
-            target_pos, lane_position, steering_output, dt);
-    Debug_Print(buf);
-    Control_SetSteering(steering_output / 100.0f);
+    // char buf[128];
+    // snprintf(buf, sizeof(buf), "[STEER] target_pos=%d lane_pos=%.2f output=%.2f%% dt=%.2f\r\n",
+    //         target_pos, lane_position, steering_output, dt);
+    // Debug_Print(buf);
+    Control_SetSteering(steering_output);
 }

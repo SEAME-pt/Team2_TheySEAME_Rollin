@@ -39,7 +39,7 @@ void PCA9685_SetServoAngle(uint8_t channel, float angle) {
 
 void Control_SetSteering(float steering_normalized) {
     // Convert normalized steering (-1.0 to +1.0) to servo angle (-30 to +30 degrees)
-    float angle = steering_normalized * 30.0f;
+    float angle = steering_normalized;
     PCA9685_SetServoAngle(0, angle);  // Channel 0 for steering servo
 }
 
@@ -161,7 +161,7 @@ void Control_Thread_Entry(ULONG thread_input) {
                 tx_mutex_put(&g_vehicle_data_mutex);
             }
         }
-        steer_control(0, recvs.lane_pos, cc_dt);
+        // steer_control(0, recvs.lane_pos, cc_dt);
         if (r == TX_SUCCESS) {
             // Got a command - reset timeout counter
             no_cmd_ticks = 0;
@@ -195,7 +195,7 @@ void Control_Thread_Entry(ULONG thread_input) {
                     local_cmd.brake != last_brake) {
 
                     // Convert steering to normalized float
-                    float steering_normalized = (float)local_cmd.steering_angle / 100.0f;
+                    float steering_normalized = (float)local_cmd.steering_angle;
 
                     Control_SetSteering(steering_normalized);
                     Control_SetThrottle(local_cmd.throttle, local_cmd.gear, local_cmd.brake);
