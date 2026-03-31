@@ -543,11 +543,51 @@ Needs: impl, utest
 ```
 
 ```
+`dsn~pid-steering-gain-scheduling~1`
+
+Status: draft
+
+The lane keeping controller shall adjust its gains as a function of current vehicle speed to maintain stable lane centring across the full operating speed range.
+
+Covers:
+- `feat~pid-steering~1`
+
+Needs: impl, itest
+```
+
+
+```
 `dsn~pid-steering-tracking-accuracy~1`
 
 Status: draft
 
 When the steering controller is active and no deactivation condition is present, the system shall maintain the vehicle within a defined lateral offset of the reference trajectory under steady-state conditions.
+
+Covers:
+- `feat~pid-steering~1`
+
+Needs: impl, itest
+```
+
+```
+`dsn~pid-steering-lane-lost-deactivation~1`
+
+Status: draft
+
+If the Perception Module no longer provides a valid lane centre reference while the lane keeping controller is active, the system shall deactivate the lane keeping controller and transfer steering authority back to the driver.
+
+Covers:
+- `feat~pid-steering~1`
+
+Needs: impl, itest
+```
+
+```
+`dsn~pid-steering-fault-deactivation~1`
+
+Status: draft
+
+If a system fault is detected while the lane keeping controller is active, the system shall deactivate the lane keeping controller and transfer steering authority back to the driver.
 
 Covers:
 - `feat~pid-steering~1`
