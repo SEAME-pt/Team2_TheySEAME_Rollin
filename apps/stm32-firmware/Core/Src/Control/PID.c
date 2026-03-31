@@ -18,15 +18,15 @@ float PID_GetIntegral(void)
 
 float PID(float set_point, float current_value, float dt, PID_Mode_t mode)
 {
-    if (dt <= 0.0f) return 0.0f;
-
     float error = set_point - current_value;
     float output = 0.0f;
     float ff = 0.0f;
-
+    
     PID_Gains_t cruise_gains = {50.0f, 12.3f, 0.0f};
-    PID_Gains_t steering_gains = {10.0f, 0.0f, 1.0f};
-
+    PID_Gains_t steering_gains = {50.0f, 0.0f, 8.0f};
+    
+    if (dt <= 0.0f) 
+        return 0.0f;
     // CRUISE
     if (mode == PID_MODE_CRUISE)
     {
@@ -113,6 +113,6 @@ void steer_control(int target_pos, float lane_position, float dt)
     char buf[128];
     snprintf(buf, sizeof(buf), "[STEER] target_pos=%d lane_pos=%.2f output=%.2f%% dt=%.2f\r\n",
             target_pos, lane_position, steering_output, dt);
-    // Debug_Print(buf);
+    Debug_Print(buf);
     Control_SetSteering(steering_output / 100.0f);
 }
