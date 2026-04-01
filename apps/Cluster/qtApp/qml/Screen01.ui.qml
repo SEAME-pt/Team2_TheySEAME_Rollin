@@ -17,50 +17,6 @@ Rectangle {
     height: 400
     color: "#FFE18D"
 
-    // TEST MODE: Set to true to test without systemInfo (for Qt Design Studio preview)
-    property bool previewMode: true
-    property real previewLeftCarDistance: 100  // Start at closest position
-
-    // Preview mode properties for generalInfo (date/time/weather)
-    property string previewDate: "19/03/2026"
-    property string previewTime: "14:30"
-    property string previewTemperature: "22"
-    property string previewWeatherInfo: "sun"
-
-    // Preview mode properties for systemInfo
-    property int previewSpeed: 85
-    property int previewBattery: 78
-    property bool previewCruiseActive: true
-    property int previewTargetSpeed: 130
-
-    // Auto-animate in a loop
-    SequentialAnimation {
-        running: previewMode
-        loops: Animation.Infinite
-
-        NumberAnimation {
-            target: rectangle
-            property: "previewLeftCarDistance"
-            from: 100
-            to: 0
-            duration: 4000
-            easing.type: Easing.InOutQuad
-        }
-
-        PauseAnimation { duration: 500 }
-
-        NumberAnimation {
-            target: rectangle
-            property: "previewLeftCarDistance"
-            from: 0
-            to: 100
-            duration: 4000
-            easing.type: Easing.InOutQuad
-        }
-
-        PauseAnimation { duration: 500 }
-    }
-
     Image {
         id: cluster
         x: 0
@@ -76,7 +32,7 @@ Rectangle {
             Text {
                 id: speed
                 color: "#47473f"
-                text: rectangle.previewMode ? rectangle.previewSpeed.toString() : (systemInfo ? systemInfo.speed.toString() : "0")
+                text: systemInfo ? systemInfo.speed.toString() : "0"
                 font.pixelSize: 98
                 font.family: "BaseNeueTrial-Bold"
                 font.bold: true
@@ -101,7 +57,7 @@ Rectangle {
             width: 218
             height: 119
             color: "#47473f"
-            text: rectangle.previewMode ? rectangle.previewBattery.toString() + "%" : (systemInfo ? systemInfo.battery.toString() + "%" : "0%")
+            text: systemInfo ? systemInfo.battery.toString() + "%" : "0%"
             font.pixelSize: 77
             font.family: "BaseNeueTrial-Bold"
             font.bold: true
@@ -114,7 +70,8 @@ Rectangle {
             width: 155
             height: 34
             color: "#ffffff"
-            text: rectangle.previewMode ? rectangle.previewDate : (generalInfo ? generalInfo.currentDate.toString("dd/MM/yyyy") : "")
+            text: generalInfo ? generalInfo.currentDate.toString(
+                                     "dd/MM/yyyy") : ""
             font.pixelSize: 28
             font.family: "Inter"
             font.bold: true
@@ -127,7 +84,7 @@ Rectangle {
             width: 72
             height: 34
             color: "#ffffff"
-            text: rectangle.previewMode ? rectangle.previewTime : (generalInfo ? generalInfo.localTime : "")
+            text: generalInfo ? generalInfo.localTime : ""
             font.pixelSize: 28
             font.family: "Inter"
             font.bold: true
@@ -140,7 +97,7 @@ Rectangle {
             width: 72
             height: 34
             color: "#ffffff"
-            text: rectangle.previewMode ? rectangle.previewTemperature + "°C" : (generalInfo ? generalInfo.temperature + "°C" : "")
+            text: generalInfo ? generalInfo.temperature + "°C" : ""
             font.pixelSize: 28
             font.family: "Inter"
             font.bold: true
@@ -152,77 +109,8 @@ Rectangle {
             y: 20
             width: 47
             height: 35
-            source: rectangle.previewMode ? ("images/" + rectangle.previewWeatherInfo + "-256.png") : (generalInfo ? "images/" + generalInfo.weatherInfo + "-256.png" : "images/sun-256.png")
+            source: generalInfo ? "images/" + generalInfo.weatherInfo + "-256.png" : "images/sun-256.png"
             fillMode: Image.PreserveAspectFit
-        }
-
-        Image {
-            id: cruiseIndicator
-            x: 389
-            y: 110
-            width: 80
-            height: 36
-            source: "images/CC.png"
-            fillMode: Image.PreserveAspectFit
-            visible: rectangle.previewMode ? rectangle.previewCruiseActive : (systemInfo ? systemInfo._cruiseActive : false)
-        }
-
-        Text {
-            id: targetSpeedDisplay
-            x: 389
-            y: 155
-            width: 120
-            color: "#47473f"
-            text: rectangle.previewMode ? (rectangle.previewCruiseActive ? rectangle._targetSpeed.toString() + " hm/h" : "---") : (systemInfo ? systemInfo.targetSpeedDisplay : "---")
-            font.pixelSize: 16
-            font.family: "BaseNeueTrial-Bold"
-            font.bold: true
-            horizontalAlignment: Text.AlignHCenter
-        }
-
-        // Detected vehicles overlays (left lane)
-        Image {
-            id: leftLaneDetected
-            property real distance: rectangle.previewMode ? rectangle.previewLeftCarDistance : (systemInfo ? systemInfo.leftCarDistance : 0)
-            x: 575 - 175 * (distance / 100)
-            y: 82 + 141 * (distance / 100)
-            width: 46 + 137 * (distance / 100)
-            height: 52 + 80 * (distance / 100)
-            source: "images/leftCar.png.png"
-            fillMode: Image.PreserveAspectFit
-            visible: false
-            opacity: 0.85
-
-            Behavior on x { NumberAnimation { duration: 300; easing.type: Easing.InOutQuad } }
-            Behavior on y { NumberAnimation { duration: 300; easing.type: Easing.InOutQuad } }
-            Behavior on width { NumberAnimation { duration: 300; easing.type: Easing.InOutQuad } }
-            Behavior on height { NumberAnimation { duration: 300; easing.type: Easing.InOutQuad } }
-        }
-
-        // Detected vehicles overlays (front/center lane)
-        Image {
-            id: frontLaneDetected
-            x: 864
-            y: 97
-            width: 120
-            height: 80
-            source: "images/frontCar.png.png"
-            fillMode: Image.PreserveAspectFit
-            visible: false  // Test: visible to preview layout
-            opacity: 0.85
-        }
-
-        // Detected vehicles overlays (right lane)
-        Image {
-            id: rightLaneDetected
-            x: 674
-            y: 150
-            width: 120
-            height: 80
-            source: "images/rightCar.png"
-            fillMode: Image.PreserveAspectFit
-            visible: false  // Test: visible to preview layout
-            opacity: 0.85
         }
 
         Rectangle {
@@ -238,7 +126,7 @@ Rectangle {
                 id: baterry
                 x: 0
                 y: 0
-                width: rectangle.previewMode ? (rectangle.previewBattery / 100) * maxBattery.width : (systemInfo ? (systemInfo.battery / 100) * maxBattery.width : 0)
+                width: systemInfo ? (systemInfo.battery / 100) * maxBattery.width : 0
                 height: 12
                 color: "#76b047"
                 border.color: "#76b047"
@@ -246,6 +134,44 @@ Rectangle {
         }
     }
 
+    // Cruise Control Display (Outside image to avoid clipping)
+    Rectangle {
+        id: cruiseControl
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: -12
+        anchors.bottomMargin: 0
+        width: 160
+        height: 60
+        color: "transparent"
+        border.color: "transparent"
+        z: 10
+
+        Column {
+            anchors.centerIn: parent
+            spacing: 5
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            Image {
+                id: ccImage
+                source: systemInfo && systemInfo.cruiseActive ? "file:///home/team2/Documents/hugo-folder/Team2_TheySEAME_Rollin/apps/Cluster/qtApp/qml/images/CC_enabled.png" : "file:///home/team2/Documents/hugo-folder/Team2_TheySEAME_Rollin/apps/Cluster/qtApp/qml/images/CC_disabled.png"
+                fillMode: Image.PreserveAspectFit
+                width: 40
+                height: 40
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+            Text {
+                text: systemInfo && systemInfo.cruiseActive ? systemInfo.targetSpeedDisplay : ""
+                font.pixelSize: 18
+                font.family: "BaseNeueTrial-Bold"
+                font.bold: true
+                color: systemInfo && systemInfo.cruiseActive ? "#e74c3c" : "#95a5a6"
+                anchors.horizontalCenter: parent.horizontalCenter
+                visible: systemInfo && systemInfo.cruiseActive
+            }
+        }
+    }
     states: [
         State {
             name: "clicked"

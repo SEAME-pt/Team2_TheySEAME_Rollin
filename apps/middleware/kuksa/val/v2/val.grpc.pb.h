@@ -29,13 +29,13 @@
 #include <grpcpp/completion_queue.h>
 #include <grpcpp/support/message_allocator.h>
 #include <grpcpp/support/method_handler.h>
-#include <grpcpp/impl/codegen/proto_utils.h>
+#include <grpcpp/impl/proto_utils.h>
 #include <grpcpp/impl/rpc_method.h>
 #include <grpcpp/support/server_callback.h>
-#include <grpcpp/impl/codegen/server_callback_handlers.h>
+#include <grpcpp/impl/server_callback_handlers.h>
 #include <grpcpp/server_context.h>
 #include <grpcpp/impl/service_type.h>
-#include <grpcpp/impl/codegen/status.h>
+#include <grpcpp/support/status.h>
 #include <grpcpp/support/stub_options.h>
 #include <grpcpp/support/sync_stream.h>
 
@@ -164,31 +164,6 @@ class VAL final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kuksa::val::v2::ActuateResponse>> PrepareAsyncActuate(::grpc::ClientContext* context, const ::kuksa::val::v2::ActuateRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kuksa::val::v2::ActuateResponse>>(PrepareAsyncActuateRaw(context, request, cq));
     }
-    // Actuate a single actuator in a gRPC stream -> Use for low latency and high throughput
-    //
-    // Returns (GRPC error code):
-    //   NOT_FOUND if the actuator does not exist.
-    //   PERMISSION_DENIED if access is denied for the actuator.
-    //   UNAUTHENTICATED if no credentials provided or credentials has expired
-    //   UNAVAILABLE if there is no provider currently providing the actuator
-    //   DATA_LOSS is there is a internal TransmissionFailure
-    //   INVALID_ARGUMENT
-    //       - if the provided path is not an actuator.
-    //       - if the data type used in the request does not match
-    //            the data type of the addressed signal
-    //       - if the requested value is not accepted,
-    //            e.g. if sending an unsupported enum value
-    //       - if the provided value is out of the min/max range specified
-    //
-    std::unique_ptr< ::grpc::ClientWriterInterface< ::kuksa::val::v2::ActuateRequest>> ActuateStream(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response) {
-      return std::unique_ptr< ::grpc::ClientWriterInterface< ::kuksa::val::v2::ActuateRequest>>(ActuateStreamRaw(context, response));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::kuksa::val::v2::ActuateRequest>> AsyncActuateStream(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response, ::grpc::CompletionQueue* cq, void* tag) {
-      return std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::kuksa::val::v2::ActuateRequest>>(AsyncActuateStreamRaw(context, response, cq, tag));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::kuksa::val::v2::ActuateRequest>> PrepareAsyncActuateStream(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::kuksa::val::v2::ActuateRequest>>(PrepareAsyncActuateStreamRaw(context, response, cq));
-    }
     // Actuate simultaneously multiple actuators.
     // If any error occurs, the entire operation will be aborted
     // and no single actuator value will be forwarded to the provider.
@@ -258,48 +233,29 @@ class VAL final {
     //
     // Errors:
     //    - Provider sends ProvideActuationRequest -> Databroker returns ProvideActuationResponse
-    //        - strict case
-    //            Returns (GRPC error code) and closes the stream call
-    //              NOT_FOUND if any of the signals are non-existant.
-    //              PERMISSION_DENIED if access is denied for any of the signals.
-    //              UNAUTHENTICATED if no credentials provided or credentials has expired
-    //              ALREADY_EXISTS if a provider already claimed the ownership of an actuator
+    //        Returns (GRPC error code) and closes the stream call (strict case).
+    //          NOT_FOUND if any of the signals are non-existant.
+    //          PERMISSION_DENIED if access is denied for any of the signals.
+    //          UNAUTHENTICATED if no credentials provided or credentials has expired
+    //          ALREADY_EXISTS if a provider already claimed the ownership of an actuator
     //
     //    - Provider sends PublishValuesRequest -> Databroker returns PublishValuesResponse upon error, and nothing upon success
-    //        - permissive case
-    //            GRPC errors are returned as messages in the stream
-    //            response with the signal id `map<int32, Error> status = 2;`
-    //              NOT_FOUND if a signal is non-existant.
-    //              PERMISSION_DENIED
-    //                  - if access is denied for a signal.
-    //              INVALID_ARGUMENT
-    //                  - if the data type used in the request does not match
-    //                       the data type of the addressed signal
-    //                  - if the published value is not accepted,
-    //                       e.g. if sending an unsupported enum value
-    //                  - if the published value is out of the min/max range specified
-    //        - strict case
-    //            Returns (GRPC error code) and closes the stream call.
-    //              ALREADY_EXISTS if a provider already claimed the ownership of the signals
-    //              ABORTED if provider has not claimed yet the signals
+    //        GRPC errors are returned as messages in the stream
+    //        response with the signal id `map<int32, Error> status = 2;` (permissive case)
+    //          NOT_FOUND if a signal is non-existant.
+    //          PERMISSION_DENIED
+    //              - if access is denied for a signal.
+    //          INVALID_ARGUMENT
+    //              - if the data type used in the request does not match
+    //                   the data type of the addressed signal
+    //              - if the published value is not accepted,
+    //                   e.g. if sending an unsupported enum value
+    //              - if the published value is out of the min/max range specified
     //
     //    - Databroker sends BatchActuateStreamRequest -> Provider shall return a BatchActuateStreamResponse,
     //        for every signal requested to indicate if the request was accepted or not.
     //        It is up to the provider to decide if the stream shall be closed,
     //        as of today Databroker will not react on the received error message.
-    //
-    //    - Provider sends ProvideSignalRequest -> Databroker returns ProvideSignalResponse
-    //        - strict case
-    //            Returns (GRPC error code) and closes the stream call.
-    //              NOT_FOUND if any of the signals are non-existant.
-    //              PERMISSION_DENIED if access is denied for any of the signals.
-    //              UNAUTHENTICATED if no credentials provided or credentials has expired
-    //              ALREADY_EXISTS if a provider already claimed the ownership of any signal.
-    //
-    //    - Provider sends ProviderErrorIndication
-    //        - strict case
-    //            Returns (GRPC error code) and closes the stream call.
-    //              ABORTED if provider has not claimed yet the signals
     //
     std::unique_ptr< ::grpc::ClientReaderWriterInterface< ::kuksa::val::v2::OpenProviderStreamRequest, ::kuksa::val::v2::OpenProviderStreamResponse>> OpenProviderStream(::grpc::ClientContext* context) {
       return std::unique_ptr< ::grpc::ClientReaderWriterInterface< ::kuksa::val::v2::OpenProviderStreamRequest, ::kuksa::val::v2::OpenProviderStreamResponse>>(OpenProviderStreamRaw(context));
@@ -403,23 +359,6 @@ class VAL final {
       //
       virtual void Actuate(::grpc::ClientContext* context, const ::kuksa::val::v2::ActuateRequest* request, ::kuksa::val::v2::ActuateResponse* response, std::function<void(::grpc::Status)>) = 0;
       virtual void Actuate(::grpc::ClientContext* context, const ::kuksa::val::v2::ActuateRequest* request, ::kuksa::val::v2::ActuateResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      // Actuate a single actuator in a gRPC stream -> Use for low latency and high throughput
-      //
-      // Returns (GRPC error code):
-      //   NOT_FOUND if the actuator does not exist.
-      //   PERMISSION_DENIED if access is denied for the actuator.
-      //   UNAUTHENTICATED if no credentials provided or credentials has expired
-      //   UNAVAILABLE if there is no provider currently providing the actuator
-      //   DATA_LOSS is there is a internal TransmissionFailure
-      //   INVALID_ARGUMENT
-      //       - if the provided path is not an actuator.
-      //       - if the data type used in the request does not match
-      //            the data type of the addressed signal
-      //       - if the requested value is not accepted,
-      //            e.g. if sending an unsupported enum value
-      //       - if the provided value is out of the min/max range specified
-      //
-      virtual void ActuateStream(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response, ::grpc::ClientWriteReactor< ::kuksa::val::v2::ActuateRequest>* reactor) = 0;
       // Actuate simultaneously multiple actuators.
       // If any error occurs, the entire operation will be aborted
       // and no single actuator value will be forwarded to the provider.
@@ -474,48 +413,29 @@ class VAL final {
       //
       // Errors:
       //    - Provider sends ProvideActuationRequest -> Databroker returns ProvideActuationResponse
-      //        - strict case
-      //            Returns (GRPC error code) and closes the stream call
-      //              NOT_FOUND if any of the signals are non-existant.
-      //              PERMISSION_DENIED if access is denied for any of the signals.
-      //              UNAUTHENTICATED if no credentials provided or credentials has expired
-      //              ALREADY_EXISTS if a provider already claimed the ownership of an actuator
+      //        Returns (GRPC error code) and closes the stream call (strict case).
+      //          NOT_FOUND if any of the signals are non-existant.
+      //          PERMISSION_DENIED if access is denied for any of the signals.
+      //          UNAUTHENTICATED if no credentials provided or credentials has expired
+      //          ALREADY_EXISTS if a provider already claimed the ownership of an actuator
       //
       //    - Provider sends PublishValuesRequest -> Databroker returns PublishValuesResponse upon error, and nothing upon success
-      //        - permissive case
-      //            GRPC errors are returned as messages in the stream
-      //            response with the signal id `map<int32, Error> status = 2;`
-      //              NOT_FOUND if a signal is non-existant.
-      //              PERMISSION_DENIED
-      //                  - if access is denied for a signal.
-      //              INVALID_ARGUMENT
-      //                  - if the data type used in the request does not match
-      //                       the data type of the addressed signal
-      //                  - if the published value is not accepted,
-      //                       e.g. if sending an unsupported enum value
-      //                  - if the published value is out of the min/max range specified
-      //        - strict case
-      //            Returns (GRPC error code) and closes the stream call.
-      //              ALREADY_EXISTS if a provider already claimed the ownership of the signals
-      //              ABORTED if provider has not claimed yet the signals
+      //        GRPC errors are returned as messages in the stream
+      //        response with the signal id `map<int32, Error> status = 2;` (permissive case)
+      //          NOT_FOUND if a signal is non-existant.
+      //          PERMISSION_DENIED
+      //              - if access is denied for a signal.
+      //          INVALID_ARGUMENT
+      //              - if the data type used in the request does not match
+      //                   the data type of the addressed signal
+      //              - if the published value is not accepted,
+      //                   e.g. if sending an unsupported enum value
+      //              - if the published value is out of the min/max range specified
       //
       //    - Databroker sends BatchActuateStreamRequest -> Provider shall return a BatchActuateStreamResponse,
       //        for every signal requested to indicate if the request was accepted or not.
       //        It is up to the provider to decide if the stream shall be closed,
       //        as of today Databroker will not react on the received error message.
-      //
-      //    - Provider sends ProvideSignalRequest -> Databroker returns ProvideSignalResponse
-      //        - strict case
-      //            Returns (GRPC error code) and closes the stream call.
-      //              NOT_FOUND if any of the signals are non-existant.
-      //              PERMISSION_DENIED if access is denied for any of the signals.
-      //              UNAUTHENTICATED if no credentials provided or credentials has expired
-      //              ALREADY_EXISTS if a provider already claimed the ownership of any signal.
-      //
-      //    - Provider sends ProviderErrorIndication
-      //        - strict case
-      //            Returns (GRPC error code) and closes the stream call.
-      //              ABORTED if provider has not claimed yet the signals
       //
       virtual void OpenProviderStream(::grpc::ClientContext* context, ::grpc::ClientBidiReactor< ::kuksa::val::v2::OpenProviderStreamRequest,::kuksa::val::v2::OpenProviderStreamResponse>* reactor) = 0;
       // Get server information
@@ -538,9 +458,6 @@ class VAL final {
     virtual ::grpc::ClientAsyncReaderInterface< ::kuksa::val::v2::SubscribeByIdResponse>* PrepareAsyncSubscribeByIdRaw(::grpc::ClientContext* context, const ::kuksa::val::v2::SubscribeByIdRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::kuksa::val::v2::ActuateResponse>* AsyncActuateRaw(::grpc::ClientContext* context, const ::kuksa::val::v2::ActuateRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::kuksa::val::v2::ActuateResponse>* PrepareAsyncActuateRaw(::grpc::ClientContext* context, const ::kuksa::val::v2::ActuateRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientWriterInterface< ::kuksa::val::v2::ActuateRequest>* ActuateStreamRaw(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response) = 0;
-    virtual ::grpc::ClientAsyncWriterInterface< ::kuksa::val::v2::ActuateRequest>* AsyncActuateStreamRaw(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response, ::grpc::CompletionQueue* cq, void* tag) = 0;
-    virtual ::grpc::ClientAsyncWriterInterface< ::kuksa::val::v2::ActuateRequest>* PrepareAsyncActuateStreamRaw(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::kuksa::val::v2::BatchActuateResponse>* AsyncBatchActuateRaw(::grpc::ClientContext* context, const ::kuksa::val::v2::BatchActuateRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::kuksa::val::v2::BatchActuateResponse>* PrepareAsyncBatchActuateRaw(::grpc::ClientContext* context, const ::kuksa::val::v2::BatchActuateRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::kuksa::val::v2::ListMetadataResponse>* AsyncListMetadataRaw(::grpc::ClientContext* context, const ::kuksa::val::v2::ListMetadataRequest& request, ::grpc::CompletionQueue* cq) = 0;
@@ -595,15 +512,6 @@ class VAL final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kuksa::val::v2::ActuateResponse>> PrepareAsyncActuate(::grpc::ClientContext* context, const ::kuksa::val::v2::ActuateRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kuksa::val::v2::ActuateResponse>>(PrepareAsyncActuateRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientWriter< ::kuksa::val::v2::ActuateRequest>> ActuateStream(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response) {
-      return std::unique_ptr< ::grpc::ClientWriter< ::kuksa::val::v2::ActuateRequest>>(ActuateStreamRaw(context, response));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncWriter< ::kuksa::val::v2::ActuateRequest>> AsyncActuateStream(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response, ::grpc::CompletionQueue* cq, void* tag) {
-      return std::unique_ptr< ::grpc::ClientAsyncWriter< ::kuksa::val::v2::ActuateRequest>>(AsyncActuateStreamRaw(context, response, cq, tag));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncWriter< ::kuksa::val::v2::ActuateRequest>> PrepareAsyncActuateStream(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncWriter< ::kuksa::val::v2::ActuateRequest>>(PrepareAsyncActuateStreamRaw(context, response, cq));
-    }
     ::grpc::Status BatchActuate(::grpc::ClientContext* context, const ::kuksa::val::v2::BatchActuateRequest& request, ::kuksa::val::v2::BatchActuateResponse* response) override;
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kuksa::val::v2::BatchActuateResponse>> AsyncBatchActuate(::grpc::ClientContext* context, const ::kuksa::val::v2::BatchActuateRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kuksa::val::v2::BatchActuateResponse>>(AsyncBatchActuateRaw(context, request, cq));
@@ -652,7 +560,6 @@ class VAL final {
       void SubscribeById(::grpc::ClientContext* context, const ::kuksa::val::v2::SubscribeByIdRequest* request, ::grpc::ClientReadReactor< ::kuksa::val::v2::SubscribeByIdResponse>* reactor) override;
       void Actuate(::grpc::ClientContext* context, const ::kuksa::val::v2::ActuateRequest* request, ::kuksa::val::v2::ActuateResponse* response, std::function<void(::grpc::Status)>) override;
       void Actuate(::grpc::ClientContext* context, const ::kuksa::val::v2::ActuateRequest* request, ::kuksa::val::v2::ActuateResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
-      void ActuateStream(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response, ::grpc::ClientWriteReactor< ::kuksa::val::v2::ActuateRequest>* reactor) override;
       void BatchActuate(::grpc::ClientContext* context, const ::kuksa::val::v2::BatchActuateRequest* request, ::kuksa::val::v2::BatchActuateResponse* response, std::function<void(::grpc::Status)>) override;
       void BatchActuate(::grpc::ClientContext* context, const ::kuksa::val::v2::BatchActuateRequest* request, ::kuksa::val::v2::BatchActuateResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       void ListMetadata(::grpc::ClientContext* context, const ::kuksa::val::v2::ListMetadataRequest* request, ::kuksa::val::v2::ListMetadataResponse* response, std::function<void(::grpc::Status)>) override;
@@ -685,9 +592,6 @@ class VAL final {
     ::grpc::ClientAsyncReader< ::kuksa::val::v2::SubscribeByIdResponse>* PrepareAsyncSubscribeByIdRaw(::grpc::ClientContext* context, const ::kuksa::val::v2::SubscribeByIdRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::kuksa::val::v2::ActuateResponse>* AsyncActuateRaw(::grpc::ClientContext* context, const ::kuksa::val::v2::ActuateRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::kuksa::val::v2::ActuateResponse>* PrepareAsyncActuateRaw(::grpc::ClientContext* context, const ::kuksa::val::v2::ActuateRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientWriter< ::kuksa::val::v2::ActuateRequest>* ActuateStreamRaw(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response) override;
-    ::grpc::ClientAsyncWriter< ::kuksa::val::v2::ActuateRequest>* AsyncActuateStreamRaw(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response, ::grpc::CompletionQueue* cq, void* tag) override;
-    ::grpc::ClientAsyncWriter< ::kuksa::val::v2::ActuateRequest>* PrepareAsyncActuateStreamRaw(::grpc::ClientContext* context, ::kuksa::val::v2::ActuateResponse* response, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::kuksa::val::v2::BatchActuateResponse>* AsyncBatchActuateRaw(::grpc::ClientContext* context, const ::kuksa::val::v2::BatchActuateRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::kuksa::val::v2::BatchActuateResponse>* PrepareAsyncBatchActuateRaw(::grpc::ClientContext* context, const ::kuksa::val::v2::BatchActuateRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::kuksa::val::v2::ListMetadataResponse>* AsyncListMetadataRaw(::grpc::ClientContext* context, const ::kuksa::val::v2::ListMetadataRequest& request, ::grpc::CompletionQueue* cq) override;
@@ -704,7 +608,6 @@ class VAL final {
     const ::grpc::internal::RpcMethod rpcmethod_Subscribe_;
     const ::grpc::internal::RpcMethod rpcmethod_SubscribeById_;
     const ::grpc::internal::RpcMethod rpcmethod_Actuate_;
-    const ::grpc::internal::RpcMethod rpcmethod_ActuateStream_;
     const ::grpc::internal::RpcMethod rpcmethod_BatchActuate_;
     const ::grpc::internal::RpcMethod rpcmethod_ListMetadata_;
     const ::grpc::internal::RpcMethod rpcmethod_PublishValue_;
@@ -796,23 +699,6 @@ class VAL final {
     //       - if the provided value is out of the min/max range specified
     //
     virtual ::grpc::Status Actuate(::grpc::ServerContext* context, const ::kuksa::val::v2::ActuateRequest* request, ::kuksa::val::v2::ActuateResponse* response);
-    // Actuate a single actuator in a gRPC stream -> Use for low latency and high throughput
-    //
-    // Returns (GRPC error code):
-    //   NOT_FOUND if the actuator does not exist.
-    //   PERMISSION_DENIED if access is denied for the actuator.
-    //   UNAUTHENTICATED if no credentials provided or credentials has expired
-    //   UNAVAILABLE if there is no provider currently providing the actuator
-    //   DATA_LOSS is there is a internal TransmissionFailure
-    //   INVALID_ARGUMENT
-    //       - if the provided path is not an actuator.
-    //       - if the data type used in the request does not match
-    //            the data type of the addressed signal
-    //       - if the requested value is not accepted,
-    //            e.g. if sending an unsupported enum value
-    //       - if the provided value is out of the min/max range specified
-    //
-    virtual ::grpc::Status ActuateStream(::grpc::ServerContext* context, ::grpc::ServerReader< ::kuksa::val::v2::ActuateRequest>* reader, ::kuksa::val::v2::ActuateResponse* response);
     // Actuate simultaneously multiple actuators.
     // If any error occurs, the entire operation will be aborted
     // and no single actuator value will be forwarded to the provider.
@@ -864,48 +750,29 @@ class VAL final {
     //
     // Errors:
     //    - Provider sends ProvideActuationRequest -> Databroker returns ProvideActuationResponse
-    //        - strict case
-    //            Returns (GRPC error code) and closes the stream call
-    //              NOT_FOUND if any of the signals are non-existant.
-    //              PERMISSION_DENIED if access is denied for any of the signals.
-    //              UNAUTHENTICATED if no credentials provided or credentials has expired
-    //              ALREADY_EXISTS if a provider already claimed the ownership of an actuator
+    //        Returns (GRPC error code) and closes the stream call (strict case).
+    //          NOT_FOUND if any of the signals are non-existant.
+    //          PERMISSION_DENIED if access is denied for any of the signals.
+    //          UNAUTHENTICATED if no credentials provided or credentials has expired
+    //          ALREADY_EXISTS if a provider already claimed the ownership of an actuator
     //
     //    - Provider sends PublishValuesRequest -> Databroker returns PublishValuesResponse upon error, and nothing upon success
-    //        - permissive case
-    //            GRPC errors are returned as messages in the stream
-    //            response with the signal id `map<int32, Error> status = 2;`
-    //              NOT_FOUND if a signal is non-existant.
-    //              PERMISSION_DENIED
-    //                  - if access is denied for a signal.
-    //              INVALID_ARGUMENT
-    //                  - if the data type used in the request does not match
-    //                       the data type of the addressed signal
-    //                  - if the published value is not accepted,
-    //                       e.g. if sending an unsupported enum value
-    //                  - if the published value is out of the min/max range specified
-    //        - strict case
-    //            Returns (GRPC error code) and closes the stream call.
-    //              ALREADY_EXISTS if a provider already claimed the ownership of the signals
-    //              ABORTED if provider has not claimed yet the signals
+    //        GRPC errors are returned as messages in the stream
+    //        response with the signal id `map<int32, Error> status = 2;` (permissive case)
+    //          NOT_FOUND if a signal is non-existant.
+    //          PERMISSION_DENIED
+    //              - if access is denied for a signal.
+    //          INVALID_ARGUMENT
+    //              - if the data type used in the request does not match
+    //                   the data type of the addressed signal
+    //              - if the published value is not accepted,
+    //                   e.g. if sending an unsupported enum value
+    //              - if the published value is out of the min/max range specified
     //
     //    - Databroker sends BatchActuateStreamRequest -> Provider shall return a BatchActuateStreamResponse,
     //        for every signal requested to indicate if the request was accepted or not.
     //        It is up to the provider to decide if the stream shall be closed,
     //        as of today Databroker will not react on the received error message.
-    //
-    //    - Provider sends ProvideSignalRequest -> Databroker returns ProvideSignalResponse
-    //        - strict case
-    //            Returns (GRPC error code) and closes the stream call.
-    //              NOT_FOUND if any of the signals are non-existant.
-    //              PERMISSION_DENIED if access is denied for any of the signals.
-    //              UNAUTHENTICATED if no credentials provided or credentials has expired
-    //              ALREADY_EXISTS if a provider already claimed the ownership of any signal.
-    //
-    //    - Provider sends ProviderErrorIndication
-    //        - strict case
-    //            Returns (GRPC error code) and closes the stream call.
-    //              ABORTED if provider has not claimed yet the signals
     //
     virtual ::grpc::Status OpenProviderStream(::grpc::ServerContext* context, ::grpc::ServerReaderWriter< ::kuksa::val::v2::OpenProviderStreamResponse, ::kuksa::val::v2::OpenProviderStreamRequest>* stream);
     // Get server information
@@ -1012,32 +879,12 @@ class VAL final {
     }
   };
   template <class BaseClass>
-  class WithAsyncMethod_ActuateStream : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithAsyncMethod_ActuateStream() {
-      ::grpc::Service::MarkMethodAsync(5);
-    }
-    ~WithAsyncMethod_ActuateStream() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status ActuateStream(::grpc::ServerContext* /*context*/, ::grpc::ServerReader< ::kuksa::val::v2::ActuateRequest>* /*reader*/, ::kuksa::val::v2::ActuateResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void RequestActuateStream(::grpc::ServerContext* context, ::grpc::ServerAsyncReader< ::kuksa::val::v2::ActuateResponse, ::kuksa::val::v2::ActuateRequest>* reader, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncClientStreaming(5, context, reader, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
   class WithAsyncMethod_BatchActuate : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_BatchActuate() {
-      ::grpc::Service::MarkMethodAsync(6);
+      ::grpc::Service::MarkMethodAsync(5);
     }
     ~WithAsyncMethod_BatchActuate() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1048,7 +895,7 @@ class VAL final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestBatchActuate(::grpc::ServerContext* context, ::kuksa::val::v2::BatchActuateRequest* request, ::grpc::ServerAsyncResponseWriter< ::kuksa::val::v2::BatchActuateResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1057,7 +904,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_ListMetadata() {
-      ::grpc::Service::MarkMethodAsync(7);
+      ::grpc::Service::MarkMethodAsync(6);
     }
     ~WithAsyncMethod_ListMetadata() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1068,7 +915,7 @@ class VAL final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestListMetadata(::grpc::ServerContext* context, ::kuksa::val::v2::ListMetadataRequest* request, ::grpc::ServerAsyncResponseWriter< ::kuksa::val::v2::ListMetadataResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(7, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1077,7 +924,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_PublishValue() {
-      ::grpc::Service::MarkMethodAsync(8);
+      ::grpc::Service::MarkMethodAsync(7);
     }
     ~WithAsyncMethod_PublishValue() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1088,7 +935,7 @@ class VAL final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestPublishValue(::grpc::ServerContext* context, ::kuksa::val::v2::PublishValueRequest* request, ::grpc::ServerAsyncResponseWriter< ::kuksa::val::v2::PublishValueResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(8, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(7, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1097,7 +944,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_OpenProviderStream() {
-      ::grpc::Service::MarkMethodAsync(9);
+      ::grpc::Service::MarkMethodAsync(8);
     }
     ~WithAsyncMethod_OpenProviderStream() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1108,7 +955,7 @@ class VAL final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestOpenProviderStream(::grpc::ServerContext* context, ::grpc::ServerAsyncReaderWriter< ::kuksa::val::v2::OpenProviderStreamResponse, ::kuksa::val::v2::OpenProviderStreamRequest>* stream, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncBidiStreaming(9, context, stream, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncBidiStreaming(8, context, stream, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1117,7 +964,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_GetServerInfo() {
-      ::grpc::Service::MarkMethodAsync(10);
+      ::grpc::Service::MarkMethodAsync(9);
     }
     ~WithAsyncMethod_GetServerInfo() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1128,10 +975,10 @@ class VAL final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestGetServerInfo(::grpc::ServerContext* context, ::kuksa::val::v2::GetServerInfoRequest* request, ::grpc::ServerAsyncResponseWriter< ::kuksa::val::v2::GetServerInfoResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(10, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(9, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_GetValue<WithAsyncMethod_GetValues<WithAsyncMethod_Subscribe<WithAsyncMethod_SubscribeById<WithAsyncMethod_Actuate<WithAsyncMethod_ActuateStream<WithAsyncMethod_BatchActuate<WithAsyncMethod_ListMetadata<WithAsyncMethod_PublishValue<WithAsyncMethod_OpenProviderStream<WithAsyncMethod_GetServerInfo<Service > > > > > > > > > > > AsyncService;
+  typedef WithAsyncMethod_GetValue<WithAsyncMethod_GetValues<WithAsyncMethod_Subscribe<WithAsyncMethod_SubscribeById<WithAsyncMethod_Actuate<WithAsyncMethod_BatchActuate<WithAsyncMethod_ListMetadata<WithAsyncMethod_PublishValue<WithAsyncMethod_OpenProviderStream<WithAsyncMethod_GetServerInfo<Service > > > > > > > > > > AsyncService;
   template <class BaseClass>
   class WithCallbackMethod_GetValue : public BaseClass {
    private:
@@ -1258,40 +1105,18 @@ class VAL final {
       ::grpc::CallbackServerContext* /*context*/, const ::kuksa::val::v2::ActuateRequest* /*request*/, ::kuksa::val::v2::ActuateResponse* /*response*/)  { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_ActuateStream : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithCallbackMethod_ActuateStream() {
-      ::grpc::Service::MarkMethodCallback(5,
-          new ::grpc::internal::CallbackClientStreamingHandler< ::kuksa::val::v2::ActuateRequest, ::kuksa::val::v2::ActuateResponse>(
-            [this](
-                   ::grpc::CallbackServerContext* context, ::kuksa::val::v2::ActuateResponse* response) { return this->ActuateStream(context, response); }));
-    }
-    ~WithCallbackMethod_ActuateStream() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status ActuateStream(::grpc::ServerContext* /*context*/, ::grpc::ServerReader< ::kuksa::val::v2::ActuateRequest>* /*reader*/, ::kuksa::val::v2::ActuateResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    virtual ::grpc::ServerReadReactor< ::kuksa::val::v2::ActuateRequest>* ActuateStream(
-      ::grpc::CallbackServerContext* /*context*/, ::kuksa::val::v2::ActuateResponse* /*response*/)  { return nullptr; }
-  };
-  template <class BaseClass>
   class WithCallbackMethod_BatchActuate : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithCallbackMethod_BatchActuate() {
-      ::grpc::Service::MarkMethodCallback(6,
+      ::grpc::Service::MarkMethodCallback(5,
           new ::grpc::internal::CallbackUnaryHandler< ::kuksa::val::v2::BatchActuateRequest, ::kuksa::val::v2::BatchActuateResponse>(
             [this](
                    ::grpc::CallbackServerContext* context, const ::kuksa::val::v2::BatchActuateRequest* request, ::kuksa::val::v2::BatchActuateResponse* response) { return this->BatchActuate(context, request, response); }));}
     void SetMessageAllocatorFor_BatchActuate(
         ::grpc::MessageAllocator< ::kuksa::val::v2::BatchActuateRequest, ::kuksa::val::v2::BatchActuateResponse>* allocator) {
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(6);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(5);
       static_cast<::grpc::internal::CallbackUnaryHandler< ::kuksa::val::v2::BatchActuateRequest, ::kuksa::val::v2::BatchActuateResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
@@ -1312,13 +1137,13 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithCallbackMethod_ListMetadata() {
-      ::grpc::Service::MarkMethodCallback(7,
+      ::grpc::Service::MarkMethodCallback(6,
           new ::grpc::internal::CallbackUnaryHandler< ::kuksa::val::v2::ListMetadataRequest, ::kuksa::val::v2::ListMetadataResponse>(
             [this](
                    ::grpc::CallbackServerContext* context, const ::kuksa::val::v2::ListMetadataRequest* request, ::kuksa::val::v2::ListMetadataResponse* response) { return this->ListMetadata(context, request, response); }));}
     void SetMessageAllocatorFor_ListMetadata(
         ::grpc::MessageAllocator< ::kuksa::val::v2::ListMetadataRequest, ::kuksa::val::v2::ListMetadataResponse>* allocator) {
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(7);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(6);
       static_cast<::grpc::internal::CallbackUnaryHandler< ::kuksa::val::v2::ListMetadataRequest, ::kuksa::val::v2::ListMetadataResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
@@ -1339,13 +1164,13 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithCallbackMethod_PublishValue() {
-      ::grpc::Service::MarkMethodCallback(8,
+      ::grpc::Service::MarkMethodCallback(7,
           new ::grpc::internal::CallbackUnaryHandler< ::kuksa::val::v2::PublishValueRequest, ::kuksa::val::v2::PublishValueResponse>(
             [this](
                    ::grpc::CallbackServerContext* context, const ::kuksa::val::v2::PublishValueRequest* request, ::kuksa::val::v2::PublishValueResponse* response) { return this->PublishValue(context, request, response); }));}
     void SetMessageAllocatorFor_PublishValue(
         ::grpc::MessageAllocator< ::kuksa::val::v2::PublishValueRequest, ::kuksa::val::v2::PublishValueResponse>* allocator) {
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(8);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(7);
       static_cast<::grpc::internal::CallbackUnaryHandler< ::kuksa::val::v2::PublishValueRequest, ::kuksa::val::v2::PublishValueResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
@@ -1366,7 +1191,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithCallbackMethod_OpenProviderStream() {
-      ::grpc::Service::MarkMethodCallback(9,
+      ::grpc::Service::MarkMethodCallback(8,
           new ::grpc::internal::CallbackBidiHandler< ::kuksa::val::v2::OpenProviderStreamRequest, ::kuksa::val::v2::OpenProviderStreamResponse>(
             [this](
                    ::grpc::CallbackServerContext* context) { return this->OpenProviderStream(context); }));
@@ -1389,13 +1214,13 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithCallbackMethod_GetServerInfo() {
-      ::grpc::Service::MarkMethodCallback(10,
+      ::grpc::Service::MarkMethodCallback(9,
           new ::grpc::internal::CallbackUnaryHandler< ::kuksa::val::v2::GetServerInfoRequest, ::kuksa::val::v2::GetServerInfoResponse>(
             [this](
                    ::grpc::CallbackServerContext* context, const ::kuksa::val::v2::GetServerInfoRequest* request, ::kuksa::val::v2::GetServerInfoResponse* response) { return this->GetServerInfo(context, request, response); }));}
     void SetMessageAllocatorFor_GetServerInfo(
         ::grpc::MessageAllocator< ::kuksa::val::v2::GetServerInfoRequest, ::kuksa::val::v2::GetServerInfoResponse>* allocator) {
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(10);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(9);
       static_cast<::grpc::internal::CallbackUnaryHandler< ::kuksa::val::v2::GetServerInfoRequest, ::kuksa::val::v2::GetServerInfoResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
@@ -1410,7 +1235,7 @@ class VAL final {
     virtual ::grpc::ServerUnaryReactor* GetServerInfo(
       ::grpc::CallbackServerContext* /*context*/, const ::kuksa::val::v2::GetServerInfoRequest* /*request*/, ::kuksa::val::v2::GetServerInfoResponse* /*response*/)  { return nullptr; }
   };
-  typedef WithCallbackMethod_GetValue<WithCallbackMethod_GetValues<WithCallbackMethod_Subscribe<WithCallbackMethod_SubscribeById<WithCallbackMethod_Actuate<WithCallbackMethod_ActuateStream<WithCallbackMethod_BatchActuate<WithCallbackMethod_ListMetadata<WithCallbackMethod_PublishValue<WithCallbackMethod_OpenProviderStream<WithCallbackMethod_GetServerInfo<Service > > > > > > > > > > > CallbackService;
+  typedef WithCallbackMethod_GetValue<WithCallbackMethod_GetValues<WithCallbackMethod_Subscribe<WithCallbackMethod_SubscribeById<WithCallbackMethod_Actuate<WithCallbackMethod_BatchActuate<WithCallbackMethod_ListMetadata<WithCallbackMethod_PublishValue<WithCallbackMethod_OpenProviderStream<WithCallbackMethod_GetServerInfo<Service > > > > > > > > > > CallbackService;
   typedef CallbackService ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_GetValue : public BaseClass {
@@ -1498,29 +1323,12 @@ class VAL final {
     }
   };
   template <class BaseClass>
-  class WithGenericMethod_ActuateStream : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithGenericMethod_ActuateStream() {
-      ::grpc::Service::MarkMethodGeneric(5);
-    }
-    ~WithGenericMethod_ActuateStream() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status ActuateStream(::grpc::ServerContext* /*context*/, ::grpc::ServerReader< ::kuksa::val::v2::ActuateRequest>* /*reader*/, ::kuksa::val::v2::ActuateResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-  };
-  template <class BaseClass>
   class WithGenericMethod_BatchActuate : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_BatchActuate() {
-      ::grpc::Service::MarkMethodGeneric(6);
+      ::grpc::Service::MarkMethodGeneric(5);
     }
     ~WithGenericMethod_BatchActuate() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1537,7 +1345,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_ListMetadata() {
-      ::grpc::Service::MarkMethodGeneric(7);
+      ::grpc::Service::MarkMethodGeneric(6);
     }
     ~WithGenericMethod_ListMetadata() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1554,7 +1362,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_PublishValue() {
-      ::grpc::Service::MarkMethodGeneric(8);
+      ::grpc::Service::MarkMethodGeneric(7);
     }
     ~WithGenericMethod_PublishValue() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1571,7 +1379,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_OpenProviderStream() {
-      ::grpc::Service::MarkMethodGeneric(9);
+      ::grpc::Service::MarkMethodGeneric(8);
     }
     ~WithGenericMethod_OpenProviderStream() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1588,7 +1396,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_GetServerInfo() {
-      ::grpc::Service::MarkMethodGeneric(10);
+      ::grpc::Service::MarkMethodGeneric(9);
     }
     ~WithGenericMethod_GetServerInfo() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1700,32 +1508,12 @@ class VAL final {
     }
   };
   template <class BaseClass>
-  class WithRawMethod_ActuateStream : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithRawMethod_ActuateStream() {
-      ::grpc::Service::MarkMethodRaw(5);
-    }
-    ~WithRawMethod_ActuateStream() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status ActuateStream(::grpc::ServerContext* /*context*/, ::grpc::ServerReader< ::kuksa::val::v2::ActuateRequest>* /*reader*/, ::kuksa::val::v2::ActuateResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void RequestActuateStream(::grpc::ServerContext* context, ::grpc::ServerAsyncReader< ::grpc::ByteBuffer, ::grpc::ByteBuffer>* reader, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncClientStreaming(5, context, reader, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
   class WithRawMethod_BatchActuate : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_BatchActuate() {
-      ::grpc::Service::MarkMethodRaw(6);
+      ::grpc::Service::MarkMethodRaw(5);
     }
     ~WithRawMethod_BatchActuate() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1736,7 +1524,7 @@ class VAL final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestBatchActuate(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1745,7 +1533,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_ListMetadata() {
-      ::grpc::Service::MarkMethodRaw(7);
+      ::grpc::Service::MarkMethodRaw(6);
     }
     ~WithRawMethod_ListMetadata() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1756,7 +1544,7 @@ class VAL final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestListMetadata(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(7, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1765,7 +1553,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_PublishValue() {
-      ::grpc::Service::MarkMethodRaw(8);
+      ::grpc::Service::MarkMethodRaw(7);
     }
     ~WithRawMethod_PublishValue() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1776,7 +1564,7 @@ class VAL final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestPublishValue(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(8, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(7, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1785,7 +1573,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_OpenProviderStream() {
-      ::grpc::Service::MarkMethodRaw(9);
+      ::grpc::Service::MarkMethodRaw(8);
     }
     ~WithRawMethod_OpenProviderStream() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1796,7 +1584,7 @@ class VAL final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestOpenProviderStream(::grpc::ServerContext* context, ::grpc::ServerAsyncReaderWriter< ::grpc::ByteBuffer, ::grpc::ByteBuffer>* stream, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncBidiStreaming(9, context, stream, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncBidiStreaming(8, context, stream, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1805,7 +1593,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_GetServerInfo() {
-      ::grpc::Service::MarkMethodRaw(10);
+      ::grpc::Service::MarkMethodRaw(9);
     }
     ~WithRawMethod_GetServerInfo() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1816,7 +1604,7 @@ class VAL final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestGetServerInfo(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(10, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(9, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1930,34 +1718,12 @@ class VAL final {
       ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_ActuateStream : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithRawCallbackMethod_ActuateStream() {
-      ::grpc::Service::MarkMethodRawCallback(5,
-          new ::grpc::internal::CallbackClientStreamingHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
-            [this](
-                   ::grpc::CallbackServerContext* context, ::grpc::ByteBuffer* response) { return this->ActuateStream(context, response); }));
-    }
-    ~WithRawCallbackMethod_ActuateStream() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status ActuateStream(::grpc::ServerContext* /*context*/, ::grpc::ServerReader< ::kuksa::val::v2::ActuateRequest>* /*reader*/, ::kuksa::val::v2::ActuateResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    virtual ::grpc::ServerReadReactor< ::grpc::ByteBuffer>* ActuateStream(
-      ::grpc::CallbackServerContext* /*context*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
-  };
-  template <class BaseClass>
   class WithRawCallbackMethod_BatchActuate : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawCallbackMethod_BatchActuate() {
-      ::grpc::Service::MarkMethodRawCallback(6,
+      ::grpc::Service::MarkMethodRawCallback(5,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
                    ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->BatchActuate(context, request, response); }));
@@ -1979,7 +1745,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawCallbackMethod_ListMetadata() {
-      ::grpc::Service::MarkMethodRawCallback(7,
+      ::grpc::Service::MarkMethodRawCallback(6,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
                    ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->ListMetadata(context, request, response); }));
@@ -2001,7 +1767,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawCallbackMethod_PublishValue() {
-      ::grpc::Service::MarkMethodRawCallback(8,
+      ::grpc::Service::MarkMethodRawCallback(7,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
                    ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->PublishValue(context, request, response); }));
@@ -2023,7 +1789,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawCallbackMethod_OpenProviderStream() {
-      ::grpc::Service::MarkMethodRawCallback(9,
+      ::grpc::Service::MarkMethodRawCallback(8,
           new ::grpc::internal::CallbackBidiHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
                    ::grpc::CallbackServerContext* context) { return this->OpenProviderStream(context); }));
@@ -2046,7 +1812,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawCallbackMethod_GetServerInfo() {
-      ::grpc::Service::MarkMethodRawCallback(10,
+      ::grpc::Service::MarkMethodRawCallback(9,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
                    ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetServerInfo(context, request, response); }));
@@ -2149,7 +1915,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_BatchActuate() {
-      ::grpc::Service::MarkMethodStreamed(6,
+      ::grpc::Service::MarkMethodStreamed(5,
         new ::grpc::internal::StreamedUnaryHandler<
           ::kuksa::val::v2::BatchActuateRequest, ::kuksa::val::v2::BatchActuateResponse>(
             [this](::grpc::ServerContext* context,
@@ -2176,7 +1942,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_ListMetadata() {
-      ::grpc::Service::MarkMethodStreamed(7,
+      ::grpc::Service::MarkMethodStreamed(6,
         new ::grpc::internal::StreamedUnaryHandler<
           ::kuksa::val::v2::ListMetadataRequest, ::kuksa::val::v2::ListMetadataResponse>(
             [this](::grpc::ServerContext* context,
@@ -2203,7 +1969,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_PublishValue() {
-      ::grpc::Service::MarkMethodStreamed(8,
+      ::grpc::Service::MarkMethodStreamed(7,
         new ::grpc::internal::StreamedUnaryHandler<
           ::kuksa::val::v2::PublishValueRequest, ::kuksa::val::v2::PublishValueResponse>(
             [this](::grpc::ServerContext* context,
@@ -2230,7 +1996,7 @@ class VAL final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_GetServerInfo() {
-      ::grpc::Service::MarkMethodStreamed(10,
+      ::grpc::Service::MarkMethodStreamed(9,
         new ::grpc::internal::StreamedUnaryHandler<
           ::kuksa::val::v2::GetServerInfoRequest, ::kuksa::val::v2::GetServerInfoResponse>(
             [this](::grpc::ServerContext* context,

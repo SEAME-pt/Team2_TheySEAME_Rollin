@@ -74,12 +74,19 @@ bool systemInfo::start()
     _running = true;
 
     _thread = std::thread([this]() {
+        const QString platform = qEnvironmentVariable("QT_QPA_PLATFORM");
+        const bool skipSubscribe = qEnvironmentVariableIntValue("DISABLE_KUKSA_SUBSCRIBE") == 1;
 
-        std::thread subThread([this]() {
-            if (!_kuksa.subscribeFromKuksa()) {
-                qWarning() << "Failed to subscribe to Kuksa";
-            }
-        });
+        std::unique_ptr<std::thread> subThread;
+        if (!skipSubscribe) {
+            subThread = std::make_unique<std::thread>([this]() {
+                if (!_kuksa.subscribeFromKuksa()) {
+                    qWarning() << "Failed to subscribe to Kuksa";
+                }
+            });
+        } else {
+            qWarning() << "Skipping Kuksa subscribe (DISABLE_KUKSA_SUBSCRIBE=1). Platform:" << platform;
+        }
 
         while (_running) {
             setSpeed(static_cast<int>(_kuksa.getSpeed()));
@@ -87,10 +94,12 @@ bool systemInfo::start()
             setCruiseActive(_kuksa.getCcActive());
             setTargetSpeed(static_cast<int>(_kuksa.getCcTargetSpeed()));
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(30));
         }
 
-        subThread.join();
+        if (subThread && subThread->joinable()) {
+            subThread->join();
+        }
     });
 
     return true;
