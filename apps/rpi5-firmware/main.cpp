@@ -1,30 +1,40 @@
 #include "Evdev.hpp"
-#include "CarKuksa.hpp"
 #include "RemoteControl.hpp"
-#include <stdio.h>
+#include "ActuatorCAN.hpp"
+#include "CAN.hpp"
+#include "ActuatorKuksa.hpp"
 #include <unistd.h>
 #include <stdlib.h>
 #include <poll.h>
 #include <csignal>
+#include <thread>
+#include "ActuatorController.hpp"
 
-bool run = true;
+std::atomic<bool> run = true;
 
 void signal_handler(int signal) {
-	run = false;
+	run.store(false);
 }
 
 int main() {
 	struct pollfd fds[2];
-	Evdev evdev("/dev/input/event6");
+	Evdev evdev("/dev/input/event4");
 	RemoteControl remote(evdev);
-	CarKuksa car(remote);
+	CAN can("can0", 500, 0, 0);
+	//CarActuator *car = new ActuatorCAN(can, remote);
+	CarActuator *car = new ActuatorKuksa(
+		new ActuatorCAN(can, remote)
+	);
+	kuksaLib kuksa;
+	ActuatorController ctrl(car, remote, kuksa);
+	std::thread vhState(&kuksaLib::subscribeFromKuksa, &kuksa);
 
 	std::signal(SIGINT, signal_handler);
-	remote.attach(&car);
+	remote.attach(&ctrl);
 
 	fds[0].fd = evdev.getfd();
 	fds[0].events = POLLIN;
-	while (run) {
+	while (run.load()) {
 		if (poll(fds, 2, 0) < 0) {
 			perror("Error in poll:");
 			break;
@@ -34,5 +44,7 @@ int main() {
 			remote.getEvent();
 		}
 	}
+
+	vhState.join();
 	return (0);
 }
