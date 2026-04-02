@@ -127,6 +127,10 @@ boost::shared_ptr<cc::Sensor> setup_camera(
             std::vector<uchar> buf;
             cv::imencode(".jpg", frame, buf, {cv::IMWRITE_JPEG_QUALITY, 80});
             uint32_t size = htonl(buf.size());
+                    std::cout << "[FRAME] resolucao=" << frame.cols << "x" << frame.rows
+                  << " | jpeg_size=" << buf.size() << " bytes"
+                  << " | timestamp=" << img->GetTimestamp()
+                  << "\n";
             send(sock, &size, 4, 0);
             send(sock, buf.data(), buf.size(), 0);
         }
