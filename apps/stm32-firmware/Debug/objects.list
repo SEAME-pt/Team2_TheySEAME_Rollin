@@ -2,6 +2,7 @@
 "./Core/Src/Communication/communication.o"
 "./Core/Src/Communication/mcp2515.o"
 "./Core/Src/Control/control_queue.o"
+"./Core/Src/Control/cruise_control.o"
 "./Core/Src/Control/steering.o"
 "./Core/Src/Drivers/ina219.o"
 "./Core/Src/Drivers/pca9685.o"

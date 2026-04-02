@@ -3,6 +3,10 @@
 
 #include "main.h"
 
+#ifdef UNIT_TEST
+typedef int HAL_StatusTypeDef;
+typedef int I2C_HandleTypeDef;
+#endif
 // Register addresses
 #define PCA9685_MODE1      0x00
 #define PCA9685_MODE2      0x01

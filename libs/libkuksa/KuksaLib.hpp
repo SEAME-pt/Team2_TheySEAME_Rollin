@@ -115,6 +115,8 @@ public:
     kuksaLib();
     ~kuksaLib();
 
+	void asyncSub();
+
     bool subscribeFromKuksa();
 
     template<typename T>
