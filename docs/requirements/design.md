@@ -413,7 +413,7 @@ Needs: impl, utest
 ```
 `dsn~cruise-control-activation-command~1`
 
-Status: proposed
+Status: draft
 
 The cruise control system shall activate only when the driver actuates the `+` cruise control command and all activation conditions are satisfied.
 
@@ -426,7 +426,7 @@ Needs: impl, itest
 ```
 `dsn~cruise-control-activation-conditions~1`
 
-Status: proposed
+Status: draft
 
 The cruise control system shall only allow activation if all of the following conditions are simultaneously satisfied: target speed is within the valid range [15, 130] hm/h, the brake pedal and accelerator pedal are not actuated, and no active fault codes related vehicle speed sensor.
 
@@ -439,7 +439,7 @@ Needs: impl, itest
 ```
 `dsn~cruise-control-initial-target-speed~1`
 
-Status: proposed
+Status: draft
 
 Upon cruise control activation, the system shall store the current vehicle speed as the initial target speed.
 
@@ -453,7 +453,7 @@ Needs: impl, itest
 
 `dsn~cruise-control-target-speed-increment~1`
 
-Status: proposed
+Status: draft
 
 If the driver actuates the `+` cruise control command while cruise control is active, the system shall increase the active target speed by 1 hm/h for each command actuation.
 
@@ -466,7 +466,7 @@ Needs: impl, itest
 ```
 `dsn~cruise-control-target-speed-decrement~1`
 
-Status: proposed
+Status: draft
 
 If the driver actuates the `-` cruise control command while cruise control is active, the system shall decrease the active target speed by 1 hm/h for each command actuation.
 

@@ -6,11 +6,7 @@
 #include <time.h>
 #include "../Drivers/pca9685.h"
 #include "../Sensors/sensors.h"
-/*----------------------------------------CRUISE_CONTROL --------------------------------------------*/
 
-
-
-/*----------------------------------------PID --------------------------------------------*/
 #define PID_KP 50.0f
 #define PID_KI 12.3f
 #define PID_KD 0.002f

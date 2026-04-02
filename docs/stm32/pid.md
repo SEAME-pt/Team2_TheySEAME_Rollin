@@ -128,9 +128,9 @@ response tests.
 
 The final gains used in the controller are:
 
-- **Kp = 9.0**
-- **Ki = 0.02**
-- **Kd = 0.05**
+- **Kp = 50.0**
+- **Ki = 12.3**
+- **Kd = 0.002**
 
 These parameters provide:
 
