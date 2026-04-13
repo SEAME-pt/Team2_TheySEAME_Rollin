@@ -12,10 +12,10 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 | Field | Details |
 |-------|----------|
-| **Sprint Number** | Sprint 11 |
-| **Sprint Goal** | Achieve full PID control and integrate/train YOLO detection model with HAILO. |
-| **Sprint Duration** | Mar 23 – Apr 3 2026 |
-| **Focus Areas** | PID, YOLO, CARLA, Deep Learning |
+| **Sprint Number** | Sprint 12 |
+| **Sprint Goal** | Perform Lap Test in CARLA. |
+| **Sprint Duration** | Apr 13 – Apr 24 2026 |
+| **Focus Areas** | PID, YOLO, CARLA, Model Training |
 
 
 ## 📅 Scrum Team
