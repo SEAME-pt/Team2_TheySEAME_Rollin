@@ -1,3 +1,9 @@
+#ifndef __HAL_STUBS_H__
+#define __HAL_STUBS_H__
+typedef int HAL_StatusTypeDef;
+typedef int I2C_HandleTypeDef;
+#endif
+
 #include "sensors.h"
 #include "../../Core/Src/Sensors/sensors_queue.h"
 #include <stdio.h>
@@ -20,6 +26,7 @@ void __enable_irq(void) { }
 #ifndef TX_WAIT_FOREVER
 #define TX_WAIT_FOREVER ((ULONG)0xffffffffUL)
 #endif
+
 
 /* Define global variables referenced by SUT */
 VehicleData_t g_vehicle_data = {0};

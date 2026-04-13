@@ -1,47 +1,50 @@
-#include "CAN.hpp"
 #include "Evdev.hpp"
-#include "CarCAN.hpp"
 #include "RemoteControl.hpp"
-#include <stdio.h>
+#include "ActuatorCAN.hpp"
+#include "CAN.hpp"
+#include "ActuatorKuksa.hpp"
 #include <unistd.h>
 #include <stdlib.h>
 #include <poll.h>
 #include <csignal>
+#include <thread>
+#include "ActuatorController.hpp"
 
-bool run = true;
+std::atomic<bool> run = true;
 
 void signal_handler(int signal) {
-	run = false;
+	run.store(false);
 }
 
 int main() {
 	struct pollfd fds[2];
-	CAN can("can0", 500, 0, 0);
-	Evdev evdev("/dev/input/event6");
+	Evdev evdev("/dev/input/event4");
 	RemoteControl remote(evdev);
-	CarCAN car(can, remote);
+	CAN can("can0", 500, 0, 0);
+	//CarActuator *car = new ActuatorCAN(can, remote);
+	CarActuator *car = new ActuatorKuksa(
+		new ActuatorCAN(can, remote)
+	);
+	kuksaLib kuksa;
+	ActuatorController ctrl(car, remote, kuksa);
+	std::thread vhState(&kuksaLib::subscribeFromKuksa, &kuksa);
 
 	std::signal(SIGINT, signal_handler);
-	remote.attach(&car);
+	remote.attach(&ctrl);
 
-	fds[0].fd = can.getSocketFd();
+	fds[0].fd = evdev.getfd();
 	fds[0].events = POLLIN;
-	fds[1].fd = evdev.getfd();
-	fds[1].events = POLLIN;
-	while (run) {
+	while (run.load()) {
 		if (poll(fds, 2, 0) < 0) {
 			perror("Error in poll:");
 			break;
 		}
 		if (fds[0].revents & POLLIN) {
-			//printf("Receiving frame\n");
-			struct can_frame frame;
-			can.readFrame(frame);
-		}
-		if (fds[1].revents & POLLIN) {
 			evdev.readEvent();
 			remote.getEvent();
 		}
 	}
+
+	vhState.join();
 	return (0);
 }

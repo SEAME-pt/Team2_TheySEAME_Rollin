@@ -49,9 +49,9 @@ uint32_t ControlQueue_GetDrops(void) {
 UINT ControlQueue_GetOccupancy(UINT *count) {
     /* Returns the current number of messages in the queue via tx_queue_info_get */
     if (count == NULL) return 1; /* invalid param */
-    UINT created_count = 0;
+    ULONG created_count = 0;
     UINT status = tx_queue_info_get(&control_q, NULL, &created_count, NULL, NULL, NULL, NULL);
     if (status != TX_SUCCESS) return status;
-    *count = created_count;
+    *count = (UINT)created_count;
     return TX_SUCCESS;
 }

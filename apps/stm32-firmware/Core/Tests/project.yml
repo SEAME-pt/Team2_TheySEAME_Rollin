@@ -99,6 +99,11 @@
     - -:test/support
   :source:
     - ../Src/**
+    - ../Src/Sensors/speed.c
+    - ../Src/Sensors/sensors_queue.c
+    - ../Src/Control/control_queue.c
+    - ../Src/Communication/mcp2515.c
+    - ../Src/Control/cruise_control.c
   :include:
     - ../../Core/Inc/** # In simple projects, this entry often duplicates :source
     - ../../Core/Src/** # In simple projects, this entry often duplicates :source
