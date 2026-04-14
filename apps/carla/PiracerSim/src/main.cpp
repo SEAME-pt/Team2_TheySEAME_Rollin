@@ -34,7 +34,7 @@ static int         g_sock    = -1;
 static std::string RPI_IP    = "10.21.221.17";
 static int         RPI_PORT  = 9999;
 
-// Fila com no máximo 1 frame — descarta frames antigas automaticamente
+// Queue with at most 1 frame — automatically discards old frames
 static std::queue<std::vector<uint8_t>> g_frame_queue;
 static std::mutex                        g_queue_mtx;
 static std::condition_variable           g_queue_cv;
@@ -52,7 +52,7 @@ void sender_thread_func(int sock) {
             });
             if (!g_sender_running && g_frame_queue.empty()) break;
 
-            // Descarta frames acumuladas; mantém só a mais recente
+            // Discard accumulated frames; keep only the most recent
             while (g_frame_queue.size() > 1)
                 g_frame_queue.pop();
 
@@ -71,7 +71,7 @@ void sender_thread_func(int sock) {
 }
 
 void handle_sigint(int) {
-    std::cout << "\nSIGINT: a destruir actores...\n";
+    std::cout << "\nSIGINT: destroying actors...\n";
     g_sender_running = false;
     g_queue_cv.notify_all();
     if (g_rgb_camera) g_rgb_camera->Destroy();
@@ -80,6 +80,7 @@ void handle_sigint(int) {
     std::exit(0);
 }
 
+// Setup CARLA world with synchronous mode and fixed delta time
 cc::World setup_world(cc::Client& client) {
     auto world    = client.GetWorld();
     auto settings = world.GetSettings();
@@ -89,34 +90,38 @@ cc::World setup_world(cc::Client& client) {
     return world;
 }
 
+// Try to connect to the RPi, retrying every 2 seconds if it fails
 int connect_rpi(const std::string& ip, int port) {
-    int sock = socket(AF_INET, SOCK_STREAM, 0);
-    int flag = 1;
-    setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof(flag));
+    while (true) {
+        int sock = socket(AF_INET, SOCK_STREAM, 0);
+        int flag = 1;
+        setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof(flag));
 
-    sockaddr_in addr{};
-    addr.sin_family = AF_INET;
-    addr.sin_port   = htons(port);
-    inet_pton(AF_INET, ip.c_str(), &addr.sin_addr);
-    if (connect(sock, (sockaddr*)&addr, sizeof(addr)) < 0) {
-        std::cerr << "Erro ao conectar ao RPi!\n";
-        close(sock);
-        return -1;
+        sockaddr_in addr{};
+        addr.sin_family = AF_INET;
+        addr.sin_port   = htons(port);
+        inet_pton(AF_INET, ip.c_str(), &addr.sin_addr);
+        if (connect(sock, (sockaddr*)&addr, sizeof(addr)) < 0) {
+            std::cerr << "[ERROR] Failed to connect to RPi! Retrying in 2 seconds...\n";
+            close(sock);
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+            continue;
+        }
+        std::cout << "[INFO] Connected to RPi!\n";
+        return sock;
     }
-    std::cout << "Ligado ao RPi!\n";
-    return sock;
 }
 
 boost::shared_ptr<cc::Vehicle> spawn_vehicle(cc::World& world) {
     auto blueprints  = world.GetBlueprintLibrary();
     auto vehicle_bp  = blueprints->Find("vehicle.nissan.micra");
-    if (!vehicle_bp) throw std::runtime_error("blueprint do veículo não encontrado");
+    if (!vehicle_bp) throw std::runtime_error("vehicle blueprint not found");
 
     auto spawn_points = world.GetMap()->GetRecommendedSpawnPoints();
-    if (spawn_points.empty()) throw std::runtime_error("sem spawn points");
+    if (spawn_points.empty()) throw std::runtime_error("no spawn points");
 
     auto actor   = world.SpawnActor(*vehicle_bp, spawn_points[1]);
-    if (!actor)  throw std::runtime_error("falhou spawn do veículo");
+    if (!actor)  throw std::runtime_error("vehicle spawn failed");
 
     auto vehicle = boost::static_pointer_cast<cc::Vehicle>(actor);
     vehicle->ApplyPhysicsControl(vehicle->GetPhysicsControl());
@@ -130,7 +135,7 @@ boost::shared_ptr<cc::Sensor> setup_camera(
 {
     auto blueprints  = world.GetBlueprintLibrary();
     auto rgb_bp_ptr  = blueprints->Find("sensor.camera.rgb");
-    if (!rgb_bp_ptr) throw std::runtime_error("blueprint câmera não encontrado");
+    if (!rgb_bp_ptr) throw std::runtime_error("camera blueprint not found");
 
     auto rgb_bp = *rgb_bp_ptr;
     rgb_bp.SetAttribute("image_size_x", "320");
@@ -183,6 +188,7 @@ boost::shared_ptr<cc::Sensor> setup_camera(
 }
 
 void update_spectator(cc::World& world, boost::shared_ptr<cc::Vehicle> vehicle) {
+    // Smoothly update spectator camera to follow the vehicle
     static carla::geom::Location smooth_loc = vehicle->GetTransform().location;
     auto vt  = vehicle->GetTransform();
     auto fwd = vt.GetForwardVector();
@@ -220,7 +226,7 @@ int main(int argc, char* argv[]) {
         if (std::string(argv[i]) == "--auto")   autopilot_mode = true;
         if (std::string(argv[i]) == "--manual") autopilot_mode = false;
     }
-    std::cout << "Modo: " << (autopilot_mode ? "AUTOPILOT" : "MANUAL") << "\n";
+    std::cout << "Mode: " << (autopilot_mode ? "AUTOPILOT" : "MANUAL") << "\n";
     signal(SIGINT, handle_sigint);
 
     try {
