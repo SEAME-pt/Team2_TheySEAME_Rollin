@@ -23,7 +23,6 @@ CAN::CAN(const std::string &interface, const unsigned int bitrate,
 
 CAN::~CAN() {
 	close(_sock);
-	can_do_stop(_interface.c_str());
 	std::cout << "Closed CAN socket" << std::endl;
 }
 

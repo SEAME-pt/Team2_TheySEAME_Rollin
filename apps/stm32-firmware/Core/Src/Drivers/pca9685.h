@@ -1,8 +1,12 @@
-#ifndef DRIVERS_H
-#define DRIVERS_H
+#ifndef PCA9685_H
+#define PCA9685_H
 
 #include "main.h"
 
+#ifdef UNIT_TEST
+typedef int HAL_StatusTypeDef;
+typedef int I2C_HandleTypeDef;
+#endif
 // Register addresses
 #define PCA9685_MODE1      0x00
 #define PCA9685_MODE2      0x01
@@ -12,8 +16,6 @@
 #define PCA9685_ALLLED_ON_H  0xFB
 #define PCA9685_ALLLED_OFF_L 0xFC
 #define PCA9685_ALLLED_OFF_H 0xFD
-#define PCA9685_LED0_ON_L      0x06
-
 // PCA9685 Addresses (8-bit format: 7-bit address << 1)
 // Scanner finds these at 7-bit 0x40 and 0x60
 #define PCA9685_ADDR_STEERING  (0x40 << 1)  // = 0x80
@@ -30,7 +32,6 @@
  * @param device_name Human-readable device name used in debug prints
  *
  * Requirement traceability:
- * [impl->dsn~control-actuation-commands~1]
  *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR / other HAL status
  */
@@ -50,7 +51,6 @@ HAL_StatusTypeDef PCA9685_Init_Device(I2C_HandleTypeDef *hi2c, uint8_t device_ad
  * @param name2 Human-readable name for second device
  *
  * Requirement traceability:
- * [impl->dsn~control-actuation-commands~1]
  *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR / other HAL status
  */
@@ -69,7 +69,6 @@ HAL_StatusTypeDef PCA9685_Init_Multiple(I2C_HandleTypeDef *hi2c, uint8_t addr1, 
  * @param off 12-bit OFF time
  *
  * Requirement traceability:
- * [impl->dsn~control-actuation-commands~1]
  *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR / other HAL status
  */

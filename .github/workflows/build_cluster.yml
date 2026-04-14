@@ -4,6 +4,7 @@ permissions:
   contents: write 
   
 on:
+  workflow_call:
   workflow_dispatch:
   push:
     branches:
@@ -40,12 +41,9 @@ jobs:
           docker cp $CONTAINER_ID:/build/project/qtAppExec ./qtApp
           docker rm $CONTAINER_ID
 
-      - name: Create GitHub Release and upload binary
-        uses: softprops/action-gh-release@v1
+      - name: Set up Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: cluster
           name: Cluster
-          files: |
-            qtApp
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          path: ./qtApp
+          retention-days: 30

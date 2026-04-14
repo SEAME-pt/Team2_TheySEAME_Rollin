@@ -3,8 +3,28 @@
 #include "IEvdev.hpp"
 #include <cstdint>
 #include <unordered_map>
+#include "Subject.hpp"
 
-class RemoteControl {
+enum Keys {
+	JoyZ = ABS_Z,
+	JoyY = ABS_Y,
+	Start = BTN_START,
+	L2 = BTN_TL2,
+	X = BTN_X,
+	B = BTN_B,
+	Y = BTN_Y,
+	A = BTN_A,
+	DpadY = ABS_HAT0Y,
+};
+
+/**
+ * @class RemoteControl
+ * @brief RemoteControl class
+ *
+ * The RemoteControl takes input from the linux evdev interface and notifies
+ * actions on input
+ */
+class RemoteControl : public Subject {
 public:
 
 	/**
@@ -14,7 +34,6 @@ public:
 	 * Also receives an evdev interface
 	 *
 	 * @param evdev interface reference
-	 *
 	 */
 	RemoteControl(IEvdev &ev);
 
@@ -22,7 +41,6 @@ public:
 	 * @brief RemoteControl destructor
 	 *
 	 * Destructs the RemoteControl
-	 *
 	 */
 	~RemoteControl();
 
@@ -34,9 +52,8 @@ public:
 	 * @param key keycode
 	 *
 	 * @return Current key value
-	 *
 	 */
-	uint8_t getkey(const uint16_t key) const;
+	short getkey(const uint16_t key) const;
 
 	/**
 	 * @brief Set a Gamepad key value
@@ -45,9 +62,17 @@ public:
 	 *
 	 * @param key keycode
 	 * @param value to set the key to (0|1)
-	 *
 	 */
-	void setkey(const uint16_t keycode, const uint8_t value);
+	void setkey(const uint16_t keycode, const short value);
+
+
+	/**
+	 * @brief Get gamepad input
+	 *
+	 * This functions loops through the event queue in Evdev and
+	 * notifies whenever the right input is pressed
+	 */
+	void getEvent();
 
 	/**
 	 * @brief Get evedev
@@ -55,11 +80,10 @@ public:
 	 * Returns the evdev used to poll events
 	 *
 	 * @return reference to evdev interface
-	 *
 	 */
 	const IEvdev &getEvdev() const;
 
 private:
 	IEvdev &_ev;
-	std::unordered_map<uint16_t, uint8_t> _state;
+	std::unordered_map<uint16_t, short> _state;
 };

@@ -5,6 +5,21 @@
 
 extern char uart_buf[64];
 
+#define PCA9685_PRESCALE_SERVO_50HZ      121U
+#define PCA9685_PRESCALE_DC_1017HZ       5U
+
+static const char *PCA9685_PrescaleDescription(uint8_t prescale) {
+    if (prescale == PCA9685_PRESCALE_SERVO_50HZ) {
+        return "50Hz";
+    }
+
+    if (prescale == PCA9685_PRESCALE_DC_1017HZ) {
+        return "~1017Hz";
+    }
+
+    return "custom";
+}
+
 // Software reset routine used internally by the driver. API documented in header.
 static HAL_StatusTypeDef PCA9685_SoftwareReset(I2C_HandleTypeDef *hi2c) {
     uint8_t reset_cmd = 0x06;  // SWRST command
@@ -46,7 +61,7 @@ static HAL_StatusTypeDef PCA9685_ReadReg(I2C_HandleTypeDef *hi2c, uint8_t device
 }
 
 // Initialize PCA9685 device without software reset (for multiple devices)
-static HAL_StatusTypeDef PCA9685_Init_Device_NoReset(I2C_HandleTypeDef *hi2c, uint8_t addr, const char* name) {
+static HAL_StatusTypeDef PCA9685_Init_Device_NoReset(I2C_HandleTypeDef *hi2c, uint8_t addr, const char* name, uint8_t prescale) {
     HAL_StatusTypeDef ret;
     char msg[80];
     
@@ -62,9 +77,10 @@ static HAL_StatusTypeDef PCA9685_Init_Device_NoReset(I2C_HandleTypeDef *hi2c, ui
         return ret;
     }
     
-    // Step 2: Set prescaler for 50Hz (must be in sleep mode)
-    Debug_Print("  Step 2: PRESCALE=121 (50Hz)...\r\n");
-    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_PRESCALE, 121);
+    // Step 2: Set prescaler while the oscillator is stopped.
+    snprintf(msg, sizeof(msg), "  Step 2: PRESCALE=%u (%s)...\r\n", prescale, PCA9685_PrescaleDescription(prescale));
+    Debug_Print(msg);
+    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_PRESCALE, prescale);
     if (ret != HAL_OK) {
         snprintf(msg, sizeof(msg), "  FAILED: %d\r\n", ret);
         Debug_Print(msg);
@@ -110,14 +126,13 @@ HAL_StatusTypeDef PCA9685_Init_Multiple(I2C_HandleTypeDef *hi2c, uint8_t addr1, 
     }
     tx_thread_sleep(5);  // 50ms for all PCA9685 chips to reset
     
-    // Initialize first device (without reset)
-    ret = PCA9685_Init_Device_NoReset(hi2c, addr1, name1);
+    // Steering servo must run at 50Hz, while the DC throttle controller can use a higher PWM frequency.
+    ret = PCA9685_Init_Device_NoReset(hi2c, addr1, name1, PCA9685_PRESCALE_SERVO_50HZ);
     if (ret != HAL_OK) {
         return ret;
     }
     
-    // Initialize second device (without reset)
-    ret = PCA9685_Init_Device_NoReset(hi2c, addr2, name2);
+    ret = PCA9685_Init_Device_NoReset(hi2c, addr2, name2, PCA9685_PRESCALE_DC_1017HZ);
     if (ret != HAL_OK) {
         return ret;
     }
@@ -157,9 +172,9 @@ HAL_StatusTypeDef PCA9685_Init_Device(I2C_HandleTypeDef *hi2c, uint8_t addr, con
         return ret;
     }
     
-    // Step 2: Set prescaler for 50Hz (must be in sleep mode)
+    // Step 2: Default single-device init stays at 50Hz, which is correct for servos.
     Debug_Print("  Step 2: PRESCALE=121 (50Hz)...\r\n");
-    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_PRESCALE, 121);
+    ret = PCA9685_WriteReg(hi2c, addr, PCA9685_PRESCALE, PCA9685_PRESCALE_SERVO_50HZ);
     if (ret != HAL_OK) {
         snprintf(msg, sizeof(msg), "  FAILED: %d\r\n", ret);
         Debug_Print(msg);

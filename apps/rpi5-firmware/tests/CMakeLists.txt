@@ -11,8 +11,6 @@ include_directories(PUBLIC
 	${CMAKE_SOURCE_DIR}/../../libs/googletest/include
 )
 
-if(CMAKE_CROSSCOMPILING)
-	add_subdirectory(integration)
-else()
-	add_subdirectory(unit)
-endif()
+add_subdirectory(unit)
+
+enable_testing()

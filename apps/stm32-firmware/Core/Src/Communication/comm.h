@@ -29,11 +29,6 @@
  * @param thread_input Thread input parameter provided by the RTOS (typically a pointer or id). Can be NULL if unused.
  *
  * Requirement traceability:
- * [impl->dsn~can-init~1]
- * [impl->dsn~can-telemetry-tx~1]
- * [impl->dsn~can-telemetry-rx~1]
- * [impl->dsn~can-error-handling~1]
- * [impl->dsn~can-rate-limit~1]
  *
  * @return void
  */

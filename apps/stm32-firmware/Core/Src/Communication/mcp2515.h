@@ -39,11 +39,15 @@
 #define MCP2515_REG_RXB0CTRL    0x60
 #define MCP2515_REG_RXB0SIDH    0x61
 #define MCP2515_REG_RXB0SIDL    0x62
+#define MCP2515_REG_RXB0EID8    0x63
+#define MCP2515_REG_RXB0EID0    0x64
 #define MCP2515_REG_RXB0DLC     0x65
 #define MCP2515_REG_RXB0DATA    0x66
 #define MCP2515_REG_RXB1CTRL    0x70  // RX Buffer 1 Control
 #define MCP2515_REG_RXB1SIDH    0x71
 #define MCP2515_REG_RXB1SIDL    0x72
+#define MCP2515_REG_RXB1EID8    0x73
+#define MCP2515_REG_RXB1EID0    0x74
 #define MCP2515_REG_RXB1DLC     0x75
 #define MCP2515_REG_RXB1DATA    0x76
 
@@ -79,7 +83,6 @@ typedef enum {
  * @param speed CAN speed selection (see MCP2515_Speed_t)
  *
  * Requirement traceability:
- * [impl->dsn~can-init~1]
  *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR / other HAL status
  */
@@ -102,10 +105,6 @@ HAL_StatusTypeDef MCP2515_Init(MCP2515_Speed_t speed);
  * @param length Number of payload bytes (0..8)
  *
  * @par Requirement traceability:
- * [impl->dsn~can-telemetry-tx~1]
- * [impl->dsn~can-error-handling~1]
- * [impl->dsn~can-rate-limit~1]
- * [impl->dsn~can-logging-policy~1]
  *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR
  */
@@ -120,7 +119,6 @@ HAL_StatusTypeDef MCP2515_SendMessage(uint16_t can_id, uint8_t *data, uint8_t le
  * @param percentage Battery charge percentage (0..100)
  *
  * Requirement traceability:
- * [impl->dsn~can-telemetry-tx~1]
  *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR
  */
@@ -133,7 +131,6 @@ HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage);  // Convenience wrapp
  * telemetry format (decimeters/second) and transmits using the MCP2515.
  *
  * Requirement traceability:
- * [impl->dsn~can-telemetry-tx~1]
  *
  * @param speed_ms Vehicle speed in meters per second
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR
@@ -149,7 +146,6 @@ HAL_StatusTypeDef MCP2515_SendSpeed(float speed_ms);  // Convenience wrapper for
  * @param mode One of MCP2515_MODE_* values
  *
  * Requirement traceability:
- * [impl->dsn~can-init~1]
  *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR
  */
@@ -166,11 +162,10 @@ HAL_StatusTypeDef MCP2515_SetMode(uint8_t mode);
  * @param length Pointer to variable that will receive the payload length
  *
  * Requirement traceability:
- * [impl->dsn~can-telemetry-rx~1]
  *
  * @return int Returns 1 if a message was received, 0 if no message is available, negative on error
  */
-int MCP2515_ReceiveMessage(uint16_t *can_id, uint8_t *data, uint8_t *length);  // Returns 1 if message received, 0 otherwise
+int MCP2515_ReceiveMessage(uint32_t *can_id, uint8_t *data, uint8_t *length);  // Returns 1 if message received, 0 otherwise
 
 /**
  * @brief Poll and handle received messages.
@@ -179,8 +174,6 @@ int MCP2515_ReceiveMessage(uint16_t *can_id, uint8_t *data, uint8_t *length);  /
  * them and dispatch updates to the rest of the system.
  *
  * Requirement traceability:
- * [impl->dsn~can-telemetry-rx~1]
- * [impl->dsn~can-error-handling~1]
  */
 void MCP2515_CheckForMessages(void);  // Check and print any received messages
 
@@ -191,7 +184,6 @@ void MCP2515_CheckForMessages(void);  // Check and print any received messages
  * production builds unless explicitly enabled.
  *
  * Requirement traceability:
- * [impl->dsn~can-logging-policy~1]
  */
 void MCP2515_PrintStatus(void);  // Diagnostic function
 
@@ -202,7 +194,6 @@ void MCP2515_PrintStatus(void);  // Diagnostic function
  * production builds unless explicitly enabled.
  *
  * Requirement traceability:
- * [impl->dsn~can-logging-policy~1]
  */
 void MCP2515_PrintDetailedStatus(void);  // Verbose diagnostic with RX buffer check
 
@@ -213,7 +204,6 @@ void MCP2515_PrintDetailedStatus(void);  // Verbose diagnostic with RX buffer ch
  * dedicated test flows.
  *
  * Requirement traceability:
- * [impl->dsn~can-init~1]
  */
 void MCP2515_TestConnection(void);  // Test SPI connection
 
@@ -225,7 +215,6 @@ void MCP2515_TestConnection(void);  // Test SPI connection
  * Used during initialization and error recovery to force device reset.
  *
  * Requirement traceability:
- * [impl->dsn~can-init~1]
  */
 void MCP2515_Reset(void);
 

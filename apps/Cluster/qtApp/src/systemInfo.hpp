@@ -1,7 +1,5 @@
 #pragma once
 #include <QObject>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
 #include <QDebug>
 #include <iostream>
 #include <QJsonDocument>
@@ -13,7 +11,7 @@
 #include <atomic>
 #include "../../../middleware/kuksa/val/v2/val.grpc.pb.h"
 #include "../../../middleware/kuksa/val/v2/types.pb.h"
-
+#include "../middleware/kuksa/val/v2/KuksaLib.hpp"
 
 using kuksa::val::v2::VAL;
 
@@ -29,8 +27,6 @@ public:
      * @param parent Optional parent QObject
      *
      * Requirement traceability:
-     * [impl->dsn~cluster-battery~1]
-     * [impl->dsn~cluster-speed~1]
      *
      */
     explicit systemInfo(QObject *parent = nullptr);
@@ -44,8 +40,6 @@ public:
      * @brief Initializes the data collection thread and starts listening for updates from Kuksa.
      *
      * Requirement traceability:
-     * [impl->dsn~cluster-battery~1]
-     * [impl->dsn~cluster-speed~1]
      *
      * @return true if started successfully, false otherwise
      */
@@ -57,8 +51,6 @@ public:
      * @param out Output integer
      *
      * Requirement traceability:
-     * [impl->dsn~cluster-battery~1]
-     * [impl->dsn~cluster-speed~1]
      *
      * @return true if conversion is successful
      */
@@ -69,7 +61,6 @@ public:
      * @param battery Battery value
      *
      * Requirement traceability:
-     * [impl->dsn~cluster-battery~1]
      *
      */
     void setBattery(int battery);
@@ -78,7 +69,6 @@ public:
      * @brief Returns the current battery value.
      *
      * Requirement traceability:
-     * [impl->dsn~cluster-battery~1]
      *
      * @return int battery value
      */
@@ -89,7 +79,6 @@ public:
      * @param speed Speed value
      *
      * Requirement traceability:
-     * [impl->dsn~cluster-speed~1]
      *
      */
     void setSpeed(int speed);
@@ -98,7 +87,6 @@ public:
      * @brief Returns the current speed value.
      *
      * Requirement traceability:
-     * [impl->dsn~cluster-speed~1]
      *
      * @return int speed value
      */
@@ -107,13 +95,10 @@ signals:
     void speedUpdated(int speed);
     void batteryUpdated(int battery);
 
-public slots:
-    bool updateFromKuksa();
-
 private:
-    QString _server = "0.0.0.0:55555";
-    int _battery = -0;
-    int _speed = 0;
+    std::atomic<int> _battery{0};
+    std::atomic<int> _speed{0};
+    kuksaLib _kuksa;
     std::thread _thread;
     std::atomic_bool _running{false};
 };
