@@ -5,6 +5,7 @@
         <file>Screen01.ui.qml</file>
         <file>TestCarAnimation.qml</file>
         <file>images/CC_enabled.png</file>
+        <file>images/CC_enabled_green.png</file>
         <file>images/CC_disabled.png</file>
         <file>images/CC.png</file>
         <file>images/cluster.png</file>

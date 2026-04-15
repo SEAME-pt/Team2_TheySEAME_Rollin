@@ -147,28 +147,28 @@ Rectangle {
         border.color: "transparent"
         z: 10
 
-        Column {
+        Row {
             anchors.centerIn: parent
-            spacing: 5
+            spacing: 8
             anchors.horizontalCenter: parent.horizontalCenter
 
             Image {
                 id: ccImage
-                source: systemInfo && systemInfo.cruiseActive ? "file:///home/team2/Documents/hugo-folder/Team2_TheySEAME_Rollin/apps/Cluster/qtApp/qml/images/CC_enabled.png" : "file:///home/team2/Documents/hugo-folder/Team2_TheySEAME_Rollin/apps/Cluster/qtApp/qml/images/CC_disabled.png"
+                source: systemInfo && systemInfo.cruiseActive ? "file:///home/team2/Documents/hugo-folder/Team2_TheySEAME_Rollin/apps/Cluster/qtApp/qml/images/CC_enabled_green.png" : "file:///home/team2/Documents/hugo-folder/Team2_TheySEAME_Rollin/apps/Cluster/qtApp/qml/images/CC_disabled.png"
                 fillMode: Image.PreserveAspectFit
                 width: 40
                 height: 40
-                anchors.horizontalCenter: parent.horizontalCenter
             }
 
             Text {
-                text: systemInfo && systemInfo.cruiseActive ? systemInfo.targetSpeedDisplay : ""
+                text: systemInfo ? systemInfo.targetSpeedDisplay : "---"
+                width: 70
                 font.pixelSize: 18
                 font.family: "BaseNeueTrial-Bold"
                 font.bold: true
-                color: systemInfo && systemInfo.cruiseActive ? "#e74c3c" : "#95a5a6"
-                anchors.horizontalCenter: parent.horizontalCenter
-                visible: systemInfo && systemInfo.cruiseActive
+                color: "#000000"
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
             }
         }
     }

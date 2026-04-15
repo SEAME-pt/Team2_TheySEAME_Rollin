@@ -43,6 +43,7 @@ void systemInfo::setCruiseActive(bool active)
     if (_cruiseActive == active) return;
     _cruiseActive = active;
     emit cruiseActiveUpdated(active);
+    emit targetSpeedUpdated(_targetSpeed);
 }
 
 bool systemInfo::getCruiseActive() const
