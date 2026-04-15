@@ -11,6 +11,7 @@ public:
 
 	void createPerspectiveMatrices(float *srcRaw, float *dstRaw);
 	void warp(cv::Mat *res);
+	cv::Mat &getImg();
 
 private:
 	

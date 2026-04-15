@@ -20,3 +20,7 @@ void Bev::createPerspectiveMatrices(float *srcRaw, float *dstRaw) {
 void Bev::warp(cv::Mat *res) {
 	cv::warpPerspective(_img, *res, _M, _img.size(), cv::INTER_NEAREST);
 }
+
+cv::Mat &Bev::getImg() {
+	return (_img);
+}
