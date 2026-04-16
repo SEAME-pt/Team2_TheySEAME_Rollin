@@ -11,6 +11,8 @@ set(SOURCES
 	Bev.cpp
 	Lka.cpp
 	Lka.hpp
+	Frame.hpp
+	Frame.cpp
 )
 
 include_directories(comms mode_manager/remote middleware /home/rumachad/Seame/agl-app/sdk/sysroots/aarch64-agl-linux/usr/include/opencv4/ .)

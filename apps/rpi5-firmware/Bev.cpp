@@ -1,7 +1,8 @@
 #include "Bev.hpp"
 
-Bev::Bev(float imgH, float imgW, void *data) {
+Bev::Bev(float imgH, float imgW, void *data, const int fov) {
 	_img = cv::Mat(imgH, imgW, CV_32F, data);
+	_fov = fov;
 }
 
 Bev::Bev(const cv::Mat &img) {
