@@ -69,13 +69,13 @@ static int8_t clamp_i8(int16_t value, int8_t min_value, int8_t max_value) {
 
 /* Helper: safely snapshot global vehicle data with mutex protection */
 static int snapshot_vehicle_data(VehicleData_t *out) {
-    if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-        *out = g_vehicle_data;
-        tx_mutex_put(&g_vehicle_data_mutex);
-        return 1;  // Success
-    }
-    Debug_Print("[COMM] Failed to acquire vehicle data mutex\r\n");
-    return 0;  // Failure
+        if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+            *out = g_vehicle_data;
+            tx_mutex_put(&g_vehicle_data_mutex);
+            return 1;  // Success
+        }
+        Debug_Print("[COMM] Failed to acquire vehicle data mutex\r\n");
+        return 0;  // Failure
 }
 
 /* Send battery and speed messages over CAN and print a concise summary */

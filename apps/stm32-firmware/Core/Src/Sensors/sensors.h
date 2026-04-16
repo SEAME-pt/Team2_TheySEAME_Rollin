@@ -23,6 +23,7 @@ typedef struct {
     float vehicle_speed;           /**< Vehicle speed in meters per second */
     uint8_t data_valid;            /**< Flag: 1 if data is valid, 0 if not updated yet */
     bool cruise_control_active;     /**< Flag: 1 if cruise control is currently active, 0 otherwise */
+    uint16_t distance;             /**< Distance to obstacle in cm (from distance sensor) */
 } VehicleData_t;
 
 /**
@@ -66,6 +67,7 @@ extern TX_MUTEX g_vehicle_data_mutex;
  */
 extern VehicleCommand_t g_vehicle_command;
 
+extern uint16_t g_aeb_brake;
 /**
  * @brief Mutex protecting `g_vehicle_command`
  */
