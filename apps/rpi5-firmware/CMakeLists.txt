@@ -9,9 +9,11 @@ set(SOURCES
 	main.cpp
 	Bev.hpp
 	Bev.cpp
+	Lka.cpp
+	Lka.hpp
 )
 
-include_directories(comms mode_manager/remote middleware /home/rumachad/Seame/agl-app/sdk/sysroots/aarch64-agl-linux/usr/include/opencv4/)
+include_directories(comms mode_manager/remote middleware /home/rumachad/Seame/agl-app/sdk/sysroots/aarch64-agl-linux/usr/include/opencv4/ .)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/../../libs/libkuksa ${CMAKE_BINARY_DIR}/libkuksa)
 add_subdirectory(mode_manager)

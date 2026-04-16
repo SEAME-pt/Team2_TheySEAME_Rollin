@@ -11,6 +11,8 @@
 #include <thread>
 #include "ActuatorController.hpp"
 #include "Bev.hpp"
+#include <opencv4/opencv2/highgui.hpp>
+#include "Lka.hpp"
 
 std::atomic<bool> run = true;
 
@@ -103,7 +105,7 @@ cv::Point searchLanes(cv::Mat &frame, uint row, int dir) {
 //	cv::imwrite("300fovbird.jpg", res);
 //}
 
-int handleFrame(cv::VideoCapture &cam) {
+int handleFrame(cv::VideoCapture &cam, Lka &lka) {
 	cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
 	float img_h = 464;
 	float img_w = 1536;
@@ -116,29 +118,37 @@ int handleFrame(cv::VideoCapture &cam) {
 		return (-1);
 	}
 	cv::Mat frame = frameRaw(cv::Rect(0, 864 - img_h, img_w, img_h));
+
+	float srcRaw[] = {0, img_h, img_w, img_h, 0, 0, img_w, 0};
+	float dstRaw[] = {568, img_h, 968, img_h, 0, 0, img_w, 0};
+	Bev bev(frame);
+	bev.createPerspectiveMatrices(srcRaw, dstRaw);
+	bev.warp(&frame);
 	cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
 	cv::threshold(frame, frame, 127, 255, cv::THRESH_BINARY);
 	cv::erode(frame, frame, kernel);
 	cv::dilate(frame, frame, kernel);
 	cv::medianBlur(frame, frame, 9);
 
-	cv::Point carOrigin(img_w / 2, img_h / 2);
-	int topRow = carOrigin.y - 125;
+	cv::Point carOrigin(img_w / 2, img_h - 50);
+	int topRow = img_h - 125;
 	cv::Point topLeft = searchLanes(frame, topRow, LEFT);
 	cv::Point topRight = searchLanes(frame, topRow, RIGHT);
 
-	int bottomRow = carOrigin.y + 125;
+	int bottomRow = img_h + 125;
 	cv::Point bottomLeft = searchLanes(frame, bottomRow, LEFT);
 	cv::Point bottomRight = searchLanes(frame, bottomRow, RIGHT);
 
 	cv::Point laneCenter((topLeft.x + topRight.x) / 2, (topLeft.y + topRight.y) / 2);
 	float distX = laneCenter.x - carOrigin.x;
-	float distY = laneCenter.y - carOrigin.y;
+	float distY = carOrigin.y - laneCenter.y;
 
 	std::cout << "Car: " << carOrigin << " " << "Lane: " << laneCenter << std::endl;
 	std::cout << "Distances: " << distY << " " << distX << std::endl;
 	int angle = atan(distX / distY) * (180 / M_PI);
 	std::cout << "Angle: " << angle << std::endl;
+	lka.setAngle(std::clamp(angle, -30, 30));
+	lka.notify(Events::CAR_STEERING);
 
 	//std::cout << "Frame " << i++ << std::endl;
 	return (0);
@@ -146,7 +156,7 @@ int handleFrame(cv::VideoCapture &cam) {
 
 int main() {
 	struct pollfd fds[2];
-	Evdev evdev("/dev/input/event6");
+	Evdev evdev("/dev/input/event4");
 	RemoteControl remote(evdev);
 	CAN can("can0", 500, 0, 0);
 	//CarActuator *car = new ActuatorCAN(can, remote);
@@ -154,10 +164,12 @@ int main() {
 		new ActuatorCAN(can, remote)
 	);
 	kuksaLib kuksa;
-	ActuatorController ctrl(car, remote, kuksa);
+	Lka lka;
+	ActuatorController ctrl(car, &remote, &lka, kuksa);
 	//std::thread vhState(&kuksaLib::subscribeFromKuksa, &kuksa);
 
 	std::signal(SIGINT, signal_handler);
+	lka.attach(&ctrl);
 	remote.attach(&ctrl);
 
 	fds[0].fd = evdev.getfd();
@@ -178,7 +190,9 @@ int main() {
 			evdev.readEvent();
 			remote.getEvent();
 		}
-		handleFrame(cam);
+		if (handleFrame(cam, lka) == -1) {
+			break;
+		}
 	}
 	cam.release();
 
