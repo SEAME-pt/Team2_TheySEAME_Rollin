@@ -1,7 +1,7 @@
 #include "ActuatorCAN.hpp"
 #include <iostream>
 
-ActuatorCAN::ActuatorCAN(ICAN &can, RemoteControl &remote) : _can(can), _subject(remote) {
+ActuatorCAN::ActuatorCAN(ICAN &can) : _can(can) {
 	std::cout << "CarCAN constructor" << std::endl;
 	_gear = DRIVE;
 }

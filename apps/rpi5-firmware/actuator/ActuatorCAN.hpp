@@ -1,6 +1,5 @@
 #pragma once
 
-#include "RemoteControl.hpp"
 #include "CarActuator.hpp"
 #include "ICAN.hpp"
 
@@ -24,7 +23,7 @@ enum CAN_ID {
 class ActuatorCAN : public CarActuator {
 public:
 
-	ActuatorCAN(ICAN &can, RemoteControl &remote);
+	ActuatorCAN(ICAN &can);
 	~ActuatorCAN();
 
 	void startNstop(const bool signal);
@@ -37,6 +36,5 @@ public:
 
 private:
 	ICAN &_can;
-	RemoteControl &_subject;
 	short _gear;
 };

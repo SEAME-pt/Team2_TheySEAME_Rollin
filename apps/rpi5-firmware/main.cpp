@@ -159,9 +159,9 @@ int main() {
 	Evdev evdev("/dev/input/event4");
 	RemoteControl remote(evdev);
 	CAN can("can0", 500, 0, 0);
-	//CarActuator *car = new ActuatorCAN(can, remote);
+	//CarActuator *car = new ActuatorCAN(can);
 	CarActuator *car = new ActuatorKuksa(
-		new ActuatorCAN(can, remote)
+		new ActuatorCAN(can)
 	);
 	kuksaLib kuksa;
 	Lka lka;
