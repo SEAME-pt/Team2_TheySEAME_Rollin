@@ -73,8 +73,17 @@ class CARLACamera:
         ret, jpeg_buf = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
         if not ret:
             return False
+        jpeg_bytes = jpeg_buf.tobytes()
         try:
-            self._out.write(jpeg_buf.tobytes())
+            boundary = (
+                b"--frame\r\n"
+                b"Content-Type: image/jpeg\r\n"
+                b"Content-Length: " + str(len(jpeg_bytes)).encode() + b"\r\n"
+                b"\r\n"
+            )
+            self._out.write(boundary)
+            self._out.write(jpeg_bytes)
+            self._out.write(b"\r\n")
             self._out.flush()
             return True
         except BrokenPipeError:
@@ -96,16 +105,16 @@ class CARLACamera:
 # ── Entry point ────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     W, H = 320, 240
-
     cam = CARLACamera(
         CAM_HEIGHT=H, CAM_WIDTH=W,
         MODEL_HEIGHT=H, MODEL_WIDTH=W,
     )
-
     try:
         while True:
-            frame = cam.read_and_pipe_frame()
+            frame = cam.read_frame()          # ← was read_and_pipe_frame()
             if frame is None:
+                break
+            if not cam.write_frame_to_pipe(frame):  # ← pipe the frame out
                 break
     finally:
         cam.terminate_camera()
