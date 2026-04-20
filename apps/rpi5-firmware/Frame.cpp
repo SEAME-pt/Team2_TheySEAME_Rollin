@@ -1,8 +1,13 @@
 #include "Frame.hpp"
 #include <opencv4/opencv2/imgproc.hpp>
+#include <opencv4/opencv2/imgcodecs.hpp>
 
 Frame::Frame() {
 	_kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+}
+
+Frame::Frame(const cv::Mat &frameRaw) {
+	_frameRaw = frameRaw;
 }
 
 Frame::~Frame() {}
@@ -24,7 +29,7 @@ void Frame::close() {
 }
 
 void Frame::cropp() {
-	_frameRaw = _frameRaw(cv::Rect(0, 864 - _frameRaw.rows, _frameRaw.cols, _frameRaw.rows));
+	_frameRaw = _frameRaw(cv::Rect(0, _frameRaw.rows - 464, _frameRaw.cols, 464));
 }
 
 void Frame::transformToBinary() {
@@ -32,6 +37,17 @@ void Frame::transformToBinary() {
 	cv::threshold(_frameRaw, _frameRaw, 127, 255, cv::THRESH_BINARY);
 }
 
-int Frame::getHeight() { return (_frameRaw.rows); }
+void Frame::save(const std::string &filename) {
+	cv::imwrite(filename, _frameRaw);
+}
 
-int Frame::getWidth() { return (_frameRaw.cols); }
+int Frame::getHeight() const { return (_frameRaw.rows); }
+
+int Frame::getWidth() const { return (_frameRaw.cols); }
+
+cv::Mat &Frame::getRawFrame() { return (_frameRaw); }
+
+std::ostream &operator<<(std::ostream &os, const Frame &frame) {
+	os << "Frame: " << frame.getHeight() << " " << frame.getWidth();
+	return (os);
+}

@@ -1,21 +1,19 @@
 #pragma once
 
 #include <opencv4/opencv2/opencv.hpp>
+#include "Frame.hpp"
 
 class Bev {
 public:
 
-	Bev(float imgH, float imgW, void *data, const int fov);
-	Bev(const cv::Mat &img);
+	Bev(const int fov, const int frame_h, const int frame_w);
 	~Bev();
 
-	void createPerspectiveMatrices(float *srcRaw, float *dstRaw);
-	void warp(cv::Mat *res);
-	cv::Mat &getImg();
+	cv::Mat &createPerspectiveMatrices(float *srcRaw, float *dstRaw);
+	void applyBevToFrame(Frame &frame);
 
 private:
 	
-	cv::Mat _img;
 	cv::Mat _M;
 	int _fov;
 };

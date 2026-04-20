@@ -61,6 +61,5 @@ void ActuatorController::update(Subject *subj, Events event) {
 		}
 	} else {
 		_car->setSteering(_lka->getAngle());
-		std::cout << "Bias" << std::endl;
 	}
 }

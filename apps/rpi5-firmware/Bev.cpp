@@ -1,27 +1,35 @@
 #include "Bev.hpp"
 
-Bev::Bev(float imgH, float imgW, void *data, const int fov) {
-	_img = cv::Mat(imgH, imgW, CV_32F, data);
+Bev::Bev(const int fov, const int frame_h, const int frame_w) {
 	_fov = fov;
-}
-
-Bev::Bev(const cv::Mat &img) {
-	_img = img;
+	float frameH = frame_h - _fov;
+	float frameW = frame_w;
+	float srcData[] = { \
+		0, frameH, \
+		frameW, frameH, \
+		0, 0, \
+		frameW, 0
+	};
+	float dstData[] = {
+		(frameW / 2) - ((float)_fov / 2), frameH, \
+		(frameW / 2) + ((float)_fov / 2), frameH, \
+		0, 0, \
+		frameW, 0
+	};
+	_M = cv::getPerspectiveTransform(
+		cv::Mat(4, 2, CV_32F, srcData), \
+		cv::Mat(4, 2, CV_32F, dstData)
+	);
 }
 
 Bev::~Bev() {}
 
-void Bev::createPerspectiveMatrices(float *srcRaw, float *dstRaw) {
-	cv::Mat src(4, 2, CV_32F, srcRaw);
-	cv::Mat dst(4, 2, CV_32F, dstRaw);
-
-	_M = cv::getPerspectiveTransform(src, dst);
-}
-
-void Bev::warp(cv::Mat *res) {
-	cv::warpPerspective(_img, *res, _M, _img.size(), cv::INTER_NEAREST);
-}
-
-cv::Mat &Bev::getImg() {
-	return (_img);
+void Bev::applyBevToFrame(Frame &frame) {
+	frame.save("./OrigFrame.jpg");
+	frame.cropp();
+	frame.transformToBinary();
+	frame.open();
+	frame.save("./BinaryFrame.jpg");
+	frame.warp(_M);
+	frame.save("./WarpFrame.jpg");
 }
