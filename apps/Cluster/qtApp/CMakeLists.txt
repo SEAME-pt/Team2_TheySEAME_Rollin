@@ -13,7 +13,7 @@ if(NOT DEFINED CMAKE_PREFIX_PATH)
     set(CMAKE_PREFIX_PATH "/build/qt6/pi" CACHE PATH "Qt6 installation path")
 endif()
 
-find_package(Qt6 6.7 REQUIRED COMPONENTS Core Gui Qml Quick QuickControls2 Positioning Test)
+find_package(Qt6 6.7 REQUIRED COMPONENTS Core Gui Qml Quick Quick3D QuickControls2 Positioning Test)
 
 set(PKG_CONFIG_USE_CMAKE_PREFIX_PATH OFF)
 
@@ -64,6 +64,21 @@ add_executable(qtAppExec
     qml.qrc
 )
 
+add_custom_command(
+  OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/qml/3d-assets/carro/LowPolyFiatUNO.qml
+  COMMAND ${CMAKE_COMMAND} -E echo "Generating LowPolyFiatUNO.mesh via balsam"
+  COMMAND ${CMAKE_COMMAND} -E env QT_QPA_PLATFORM=offscreen balsam ${CMAKE_CURRENT_SOURCE_DIR}/qml/3d-assets/carro/LowPolyFiatUNO.obj --outputPath ${CMAKE_CURRENT_SOURCE_DIR}/qml/3d-assets/carro
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/qml/3d-assets/carro/LowPolyFiatUNO.obj
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  VERBATIM
+)
+
+add_custom_target(car_mesh ALL
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/qml/3d-assets/carro/LowPolyFiatUNO.qml
+)
+
+add_dependencies(qtAppExec car_mesh)
+
 target_include_directories(qtAppLib PRIVATE
   ${CMAKE_SOURCE_DIR}/../../middleware
   ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2
@@ -83,6 +98,7 @@ target_link_libraries(qtAppExec
     PRIVATE 
     Qt6::Gui
     Qt6::Qml
+  Qt6::Quick3D
     Qt6::Test
     Qt6::Network
     Qt6::Positioning

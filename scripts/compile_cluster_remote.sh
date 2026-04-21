@@ -107,6 +107,7 @@ set -e
 REMOTE_PATH="/home/team2/Documents/hugo-folder/Team2_TheySEAME_Rollin"
 QT_CMAKE="$HOME/Qt/6.7.3/gcc_64/bin/qt-cmake"
 CLUSTER_APP_DIR="apps/Cluster/qtApp"
+    export PATH="$HOME/Qt/6.7.3/gcc_64/bin:$PATH"
 
 cd "$REMOTE_PATH/$CLUSTER_APP_DIR"
 
@@ -123,6 +124,7 @@ cmake --build . --parallel $(nproc)
 
 echo "Build completed successfully!"
 ls -lh qtAppExec
+ls -lh ../qml/3d-assets/carro/LowPolyFiatUNO.* || true
 REMOTE_SCRIPT
     
     print_success "Remote compilation completed"
@@ -136,7 +138,9 @@ sync_local() {
     local local_qml_path="$LOCAL_PROJECT_DIR/$CLUSTER_APP_DIR/qml"
     local local_src_path="$LOCAL_PROJECT_DIR/$CLUSTER_APP_DIR/src"
     local local_cmake_file="$LOCAL_PROJECT_DIR/$CLUSTER_APP_DIR/CMakeLists.txt"
+    local local_root_qrc_file="$LOCAL_PROJECT_DIR/$CLUSTER_APP_DIR/qml.qrc"
     local local_main_file="$LOCAL_PROJECT_DIR/$CLUSTER_APP_DIR/main.cpp"
+    local local_qt_conf_file="$LOCAL_PROJECT_DIR/$CLUSTER_APP_DIR/qt.conf"
     local local_libbkuksa_path="$LOCAL_PROJECT_DIR/libs/libkuksa"
     local remote_app_path="$REMOTE_PATH/$CLUSTER_APP_DIR"
     local remote_libbkuksa_path="$REMOTE_PATH/libs/libkuksa"
@@ -150,6 +154,14 @@ sync_local() {
     if [ -f "$local_main_file" ]; then
         scp "$local_main_file" "$REMOTE_HOST:$remote_app_path/" 2>/dev/null || \
             print_info "main.cpp sync completed"
+    fi
+    if [ -f "$local_qt_conf_file" ]; then
+        scp "$local_qt_conf_file" "$REMOTE_HOST:$remote_app_path/" 2>/dev/null || \
+            print_info "qt.conf sync completed"
+    fi
+    if [ -f "$local_root_qrc_file" ]; then
+        scp "$local_root_qrc_file" "$REMOTE_HOST:$remote_app_path/" 2>/dev/null || \
+            print_info "qml.qrc sync completed"
     fi
     
     # Sync QML files (critical for UI updates)
@@ -229,7 +241,7 @@ main() {
             echo "Binary location: $LOCAL_MOUNT_POINT/$CLUSTER_APP_DIR/build/qtAppExec"
             echo ""
             echo "To run the application:"
-            echo "  ssh $REMOTE_HOST 'QT_QPA_PLATFORM=offscreen $REMOTE_PATH/$CLUSTER_APP_DIR/build/qtAppExec'"
+            echo "  ssh $REMOTE_HOST 'QSG_INFO=1 QSG_RHI_BACKEND=opengl QT_QPA_PLATFORM=wayland $REMOTE_PATH/$CLUSTER_APP_DIR/build/qtAppExec'"
             ;;
         *)
             print_error "Unknown option: $1"
