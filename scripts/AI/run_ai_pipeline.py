@@ -4,7 +4,9 @@
 
 import cv2
 import numpy as np
+import argparse
 from hailo_lib import PostProcessor, polyfit_lines, Camera, Inference
+from hailo_lib.CameraCarla import CARLACamera
 
 CAM_HEIGHT = 640
 CAM_WIDTH = 640
@@ -18,12 +20,40 @@ DISPLAY_MASK_ONLY = False
 DEBUG_LANE_MASK = False
 DEBUG_EVERY_N_FRAMES = 10
 
+
+def _parse_args():
+	parser = argparse.ArgumentParser(description="Run AI pipeline with either Pi camera or CARLA camera")
+	parser.add_argument(
+		"--use-carla-camera",
+		action="store_true",
+		help="Use CARLA TCP camera input instead of Raspberry Pi camera",
+	)
+	parser.add_argument(
+		"--carla-port",
+		type=int,
+		default=5005,
+		help="TCP port used by CARLA camera stream (default: 5005)",
+	)
+	return parser.parse_args()
+
 if __name__ == '__main__':
+	args = _parse_args()
 	camera = None
 	printed_tensor_info = False
 	frame_index = 0
 	try:
-		camera = Camera(CAM_HEIGHT, CAM_WIDTH, MODEL_HEIGHT, MODEL_WIDTH)
+		if args.use_carla_camera:
+			camera = CARLACamera(
+				CAM_HEIGHT,
+				CAM_WIDTH,
+				MODEL_HEIGHT,
+				MODEL_WIDTH,
+				port=args.carla_port,
+			)
+			print(f"Using CARLA camera on port {args.carla_port}")
+		else:
+			camera = Camera(CAM_HEIGHT, CAM_WIDTH, MODEL_HEIGHT, MODEL_WIDTH)
+			print("Using Raspberry Pi camera")
 		infer_engine = Inference(camera, "/root/trained_models/yolov8n_seg_100e.hef")
 		post_processor = PostProcessor(input_size=(MODEL_HEIGHT, MODEL_WIDTH), model_family=MODEL_FAMILY)
 		for frame, infer_results in infer_engine.run_inference():

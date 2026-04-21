@@ -47,6 +47,9 @@ class Inference:
 		self.output_vstream_params = OutputVStreamParams.make(self.network_group)
 
 	def _read_frame(self):
+		if hasattr(self.camera, "read_frame"):
+			return self.camera.read_frame()
+
 		frame_size = self.CAM_HEIGHT * self.CAM_WIDTH * 3 // 2
 		raw_frame = self.camera.cam_proc.stdout.read(frame_size)
 		if not raw_frame or len(raw_frame) != frame_size:
