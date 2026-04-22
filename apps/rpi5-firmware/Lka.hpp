@@ -15,6 +15,7 @@ public:
 	void setAngle(int angle);
 	int getAngle();
 	void laneCenter(Frame &frame);
+	void poly(Frame &frame);
 
 private:
 
