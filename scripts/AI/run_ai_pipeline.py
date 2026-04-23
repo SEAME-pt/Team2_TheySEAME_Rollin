@@ -67,6 +67,7 @@ if __name__ == '__main__':
 	labels = _default_labels(config_data, MODEL_TYPE)
 	try:
 		if args.use_carla_camera:
+			print("Initializing CARLA camera...")
 			camera = CARLACamera(
 				CAM_HEIGHT,
 				CAM_WIDTH,
@@ -76,6 +77,7 @@ if __name__ == '__main__':
 			)
 			print(f"Using CARLA camera on port {args.carla_port}")
 		else:
+			print("Initializing Raspberry Pi camera...")
 			camera = Camera(CAM_HEIGHT, CAM_WIDTH, MODEL_HEIGHT, MODEL_WIDTH)
 			print("Using Raspberry Pi camera")
 		infer_engine = Inference(camera, "/root/trained_models/yolov8n_seg.hef")
