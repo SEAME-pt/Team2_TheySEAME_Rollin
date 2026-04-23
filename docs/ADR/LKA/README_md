@@ -1,0 +1,35 @@
+# ADR: Select YOLOv11 for Unified LKA (Segmentation) and TSR (Bounding Boxes) via Hailo Model Zoo
+
+## Status
+Accepted
+
+## Context
+We need to implement a high-performance vision system for Lane Keep Assist (LKA) and Traffic Sign Recognition (TSR). The system requirements include:
+1. **LKA:** Pixel-level instance segmentation for accurate lane boundary identification.
+2. **TSR:** Efficient object detection (bounding boxes) for sign classification.
+
+Previously, using **UltraFastLane** was considered, but we have decided to move away from that approach. Other teams reported significant integration issues and stability bugs with UltraFastLane, and we want to avoid these technical hurdles. Furthermore, we are targeting Hailo hardware, making compatibility with the Hailo Model Zoo a primary requirement.
+
+## Considered Options
+* **Option 1: YOLOv11s-seg (LKA) and YOLOv11s (TSR)** - Utilizing the hardware-optimized versions from the Hailo Model Zoo.
+* **Option 2: UltraFastLane + Separate Detection Model** - A specialized lane detector paired with a standalone detection network.
+
+## Decision Outcome
+Chosen option: **"Option 1"**, because it provides a unified, stable, and hardware-accelerated workflow. By utilizing **YOLOv11s_seg** for lane segmentation and **YOLOv11s** for traffic sign bounding boxes, we consolidate our development pipeline within the Hailo ecosystem. This decision mitigates the risks associated with UltraFastLane while ensuring high inference speeds and easier deployment via the Hailo Dataflow Compiler.
+
+## Consequences
+
+### Positive Consequences
+* **Hardware Efficiency:** Models are specifically optimized for 8-bit quantization and high throughput on Hailo-8/Hailo-15 chips.
+* **Unified Pipeline:** Simplifies training, calibration, and exportation (HEF generation) by using a single model family and toolchain.
+* **Reduced Technical Debt:** Avoids the stability issues encountered by other teams using specialized lane-detection architectures.
+
+### Negative Consequences
+* **Future Deployment Choice:** We still need to determine if these will run as a single merged HEF or two separate contexts.
+* **Inference Load:** Running segmentation and bounding box tasks simultaneously requires careful monitoring of the NPU's internal bandwidth and FPS.
+
+## Links
+* [Hailo Model Zoo](https://github.com/hailo-ai/hailo_model_zoo)
+* [Hailo YOLOv11 Segmentation Documentation](https://github.com/hailo-ai/hailo_model_zoo/blob/master/docs/public_models/HAILO8/HAILO8_segmentation.rst)
+* [Hailo YOLOv11 Object Detection Documentation](https://github.com/hailo-ai/hailo_model_zoo/blob/master/docs/public_models/HAILO8/HAILO8_object_detection.rst)
+* [Ultralytics YOLOv11 Tasks](https://docs.ultralytics.com/tasks/)
