@@ -6,17 +6,20 @@
 class Bev {
 public:
 
-	Bev(const int fov, const int frame_h, const int frame_w);
+	Bev(const int fov, const cv::Rect &roi);
 	~Bev();
 
 	cv::Mat &createPerspectiveMatrices(float *srcRaw, float *dstRaw);
 	void slidingWindow(Frame &frame, int x, int ptnNbr, int rectW, std::vector<cv::Point> &ptns);
 	void applyBevToFrame(Frame &frame);
+	int getLaneX();
 
 private:
 	
 	int checkPixelsInRect(Frame &frame, cv::Rect &rect);
 
+	cv::Rect _roi;
 	cv::Mat _M;
+	std::vector<int> histogram;
 	int _fov;
 };

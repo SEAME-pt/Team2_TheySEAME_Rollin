@@ -9,7 +9,7 @@
 class Lka : public Subject {
 public:
 
-	Lka();
+	Lka(const int fov, const int startX, const int startY, const int width, const int height);
 	~Lka();
 
 	void setAngle(int angle);

@@ -16,9 +16,10 @@ public:
 	void warp(cv::Mat matrix);
 	void open();
 	void close();
+	void canny();
 	void setPointValue(const int x, const int y, const uchar val);
 	uchar getPointValue(const int x, const int y);
-	void cropp(const int xStart, const int yStart, const int height, const int width);
+	void cropp(const cv::Rect &rect);
 	void histogram(std::vector<int> &histogram);
 	void transformToBinary();
 	void drawLine(cv::Point &pt1, cv::Point &pt2, const cv::Scalar &color, const int thickness);

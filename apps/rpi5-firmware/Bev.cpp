@@ -1,9 +1,10 @@
 #include "Bev.hpp"
 
-Bev::Bev(const int fov, const int frame_h, const int frame_w) {
+Bev::Bev(const int fov, const cv::Rect &roi) {
 	_fov = fov;
-	float frameH = frame_h;
-	float frameW = frame_w;
+	_roi = roi;
+	float frameH = roi.height;
+	float frameW = roi.width;
 	float srcData[] = { \
 		0, frameH, \
 		frameW, frameH, \
@@ -33,7 +34,7 @@ void Bev::slidingWindow(Frame &frame, int startX, int ptnNbr, int rectW, std::ve
 	cv::cvtColor(frame.getRawFrame(), color, cv::COLOR_GRAY2BGR);
 	for (size_t i = 0; i < ptnNbr; i++) {
 		cv::Rect rect(x - (rectW / 2), y, rectW, step_y);
-		std::cout << "Point: (" << x << ", " << y << ")" << std::endl;
+		//std::cout << "Point: (" << x << ", " << y << ")" << std::endl;
 		int average = checkPixelsInRect(frame, rect);
 		if (average != 0) {
 			x = average;
@@ -54,23 +55,31 @@ int Bev::checkPixelsInRect(Frame &frame, cv::Rect &rect) {
 			if (frame.getPointValue(x, y) == 255) {
 				average += x;
 				found++;
-				frame.setPointValue(x, y, 0);
+				//frame.setPointValue(x, y, 0);
 				//std::cout << x << " ";
 			}
 		}
 	}
-	std::cout << std::endl;
 	return (average / found);
 }
 
-void Bev::applyBevToFrame(Frame &frame) {
-	int cropp = 400;
-	int croppH = frame.getHeight() - cropp;
+int Bev::getLaneX() {
+	auto it = std::max_element(histogram.begin(), histogram.end());
+	int laneX = std::distance(histogram.begin(), it);
+	int distance = 200;
+	for (size_t i = laneX - distance; i < laneX + distance; i++) {
+		histogram[i] = 0;
+	}
+	return (laneX);
+}
 
+void Bev::applyBevToFrame(Frame &frame) {
 	frame.save("./OrigFrame.jpg");
-	frame.cropp(0, cropp, croppH, frame.getWidth());
+	frame.cropp(_roi);
 	frame.transformToBinary();
-	frame.open();
 	frame.warp(_M);
 	frame.save("./WarpFrame.jpg");
+	frame.open();
+	frame.save("./Canny.jpg");
+	frame.histogram(histogram);
 }

@@ -29,6 +29,12 @@ void Frame::close() {
 	cv::medianBlur(_frameRaw, _frameRaw, 9);
 }
 
+void Frame::canny() {
+	cv::Mat edges;
+	cv::Canny(_frameRaw, edges, 50, 200);
+	_frameRaw = edges;
+}
+
 void Frame::setPointValue(const int x, const int y, const uchar val) {
 	_frameRaw.at<uchar>(y, x) = val;
 }
@@ -37,8 +43,8 @@ uchar Frame::getPointValue(const int x, const int y) {
 	return (_frameRaw.at<uchar>(y, x));
 }
 
-void Frame::cropp(const int xStart, const int yStart, const int height, const int width) {
-	_frameRaw = _frameRaw(cv::Rect(xStart, yStart, width, height));
+void Frame::cropp(const cv::Rect &rect) {
+	_frameRaw = _frameRaw(rect);
 }
 
 void Frame::histogram(std::vector<int> &histogram) {
