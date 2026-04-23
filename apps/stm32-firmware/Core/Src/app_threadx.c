@@ -113,7 +113,9 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
     g_vehicle_command.cruise_control_target_speed = 0;
     // Initialize global vehicle data structure
     g_vehicle_data.battery_voltage = 0;
+    g_vehicle_data.rasp_battery_voltage = 0;
     g_vehicle_data.battery_percentage = 0.0f;
+    g_vehicle_data.rasp_battery_percentage = 0.0f;
     g_vehicle_data.battery_current = 0.0f;
     g_vehicle_data.vehicle_speed = 0.0f;
     g_vehicle_data.data_valid = 0;

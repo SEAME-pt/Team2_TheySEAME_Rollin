@@ -86,16 +86,18 @@ static void send_battery_and_speed(const VehicleData_t *snapshot) {
     }
     
     uint8_t battery = (uint8_t)snapshot->battery_percentage;
-    HAL_StatusTypeDef bat_status = MCP2515_SendBattery(battery);
+    uint8_t rasp_battery = (uint8_t)snapshot->rasp_battery_percentage;
+    HAL_StatusTypeDef bat_status = MCP2515_SendBattery(battery, rasp_battery);
     HAL_StatusTypeDef speed_status = MCP2515_SendSpeed(snapshot->vehicle_speed);
 
     uint16_t speed_hmh = (uint16_t)(snapshot->vehicle_speed * 36.0f);
     snprintf(comm_uart_buf, sizeof(comm_uart_buf),
-            "[TX] 0x200 Speed=%u hm/h (raw=%.2f m/s) (%s) | 0x201 Bat=%u%% (%s)\r\n",
+            "[TX] 0x200 Speed=%u hm/h (raw=%.2f m/s) (%s) | 0x201 Bat=%u%% RaspBat=%u%%  (%s)\r\n",
             speed_hmh,
             snapshot->vehicle_speed,  // Add raw value for debugging
             (speed_status == HAL_OK) ? "OK" : (speed_status == HAL_BUSY) ? "BUSY" : "FAIL",
             battery,
+            rasp_battery,
             (bat_status == HAL_OK) ? "OK" : (bat_status == HAL_BUSY) ? "BUSY" : "FAIL");
     Debug_Print(comm_uart_buf);
 

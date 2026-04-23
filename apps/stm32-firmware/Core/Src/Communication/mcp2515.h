@@ -117,12 +117,13 @@ HAL_StatusTypeDef MCP2515_SendMessage(uint16_t can_id, uint8_t *data, uint8_t le
  * The message format and CAN ID follow project telemetry specification.
  *
  * @param percentage Battery charge percentage (0..100)
+ * @param rasp_percentage Raspberry Pi battery charge percentage (0..100)
  *
  * Requirement traceability:
  *
  * @return HAL_StatusTypeDef HAL_OK on success, otherwise HAL_ERROR
  */
-HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage);  // Convenience wrapper for battery data
+HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage, uint8_t rasp_percentage);  // Convenience wrapper for battery data
 
 /**
  * @brief Send speed data over CAN

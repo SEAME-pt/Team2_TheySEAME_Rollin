@@ -421,7 +421,7 @@ HAL_StatusTypeDef MCP2515_SendSpeed(float speed_ms) {
     return HAL_TIMEOUT;
 }
 
-HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage) {
+HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage, uint8_t rasp_percentage) {
     extern UART_HandleTypeDef huart1;
     char buffer[200];
     
@@ -443,12 +443,12 @@ HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage) {
     MCP2515_WriteRegister(MCP2515_REG_TXB0SIDH, (uint8_t)(can_id >> 3));
     MCP2515_WriteRegister(MCP2515_REG_TXB0SIDL, (uint8_t)(can_id << 5));
     
-    // Set data length code (1 byte)
-    MCP2515_WriteRegister(MCP2515_REG_TXB0DLC, 0x01);
+    // Set data length code (2 bytes)
+    MCP2515_WriteRegister(MCP2515_REG_TXB0DLC, 0x02);
     
     // Set battery percentage data (single byte)
     MCP2515_WriteRegister(MCP2515_REG_TXB0DATA, percentage);
-    
+    MCP2515_WriteRegister(MCP2515_REG_TXB0DATA + 1, rasp_percentage);
     // Verify what was written
     uint8_t sidh_readback = MCP2515_ReadRegister(MCP2515_REG_TXB0SIDH);
     uint8_t sidl_readback = MCP2515_ReadRegister(MCP2515_REG_TXB0SIDL);
@@ -458,8 +458,8 @@ HAL_StatusTypeDef MCP2515_SendBattery(uint8_t percentage) {
         sidh_readback, sidl_readback, dlc_readback);
     HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
     
-    snprintf(buffer, sizeof(buffer), "[DEBUG] Sending CAN ID 0x%03X: Battery=%d%%\r\n", 
-            can_id, percentage);
+    snprintf(buffer, sizeof(buffer), "[DEBUG] Sending CAN ID 0x%03X: Battery=%d%% RaspBattery=%d%%\r\n", 
+            can_id, percentage, rasp_percentage);
     HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
     
     // Check mode before transmission

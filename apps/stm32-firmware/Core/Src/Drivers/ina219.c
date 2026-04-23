@@ -12,16 +12,13 @@ enum BatteryState batteryState;
 
 // Variable definitions for extern declarations in header
 bool isFirst;
-uint16_t ina219_calibrationValue;
-int16_t ina219_currentDivider_mA;
-int16_t ina219_powerMultiplier_mW;
 
 // Read a 16-bit register from INA219 (internal helper)
 uint16_t Read16(INA219_t *ina219, uint8_t Register)
 {
 	uint8_t Value[2];
 
-	HAL_I2C_Mem_Read(ina219->ina219_i2c, (INA219_ADDRESS<<1), Register, 1, Value, 2, 1000);
+	HAL_I2C_Mem_Read(ina219->ina219_i2c, (ina219->Address<<1), Register, 1, Value, 2, 1000);
 
 	return ((Value[0] << 8) | Value[1]);
 }
@@ -46,7 +43,7 @@ HAL_StatusTypeDef Write16(INA219_t *ina219, uint8_t Register, uint16_t Value)
 	uint8_t addr[2];
 	addr[0] = (Value >> 8) & 0xff;  // upper byte
 	addr[1] = (Value >> 0) & 0xff; // lower byte
-	return HAL_I2C_Mem_Write(ina219->ina219_i2c, (INA219_ADDRESS<<1), Register, 1, (uint8_t*)addr, 2, 1000);
+	return HAL_I2C_Mem_Write(ina219->ina219_i2c, (ina219->Address<<1), Register, 1, (uint8_t*)addr, 2, 1000);
 }
 
 // Read bus voltage in millivolts
@@ -71,7 +68,7 @@ int16_t INA219_ReadCurrent(INA219_t *ina219)
 {
 	int16_t result = INA219_ReadCurrent_raw(ina219);
 
-	return (result / ina219_currentDivider_mA );
+	return (result / ina219->currentDivider_mA );
 }
 
 // Read shunt voltage in millivolts
@@ -85,7 +82,7 @@ uint16_t INA219_ReadShuntVolage(INA219_t *ina219)
 uint16_t INA219_ReadPower(INA219_t *ina219)
 {
 	uint16_t result = Read16(ina219, INA219_REG_POWER );
-	result = result * ina219_powerMultiplier_mW; // power is the power register times the power_LSB (power multiplier)
+	result = result * ina219->powerMultiplier_mW; // power is the power register times the power_LSB (power multiplier)
 	return (result);
 }
 
@@ -99,8 +96,6 @@ uint16_t INA219_ReadPower(INA219_t *ina219)
  * @example: 	GetBatteryLife(&ina219, 6000, 4000)
  * 				returns 75.02%
  */
-static float filteredVoltage = 0.0f;
-static bool voltageFilterInitialized = false;
 #define BATTERY_EMA_ALPHA 0.05f  // Low alpha = more smoothing (0.05 = ~20 samples to reach 63% of new value)
 
 float INA219_GetBatteryLife(INA219_t *ina219,float batteryMax, float batteryMin)
@@ -110,14 +105,14 @@ float INA219_GetBatteryLife(INA219_t *ina219,float batteryMax, float batteryMin)
 	
 	// Apply exponential moving average filter to smooth voltage readings
 	// This prevents voltage sag under load from causing rapid battery % fluctuations
-	if (!voltageFilterInitialized) {
-		filteredVoltage = (float)vbus;
-		voltageFilterInitialized = true;
+	if (!ina219->voltageFilterInitialized) {
+		ina219->filteredVoltage = (float)vbus;
+		ina219->voltageFilterInitialized = true;
 	} else {
-		filteredVoltage = BATTERY_EMA_ALPHA * (float)vbus + (1.0f - BATTERY_EMA_ALPHA) * filteredVoltage;
+		ina219->filteredVoltage = BATTERY_EMA_ALPHA * (float)vbus + (1.0f - BATTERY_EMA_ALPHA) * ina219->filteredVoltage;
 	}
 	
-	percentageLife = (filteredVoltage - batteryMin) / (batteryMax - batteryMin);
+	percentageLife = (ina219->filteredVoltage - batteryMin) / (batteryMax - batteryMin);
 	if(percentageLife >= 0 )
 	{
 		return percentageLife * 100;
@@ -291,11 +286,11 @@ void INA219_setCalibration_32V_2A(INA219_t *ina219)
 	             INA219_CONFIG_SADCRES_12BIT_1S_532US |
 	             INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
 
-	ina219_calibrationValue = 4096;
-	ina219_currentDivider_mA = 10; // Current LSB = 100uA per bit (1000/100 = 10)
-	ina219_powerMultiplier_mW = 2; // Power LSB = 1mW per bit (2/1)
+	ina219->calibrationValue = 4096;
+	ina219->currentDivider_mA = 10; // Current LSB = 100uA per bit (1000/100 = 10)
+	ina219->powerMultiplier_mW = 2; // Power LSB = 1mW per bit (2/1)
 
-	INA219_setCalibration(ina219, ina219_calibrationValue);
+	INA219_setCalibration(ina219, ina219->calibrationValue);
 	INA219_setConfig(ina219, config);
 }
 
@@ -306,11 +301,11 @@ void INA219_setCalibration_32V_1A(INA219_t *ina219)
 	                    INA219_CONFIG_SADCRES_12BIT_1S_532US |
 	                    INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
 
-	ina219_calibrationValue = 10240;
-	ina219_currentDivider_mA = 25;    // Current LSB = 40uA per bit (1000/40 = 25)
-	ina219_powerMultiplier_mW = 0.8f; // Power LSB = 800uW per bit
+	ina219->calibrationValue = 10240;
+	ina219->currentDivider_mA = 25;    // Current LSB = 40uA per bit (1000/40 = 25)
+	ina219->powerMultiplier_mW = 0.8f; // Power LSB = 800uW per bit
 
-	INA219_setCalibration(ina219, ina219_calibrationValue);
+	INA219_setCalibration(ina219, ina219->calibrationValue);
 	INA219_setConfig(ina219, config);
 }
 
@@ -322,11 +317,11 @@ void INA219_setCalibration_16V_400mA(INA219_t *ina219)
 	                    INA219_CONFIG_SADCRES_12BIT_1S_532US |
 	                    INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
 
-	ina219_calibrationValue = 33600; //Previous: 10240
-	ina219_currentDivider_mA = 11;    // Current LSB = 91uA per bit (1000/91 = 11)
-	ina219_powerMultiplier_mW = 2.0f; // Power LSB = 4mW per bit
+	ina219->calibrationValue = 33600; //Previous: 10240
+	ina219->currentDivider_mA = 11;    // Current LSB = 91uA per bit (1000/91 = 11)
+	ina219->powerMultiplier_mW = 2.0f; // Power LSB = 4mW per bit
 
-	INA219_setCalibration(ina219, ina219_calibrationValue);
+	INA219_setCalibration(ina219, ina219->calibrationValue);
 	INA219_setConfig(ina219, config);
 }
 
@@ -338,11 +333,11 @@ void INA219_setCalibration_16V_3A(INA219_t *ina219)
                       INA219_CONFIG_SADCRES_12BIT_1S_532US |
                       INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
 
-    ina219_calibrationValue = 33600;       // Calibration register
-    ina219_currentDivider_mA = 11;        // Current LSB = 91 uA/bit
-    ina219_powerMultiplier_mW = 2;        // Power multiplier
+    ina219->calibrationValue = 33600;       // Calibration register
+    ina219->currentDivider_mA = 11;        // Current LSB = 91 uA/bit
+    ina219->powerMultiplier_mW = 2;        // Power multiplier
 
-    INA219_setCalibration(ina219, ina219_calibrationValue);
+    INA219_setCalibration(ina219, ina219->calibrationValue);
     INA219_setConfig(ina219, config);
 }
 
@@ -379,8 +374,8 @@ uint8_t INA219_Init(INA219_t *ina219, I2C_HandleTypeDef *i2c, uint8_t Address)
 	ina219->ina219_i2c = i2c;
 	ina219->Address = Address;
 
-	ina219_currentDivider_mA = 0;
-	ina219_powerMultiplier_mW = 0;
+	ina219->currentDivider_mA = 0;
+	ina219->powerMultiplier_mW = 0;
 
 	uint8_t ina219_isReady = HAL_I2C_IsDeviceReady(i2c, (Address << 1), 3, 2);
 

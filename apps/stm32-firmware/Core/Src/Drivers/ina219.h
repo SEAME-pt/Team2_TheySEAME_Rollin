@@ -15,6 +15,7 @@
 #include "main.h"
 
 #define INA219_ADDRESS 							(0x41)
+#define INA219_ADDRESS_2							(0x40)
 
 //
 //	Registers
@@ -72,16 +73,17 @@
 
 typedef struct
 {
-	I2C_HandleTypeDef 	*ina219_i2c;
-	uint8_t				Address;
+    I2C_HandleTypeDef *ina219_i2c;
+    uint8_t            Address;
+    float              filteredVoltage; 
+    bool               voltageFilterInitialized;
+    int16_t            currentDivider_mA;
+    int16_t            powerMultiplier_mW;
+    uint16_t           calibrationValue;
 } INA219_t;
 
 enum BatteryState {Battery_START,Battery_OK, Battery_LOW}; // To help health check function sufficiently diagnose problems
 extern bool isFirst;
-
-extern uint16_t ina219_calibrationValue;
-extern int16_t ina219_currentDivider_mA;
-extern int16_t ina219_powerMultiplier_mW;
 
 /**
  * @brief Get the elapsed time in milliseconds since last call
