@@ -38,13 +38,13 @@ int handleFrame(cv::VideoCapture &cam, Lka &lka) {
 
 int main() {
 	struct pollfd fds[1];
-	Evdev evdev("/dev/input/event6");
+	Evdev evdev("/dev/input/event4");
 	RemoteControl remote(evdev);
 	CAN can("can0", 500, 0, 0);
-	CarActuator *car = new ActuatorCAN(can);
-	//CarActuator *car = new ActuatorKuksa(
-	//	new ActuatorCAN(can)
-	//);
+	//CarActuator *car = new ActuatorCAN(can);
+	CarActuator *car = new ActuatorKuksa(
+		new ActuatorCAN(can)
+	);
 	kuksaLib kuksa;
 	Lka lka(350, 0, 400, 1536, 464);
 	ActuatorController ctrl(car, &remote, &lka, kuksa);
@@ -78,6 +78,8 @@ int main() {
 		}
 	}
 	cam.release();
+
+	delete car;
 
 	//vhState.join();
 	return (0);

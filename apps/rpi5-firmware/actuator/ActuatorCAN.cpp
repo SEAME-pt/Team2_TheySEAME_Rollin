@@ -16,22 +16,13 @@ void ActuatorCAN::setGear(const short gear) {
 	_gear = gear;
 	data[0] = _gear;
 	_can.sendFrame(GEAR, data, sizeof(data));
-	std::cout << "Changing Gear" << std::endl;
 }
 
 void ActuatorCAN::setThrottle(const int throttle) {
 	uint8_t data[1];
 
-	if (_gear == PARKING) { return; }
-	if (throttle < 0) {
-		setGear(DRIVE);
-	} else {
-		setGear(REVERSE);
-	}
-	setCruiseControl(false, 0);
 	data[0] = abs(throttle);
 	_can.sendFrame(THROTTLE, data, sizeof(data));
-	std::cout << "Changed Throttle" << std::endl;
 }
 
 void ActuatorCAN::setSteering(const int steering) {
@@ -39,14 +30,12 @@ void ActuatorCAN::setSteering(const int steering) {
 
 	data[0] = steering;
 	_can.sendFrame(STEERING, data, sizeof(data));
-	std::cout << "Changed Steering " << steering << std::endl;
 }
 
 void ActuatorCAN::brake(const bool flag) {
 	uint8_t data[1];
 
 	data[0] = flag;
-	setCruiseControl(false, 0);
 	_can.sendFrame(BRAKE, data, sizeof(data));
 }
 
@@ -58,5 +47,4 @@ void ActuatorCAN::setCruiseControl(const bool flag, const int targetSpeed) {
 	data[0] = flag;
 	data[1] = targetSpeed;
 	_can.sendFrame(CRUISE_CONTROL, data, sizeof(data));
-	std::cout << "Set Cruise Control to " << flag << std::endl;
 }
