@@ -11,7 +11,9 @@ public:
 
 	cv::Mat &createPerspectiveMatrices(float *srcRaw, float *dstRaw);
 	void slidingWindow(Frame &frame, int x, int ptnNbr, int rectW, std::vector<cv::Point> &ptns);
-	void applyBevToFrame(Frame &frame);
+	void applyBevToFrameTD(Frame &frame);
+	void applyBevToFrameAI(Frame &frame);
+	cv::Mat &getReverseMatrix();
 	int getLaneX();
 
 private:
@@ -20,6 +22,7 @@ private:
 
 	cv::Rect _roi;
 	cv::Mat _M;
-	std::vector<int> histogram;
+	cv::Mat _Mreverse;
+	std::vector<int> _histogram;
 	int _fov;
 };

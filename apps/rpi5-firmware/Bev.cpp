@@ -21,6 +21,10 @@ Bev::Bev(const int fov, const cv::Rect &roi) {
 		cv::Mat(4, 2, CV_32F, srcData), \
 		cv::Mat(4, 2, CV_32F, dstData)
 	);
+	_Mreverse = cv::getPerspectiveTransform(
+		cv::Mat(4, 2, CV_32F, dstData), \
+		cv::Mat(4, 2, CV_32F, srcData)
+	);
 }
 
 Bev::~Bev() {}
@@ -64,22 +68,31 @@ int Bev::checkPixelsInRect(Frame &frame, cv::Rect &rect) {
 }
 
 int Bev::getLaneX() {
-	auto it = std::max_element(histogram.begin(), histogram.end());
-	int laneX = std::distance(histogram.begin(), it);
+	auto it = std::max_element(_histogram.begin(), _histogram.end());
+	int laneX = std::distance(_histogram.begin(), it);
 	int distance = 200;
 	for (size_t i = laneX - distance; i < laneX + distance; i++) {
-		histogram[i] = 0;
+		_histogram[i] = 0;
 	}
 	return (laneX);
 }
 
-void Bev::applyBevToFrame(Frame &frame) {
+void Bev::applyBevToFrameAI(Frame &frame) {
+	frame.warp(_M);
+	frame.histogram(_histogram);
+}
+
+void Bev::applyBevToFrameTD(Frame &frame) {
 	frame.save("./OrigFrame.jpg");
 	frame.cropp(_roi);
 	frame.transformToBinary();
 	frame.warp(_M);
 	frame.save("./WarpFrame.jpg");
 	frame.open();
-	frame.save("./Canny.jpg");
-	frame.histogram(histogram);
+	frame.save("./Garf.jpg");
+	frame.histogram(_histogram);
+}
+
+cv::Mat &Bev::getReverseMatrix() {
+	return (_Mreverse);
 }

@@ -29,7 +29,6 @@ int handleFrame(cv::VideoCapture &cam, Lka &lka) {
 		std::cout << "Failed to get Frame" << std::endl;
 		return (-1);
 	}
-	//cv::Mat frameRaw = cv::imread("./OrigFrame.jpg");
 	Frame frame(frameRaw);
 
 	lka.poly(frame);
@@ -41,25 +40,31 @@ int main() {
 	Evdev evdev("/dev/input/event4");
 	RemoteControl remote(evdev);
 	CAN can("can0", 500, 0, 0);
+	kuksaLib kuksa;
 	//CarActuator *car = new ActuatorCAN(can);
 	CarActuator *car = new ActuatorKuksa(
-		new ActuatorCAN(can)
+		new ActuatorCAN(can),
+		kuksa
 	);
-	kuksaLib kuksa;
-	Lka lka(350, 0, 400, 1536, 464);
+	Lka lka(400, 0, 400, 1536, 464);
 	ActuatorController ctrl(car, &remote, &lka, kuksa);
+
+	std::signal(SIGINT, signal_handler);
+
+	lka.attach(&ctrl);
+	remote.attach(&ctrl);
+
+	// Kuksa Thread
 	//std::thread vhState(&kuksaLib::subscribeFromKuksa, &kuksa);
 
+	cv::namedWindow("WIN", cv::WINDOW_NORMAL);
+	cv::moveWindow("WIN", 0, 0);
 	cv::VideoCapture cam("pipe:0");
 	cam.set(cv::CAP_PROP_FPS, 20);
 	if (!cam.isOpened()) {
 		std::cout << "Didnt open" << std::endl;
 		return (-1);
 	}
-
-	std::signal(SIGINT, signal_handler);
-	lka.attach(&ctrl);
-	remote.attach(&ctrl);
 
 	fds[0].fd = evdev.getfd();
 	fds[0].events = POLLIN;
@@ -78,6 +83,7 @@ int main() {
 		}
 	}
 	cam.release();
+	cv::destroyAllWindows();
 
 	delete car;
 
