@@ -65,7 +65,7 @@ void Frame::transformToBinary() {
 Frame Frame::getColoredFrame() {
 	Frame copyFrame;
 
-	cv::cvtColor(_frameRaw, copyFrame.getRawFrame(), cv::COLOR_GRAY2BGR);
+	cv::cvtColor(_frameRaw, copyFrame.getRawData(), cv::COLOR_GRAY2BGR);
 	return (copyFrame);
 }
 
@@ -88,7 +88,7 @@ int Frame::getHeight() const { return (_frameRaw.rows); }
 
 int Frame::getWidth() const { return (_frameRaw.cols); }
 
-cv::Mat &Frame::getRawFrame() { return (_frameRaw); }
+cv::Mat &Frame::getRawData() { return (_frameRaw); }
 
 std::ostream &operator<<(std::ostream &os, const Frame &frame) {
 	os << "Frame: " << frame.getHeight() << " " << frame.getWidth();

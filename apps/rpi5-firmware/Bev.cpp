@@ -35,7 +35,7 @@ void Bev::slidingWindow(Frame &frame, int startX, int ptnNbr, int rectW, std::ve
 	int y = frame.getHeight() - step_y;
 
 	cv::Mat color;
-	cv::cvtColor(frame.getRawFrame(), color, cv::COLOR_GRAY2BGR);
+	cv::cvtColor(frame.getRawData(), color, cv::COLOR_GRAY2BGR);
 	for (size_t i = 0; i < ptnNbr; i++) {
 		cv::Rect rect(x - (rectW / 2), y, rectW, step_y);
 		//std::cout << "Point: (" << x << ", " << y << ")" << std::endl;

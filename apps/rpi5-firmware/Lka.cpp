@@ -5,10 +5,6 @@ Lka::Lka(const int fov, const int startX, const int startY, const int width, con
 
 Lka::~Lka() {}
 
-void Lka::setAngle(int angle) {
-	_angle = angle;
-}
-
 int Lka::getAngle() { return (_angle); }
 
 void Lka::poly(Frame &frame) {
