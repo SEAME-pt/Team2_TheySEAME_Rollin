@@ -261,7 +261,7 @@ boost::shared_ptr<cc::Sensor> setup_camera(
         std::vector<float>              scores;
         std::vector<int>                class_ids;
         std::vector<std::vector<float>> mask_coefs;
-
+        cv::Mat model_output(H, W, CV_8UC3, cv::Scalar(0, 0, 0));
         // ── Decode ─────────────────────────────────────────────
         for (int a = 0; a < num_anchors; a++) {
             float max_score = 0.0f;
@@ -334,7 +334,7 @@ boost::shared_ptr<cc::Sensor> setup_camera(
             cv::Mat colored(H, W, CV_8UC3, cv::Scalar(0, 0, 0));
             colored.setTo(color, roi_mask);
             cv::addWeighted(display, 1.0f, colored, 0.4f, 0, display);
-
+            model_output.setTo(color, roi_mask);
             std::string label =
                 (cls < (int)CLASS_NAMES.size() ? CLASS_NAMES[cls] : "cls")
                 + " " + std::to_string(int(score * 100)) + "%";
@@ -344,7 +344,9 @@ boost::shared_ptr<cc::Sensor> setup_camera(
 
             std::cout << label << "\n";
         }
-
+        cv::imshow("MODEL OUTPUT", model_output);
+        cv::waitKey(1);
+        cv::imwrite("output/model.png", model_output);
         cv::imshow("PiRacer Camera", display);
         cv::waitKey(1);
     });
