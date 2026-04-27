@@ -57,9 +57,9 @@ void Frame::histogram(std::vector<int> &histogram) {
 	cv::reduce(_frameRaw, histogram, 0, cv::REDUCE_SUM, CV_32S);
 }
 
-void Frame::transformToBinary() {
+void Frame::transformToBinary(const int thresh) {
 	cv::cvtColor(_frameRaw, _frameRaw, cv::COLOR_BGR2GRAY);
-	cv::threshold(_frameRaw, _frameRaw, 127, 255, cv::THRESH_BINARY);
+	cv::threshold(_frameRaw, _frameRaw, thresh, 255, cv::THRESH_BINARY);
 }
 
 Frame Frame::getColoredFrame() {

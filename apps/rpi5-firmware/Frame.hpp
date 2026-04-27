@@ -130,9 +130,12 @@ public:
 	/**
 	 * @brief Transform a Frame to Binary
 	 *
-	 * Change the current Frame to be a binary frame
+	 * Change the current Frame to be a binary frame.
+	 * Higher thresh value = less white pixels in the frame
+	 *
+	 * @param thresh Threshold value
 	 */
-	void transformToBinary();
+	void transformToBinary(const int thresh);
 
 	/**
 	 * @brief Create a copy Colored Frame

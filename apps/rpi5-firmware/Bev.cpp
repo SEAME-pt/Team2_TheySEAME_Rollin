@@ -38,13 +38,13 @@ void Bev::slidingWindow(Frame &frame, int startX, int ptnNbr, int rectW, std::ve
 	cv::cvtColor(frame.getRawData(), color, cv::COLOR_GRAY2BGR);
 	for (size_t i = 0; i < ptnNbr; i++) {
 		cv::Rect rect(x - (rectW / 2), y, rectW, step_y);
-		//std::cout << "Point: (" << x << ", " << y << ")" << std::endl;
+		//std::cout << "Point: (" << x << ", " << y + (step_y / 2)<< ")" << std::endl;
 		int average = checkPixelsInRect(frame, rect);
 		if (average != 0) {
 			x = average;
 		}
 		cv::rectangle(color, rect, GREEN, 1);
-		ptns.push_back(cv::Point(x, y));
+		ptns.push_back(cv::Point(x, y + (step_y / 2)));
 		y -= step_y;
 	}
 	cv::imwrite("./HV.jpg", color);
@@ -85,7 +85,7 @@ void Bev::applyBevToFrameAI(Frame &frame) {
 void Bev::applyBevToFrameTD(Frame &frame) {
 	frame.save("./OrigFrame.jpg");
 	frame.cropp(_roi);
-	frame.transformToBinary();
+	frame.transformToBinary(180);
 	frame.warp(_M);
 	frame.save("./WarpFrame.jpg");
 	frame.open();

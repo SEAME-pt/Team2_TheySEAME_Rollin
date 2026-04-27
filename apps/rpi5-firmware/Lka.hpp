@@ -66,5 +66,5 @@ public:
 private:
 
 	Bev _bev;
-	int _angle;
+	float _angle;
 };
