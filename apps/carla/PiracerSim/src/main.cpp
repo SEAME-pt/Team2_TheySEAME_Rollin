@@ -31,18 +31,6 @@ namespace cc = carla::client;
 namespace cg = carla::geom;
 namespace csd = carla::sensor::data;
 
-Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "YOLO");
-Ort::SessionOptions session_options;
-Ort::Session session(env, "best.onnx", session_options);
-Ort::AllocatorWithDefaultOptions allocator;
-
-auto input_name_alloc   = session.GetInputNameAllocated(0, allocator);
-auto output_name_alloc  = session.GetOutputNameAllocated(0, allocator);
-auto output_name_alloc2 = session.GetOutputNameAllocated(1, allocator);
-
-const char* input_names[]  = { input_name_alloc.get() };
-const char* output_names[] = { output_name_alloc.get(), output_name_alloc2.get() };
-
 // ─── Globals ──────────────────────────────────────────────────────────────────
 boost::shared_ptr<cc::Vehicle> g_vehicle;
 boost::shared_ptr<cc::Sensor>  g_rgb_camera;
@@ -85,7 +73,7 @@ void sender_thread_func(int sock) {
 
 // ─── Signal ────────────────────────────────────────────────────────────────────
 void handle_sigint(int) {
-    std::cout << "\nSIGINT: a destruir actores...\n";
+    std::cout << "\nSIGINT: destroying actors...\n";
     g_sender_running = false;
     g_queue_cv.notify_all();
     if (g_rgb_camera) g_rgb_camera->Destroy();
@@ -115,11 +103,11 @@ int connect_rpi(const std::string& ip, int port) {
     addr.sin_port   = htons(port);
     inet_pton(AF_INET, ip.c_str(), &addr.sin_addr);
     if (connect(sock, (sockaddr*)&addr, sizeof(addr)) < 0) {
-        std::cerr << "Erro ao conectar ao RPi!\n";
+        std::cerr << "Error connecting to RPi!\n";
         close(sock);
         return -1;
     }
-    std::cout << "Ligado ao RPi!\n";
+    std::cout << "Connected to RPi!\n";
     return sock;
 }
 
@@ -127,28 +115,46 @@ int connect_rpi(const std::string& ip, int port) {
 boost::shared_ptr<cc::Vehicle> spawn_vehicle(cc::World& world) {
     auto blueprints  = world.GetBlueprintLibrary();
     auto vehicle_bp  = blueprints->Find("vehicle.nissan.micra");
-    if (!vehicle_bp) throw std::runtime_error("blueprint do veículo não encontrado");
+    if (!vehicle_bp) throw std::runtime_error("vehicle blueprint not found");
 
     auto spawn_points = world.GetMap()->GetRecommendedSpawnPoints();
-    if (spawn_points.empty()) throw std::runtime_error("sem spawn points");
+    if (spawn_points.empty()) throw std::runtime_error("no spawn points available");
 
     auto actor  = world.SpawnActor(*vehicle_bp, spawn_points[1]);
-    if (!actor) throw std::runtime_error("falhou spawn do veículo");
+    if (!actor) throw std::runtime_error("vehicle spawn failed");
 
     auto vehicle = boost::static_pointer_cast<cc::Vehicle>(actor);
     vehicle->ApplyPhysicsControl(vehicle->GetPhysicsControl());
     return vehicle;
 }
 
+// ─── ONNX context — only instantiated if --model ───────────────────────────────
+struct OnnxCtx {
+    Ort::Env                     env{ORT_LOGGING_LEVEL_WARNING, "YOLO"};
+    Ort::SessionOptions          opts;
+    Ort::Session                 session;
+    Ort::AllocatorWithDefaultOptions allocator;
+    std::string input_name;
+    std::string output_name0;
+    std::string output_name1;
+
+    OnnxCtx() : session(env, "best.onnx", opts) {
+        input_name   = session.GetInputNameAllocated(0, allocator).get();
+        output_name0 = session.GetOutputNameAllocated(0, allocator).get();
+        output_name1 = session.GetOutputNameAllocated(1, allocator).get();
+    }
+};
+
 // ─── Camera setup ──────────────────────────────────────────────────────────────
 boost::shared_ptr<cc::Sensor> setup_camera(
     cc::World& world,
     boost::shared_ptr<cc::Vehicle> vehicle,
-    int sock)
+    int sock,
+    bool use_model)
 {
     auto blueprints = world.GetBlueprintLibrary();
     auto rgb_bp_ptr = blueprints->Find("sensor.camera.rgb");
-    if (!rgb_bp_ptr) throw std::runtime_error("blueprint câmera não encontrado");
+    if (!rgb_bp_ptr) throw std::runtime_error("camera blueprint not found");
 
     auto rgb_bp = *rgb_bp_ptr;
     rgb_bp.SetAttribute("image_size_x", "640");
@@ -164,6 +170,8 @@ boost::shared_ptr<cc::Sensor> setup_camera(
     auto cam_actor = world.SpawnActor(rgb_bp, cam_transform, vehicle.get());
     auto camera    = boost::static_pointer_cast<cc::Sensor>(cam_actor);
 
+    auto onnx = use_model ? std::make_shared<OnnxCtx>() : nullptr;
+
     static const std::vector<std::string> CLASS_NAMES = {
         "center_continuous_lane",
         "center_dashed_lane",
@@ -173,10 +181,10 @@ boost::shared_ptr<cc::Sensor> setup_camera(
     };
 
     static const std::vector<cv::Scalar> COLORS = {
-        {255, 0,   0  },  // center_continuous_lane — azul
-        {0,   255, 255},  // center_dashed_lane     — amarelo
-        {0,   0,   255},  // crosswalk              — vermelho
-        {255, 255, 0  },  // left_lane              — ciano
+        {255, 0,   0  },  // center_continuous_lane — blue
+        {0,   255, 255},  // center_dashed_lane     — yellow
+        {0,   0,   255},  // crosswalk              — red
+        {255, 255, 0  },  // left_lane              — cyan
         {255, 0,   255},  // right_lane             — magenta
     };
 
@@ -184,7 +192,7 @@ boost::shared_ptr<cc::Sensor> setup_camera(
     const int   NUM_CLASSES = 5;
     const int   NUM_MASKS   = 32;
 
-    camera->Listen([sock, CONF_THRESH, NUM_CLASSES, NUM_MASKS](auto data) {
+    camera->Listen([sock, onnx, CONF_THRESH, NUM_CLASSES, NUM_MASKS](auto data) {
         auto img = boost::static_pointer_cast<csd::Image>(data);
 
         const int H = (int)img->GetHeight();
@@ -196,6 +204,13 @@ boost::shared_ptr<cc::Sensor> setup_camera(
         cv::Mat frame;
         cv::cvtColor(raw, frame, cv::COLOR_BGRA2BGR);
         cv::Mat display = frame.clone();
+
+        // ── No model — show clean frame and exit ──────────────
+        if (!onnx) {
+            cv::imshow("PiRacer Camera", display);
+            cv::waitKey(1);
+            return;
+        }
 
         // ── Preprocess ─────────────────────────────────────────
         cv::Mat resized;
@@ -220,27 +235,32 @@ boost::shared_ptr<cc::Sensor> setup_camera(
             input_shape.size()
         );
 
-        auto output = session.Run(
+        const char* input_names[]  = { onnx->input_name.c_str() };
+        const char* output_names[] = { onnx->output_name0.c_str(), onnx->output_name1.c_str() };
+
+        auto output = onnx->session.Run(
             Ort::RunOptions{nullptr},
             input_names, &input_tensor, 1,
             output_names, 2
         );
 
-        auto& out_tensor = output[0];
-        auto shape       = out_tensor.GetTensorTypeAndShapeInfo().GetShape();
-        const float* det = out_tensor.GetTensorData<float>();
-        const int num_anchors = (int)shape[2]; // 8400
+        // ── Output 0: [1, 41, 8400] ────────────────────────────
+        auto& out_tensor  = output[0];
+        auto shape        = out_tensor.GetTensorTypeAndShapeInfo().GetShape();
+        const float* det  = out_tensor.GetTensorData<float>();
+        const int num_anchors = (int)shape[2];
 
-        auto& proto_tensor = output[1];
-        auto proto_shape   = proto_tensor.GetTensorTypeAndShapeInfo().GetShape();
+        // ── Output 1: [1, 32, 160, 160] ───────────────────────
+        auto& proto_tensor  = output[1];
+        auto proto_shape    = proto_tensor.GetTensorTypeAndShapeInfo().GetShape();
         const float* protos = proto_tensor.GetTensorData<float>();
-        const int PH = (int)proto_shape[2]; // 160
-        const int PW = (int)proto_shape[3]; // 160
+        const int PH = (int)proto_shape[2];
+        const int PW = (int)proto_shape[3];
 
-        std::vector<cv::Rect>            boxes;
-        std::vector<float>               scores;
-        std::vector<int>                 class_ids;
-        std::vector<std::vector<float>>  mask_coefs;
+        std::vector<cv::Rect>           boxes;
+        std::vector<float>              scores;
+        std::vector<int>                class_ids;
+        std::vector<std::vector<float>> mask_coefs;
 
         // ── Decode ─────────────────────────────────────────────
         for (int a = 0; a < num_anchors; a++) {
@@ -276,6 +296,7 @@ boost::shared_ptr<cc::Sensor> setup_camera(
         std::vector<int> indices;
         cv::dnn::NMSBoxes(boxes, scores, CONF_THRESH, 0.4f, indices);
 
+        // ── Mask + Draw ─────────────────────────────────────
         for (int idx : indices) {
             int cls      = class_ids[idx];
             float score  = scores[idx];
@@ -314,10 +335,14 @@ boost::shared_ptr<cc::Sensor> setup_camera(
             colored.setTo(color, roi_mask);
             cv::addWeighted(display, 1.0f, colored, 0.4f, 0, display);
 
+            std::string label =
+                (cls < (int)CLASS_NAMES.size() ? CLASS_NAMES[cls] : "cls")
+                + " " + std::to_string(int(score * 100)) + "%";
             cv::putText(display, label,
                 cv::Point(box.x, std::max(box.y - 5, 0)),
                 cv::FONT_HERSHEY_SIMPLEX, 0.5, color, 1);
 
+            std::cout << label << "\n";
         }
 
         cv::imshow("PiRacer Camera", display);
@@ -365,11 +390,14 @@ void apply_control(boost::shared_ptr<cc::Vehicle> vehicle, kuksaLib& kuksa) {
 // ─── main ──────────────────────────────────────────────────────────────────────
 int main(int argc, char* argv[]) {
     bool autopilot_mode = false;
+    bool use_model      = false;
     for (int i = 1; i < argc; ++i) {
         if (std::string(argv[i]) == "--auto")   autopilot_mode = true;
         if (std::string(argv[i]) == "--manual") autopilot_mode = false;
+        if (std::string(argv[i]) == "--model")  use_model = true;
     }
-    std::cout << "Modo: " << (autopilot_mode ? "AUTOPILOT" : "MANUAL") << "\n";
+    std::cout << "Mode:  " << (autopilot_mode ? "AUTOPILOT" : "MANUAL") << "\n";
+    std::cout << "Model: " << (use_model      ? "ON"        : "OFF")    << "\n";
     signal(SIGINT, handle_sigint);
 
     try {
@@ -381,10 +409,10 @@ int main(int argc, char* argv[]) {
         auto world = setup_world(client);
 
         g_sock = connect_rpi(RPI_IP, RPI_PORT);
-        if (g_sock < 0) std::cerr << "continuing without connection RPi...\n";
+        if (g_sock < 0) std::cerr << "Continuing without RPi connection...\n";
 
         g_vehicle    = spawn_vehicle(world);
-        g_rgb_camera = setup_camera(world, g_vehicle, g_sock);
+        g_rgb_camera = setup_camera(world, g_vehicle, g_sock, use_model);
 
         auto tm = client.GetInstanceTM(8000);
         tm.SetGlobalDistanceToLeadingVehicle(2.0f);
