@@ -341,6 +341,22 @@ void INA219_setCalibration_16V_3A(INA219_t *ina219)
     INA219_setConfig(ina219, config);
 }
 
+void INA219_setCustomCalibration_ina219_2(INA219_t *ina219)
+{
+    uint16_t config = INA219_CONFIG_BVOLTAGERANGE_32V |
+                      INA219_CONFIG_GAIN_8_320MV |
+                      INA219_CONFIG_BADCRES_12BIT |
+                      INA219_CONFIG_SADCRES_12BIT_1S_532US |
+                      INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
+
+    ina219->calibrationValue    = 33573;
+    ina219->currentDivider_mA   = 8;
+    ina219->powerMultiplier_mW  = 2;
+
+    INA219_setCalibration(ina219, ina219->calibrationValue);
+    INA219_setConfig(ina219, config);
+}
+
 void INA219_setPowerMode(INA219_t *ina219, uint8_t Mode)
 {
 	uint16_t config = INA219_getConfig(ina219);
@@ -370,30 +386,27 @@ void INA219_setPowerMode(INA219_t *ina219, uint8_t Mode)
 
 uint8_t INA219_Init(INA219_t *ina219, I2C_HandleTypeDef *i2c, uint8_t Address)
 {
-	isFirst = false; // set global var used by INA219_GetMiliWattMinutes
-	ina219->ina219_i2c = i2c;
-	ina219->Address = Address;
+    isFirst = false;
+    ina219->ina219_i2c = i2c;
+    ina219->Address = Address;
+    ina219->currentDivider_mA = 0;
+    ina219->powerMultiplier_mW = 0;
+    ina219->voltageFilterInitialized = false;
 
-	ina219->currentDivider_mA = 0;
-	ina219->powerMultiplier_mW = 0;
+    uint8_t ina219_isReady = HAL_I2C_IsDeviceReady(i2c, (Address << 1), 3, 2);
 
-	uint8_t ina219_isReady = HAL_I2C_IsDeviceReady(i2c, (Address << 1), 3, 2);
+    if(ina219_isReady == HAL_OK)
+    {
+        batteryState = Battery_START;
+        INA219_HealthCheck(ina219, 0.0f, 1.0f);
+        INA219_Reset(ina219);
 
-	if(ina219_isReady == HAL_OK)
-	{
-		// just to initialize our state machine.
-		//The numbers 0.0f and 1.0f is just to call the healthcheck function.
-		//Feel free to change this if you want. This function should be called in your main function to be polled.
-		batteryState = Battery_START; // go to starting position.
-		INA219_HealthCheck(ina219,0.0f,1.0f );
-		INA219_Reset(ina219);
-		INA219_setCalibration_16V_3A(ina219);
+        if(Address == INA219_ADDRESS)         // 0x41 - Expansion Board
+            INA219_setCalibration_32V_2A(ina219);
+        else                                  // 0x40 - placa principal
+            INA219_setCustomCalibration_ina219_2(ina219);
 
-		return 1;
-	}
-
-	else
-	{
-		return 0;
-	}
+        return 1;
+    }
+    return 0;
 }
