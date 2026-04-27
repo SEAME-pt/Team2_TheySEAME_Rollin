@@ -6,6 +6,7 @@
 #define GREEN cv::Scalar(0,255,0)
 #define BLUE cv::Scalar(255,0,0)
 #define YELLOW cv::Scalar(0, 255, 255)
+#define WHITE cv::Scalar(255, 255, 255)
 
 /**
  * @class Frame

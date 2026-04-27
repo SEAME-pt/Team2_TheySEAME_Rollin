@@ -18,6 +18,9 @@ int ActuatorController::processSteering(const int rawSteering) {
 
 void ActuatorController::steering(const int angle) {
 	const int steering = std::clamp(angle, -30, 30);
+	if (steering == _kuksa.getSteering()) {
+		return;
+	}
 	_car->setSteering(steering);
 	std::cout << "Changed Steering " << steering << std::endl;
 }

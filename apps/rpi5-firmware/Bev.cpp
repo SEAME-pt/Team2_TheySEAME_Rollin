@@ -34,8 +34,6 @@ void Bev::slidingWindow(Frame &frame, int startX, int ptnNbr, int rectW, std::ve
 	int step_y = frame.getHeight() / ptnNbr;
 	int y = frame.getHeight() - step_y;
 
-	cv::Mat color;
-	cv::cvtColor(frame.getRawData(), color, cv::COLOR_GRAY2BGR);
 	for (size_t i = 0; i < ptnNbr; i++) {
 		cv::Rect rect(x - (rectW / 2), y, rectW, step_y);
 		//std::cout << "Point: (" << x << ", " << y + (step_y / 2)<< ")" << std::endl;
@@ -43,11 +41,10 @@ void Bev::slidingWindow(Frame &frame, int startX, int ptnNbr, int rectW, std::ve
 		if (average != 0) {
 			x = average;
 		}
-		cv::rectangle(color, rect, GREEN, 1);
+		cv::rectangle(frame.getRawData(), rect, GREEN, 1);
 		ptns.push_back(cv::Point(x, y + (step_y / 2)));
 		y -= step_y;
 	}
-	cv::imwrite("./HV.jpg", color);
 }
 
 int Bev::checkPixelsInRect(Frame &frame, cv::Rect &rect) {

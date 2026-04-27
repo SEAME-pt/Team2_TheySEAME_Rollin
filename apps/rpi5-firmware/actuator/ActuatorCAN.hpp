@@ -31,10 +31,8 @@ public:
 	void setSteering(const int steering);
 	void setGear(const short gear);
 	void brake(const bool flag);
-	short getGear() const;
 	void setCruiseControl(const bool flag, const int targetSpeed);
 
 private:
 	ICAN &_can;
-	short _gear;
 };

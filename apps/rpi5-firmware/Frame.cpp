@@ -54,7 +54,9 @@ void Frame::cropp(const cv::Rect &rect) {
 }
 
 void Frame::histogram(std::vector<int> &histogram) {
-	cv::reduce(_frameRaw, histogram, 0, cv::REDUCE_SUM, CV_32S);
+	cv::Mat lowerHalf = _frameRaw(cv::Range(getHeight() - 150, getHeight()), cv::Range::all());
+
+	cv::reduce(lowerHalf, histogram, 0, cv::REDUCE_SUM, CV_32S);
 }
 
 void Frame::transformToBinary(const int thresh) {

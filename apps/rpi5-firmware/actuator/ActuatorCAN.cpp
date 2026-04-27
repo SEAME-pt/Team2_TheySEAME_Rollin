@@ -3,7 +3,6 @@
 
 ActuatorCAN::ActuatorCAN(ICAN &can) : _can(can) {
 	std::cout << "CarCAN constructor" << std::endl;
-	_gear = DRIVE;
 }
 
 ActuatorCAN::~ActuatorCAN() {
@@ -13,8 +12,7 @@ ActuatorCAN::~ActuatorCAN() {
 void ActuatorCAN::setGear(const short gear) {
 	uint8_t data[1];
 
-	_gear = gear;
-	data[0] = _gear;
+	data[0] = gear;
 	_can.sendFrame(GEAR, data, sizeof(data));
 }
 
@@ -39,7 +37,6 @@ void ActuatorCAN::brake(const bool flag) {
 	_can.sendFrame(BRAKE, data, sizeof(data));
 }
 
-short ActuatorCAN::getGear() const { return (_gear); }
 
 void ActuatorCAN::setCruiseControl(const bool flag, const int targetSpeed) {
 	uint8_t data[2];

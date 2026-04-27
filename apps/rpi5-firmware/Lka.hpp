@@ -63,8 +63,10 @@ public:
 	 */
 	void poly(Frame &frame);
 
+	void putLinesInScreen(Frame &frame, const int ptsNbr, std::vector<cv::Point> &leftLane, std::vector<cv::Point> &rightLane);
+
 private:
 
 	Bev _bev;
-	float _angle;
+	int _angle;
 };
