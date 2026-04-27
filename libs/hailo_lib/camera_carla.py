@@ -102,19 +102,19 @@ class CARLACamera:
         pass
 
 
-# ── Entry point ────────────────────────────────────────────────────────────────
-if __name__ == "__main__":
-    W, H = 320, 240
-    cam = CARLACamera(
-        CAM_HEIGHT=H, CAM_WIDTH=W,
-        MODEL_HEIGHT=H, MODEL_WIDTH=W,
-    )
-    try:
-        while True:
-            frame = cam.read_frame()          # ← was read_and_pipe_frame()
-            if frame is None:
-                break
-            if not cam.write_frame_to_pipe(frame):  # ← pipe the frame out
-                break
-    finally:
-        cam.terminate_camera()
+# # ── Entry point ────────────────────────────────────────────────────────────────
+# if __name__ == "__main__":
+#     W, H = 320, 240
+#     cam = CARLACamera(
+#         CAM_HEIGHT=H, CAM_WIDTH=W,
+#         MODEL_HEIGHT=H, MODEL_WIDTH=W,
+#     )
+#     try:
+#         while True:
+#             frame = cam.read_frame()          # ← was read_and_pipe_frame()
+#             if frame is None:
+#                 break
+#             if not cam.write_frame_to_pipe(frame):  # ← pipe the frame out
+#                 break
+#     finally:
+#         cam.terminate_camera()
