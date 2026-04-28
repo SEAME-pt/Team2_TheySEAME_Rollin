@@ -29,57 +29,7 @@ Bev::Bev(const int fov, const cv::Rect &roi) {
 
 Bev::~Bev() {}
 
-void Bev::slidingWindow(Frame &frame, int startX, int ptnNbr, int rectW, std::vector<cv::Point> &ptns) {
-	int x = startX;
-	int step_y = frame.getHeight() / ptnNbr;
-	int y = frame.getHeight() - step_y;
-
-	for (size_t i = 0; i < ptnNbr; i++) {
-		cv::Rect rect(x - (rectW / 2), y, rectW, step_y);
-		//std::cout << "Point: (" << x << ", " << y + (step_y / 2)<< ")" << std::endl;
-		int average = checkPixelsInRect(frame, rect);
-		if (average != 0) {
-			x = average;
-		}
-		cv::rectangle(frame.getRawData(), rect, GREEN, 1);
-		ptns.push_back(cv::Point(x, y + (step_y / 2)));
-		y -= step_y;
-	}
-}
-
-int Bev::checkPixelsInRect(Frame &frame, cv::Rect &rect) {
-	int average = 0;
-	int found = 0;
-
-	for (int y = rect.y; y < rect.y + rect.height; y++) {
-		for (int x = rect.x; x < rect.x + rect.width; x++) {
-			if (frame.getPointValue(x, y) == 255) {
-				average += x;
-				found++;
-				//frame.setPointValue(x, y, 0);
-				//std::cout << x << " ";
-			}
-		}
-	}
-	return (average / found);
-}
-
-int Bev::getLaneX() {
-	auto it = std::max_element(_histogram.begin(), _histogram.end());
-	int laneX = std::distance(_histogram.begin(), it);
-	int distance = 200;
-	for (size_t i = laneX - distance; i < laneX + distance; i++) {
-		_histogram[i] = 0;
-	}
-	return (laneX);
-}
-
-void Bev::applyBevToFrameAI(Frame &frame) {
-	frame.warp(_M);
-	frame.histogram(_histogram);
-}
-
-void Bev::applyBevToFrameTD(Frame &frame) {
+void Bev::applyBevToFrame(Frame &frame) {
 	frame.save("./OrigFrame.jpg");
 	frame.cropp(_roi);
 	frame.transformToBinary(180);
@@ -87,7 +37,6 @@ void Bev::applyBevToFrameTD(Frame &frame) {
 	frame.save("./WarpFrame.jpg");
 	frame.open();
 	frame.save("./Garf.jpg");
-	frame.histogram(_histogram);
 }
 
 cv::Mat &Bev::getReverseMatrix() {

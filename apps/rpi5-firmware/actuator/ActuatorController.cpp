@@ -99,5 +99,6 @@ void ActuatorController::update(Subject *subj, Events event) {
 		}
 	} else {
 		steering(_lka->getAngle());
+		//throttle((-30));
 	}
 }

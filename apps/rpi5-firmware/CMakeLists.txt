@@ -13,6 +13,8 @@ set(SOURCES
 	Lka.hpp
 	Frame.hpp
 	Frame.cpp
+	SlidingWindow.hpp
+	SlidingWindow.cpp
 )
 
 set(SOURCES_LKA
@@ -23,6 +25,8 @@ set(SOURCES_LKA
 	Lka.hpp
 	Frame.hpp
 	Frame.cpp
+	SlidingWindow.hpp
+	SlidingWindow.cpp
 )
 
 include_directories(/home/rumachad/Seame/agl-app/sdk/sysroots/aarch64-agl-linux/usr/include/opencv4/ .)

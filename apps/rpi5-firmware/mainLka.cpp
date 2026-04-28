@@ -1,4 +1,5 @@
 #include "ActuatorController.hpp"
+#include "ActuatorKuksa.hpp"
 #include "CAN.hpp"
 #include "ActuatorCAN.hpp"
 #include "Lka.hpp"
@@ -27,9 +28,14 @@ int handleFrame(cv::VideoCapture &cam, Lka &lka) {
 
 int main() {
 	CAN can("can0", 500, 0, 0);
-	CarActuator *car = new ActuatorCAN(can);
-	Lka lka(400, 0, 400, 2304, 464);
+	//CarActuator *car = new ActuatorCAN(can);
+	//Lka lka(400, 0, 250, 960, 390); // Carla Setup
+	Lka lka(400, 0, 400, 1536, 464, 8);
 	kuksaLib kuksa;
+	CarActuator *car = new ActuatorKuksa(
+		new ActuatorCAN(can),
+		kuksa
+	);
 	ActuatorController ctrl(car, NULL, &lka, kuksa);
 
 	std::signal(SIGINT, signal_handler);
@@ -38,14 +44,15 @@ int main() {
 	cv::namedWindow("WIN", cv::WINDOW_NORMAL);
 	cv::moveWindow("WIN", 0, 0);
 	cv::VideoCapture cam("pipe:0");
-	cam.set(cv::CAP_PROP_FPS, 20);
+	//cam.set(cv::CAP_PROP_FPS, 20);
 	if (!cam.isOpened()) {
 		std::cout << "Didnt open" << std::endl;
 		return (-1);
 	}
 
+	std::cout << "Camera Opened" << std::endl;
 	while (run.load()) {
-		usleep(50000);
+		//usleep(50000);
 		if (handleFrame(cam, lka) == -1) {
 			break;
 		}

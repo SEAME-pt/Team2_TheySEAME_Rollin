@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Bev.hpp"
+#include "SlidingWindow.hpp"
 #include "Subject.hpp"
 
 #define LEFT -1
@@ -29,7 +30,7 @@ public:
 	 * @param width width of the roi rectangle
 	 * @param height height of the roi rectangle
 	 */
-	Lka(const int fov, const int startX, const int startY, const int width, const int height);
+	Lka(const int fov, const int startX, const int startY, const int width, const int height, const int nbrPtns);
 
 	/**
 	 * @brief Lka destructor
@@ -63,10 +64,12 @@ public:
 	 */
 	void poly(Frame &frame);
 
-	void putLinesInScreen(Frame &frame, const int ptsNbr, std::vector<cv::Point> &leftLane, std::vector<cv::Point> &rightLane);
+	void putLinesInScreen(Frame &frame, std::vector<cv::Point> &leftLane, std::vector<cv::Point> &rightLane);
 
 private:
 
 	Bev _bev;
+	SlidingWindow _slwin;
 	int _angle;
+	int _nbrPtns;
 };

@@ -54,7 +54,7 @@ void Frame::cropp(const cv::Rect &rect) {
 }
 
 void Frame::histogram(std::vector<int> &histogram) {
-	cv::Mat lowerHalf = _frameRaw(cv::Range(getHeight() - 150, getHeight()), cv::Range::all());
+	cv::Mat lowerHalf = _frameRaw(cv::Range(getHeight() - (getHeight() / 3), getHeight()), cv::Range::all());
 
 	cv::reduce(lowerHalf, histogram, 0, cv::REDUCE_SUM, CV_32S);
 }
@@ -81,7 +81,7 @@ void Frame::save(const std::string &filename) {
 
 void Frame::showInScreen(const std::string &winName) {
 	cv::Mat resized;
-	cv::resize(_frameRaw, resized, cv::Size(1480, 400));
+	cv::resize(_frameRaw, resized, cv::Size(1200, 300));
 	cv::imshow("WIN", resized);
 	cv::waitKey(1);
 }
