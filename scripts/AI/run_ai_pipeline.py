@@ -96,18 +96,44 @@ if __name__ == '__main__':
 				conf_th=LANE_CONFIDENCE_THRESHOLD,
 				iou_th=0.5,
 			)
-			lane_mask = lane_result["mask"]
-			lane_score = lane_result["score"]
-			lane_scale = lane_result["scale"]
+			# Normalize decoder outputs: `masks` may be a list of 2D arrays.
+			masks = lane_result.get("masks", None)
+			scores = lane_result.get("scores", None)
+			scales = lane_result.get("scales", None)
+
+			if masks is None:
+				lane_mask = None
+			else:
+				# If decoder returned a list of masks, stack/merge them into a single 2D mask.
+				if isinstance(masks, list):
+					if len(masks) == 0:
+						lane_mask = None
+					else:
+						try:
+							lane_mask = np.any(np.stack(masks, axis=0), axis=0).astype(np.uint8)
+						except Exception:
+							# Fallback: use the first mask element
+							lane_mask = np.asarray(masks[0])
+				else:
+					lane_mask = np.asarray(masks)
+
+			# Pick first score/scale if arrays are returned, else default values
+			if scores is None or (hasattr(scores, "size") and scores.size == 0):
+				lane_score = 0.0
+			else:
+				try:
+					lane_score = float(scores[0])
+				except Exception:
+					lane_score = float(scores)
+
+			if scales is None or (hasattr(scales, "size") and scales.size == 0):
+				lane_scale = None
+			else:
+				try:
+					lane_scale = int(scales[0])
+				except Exception:
+					lane_scale = int(scales)
 			
-			# Write to display
-			post_processor.write_segmentation_mask_to_display(
-			    camera.display_proc,
-			    lane_mask,
-			    base_frame=frame,
-			    color=(0, 255, 0),
-			    alpha=0.65
-			)
 
 			if DEBUG_LANE_MASK:
 				if lane_mask is None:
@@ -136,7 +162,7 @@ if __name__ == '__main__':
 			if lane_mask is not None:
 				points = polyfit_lines(lane_mask)
 				if points.size > 0:
-					cv2.polylines(frame, [points], isClosed=False, color=(0, 255, 0), thickness=5)
+					cv2.polylines(frame, [points], isClosed=False, color=(255, 0, 0), thickness=5)
 					cv2.putText(
 						frame,
 						f"Lane Detected {lane_score:.2f}",

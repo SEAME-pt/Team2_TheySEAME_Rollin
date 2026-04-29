@@ -173,14 +173,14 @@ class PostProcessor:
 
 		return {
 			"boxes": boxes,
-			"score": scores[0] if len(scores) > 0 else 0,
-			"scale": int(scales[0]) if len(scales) > 0 else None,
+			"scores": scores,
+			"scales": scales,
 			"classes": classes,
 			"mask": masks[0] if masks else None,
 			"masks": masks,
 		}
 
-	def render_segmentation_mask(self, mask, base_frame=None, color=(0, 255, 0), alpha=0.65):
+	def render_segmentation_mask(self, mask, base_frame=None, color=(0, 255, 0), alpha=0.8):
 		if mask is None:
 			if base_frame is None:
 				return np.zeros((self.input_size[0], self.input_size[1], 3), dtype=np.uint8)
@@ -194,9 +194,9 @@ class PostProcessor:
 		binary = (mask > 0).astype(np.uint8)
 		overlay = np.zeros_like(base)
 		overlay[binary > 0] = color
-		return cv2.addWeighted(base, 1.0, overlay, alpha, 0)
+		return cv2.addWeighted(base, alpha, overlay, alpha, 0)
 
-	def write_segmentation_mask_to_display(self, display_proc, mask, base_frame=None, color=(0, 255, 0), alpha=0.65):
+	def write_segmentation_mask_to_display(self, display_proc, mask, base_frame, color=(0, 255, 0), alpha=0.65):
 		if display_proc is None or getattr(display_proc, "stdin", None) is None:
 			return False
 
