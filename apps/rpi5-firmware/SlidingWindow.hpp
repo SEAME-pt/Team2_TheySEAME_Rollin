@@ -12,7 +12,18 @@
 class SlidingWindow {
 public:
 
+	/**
+	 * @brief SlidingWindow constructor
+	 *
+	 * SlidingWindow constructor
+	 */
 	SlidingWindow();
+
+	/**
+	 * @brief SlidingWindow destructor
+	 *
+	 * SlidingWindow destructor
+	 */
 	~SlidingWindow();
 
 	/**
@@ -72,5 +83,12 @@ public:
 
 private:
 
+	/**
+	 * @brief Check white pixels in the rectangle region
+	 *
+	 * Check all the pixels in a region and computes the average x coordinate of all white pixels
+	 *
+	 * @return int Average of all white pixels x coordinates
+	 */
 	int checkPixelsInRect(Frame &frame, cv::Rect &rect);
 };

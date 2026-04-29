@@ -8,7 +8,6 @@
  * @brief Bev class
  *
  * The Bev class changes the perspective of a regular Frame into a Birds-Eye-View perspective.
- * It also implements the Sliding Window algorithm.
  * This class is mostly used by the Lka class
  */
 class Bev {
@@ -59,15 +58,6 @@ public:
 
 private:
 	
-	/**
-	 * @brief Check white pixels in the rectangle region
-	 *
-	 * Check all the pixels in a region and computes the average x coordinate of all white pixels
-	 *
-	 * @return int Average of all white pixels x coordinates
-	 */
-	int checkPixelsInRect(Frame &frame, cv::Rect &rect);
-
 	cv::Rect _roi;
 	cv::Mat _M;
 	cv::Mat _Mreverse;
