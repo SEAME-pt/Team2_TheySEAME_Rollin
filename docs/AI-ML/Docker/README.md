@@ -42,6 +42,15 @@ For YOLO11n-seg (Newer/Faster):
 ```
 yolo segment train data=/workspace/datasets/data.yaml model=yolo11n-seg.pt epochs=100 imgsz=640 device=0
 ```
+
+Other useful flags:
+
+`project` - allows defining a project name that creates an organized directory for that project
+
+`name` - subfolder inside the project with a specific version/test
+
+`verbose=True` - more detailed logging
+
 2. Export to ONNX
 
 Hailo requires ONNX opset 11. Run this command once training is finished:
@@ -51,6 +60,11 @@ format=onnx opset=11 imgsz=640
 ```
     [!IMPORTANT]
     Move the resulting best.onnx file into the shared_with_docker folder of your Hailo Software Suite directory.
+
+Note:
+We can be more explicit about certain flags. `Simplify=True` runs the onnx-simplifier to fuse redundant operations and constant-fold nodes. The Hailo DFC is very sensitive to the graph structure; a "messy" graph with unnecessary Reshape or Transpose nodes (common in YOLOv8) can lead to parsing errors or inefficient hardware mapping.
+`dynamic=False` (Default is False, but good to be explicit). Hailo hardware requires a fixed input shape. Never use dynamic axes for Hailo; the DFC needs to know the exact tensor dimensions to allocate memory on the chip's internal SRAM.
+
 
 ⚙️ Phase 3: Hailo Compilation (HEF Generation)
 1. Launch Hailo SW Suite
