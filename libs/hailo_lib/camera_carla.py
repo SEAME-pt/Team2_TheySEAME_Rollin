@@ -46,24 +46,19 @@ class CARLACamera:
         return buf
 
     def read_frame(self) -> np.ndarray | None:
-        header = self._recvall(8)
+        header = self._recvall(4)
         if header is None:
             return None
 
-        rows, cols = struct.unpack(">II", header)
-        if rows == 0 or cols == 0 or rows > 4096 or cols > 4096:
+        (size,) = struct.unpack(">I", header)
+        if size == 0 or size > 10_000_000:
             return None
 
-        raw = self._recvall(rows * cols * 3)
+        raw = self._recvall(size)
         if raw is None:
             return None
 
-        frame = np.frombuffer(raw, dtype=np.uint8).reshape((rows, cols, 3)).copy()
-
-        if rows != self.MODEL_HEIGHT or cols != self.MODEL_WIDTH:
-            frame = cv2.resize(frame, (self.MODEL_WIDTH, self.MODEL_HEIGHT))
-
-        return frame
+        return cv2.imdecode(np.frombuffer(raw, dtype=np.uint8), cv2.IMREAD_COLOR)
 
     # ------------------------------------------------------------------ #
     #  Pipe to stdout (FFmpeg rawvideo BGR24)                              #
@@ -76,11 +71,11 @@ class CARLACamera:
         jpeg_bytes = jpeg_buf.tobytes()
         try:
             boundary = (
-                b"--frame\r\n"
-                b"Content-Type: image/jpeg\r\n"
-                b"Content-Length: " + str(len(jpeg_bytes)).encode() + b"\r\n"
-                b"\r\n"
-            )
+                f"--frame\r\n"
+                f"Content-Type: image/jpeg\r\n"
+                f"Content-Length: {len(jpeg_bytes)}\r\n"
+                f"\r\n"
+            ).encode()
             self._out.write(boundary)
             self._out.write(jpeg_bytes)
             self._out.write(b"\r\n")
@@ -109,11 +104,14 @@ if __name__ == "__main__":
         CAM_HEIGHT=H, CAM_WIDTH=W,
         MODEL_HEIGHT=H, MODEL_WIDTH=W,
     )
+    frame_count = 0
     try:
         while True:
             frame = cam.read_frame()          # ← was read_and_pipe_frame()
             if frame is None:
                 break
+            frame_count += 1
+            print(f"[DEBUG] frame {frame_count} | shape={frame.shape}", file=sys.stderr, flush=True)
             if not cam.write_frame_to_pipe(frame):  # ← pipe the frame out
                 break
     finally:
