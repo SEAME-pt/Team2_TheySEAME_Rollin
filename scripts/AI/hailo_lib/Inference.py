@@ -36,6 +36,17 @@ class Inference:
 		self.MODEL_WIDTH = MODEL_WIDTH
 		self.network_group_params = None
 
+	def get_quant_params(self):
+		output_vstream_infos = self.HEF.get_output_vstream_infos()
+	
+		quant_params = {}
+		for output_info in output_vstream_infos:
+			quant_params[output_info.name] = (
+				output_info.quant_info.qp_scale,
+				output_info.quant_info.qp_zp
+			)
+		return quant_params
+
 	def config_network_streams(self):
 		configure_params = ConfigureParams.create_from_hef(
 			hef=self.HEF, interface=HailoStreamInterface.PCIe

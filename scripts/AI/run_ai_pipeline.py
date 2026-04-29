@@ -5,44 +5,47 @@
 import cv2
 import numpy as np
 import argparse
-import json
-from pathlib import Path
-from hailo_lib import Camera, Inference
+from hailo_lib import PostProcessor
+from hailo_lib import Inference
+from hailo_lib import Camera
 from hailo_lib.CameraCarla import CARLACamera
-from hailo_lib.yoloPostProcessor import inference_result_handler
 
 CAM_HEIGHT = 640
 CAM_WIDTH = 640
 MODEL_HEIGHT = 640
 MODEL_WIDTH = 640
 PRINT_OUTPUT_TENSORS_ONCE = True
-MODEL_TYPE = "v8"
-CONFIG_PATH = Path(__file__).resolve().parent / "config.json"
+LANE_CLASS_ID = 0
+LANE_CONFIDENCE_THRESHOLD = 0.5
+MODEL_FAMILY = "yolov8"
+DISPLAY_MASK_ONLY = False
+DEBUG_LANE_MASK = False
+DEBUG_EVERY_N_FRAMES = 10
 
 
-def _load_config(config_path):
-	with open(config_path, "r", encoding="utf-8") as f:
-		return json.load(f)
+def polyfit_lines(tensor):
+	tensor = np.asarray(tensor)
+	if tensor.ndim == 4:
+		if tensor.shape[0] == 0:
+			return np.empty((0, 1, 2), dtype=np.int32)
+		lane_mask = tensor[0, :, :, 0] > 0
+	elif tensor.ndim == 2:
+		lane_mask = tensor > 0
+	else:
+		return np.empty((0, 1, 2), dtype=np.int32)
 
+	y_coords, x_coords = np.where(lane_mask)
+	if x_coords.size < 3:
+		return np.empty((0, 1, 2), dtype=np.int32)
 
-def _default_labels(config_data, model_type):
-	num_classes = int(config_data[model_type]["classes"])
-	return [f"class_{i}" for i in range(num_classes)]
+	coefficients = np.polyfit(y_coords, x_coords, 2)
+	y_values = np.linspace(0, lane_mask.shape[0] - 1, 100)
+	x_values = coefficients[0] * y_values**2 + coefficients[1] * y_values + coefficients[2]
+	x_values = np.clip(x_values, 0, lane_mask.shape[1] - 1)
 
+	points = np.column_stack((x_values, y_values)).astype(np.int32)
+	return points.reshape(-1, 1, 2)
 
-def _write_display_frame(camera, frame):
-	if hasattr(camera, "write_frame_to_pipe"):
-		return camera.write_frame_to_pipe(frame)
-
-	if hasattr(camera, "display_proc") and camera.display_proc and camera.display_proc.stdin:
-		try:
-			camera.display_proc.stdin.write(frame.tobytes())
-			camera.display_proc.stdin.flush()
-			return True
-		except BrokenPipeError:
-			return False
-
-	return False
 
 def _parse_args():
 	parser = argparse.ArgumentParser(description="Run AI pipeline with either Pi camera or CARLA camera")
@@ -63,11 +66,9 @@ if __name__ == '__main__':
 	args = _parse_args()
 	camera = None
 	printed_tensor_info = False
-	config_data = _load_config(CONFIG_PATH)
-	labels = _default_labels(config_data, MODEL_TYPE)
+	frame_index = 0
 	try:
 		if args.use_carla_camera:
-			print("Initializing CARLA camera...")
 			camera = CARLACamera(
 				CAM_HEIGHT,
 				CAM_WIDTH,
@@ -77,28 +78,100 @@ if __name__ == '__main__':
 			)
 			print(f"Using CARLA camera on port {args.carla_port}")
 		else:
-			print("Initializing Raspberry Pi camera...")
 			camera = Camera(CAM_HEIGHT, CAM_WIDTH, MODEL_HEIGHT, MODEL_WIDTH)
 			print("Using Raspberry Pi camera")
-		infer_engine = Inference(camera, "/root/trained_models/yolov8n_seg.hef")
+		infer_engine = Inference(camera, "/root/perception/trained_models/yolov8n_seg_2c_100e_16.hef")
+		post_processor = PostProcessor(input_size=(MODEL_HEIGHT, MODEL_WIDTH), strides=(8, 16, 32))
 		for frame, infer_results in infer_engine.run_inference():
+			frame_index += 1
 			if PRINT_OUTPUT_TENSORS_ONCE and not printed_tensor_info:
 				print("=== Model output tensors ===")
 				for out_name, out_tensor in infer_results.items():
 					print(f"{out_name}: shape={out_tensor.shape}, dtype={out_tensor.dtype}")
 				print("============================")
 				printed_tensor_info = True
-
-			annotated_frame = inference_result_handler(
-				frame=np.array(frame, copy=True),
-				infer_results=infer_results,
-				config_data=config_data,
-				model_type=MODEL_TYPE,
-				labels=labels,
+			lane_result = post_processor.decode(
+				infer_results,
+				quant_params=infer_engine.get_quant_params(),
+				conf_th=LANE_CONFIDENCE_THRESHOLD,
+				iou_th=0.5,
 			)
-			cv2.putText(annotated_frame, "Inference Active", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+			lane_mask = lane_result["mask"]
+			lane_score = lane_result["score"]
+			lane_scale = lane_result["scale"]
+			
+			# Write to display
+			post_processor.write_segmentation_mask_to_display(
+			    camera.display_proc,
+			    lane_mask,
+			    base_frame=frame,
+			    color=(0, 255, 0),
+			    alpha=0.65
+			)
 
-			ok = _write_display_frame(camera, annotated_frame)
+			if DEBUG_LANE_MASK:
+				if lane_mask is None:
+					if frame_index % DEBUG_EVERY_N_FRAMES == 0:
+						print(f"[lane_mask] frame={frame_index} mask=None")
+				else:
+					nonzero_count = int(np.count_nonzero(lane_mask))
+					total_count = int(lane_mask.size)
+					nonzero_ratio = (nonzero_count / total_count) if total_count > 0 else 0.0
+					if frame_index % DEBUG_EVERY_N_FRAMES == 0:
+						unique_vals = np.unique(lane_mask)
+						print(
+							f"[lane_mask] frame={frame_index} nonzero={nonzero_count}/{total_count} "
+							f"({nonzero_ratio * 100:.2f}%) unique={unique_vals.tolist()}"
+						)
+					cv2.putText(
+						frame,
+						f"Mask nz: {nonzero_count} ({nonzero_ratio * 100:.2f}%)",
+						(0, 185),
+						cv2.FONT_HERSHEY_SIMPLEX,
+						0.75,
+						(0, 255, 255) if nonzero_count > 0 else (0, 0, 255),
+						2,
+					)
+
+			if lane_mask is not None:
+				points = polyfit_lines(lane_mask)
+				if points.size > 0:
+					cv2.polylines(frame, [points], isClosed=False, color=(0, 255, 0), thickness=5)
+					cv2.putText(
+						frame,
+						f"Lane Detected {lane_score:.2f}",
+						(0, 150),
+						cv2.FONT_HERSHEY_SIMPLEX,
+						1,
+						(255, 0, 0),
+						2,
+					)
+				else:
+					cv2.putText(
+						frame,
+						"Lane Mask Found",
+						(0, 150),
+						cv2.FONT_HERSHEY_SIMPLEX,
+						1,
+						(255, 0, 0),
+						2,
+					)
+			else:
+				cv2.putText(frame, "No Lane", (0, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+			cv2.putText(frame, "Inference Active", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+			if DISPLAY_MASK_ONLY:
+				ok = post_processor.write_segmentation_mask_to_display(
+					camera.display_proc,
+					lane_mask,
+					base_frame=None,
+				)
+			else:
+				ok = post_processor.write_segmentation_mask_to_display(
+					camera.display_proc,
+					lane_mask,
+					base_frame=frame,
+				)
 
 			if not ok:
 				break
