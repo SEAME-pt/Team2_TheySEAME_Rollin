@@ -8,7 +8,7 @@
 #include <QJsonObject>
 #include <iostream>
 #include <QGeoPositionInfoSource>
-
+#include "systemInfo.hpp"
 class generalInfo : public QObject
 {
     Q_OBJECT
@@ -16,6 +16,7 @@ class generalInfo : public QObject
     Q_PROPERTY(int temperature READ getTemperature NOTIFY temperatureChanged)
     Q_PROPERTY(QString localTime READ getLocalTime NOTIFY localTimeChanged)
     Q_PROPERTY(QString currentDate READ getCurrentDate NOTIFY currentDateChanged)
+    Q_PROPERTY(int trafficSignInfo READ getTrafficSignInfo NOTIFY trafficSignInfoChanged)
 public:
     /**
     * @brief The generalInfo class
@@ -32,11 +33,8 @@ public:
     * @param parent Optional parent QObject
     *
 	  * Requirement traceability:
-<<<<<<< HEAD
-=======
     * [impl->dsn~design-requirement-cluster-datetime~1]
     * [impl->dsn~design-requirement-cluster-weather~1]
->>>>>>> 92140775 (Release/1.0.0 (#335))
     *
     */
     explicit generalInfo(QObject *parent = nullptr);
@@ -51,10 +49,7 @@ public:
     * @brief Returns the current weather icon filename.
     *
 	* Requirement traceability:
-<<<<<<< HEAD
-=======
     * [impl->dsn~design-requirement-cluster-weather~1]
->>>>>>> 92140775 (Release/1.0.0 (#335))
     *
     * @return QString representing icon (e.g., "sun-256.png")
     *
@@ -65,10 +60,7 @@ public:
     * @brief Returns the current temperature in Celsius.
     *
 	  * Requirement traceability:
-<<<<<<< HEAD
-=======
     * [impl->dsn~design-requirement-cluster-weather~1]
->>>>>>> 92140775 (Release/1.0.0 (#335))
     *
     * @return int temperature
     *
@@ -79,10 +71,7 @@ public:
     * @brief Returns the local time in HH:mm format.
     *
 	  * Requirement traceability:
-<<<<<<< HEAD
-=======
     * [impl->dsn~design-requirement-cluster-datetime~1]
->>>>>>> 92140775 (Release/1.0.0 (#335))
     *
     * @return QString current time
     *
@@ -93,20 +82,28 @@ public:
     * @brief Returns the current date in dd/MM/yyyy format.
     *
 	  * Requirement traceability:
-<<<<<<< HEAD
-=======
     * [impl->dsn~design-requirement-cluster-datetime~1]
->>>>>>> 92140775 (Release/1.0.0 (#335))
     *
     * @return QString current date
     *
     */
     QString getCurrentDate() const;
     
+    /**
+    * @brief Returns the current traffic sign information based on location.
+    * 
+    * @return QString representing traffic sign information (e.g., "Speed Limit 50 km/h")
+    * Requirement traceability:
+    * [impl->dsn~design-requirement-cluster-traffic-sign~1]
+    *
+    */
+    int getTrafficSignInfo() const;
+
 private:
     QString _weatherInfo;
     int _temperature;
     QString _localTime;
+    int _trafficSign;
     QDate   _currentDate;
     QNetworkAccessManager* _manager = nullptr;
     QGeoPositionInfoSource* _positionSource = nullptr;
@@ -119,21 +116,18 @@ signals:
     void temperatureChanged();
     void localTimeChanged();
     void currentDateChanged();
-
+    void trafficSignInfoChanged();
 public slots:
 
     /**
     * @brief Fetches current weather data from Open-Meteo API.
     *
 	  * Requirement traceability:
-<<<<<<< HEAD
-=======
     * [impl->dsn~design-requirement-cluster-weather~1]
->>>>>>> 92140775 (Release/1.0.0 (#335))
     *
     */
     void fetchWeatherData();
-
+    
     /**
     * @brief Handles the network reply for weather API.
     * Parses JSON and updates temperature and weather icon.
@@ -141,11 +135,10 @@ public slots:
     * @param reply QNetworkReply* from QNetworkAccessManager
     *
 	  * Requirement traceability:
-<<<<<<< HEAD
-=======
     * [impl->dsn~design-requirement-cluster-weather~1]
->>>>>>> 92140775 (Release/1.0.0 (#335))
     *
     */
     void onWeatherDataReceived(QNetworkReply* reply);
+
+    void kuksaDataReceiver(const int sign);
 };

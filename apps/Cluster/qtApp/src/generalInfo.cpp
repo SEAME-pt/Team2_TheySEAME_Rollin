@@ -104,6 +104,15 @@ QString generalInfo::getCurrentDate() const
     return _currentDate.toString("dd/MM/yyyy");
 }
 
+int generalInfo::getTrafficSignInfo() const
+{
+    return _trafficSign;
+}
+void generalInfo::kuksaDataReceiver(const int sign) {
+        _trafficSign = sign;
+        emit trafficSignInfoChanged();
+};
+
 void generalInfo::fetchWeatherData()
 {
     QString url = QString("https://api.open-meteo.com/v1/forecast?latitude=%1&longitude=%2&current_weather=true")

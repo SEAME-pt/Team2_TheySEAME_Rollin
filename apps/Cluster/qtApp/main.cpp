@@ -15,6 +15,9 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     generalInfo info;
     systemInfo sysInfo;
+    QObject::connect(&sysInfo, &systemInfo::trafficSignUpdated,
+                 &info, &generalInfo::kuksaDataReceiver);
+
     if (!sysInfo.start()) {
         std::cerr << "Failed to communicate with kuksa" << std::endl;
     }

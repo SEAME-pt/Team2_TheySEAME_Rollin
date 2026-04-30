@@ -9,10 +9,13 @@
 #include <grpcpp/grpcpp.h>
 #include <thread>
 #include <atomic>
+#include <mutex>
+#include <google/protobuf/stubs/common.h>
 #include "../../../middleware/kuksa/val/v2/val.grpc.pb.h"
 #include "../../../middleware/kuksa/val/v2/types.pb.h"
 #include "../../../libs/libkuksa/KuksaLib.hpp"
 
+ 
 using kuksa::val::v2::VAL;
 
 class systemInfo : public QObject
@@ -139,7 +142,7 @@ signals:
     void batteryUpdated(int battery);
     void cruiseActiveUpdated(bool active);
     void targetSpeedUpdated(int speed);
-
+    void trafficSignUpdated(int sign);
 private:
     std::atomic<int> _battery{0};
     std::atomic<int> _speed{0};
@@ -148,4 +151,5 @@ private:
     kuksaLib _kuksa;
     std::thread _thread;
     std::atomic_bool _running{false};
+    std::mutex _kuksaMutex;
 };

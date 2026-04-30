@@ -20,7 +20,7 @@ void systemInfo::setBattery(int battery)
         _battery = battery;
     emit batteryUpdated(battery);
 }
-
+ 
 void systemInfo::setSpeed(int speed)
 {
     if (_speed == speed) return;
@@ -43,6 +43,7 @@ void systemInfo::setCruiseActive(bool active)
     if (_cruiseActive == active) return;
     _cruiseActive = active;
     emit cruiseActiveUpdated(active);
+    emit targetSpeedUpdated(_targetSpeed);
 }
 
 bool systemInfo::getCruiseActive() const
@@ -74,23 +75,31 @@ bool systemInfo::start()
     _running = true;
 
     _thread = std::thread([this]() {
+        const bool skipSubscribe = qEnvironmentVariableIntValue("DISABLE_KUKSA_SUBSCRIBE") == 1;
+        GOOGLE_PROTOBUF_VERIFY_VERSION;
+        std::unique_ptr<std::thread> subThread;
+        if (!skipSubscribe) {
+            subThread = std::make_unique<std::thread>([this]() {
+                if (!_kuksa.subscribeFromKuksa()) {
+                    qWarning() << "Failed to subscribe to Kuksa";
+                }
+            });
+        }
 
-        std::thread subThread([this]() {
-            if (!_kuksa.subscribeFromKuksa()) {
-                qWarning() << "Failed to subscribe to Kuksa";
-            }
-        });
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
         while (_running) {
             setSpeed(static_cast<int>(_kuksa.getSpeed()));
             setBattery(static_cast<int>(_kuksa.getBattery()));
             setCruiseActive(_kuksa.getCcActive());
             setTargetSpeed(static_cast<int>(_kuksa.getCcTargetSpeed()));
-
+            emit trafficSignUpdated(static_cast<int>(_kuksa.getTsrDetectedSign()));
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
 
-        subThread.join();
+        if (subThread && subThread->joinable()) {
+            subThread->join();
+        }
     });
 
     return true;
