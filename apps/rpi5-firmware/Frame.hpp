@@ -43,6 +43,18 @@ public:
 	 */
 	Frame(const cv::Mat &frameRaw);
 
+	/**
+	 * @brief Frame constructor
+	 *
+	 * Creates a cv::Mat object with the height and width and type passed.
+	 * For now, a frame can be of type:
+	 * - BINARY
+	 * - INT
+	 * - FLOAT
+	 * All of these types are 1 channel
+	 *
+	 * @param cv::Mat frame
+	 */
 	Frame(const int height, const int width, const int type);
 
 	/*
