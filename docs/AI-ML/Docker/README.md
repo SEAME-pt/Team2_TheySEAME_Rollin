@@ -92,7 +92,7 @@ hailomz compile yolov8n_seg \
     --ckpt best.onnx \
     --calib-path calib_set/ \
     --classes 5 \
-    --hw-arch hailo8l
+    --hw-arch hailo8
 ```
 🏁 Final Output
 
