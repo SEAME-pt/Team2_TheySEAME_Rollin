@@ -32,10 +32,9 @@ Bev::~Bev() {}
 void Bev::applyBevToFrame(Frame &frame) {
 	frame.save("./OrigFrame.jpg");
 	frame.cropp(_roi);
-	frame.transformToBinary(180);
 	frame.warp(_M);
 	frame.save("./WarpFrame.jpg");
-	frame.open();
+	//frame.open();
 	frame.save("./Garf.jpg");
 }
 

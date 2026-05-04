@@ -9,14 +9,19 @@ Frame::Frame() {
 
 Frame::Frame(const cv::Mat &frameRaw) {
 	_kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
-	_frameRaw = frameRaw;
+	_frameRaw = frameRaw.clone();
+}
+
+Frame::Frame(const int height, const int width, const int type) {
+	_kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+	_frameRaw = cv::Mat(height, width, type);
 }
 
 Frame::~Frame() {}
 
 Frame &Frame::operator=(const Frame &frame) {
 	if (this != &frame) {
-		_frameRaw = frame._frameRaw;	
+		_frameRaw = frame._frameRaw.clone();
 	}
 	return (*this);
 }
@@ -54,20 +59,20 @@ void Frame::cropp(const cv::Rect &rect) {
 }
 
 void Frame::histogram(std::vector<int> &histogram) {
-	cv::Mat lowerHalf = _frameRaw(cv::Range(getHeight() - (getHeight() / 3), getHeight()), cv::Range::all());
+	//cv::Mat lowerHalf = _frameRaw(cv::Range(getHeight(), getHeight()), cv::Range::all());
 
-	cv::reduce(lowerHalf, histogram, 0, cv::REDUCE_SUM, CV_32S);
+	cv::reduce(_frameRaw, histogram, 0, cv::REDUCE_SUM, CV_32S);
 }
 
 void Frame::transformToBinary(const int thresh) {
 	cv::cvtColor(_frameRaw, _frameRaw, cv::COLOR_BGR2GRAY);
-	cv::threshold(_frameRaw, _frameRaw, thresh, 255, cv::THRESH_BINARY);
+	cv::threshold(_frameRaw, _frameRaw, 1, 255, cv::THRESH_BINARY);
 }
 
 Frame Frame::getColoredFrame() {
 	Frame copyFrame;
 
-	cv::cvtColor(_frameRaw, copyFrame.getRawData(), cv::COLOR_GRAY2BGR);
+	cv::cvtColor(_frameRaw, copyFrame.getMatObj(), cv::COLOR_GRAY2BGR);
 	return (copyFrame);
 }
 
@@ -81,8 +86,8 @@ void Frame::save(const std::string &filename) {
 
 void Frame::showInScreen(const std::string &winName) {
 	cv::Mat resized;
-	cv::resize(_frameRaw, resized, cv::Size(1200, 300));
-	cv::imshow("WIN", resized);
+	//cv::resize(_frameRaw, resized, cv::Size(1200, 300));
+	cv::imshow("WIN", _frameRaw * 255);
 	cv::waitKey(1);
 }
 
@@ -90,7 +95,9 @@ int Frame::getHeight() const { return (_frameRaw.rows); }
 
 int Frame::getWidth() const { return (_frameRaw.cols); }
 
-cv::Mat &Frame::getRawData() { return (_frameRaw); }
+void *Frame::getRawData() { return (_frameRaw.data); }
+
+cv::Mat &Frame::getMatObj() { return (_frameRaw); }
 
 std::ostream &operator<<(std::ostream &os, const Frame &frame) {
 	os << "Frame: " << frame.getHeight() << " " << frame.getWidth();

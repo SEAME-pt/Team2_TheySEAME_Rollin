@@ -13,6 +13,7 @@ public:
 	~ActuatorController();
 
 	void update(Subject *subj, Events event);
+	void test();
 
 private:
 

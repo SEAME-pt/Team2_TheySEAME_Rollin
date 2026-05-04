@@ -19,7 +19,7 @@ void Lka::putLinesInScreen(Frame &frame, std::vector<cv::Point> &leftLane, std::
 	frame.drawLine(leftLane[_nbrPtns - 1], rightLane[_nbrPtns - 1], GREEN, 7);
 	frame.warp(_bev.getReverseMatrix());
 	std::string angleStr = "Angle: " + std::to_string(_angle);
-	cv::putText(frame.getRawData(), angleStr, cv::Point(40, 40), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 3, cv::LINE_8, false);
+	cv::putText(frame.getMatObj(), angleStr, cv::Point(40, 40), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 3, cv::LINE_8, false);
 	frame.showInScreen("WIN");
 	frame.save("./Final.jpg");
 }
@@ -48,8 +48,11 @@ void Lka::poly(Frame &frame) {
 		//std::cout << "Angle: " << _angle << std::endl;
 	}
 	_angle = (angle / _nbrPtns) * (180 / M_PI);
-	//std::cout << "Angle: " << _angle << std::endl;
+	if (_angle == -1 || _angle == 1) {
+		_angle = 0;
+	}
+	std::cout << "Angle: " << _angle << std::endl;
 	putLinesInScreen(colorFrame, leftLanePtns, rightLanePtns);
-	//notify(Events::CAR_STEERING);
+	notify(Events::CAR_STEERING);
 }
 

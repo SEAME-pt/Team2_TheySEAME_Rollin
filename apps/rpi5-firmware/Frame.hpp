@@ -8,6 +8,13 @@
 #define YELLOW cv::Scalar(0, 255, 255)
 #define WHITE cv::Scalar(255, 255, 255)
 
+#define WHITE_PIXEL 1
+
+// This is all 1 channel Types
+#define BINARY_FRAME CV_8U
+#define INT_FRAME CV_32S
+#define FLOAT_FRAME CV_32F
+
 /**
  * @class Frame
  * @brief Frame class
@@ -35,6 +42,8 @@ public:
 	 * @param cv::Mat frame
 	 */
 	Frame(const cv::Mat &frameRaw);
+
+	Frame(const int height, const int width, const int type);
 
 	/*
 	 * @brief Frame destructor
@@ -199,11 +208,20 @@ public:
 	/**
 	 * @brief Get Frame raw data
 	 *
+	 * Get access to the raw matrix of a frame
+	 *
+	 * @return void pointer to the data
+	 */
+	void *getRawData();
+
+	/**
+	 * @brief Get Frame Mat Object
+	 *
 	 * Get access to the wrapped cv::Mat object
 	 *
-	 * @return cv::Mat object
+	 * @return cv::Mat Object
 	 */
-	cv::Mat &getRawData();
+	cv::Mat &getMatObj();
 
 private:
 

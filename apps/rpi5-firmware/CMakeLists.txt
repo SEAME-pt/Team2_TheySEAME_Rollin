@@ -29,6 +29,9 @@ set(SOURCES_LKA
 	SlidingWindow.cpp
 )
 
+add_compile_options(-fsanitize=address -g)
+add_link_options(-fsanitize=address)
+
 include_directories(/home/rumachad/Seame/agl-app/sdk/sysroots/aarch64-agl-linux/usr/include/opencv4/ .)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/../../libs/libkuksa ${CMAKE_BINARY_DIR}/libkuksa)

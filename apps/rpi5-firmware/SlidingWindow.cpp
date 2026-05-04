@@ -1,4 +1,6 @@
 #include "SlidingWindow.hpp"
+#include <iostream>
+#include <opencv4/opencv2/opencv.hpp>
 
 SlidingWindow::SlidingWindow() {}
 
@@ -25,32 +27,44 @@ void SlidingWindow::slidingWindow(Frame &frame, int startX, int ptnsNbr, int rec
 	int step_y = frame.getHeight() / ptnsNbr;
 	int y = frame.getHeight() - step_y;
 
+	cv::Mat color = frame.getMatObj();
+	cv::cvtColor(frame.getMatObj(), color, cv::COLOR_GRAY2BGR);
 	for (size_t i = 0; i < ptnsNbr; i++) {
 		cv::Rect rect(x - (rectW / 2), y, rectW, step_y);
-		//std::cout << "Point: (" << x << ", " << y + (step_y / 2)<< ")" << std::endl;
+		std::cout << "Point: (" << x << ", " << y + (step_y / 2)<< ")" << std::endl;
 		int average = checkPixelsInRect(frame, rect);
 		if (average != 0) {
 			x = average;
 		}
-		//cv::rectangle(color, rect, GREEN, 1);
+		cv::rectangle(color, rect, GREEN, 1);
 		ptns.push_back(cv::Point(x, y + (step_y / 2)));
 		y -= step_y;
 	}
+	cv::imwrite("./HV.jpg", color);
 }
 
 int SlidingWindow::checkPixelsInRect(Frame &frame, cv::Rect &rect) {
 	int average = 0;
 	int found = 0;
+	size_t startX = rect.x;
+	size_t endX = rect.x + rect.width;
 
-	for (int y = rect.y; y < rect.y + rect.height; y++) {
-		for (int x = rect.x; x < rect.x + rect.width; x++) {
-			if (frame.getPointValue(x, y) == 255) {
+	if (startX < 0) {
+		startX = 0;
+	} else if (endX >= frame.getWidth()) {
+		endX = frame.getWidth() - 1;
+	}
+	for (size_t y = rect.y; y < rect.y + rect.height; y++) {
+		for (size_t x = startX; x < endX; x++) {
+			if (frame.getPointValue(x, y) == WHITE_PIXEL) {
 				average += x;
 				found++;
-				//frame.setPointValue(x, y, 0);
 				//std::cout << x << " ";
 			}
 		}
+	}
+	if (found == 0) {
+		return (0);
 	}
 	return (average / found);
 }
@@ -58,8 +72,18 @@ int SlidingWindow::checkPixelsInRect(Frame &frame, cv::Rect &rect) {
 int SlidingWindow::getLaneX(std::vector<int> &histogram) {
 	auto it = std::max_element(histogram.begin(), histogram.end());
 	int laneX = std::distance(histogram.begin(), it);
-	int distance = 200;
-	for (size_t i = laneX - distance; i < laneX + distance; i++) {
+	int distance = 50;
+	size_t start = laneX - distance;
+	size_t end = laneX + distance;
+
+	if (start < 0) {
+		start = 0;
+	}
+	if (end >= histogram.size()) {
+		end = histogram.size() - 1;
+	}
+	std::cout << "LaneX: " << laneX << std::endl;
+	for (size_t i = start; i < end; i++) {
 		histogram[i] = 0;
 	}
 	return (laneX);

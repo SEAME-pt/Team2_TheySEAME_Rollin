@@ -13,14 +13,14 @@ int ActuatorController::processThrottle(const int rawThrottle) {
 
 int ActuatorController::processSteering(const int rawSteering) {
 	//int angle = std::clamp(((rawSteering - 127) / 1.27), -30.0, 30.0);
-	return (((rawSteering - 127) / 127));
+	return (((rawSteering - 127) / 1.27));
 }
 
 void ActuatorController::steering(const int angle) {
 	const int steering = std::clamp(angle, -30, 30);
-	if (steering == _kuksa.getSteering()) {
-		return;
-	}
+	//if (steering == _kuksa.getSteering()) {
+	//	return;
+	//}
 	_car->setSteering(steering);
 	std::cout << "Changed Steering " << steering << std::endl;
 }
@@ -99,6 +99,10 @@ void ActuatorController::update(Subject *subj, Events event) {
 		}
 	} else {
 		steering(_lka->getAngle());
-		//throttle((-30));
+		throttle((-20));
 	}
+}
+
+void ActuatorController::test() {
+	
 }
