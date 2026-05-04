@@ -99,7 +99,7 @@ hailomz compile yolov8n_seg \
 Once completed, yolov8n_seg.hef will appear in your shared_with_docker folder. This file is ready for deployment on your Raspberry Pi 5 or Hailo-8 hardware.
 💡 Troubleshooting & Pro-Tips
 
-    Calibration Accuracy: Ensure your calib_set contains roughly 100 representative images from your dataset. This is vital for maintaining accuracy during 8-bit quantization.
+    Calibration Accuracy: Ensure your calib_set contains roughly 1024 representative images from your dataset. This is vital for maintaining accuracy during 8-bit quantization.
 
     Numpy Errors: If you see ModuleNotFoundError: No module named 'numpy._core', delete any hidden .cache files/folders inside your dataset directory and restart.
 
