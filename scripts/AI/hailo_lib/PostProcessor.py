@@ -1,3 +1,46 @@
+"""
+YOLOv8 Segmentation Post-Processor for Hailo-8
+=============================================
+
+Description:
+------------
+This module implements a post-processing pipeline for YOLOv8 segmentation
+models executed on Hailo-8 hardware. It decodes the raw outputs produced
+by the HEF model inference (via hailort) into meaningful detections,
+including bounding boxes, class predictions, confidence scores, and
+segmentation masks.
+
+Features:
+---------
+- Dequantization of Hailo output tensors
+- Distribution Focal Loss (DFL) bounding box decoding
+- Confidence thresholding and Non-Maximum Suppression (NMS)
+- Segmentation mask reconstruction using prototype masks
+- Optional rendering and streaming of segmentation overlays
+
+Inputs:
+-------
+- outputs (dict):
+    Dictionary of tensors returned by `HEF.infer()`
+- quant_params (dict):
+    Dictionary mapping tensor names to (scale, zero_point)
+
+Outputs:
+--------
+Dictionary containing:
+- boxes   : ndarray of shape (N, 4)
+- scores  : ndarray of shape (N,)
+- classes : ndarray of shape (N,)
+- scales  : ndarray of shape (N,)
+- masks   : list of segmentation masks
+- mask    : first mask (for convenience)
+
+Author: Joao Barbot
+
+Date: <2026-05-04>
+
+"""
+
 import numpy as np
 import cv2
 

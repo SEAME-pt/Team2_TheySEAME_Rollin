@@ -5,10 +5,13 @@
 import cv2
 import numpy as np
 import argparse
+import struct
+import sys
 from hailo_lib import PostProcessor
 from hailo_lib import Inference
 from hailo_lib import Camera
 from hailo_lib.CameraCarla import CARLACamera
+from hailo_lib.NamedPipeWriter import NamedPipeWriter
 
 CAM_HEIGHT = 640
 CAM_WIDTH = 640
@@ -16,7 +19,7 @@ MODEL_HEIGHT = 640
 MODEL_WIDTH = 640
 PRINT_OUTPUT_TENSORS_ONCE = True
 LANE_CLASS_ID = 0
-LANE_CONFIDENCE_THRESHOLD = 0.5
+LANE_CONFIDENCE_THRESHOLD = 0.6
 MODEL_FAMILY = "yolov8"
 DISPLAY_MASK_ONLY = False
 DEBUG_LANE_MASK = False
@@ -46,9 +49,19 @@ def polyfit_lines(tensor):
 	points = np.column_stack((x_values, y_values)).astype(np.int32)
 	return points.reshape(-1, 1, 2)
 
-
 def _parse_args():
 	parser = argparse.ArgumentParser(description="Run AI pipeline with either Pi camera or CARLA camera")
+	parser.add_argument(
+		"--stream-masks",
+		action="store_true",
+		help="Write binary mask frames to stdout for consumption by another program",
+	)
+	parser.add_argument(
+		"--named-pipe",
+		type=str,
+		default=None,
+		help="Write lane masks to a named pipe (FIFO) for consumption by another program (e.g., /tmp/lane_mask_pipe)",
+	)
 	parser.add_argument(
 		"--use-carla-camera",
 		action="store_true",
@@ -65,8 +78,10 @@ def _parse_args():
 if __name__ == '__main__':
 	args = _parse_args()
 	camera = None
+	pipe_writer = None
 	printed_tensor_info = False
 	frame_index = 0
+	stream_masks = getattr(args, "stream_masks", False)
 	try:
 		if args.use_carla_camera:
 			camera = CARLACamera(
@@ -76,19 +91,28 @@ if __name__ == '__main__':
 				MODEL_WIDTH,
 				port=args.carla_port,
 			)
-			print(f"Using CARLA camera on port {args.carla_port}")
+			print(f"Using CARLA camera on port {args.carla_port}", file=sys.stderr if stream_masks else sys.stdout)
 		else:
 			camera = Camera(CAM_HEIGHT, CAM_WIDTH, MODEL_HEIGHT, MODEL_WIDTH)
-			print("Using Raspberry Pi camera")
-		infer_engine = Inference(camera, "/root/perception/trained_models/yolov8n_seg_2c_100e_16.hef")
+			print("Using Raspberry Pi camera", file=sys.stderr if stream_masks else sys.stdout)
+
+		# Initialize named pipe writer if requested
+		if args.named_pipe:
+			pipe_writer = NamedPipeWriter(args.named_pipe)
+			pipe_available = pipe_writer.pipe_fd is not None
+			if not pipe_available:
+				print(f"Warning: Named pipe not available at {args.named_pipe}", file=sys.stderr if stream_masks else sys.stdout)
+
+		infer_engine = Inference(camera, "/root/perception/lanes/trained_models/yolov8n_seg_2c_100e_16.hef")
 		post_processor = PostProcessor(input_size=(MODEL_HEIGHT, MODEL_WIDTH), strides=(8, 16, 32))
+		sent_one_frame = False
 		for frame, infer_results in infer_engine.run_inference():
 			frame_index += 1
 			if PRINT_OUTPUT_TENSORS_ONCE and not printed_tensor_info:
-				print("=== Model output tensors ===")
+				print("=== Model output tensors ===", file=sys.stderr if stream_masks else sys.stdout)
 				for out_name, out_tensor in infer_results.items():
-					print(f"{out_name}: shape={out_tensor.shape}, dtype={out_tensor.dtype}")
-				print("============================")
+					print(f"{out_name}: shape={out_tensor.shape}, dtype={out_tensor.dtype}", file=sys.stderr if stream_masks else sys.stdout)
+				print("============================", file=sys.stderr if stream_masks else sys.stdout)
 				printed_tensor_info = True
 			lane_result = post_processor.decode(
 				infer_results,
@@ -133,7 +157,11 @@ if __name__ == '__main__':
 					lane_scale = int(scales[0])
 				except Exception:
 					lane_scale = int(scales)
-			
+
+			# Write lane mask to named pipe if enabled
+			if pipe_writer is not None:
+				pipe_writer.write_mask(lane_mask, frame_index, lane_score)
+				sent_one_frame = True
 
 			if DEBUG_LANE_MASK:
 				if lane_mask is None:
@@ -202,10 +230,10 @@ if __name__ == '__main__':
 			if not ok:
 				break
 	except Exception as e:
-		print(f"FATAL ERROR: {e}")
+		print(f"FATAL ERROR: {e}", file=sys.stderr if stream_masks else sys.stdout)
 	finally:
+		if pipe_writer is not None:
+			pipe_writer.cleanup()
 		if camera:
 			camera.terminate_camera()
 			camera.terminate_display()
-
-
