@@ -19,7 +19,7 @@ Rectangle {
     color: "#FFE18D"
 
     // TEST MODE: Set to true to test without systemInfo (for Qt Design Studio preview)
-    property bool previewMode: true
+    property bool previewMode: false
     property real previewLeftCarDistance: 100  // Start at closest position
 
     // Preview mode properties for generalInfo (date/time/weather)
