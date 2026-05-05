@@ -2,6 +2,8 @@
 
 #include "Observer.hpp"
 
+class Observer;
+
 /**
  * @class Subject
  * @brief Subject abstract class

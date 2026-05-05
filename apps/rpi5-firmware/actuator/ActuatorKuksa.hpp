@@ -6,7 +6,7 @@
 class ActuatorKuksa : public ActuatorDecorator {
 public:
 
-	ActuatorKuksa(CarActuator *car);
+	ActuatorKuksa(CarActuator *car, kuksaLib &kuksa);
 	~ActuatorKuksa();
 
 	virtual void setThrottle(const int throttle);
@@ -16,5 +16,5 @@ public:
 
 private:
 
-	kuksaLib _kuksa;
+	kuksaLib &_kuksa;
 };

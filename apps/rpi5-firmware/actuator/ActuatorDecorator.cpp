@@ -22,10 +22,6 @@ void ActuatorDecorator::brake(const bool flag) {
 	_car->brake(flag);
 }
 
-short ActuatorDecorator::getGear() const {
-	return (_car->getGear());
-}
-
 void ActuatorDecorator::setCruiseControl(const bool flag, const int targetSpeed) {
 	_car->setCruiseControl(flag, targetSpeed);
 }

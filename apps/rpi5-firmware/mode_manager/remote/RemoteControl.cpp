@@ -1,6 +1,5 @@
 #include "RemoteControl.hpp"
 #include <iostream>
-#include <stdio.h>
 
 RemoteControl::RemoteControl(IEvdev &ev) : _ev(ev) {
 	std::cout << "RemoteControl Constructor" << std::endl;
@@ -27,7 +26,6 @@ short RemoteControl::getkey(const uint16_t key) const { return (_state.at(key));
 void RemoteControl::getEvent() {
 	while (_ev.pendingEvent() > 0) {
 		struct input_event &event = _ev.nextEvent();
-		printf("Event %x, %x\n", event.type, event.code);
 		switch (event.type) {
 			case EV_ABS:
 				setkey(event.code, event.value);

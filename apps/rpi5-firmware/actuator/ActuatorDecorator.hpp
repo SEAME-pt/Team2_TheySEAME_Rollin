@@ -12,7 +12,6 @@ public:
 	virtual void setSteering(const int steering);
 	virtual void setGear(const short gear);
 	virtual void brake(const bool brake);
-	virtual short getGear() const;
 	virtual void setCruiseControl(const bool flag, const int targetSpeed);
 
 private:

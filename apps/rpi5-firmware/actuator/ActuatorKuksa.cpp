@@ -1,6 +1,6 @@
 #include "ActuatorKuksa.hpp"
 
-ActuatorKuksa::ActuatorKuksa(CarActuator *car) : ActuatorDecorator(car) {}
+ActuatorKuksa::ActuatorKuksa(CarActuator *car, kuksaLib &kuksa) : ActuatorDecorator(car), _kuksa(kuksa) {}
 
 ActuatorKuksa::~ActuatorKuksa() {}
 
