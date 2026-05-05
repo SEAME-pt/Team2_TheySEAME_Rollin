@@ -48,9 +48,6 @@ void Lka::poly(Frame &frame) {
 		//std::cout << "Angle: " << _angle << std::endl;
 	}
 	_angle = (angle / _nbrPtns) * (180 / M_PI);
-	if (_angle == -1 || _angle == 1) {
-		_angle = 0;
-	}
 	std::cout << "Angle: " << _angle << std::endl;
 	putLinesInScreen(colorFrame, leftLanePtns, rightLanePtns);
 	notify(Events::CAR_STEERING);
