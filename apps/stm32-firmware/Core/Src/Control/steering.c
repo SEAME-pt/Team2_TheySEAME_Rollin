@@ -38,7 +38,6 @@ void PCA9685_SetServoAngle(uint8_t channel, float angle) {
 }
 
 void Control_SetSteering(float steering_normalized) {
-    // Convert normalized steering (-1.0 to +1.0) to servo angle (-30 to +30 degrees)
     float angle = steering_normalized;
     PCA9685_SetServoAngle(0, angle);  // Channel 0 for steering servo
 }

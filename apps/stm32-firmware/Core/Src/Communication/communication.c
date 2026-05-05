@@ -202,8 +202,7 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
         case CAN_ID_STEERING: /* Steering: supports controller and DBC payload styles */
             if (dlc == 1) {
                 int8_t raw = (int8_t)data[0];
-                int16_t steering_scaled = (raw >= -1 && raw <= 1) ? (int16_t)raw * 100 : (int16_t)raw;
-                int8_t steering = clamp_i8(steering_scaled, -100, 100);
+                int8_t steering = raw;
                 if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
                     g_vehicle_command.steering_angle = steering;
                     g_vehicle_command.command_valid = 1;

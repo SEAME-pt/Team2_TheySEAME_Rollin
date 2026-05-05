@@ -107,14 +107,3 @@ bool cruise_control(uint8_t target_speed, float current_speed, bool enabled, flo
     Control_SetThrottle(throttle, 3, false); // Ensure manual throttle is off when cruise control is active
     return active;
 }
-
-void steer_control(int target_pos, float lane_position, float dt)
-{
-    dt = 0.1;
-    float steering_output = PID(target_pos, lane_position, dt, PID_MODE_STEERING);
-    // char buf[128];
-    // snprintf(buf, sizeof(buf), "[STEER] target_pos=%d lane_pos=%.2f output=%.2f%% dt=%.2f\r\n",
-    //         target_pos, lane_position, steering_output, dt);
-    // Debug_Print(buf);
-    Control_SetSteering(steering_output);
-}
