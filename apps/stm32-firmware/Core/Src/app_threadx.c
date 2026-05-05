@@ -118,7 +118,6 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
     g_vehicle_data.vehicle_speed = 0.0f;
     g_vehicle_data.data_valid = 0;
     g_vehicle_data.cruise_control_active = 0;
-    g_vehicle_data.lane_pos = 0.0f;
     // Create mutex for protecting global vehicle data
     UINT status = tx_mutex_create(&g_vehicle_data_mutex, "VehicleData Mutex", TX_NO_INHERIT);
     if (status != TX_SUCCESS) {

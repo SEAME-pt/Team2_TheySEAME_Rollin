@@ -23,7 +23,6 @@ typedef struct {
     float vehicle_speed;           /**< Vehicle speed in meters per second */
     uint8_t data_valid;            /**< Flag: 1 if data is valid, 0 if not updated yet */
     bool cruise_control_active;     /**< Flag: 1 if cruise control is currently active, 0 otherwise */
-    float lane_pos;              /**< Lateral position relative to lane center (0=centered, positive=right, negative=left) */
 } VehicleData_t;
 
 /**

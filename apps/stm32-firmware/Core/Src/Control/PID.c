@@ -2,13 +2,11 @@
 
 static float integral_cruise = 0.0f;
 static float prev_error_cruise = 0.0f;
-static float prev_error_steering = 0.0f;
 
 void PID_Reset(void)
 {
     integral_cruise = 0.0f;
     prev_error_cruise = 0.0f;
-    prev_error_steering = 0.0f;
 }
 
 float PID_GetIntegral(void)
@@ -16,58 +14,34 @@ float PID_GetIntegral(void)
     return integral_cruise;
 }
 
-float PID(float set_point, float current_value, float dt, PID_Mode_t mode)
+float PID(float set_point, float current_value, float dt)
 {
     float error = set_point - current_value;
     float output = 0.0f;
     float ff = 0.0f;
-    
-    PID_Gains_t cruise_gains = {50.0f, 12.3f, 0.0f};
-    PID_Gains_t steering_gains = {30.0f, 0.0f, 3.0f};
-    
+        
     if (dt <= 0.0f) 
         return 0.0f;
-    // CRUISE
-    if (mode == PID_MODE_CRUISE)
+    float derivative = (error - prev_error_cruise) / dt;
+
+    ff = set_point * FEED_FORWARD_GAIN;
+
+    float u_unsat = ff + PID_KP * error +
+                    PID_KI * integral_cruise +
+                    PID_KD * derivative;
+
+    output = clamp(u_unsat);
+
+    if (!((output >= PID_OUTPUT_MAX && error > 0.0f) ||
+        (output <= PID_OUTPUT_MIN && error < 0.0f)))
     {
-        float derivative = (error - prev_error_cruise) / dt;
+        integral_cruise += error * dt;
 
-        ff = set_point * FEED_FORWARD_GAIN;
-
-        float u_unsat = ff + cruise_gains.kp * error +
-                        cruise_gains.ki * integral_cruise +
-                        cruise_gains.kd * derivative;
-
-        output = clamp(u_unsat);
-
-        if (!((output >= PID_OUTPUT_MAX && error > 0.0f) ||
-            (output <= PID_OUTPUT_MIN && error < 0.0f)))
-        {
-            integral_cruise += error * dt;
-
-            if (integral_cruise > PID_INTEGRAL_MAX) integral_cruise = PID_INTEGRAL_MAX;
-            if (integral_cruise < PID_INTEGRAL_MIN) integral_cruise = PID_INTEGRAL_MIN;
-        }
-
-        prev_error_cruise = error;
-    }
-    // STEERING
-    else if (mode == PID_MODE_STEERING)
-    {
-        float derivative = (error - prev_error_steering) / dt;
-
-        output = steering_gains.kp * error +
-                steering_gains.kd * derivative;
-
-        if (output > 30.0f) output = 30.0f;
-        if (output < -30.0f) output = -30.0f;
-        prev_error_steering = error;
-        char buf[128];
-        snprintf(buf, sizeof(buf), "[PID] set_point=%.2f current=%.2f error=%.2f output=%.2f dt=%.2f\r\n",
-                set_point, current_value, error, output, dt);
-        Debug_Print(buf);
+        if (integral_cruise > PID_INTEGRAL_MAX) integral_cruise = PID_INTEGRAL_MAX;
+        if (integral_cruise < PID_INTEGRAL_MIN) integral_cruise = PID_INTEGRAL_MIN;
     }
 
+    prev_error_cruise = error;
     return output;
 }
 
@@ -92,12 +66,12 @@ bool cruise_control(uint8_t target_speed, float current_speed, bool enabled, flo
 
     float throttle = 0.0f;
     if (enabled && (set_point > 0.416f && set_point < 3.61f))
-        throttle = PID(set_point, current_speed, dt, PID_MODE_CRUISE);
+        throttle = PID(set_point, current_speed, dt);
     else
     {
         active = false;
-        PID_Reset(); // Reset PID state when cruise control is disabled to prevent windup on next enable
-        throttle = 0.0f; // No throttle when cruise control is disabled
+        PID_Reset();
+        throttle = 0.0f;
     }
     throttle = clamp(throttle);
     char buf[128];

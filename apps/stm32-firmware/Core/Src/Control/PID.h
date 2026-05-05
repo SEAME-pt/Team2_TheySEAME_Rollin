@@ -19,18 +19,7 @@
 
 #define FEED_FORWARD_GAIN 33.0f
 
-typedef struct {
-    float kp;
-    float ki;
-    float kd;
-} PID_Gains_t;
-
-typedef enum {
-    PID_MODE_CRUISE,
-    PID_MODE_STEERING
-} PID_Mode_t;
-
-float PID(float set_point, float current_value, float dt, PID_Mode_t mode);
+float PID(float set_point, float current_value, float dt);
 float clamp(float value);
 /* test helpers */
 void PID_Reset(void);

@@ -50,7 +50,6 @@ enum CAN_IDs {
     CAN_ID_TX_SPEED            = 0x200,
     CAN_ID_TX_BATTERY          = 0x201,
     CAN_ID_CRUISE_CONTROL      = 0x212,
-    CAN_ID_LANE_POSITION       = 0x213,
 };
 
 static const uint32_t HEARTBEAT_MS = 1000; /* resend every 1s if no command seen */
@@ -279,21 +278,6 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
                 }
                 snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Cruise Control: %s, Target=%u hm/h\r\n",
                          enabled ? "ENABLED" : "DISABLED", target_speed);
-                Debug_Print(comm_uart_buf);
-                updated = 1;
-            }
-            break;
-        case CAN_ID_LANE_POSITION:
-            if (dlc >= 1) {
-                int8_t lane_pos_raw = (int8_t)data[0];
-                float lane_pos = (float)lane_pos_raw / 100.0f;
-                if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                    g_vehicle_data.lane_pos = lane_pos;
-                    tx_mutex_put(&g_vehicle_data_mutex);
-                }
-                snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Lane Position=%.2f\r\n", lane_pos);
-                Debug_Print(comm_uart_buf);
-                snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Lane Position (normalized)=%d\r\n", lane_pos_raw);
                 Debug_Print(comm_uart_buf);
                 updated = 1;
             }
