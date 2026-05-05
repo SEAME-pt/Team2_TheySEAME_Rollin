@@ -215,16 +215,6 @@ The system shall provide a cruise control feature that automatically maintains a
 Needs: dsn
 ```
 
-```
-`feat~pid-steering~1`
-
-Status: draft
-
-The system shall implement a PID-based steering controller that keeps the vehicle centred within the detected lane by computing a steering angle output from the lateral and angular deviation of the vehicle relative to the lane centre.
-
-Needs: dsn
-```
-
 ---
 
 ## Notes: 
