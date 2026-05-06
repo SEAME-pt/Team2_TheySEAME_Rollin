@@ -77,7 +77,7 @@ Rectangle {
             Text {
                 id: speed
                 color: "#47473f"
-                text: rectangle.previewMode ? rectangle.previewSpeed.toString() : (systemInfo ? systemInfo.speed.toString() : "0")
+                text: systemInfo ? systemInfo.speed.toString() : "0"
                 font.pixelSize: 98
                 font.family: "BaseNeueTrial-Bold"
                 font.bold: true
@@ -102,7 +102,7 @@ Rectangle {
             width: 218
             height: 119
             color: "#47473f"
-            text: rectangle.previewMode ? rectangle.previewBattery.toString() + "%" : (systemInfo ? systemInfo.battery.toString() + "%" : "0%")
+            text: systemInfo ? systemInfo.battery.toString() + "%" : "0%"
             font.pixelSize: 77
             font.family: "BaseNeueTrial-Bold"
             font.bold: true
@@ -115,7 +115,8 @@ Rectangle {
             width: 155
             height: 34
             color: "#ffffff"
-            text: rectangle.previewMode ? rectangle.previewDate : (generalInfo ? generalInfo.currentDate.toString("dd/MM/yyyy") : "")
+            text: generalInfo ? generalInfo.currentDate.toString(
+                                     "dd/MM/yyyy") : ""
             font.pixelSize: 28
             font.family: "Inter"
             font.bold: true
@@ -128,7 +129,7 @@ Rectangle {
             width: 72
             height: 34
             color: "#ffffff"
-            text: rectangle.previewMode ? rectangle.previewTime : (generalInfo ? generalInfo.localTime : "")
+            text: generalInfo ? generalInfo.localTime : ""
             font.pixelSize: 28
             font.family: "Inter"
             font.bold: true
@@ -141,7 +142,7 @@ Rectangle {
             width: 72
             height: 34
             color: "#ffffff"
-            text: rectangle.previewMode ? rectangle.previewTemperature + "°C" : (generalInfo ? generalInfo.temperature + "°C" : "")
+            text: generalInfo ? generalInfo.temperature + "°C" : ""
             font.pixelSize: 28
             font.family: "Inter"
             font.bold: true
@@ -228,7 +229,7 @@ Rectangle {
                 id: baterry
                 x: 0
                 y: 0
-                width: rectangle.previewMode ? (rectangle.previewBattery / 100) * maxBattery.width : (systemInfo ? (systemInfo.battery / 100) * maxBattery.width : 0)
+                width: systemInfo ? (systemInfo.battery / 100) * maxBattery.width : 0
                 height: 12
                 color: "#76b047"
                 border.color: "#76b047"

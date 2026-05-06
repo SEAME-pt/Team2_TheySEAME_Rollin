@@ -20,6 +20,24 @@
         <file>qml/images/frontCar.png.png</file>
         <file>qml/images/rightCar.png</file>
         <file>qml/images/logo.png</file>
+        <file>qml/3d-assets/models/Sedan1.glb</file>
+        <file>qml/3d-assets/carro/LowPolyFiatUNO.qml</file>
+        <file>qml/3d-assets/carro/meshes/body_Plane_mesh.mesh</file>
+        <file>qml/3d-assets/carro/meshes/circle_001_Circle_000_mesh.mesh</file>
+        <file>qml/3d-assets/carro/meshes/circle_002_Circle_001_mesh.mesh</file>
+        <file>qml/3d-assets/carro/meshes/circle_003_mesh.mesh</file>
+        <file>qml/3d-assets/carro/meshes/circle_Circle_002_mesh.mesh</file>
+        <file>qml/3d-assets/carro/meshes/fari_Plane_002_mesh.mesh</file>
+        <file>qml/3d-assets/carro/meshes/finestriniAnt_Plane_004_mesh.mesh</file>
+        <file>qml/3d-assets/carro/meshes/finestriniPost_Plane_005_mesh.mesh</file>
+        <file>qml/3d-assets/carro/meshes/grigliaAnt_Body_Plane_001_mesh.mesh</file>
+        <file>qml/3d-assets/carro/meshes/grigliaPost_Body_Plane_002_mesh.mesh</file>
+        <file>qml/3d-assets/carro/meshes/parabrezza_Plane_003_mesh.mesh</file>
+        <file>qml/3d-assets/carro/meshes/plane_001_mesh.mesh</file>
+        <file>qml/3d-assets/carro/meshes/stopDX_Body_Plane_005_mesh.mesh</file>
+        <file>qml/3d-assets/carro/meshes/stopSX_Body_Plane_004_mesh.mesh</file>
+        <file>qml/3d-assets/carro/meshes/targa_Body_Plane_003_mesh.mesh</file>
+        <file>qml/3d-assets/carro/meshes/vetroPost_Plane_006_mesh.mesh</file>
         
         <file>qml/3d-assets/models/Sedan1.glb</file>
         <file>qml/3d-assets/carro/LowPolyFiatUNO.qml</file>

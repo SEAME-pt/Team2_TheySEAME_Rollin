@@ -81,15 +81,6 @@ extern BatchActuateStreamRequestDefaultTypeInternal _BatchActuateStreamRequest_d
 class BatchActuateStreamResponse;
 struct BatchActuateStreamResponseDefaultTypeInternal;
 extern BatchActuateStreamResponseDefaultTypeInternal _BatchActuateStreamResponse_default_instance_;
-class GetProviderValueRequest;
-struct GetProviderValueRequestDefaultTypeInternal;
-extern GetProviderValueRequestDefaultTypeInternal _GetProviderValueRequest_default_instance_;
-class GetProviderValueResponse;
-struct GetProviderValueResponseDefaultTypeInternal;
-extern GetProviderValueResponseDefaultTypeInternal _GetProviderValueResponse_default_instance_;
-class GetProviderValueResponse_EntriesEntry_DoNotUse;
-struct GetProviderValueResponse_EntriesEntry_DoNotUseDefaultTypeInternal;
-extern GetProviderValueResponse_EntriesEntry_DoNotUseDefaultTypeInternal _GetProviderValueResponse_EntriesEntry_DoNotUse_default_instance_;
 class GetServerInfoRequest;
 struct GetServerInfoRequestDefaultTypeInternal;
 extern GetServerInfoRequestDefaultTypeInternal _GetServerInfoRequest_default_instance_;
@@ -126,18 +117,6 @@ extern ProvideActuationRequestDefaultTypeInternal _ProvideActuationRequest_defau
 class ProvideActuationResponse;
 struct ProvideActuationResponseDefaultTypeInternal;
 extern ProvideActuationResponseDefaultTypeInternal _ProvideActuationResponse_default_instance_;
-class ProvideSignalRequest;
-struct ProvideSignalRequestDefaultTypeInternal;
-extern ProvideSignalRequestDefaultTypeInternal _ProvideSignalRequest_default_instance_;
-class ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse;
-struct ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUseDefaultTypeInternal;
-extern ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUseDefaultTypeInternal _ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse_default_instance_;
-class ProvideSignalResponse;
-struct ProvideSignalResponseDefaultTypeInternal;
-extern ProvideSignalResponseDefaultTypeInternal _ProvideSignalResponse_default_instance_;
-class ProviderErrorIndication;
-struct ProviderErrorIndicationDefaultTypeInternal;
-extern ProviderErrorIndicationDefaultTypeInternal _ProviderErrorIndication_default_instance_;
 class PublishValueRequest;
 struct PublishValueRequestDefaultTypeInternal;
 extern PublishValueRequestDefaultTypeInternal _PublishValueRequest_default_instance_;
@@ -174,15 +153,6 @@ extern SubscribeResponseDefaultTypeInternal _SubscribeResponse_default_instance_
 class SubscribeResponse_EntriesEntry_DoNotUse;
 struct SubscribeResponse_EntriesEntry_DoNotUseDefaultTypeInternal;
 extern SubscribeResponse_EntriesEntry_DoNotUseDefaultTypeInternal _SubscribeResponse_EntriesEntry_DoNotUse_default_instance_;
-class UpdateFilterRequest;
-struct UpdateFilterRequestDefaultTypeInternal;
-extern UpdateFilterRequestDefaultTypeInternal _UpdateFilterRequest_default_instance_;
-class UpdateFilterRequest_FiltersUpdateEntry_DoNotUse;
-struct UpdateFilterRequest_FiltersUpdateEntry_DoNotUseDefaultTypeInternal;
-extern UpdateFilterRequest_FiltersUpdateEntry_DoNotUseDefaultTypeInternal _UpdateFilterRequest_FiltersUpdateEntry_DoNotUse_default_instance_;
-class UpdateFilterResponse;
-struct UpdateFilterResponseDefaultTypeInternal;
-extern UpdateFilterResponseDefaultTypeInternal _UpdateFilterResponse_default_instance_;
 }  // namespace v2
 }  // namespace val
 }  // namespace kuksa
@@ -200,26 +170,26 @@ namespace v2 {
 
 // -------------------------------------------------------------------
 
-class UpdateFilterResponse final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:kuksa.val.v2.UpdateFilterResponse) */ {
+class SubscribeRequest final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:kuksa.val.v2.SubscribeRequest) */ {
  public:
-  inline UpdateFilterResponse() : UpdateFilterResponse(nullptr) {}
-  ~UpdateFilterResponse() override;
+  inline SubscribeRequest() : SubscribeRequest(nullptr) {}
+  ~SubscribeRequest() override;
   template<typename = void>
-  explicit PROTOBUF_CONSTEXPR UpdateFilterResponse(::google::protobuf::internal::ConstantInitialized);
+  explicit PROTOBUF_CONSTEXPR SubscribeRequest(::google::protobuf::internal::ConstantInitialized);
 
-  inline UpdateFilterResponse(const UpdateFilterResponse& from)
-      : UpdateFilterResponse(nullptr, from) {}
-  UpdateFilterResponse(UpdateFilterResponse&& from) noexcept
-    : UpdateFilterResponse() {
+  inline SubscribeRequest(const SubscribeRequest& from)
+      : SubscribeRequest(nullptr, from) {}
+  SubscribeRequest(SubscribeRequest&& from) noexcept
+    : SubscribeRequest() {
     *this = ::std::move(from);
   }
 
-  inline UpdateFilterResponse& operator=(const UpdateFilterResponse& from) {
+  inline SubscribeRequest& operator=(const SubscribeRequest& from) {
     CopyFrom(from);
     return *this;
   }
-  inline UpdateFilterResponse& operator=(UpdateFilterResponse&& from) noexcept {
+  inline SubscribeRequest& operator=(SubscribeRequest&& from) noexcept {
     if (this == &from) return *this;
     if (GetArena() == from.GetArena()
   #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
@@ -251,20 +221,20 @@ class UpdateFilterResponse final :
   static const ::google::protobuf::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const UpdateFilterResponse& default_instance() {
+  static const SubscribeRequest& default_instance() {
     return *internal_default_instance();
   }
-  static inline const UpdateFilterResponse* internal_default_instance() {
-    return reinterpret_cast<const UpdateFilterResponse*>(
-               &_UpdateFilterResponse_default_instance_);
+  static inline const SubscribeRequest* internal_default_instance() {
+    return reinterpret_cast<const SubscribeRequest*>(
+               &_SubscribeRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    31;
+    4;
 
-  friend void swap(UpdateFilterResponse& a, UpdateFilterResponse& b) {
+  friend void swap(SubscribeRequest& a, SubscribeRequest& b) {
     a.Swap(&b);
   }
-  inline void Swap(UpdateFilterResponse* other) {
+  inline void Swap(SubscribeRequest* other) {
     if (other == this) return;
   #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
     if (GetArena() != nullptr &&
@@ -277,7 +247,7 @@ class UpdateFilterResponse final :
       ::google::protobuf::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(UpdateFilterResponse* other) {
+  void UnsafeArenaSwap(SubscribeRequest* other) {
     if (other == this) return;
     ABSL_DCHECK(GetArena() == other->GetArena());
     InternalSwap(other);
@@ -285,14 +255,14 @@ class UpdateFilterResponse final :
 
   // implements Message ----------------------------------------------
 
-  UpdateFilterResponse* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<UpdateFilterResponse>(arena);
+  SubscribeRequest* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<SubscribeRequest>(arena);
   }
   using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const UpdateFilterResponse& from);
+  void CopyFrom(const SubscribeRequest& from);
   using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom( const UpdateFilterResponse& from) {
-    UpdateFilterResponse::MergeImpl(*this, from);
+  void MergeFrom( const SubscribeRequest& from) {
+    SubscribeRequest::MergeImpl(*this, from);
   }
   private:
   static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
@@ -310,16 +280,16 @@ class UpdateFilterResponse final :
   ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
   void SharedCtor(::google::protobuf::Arena* arena);
   void SharedDtor();
-  void InternalSwap(UpdateFilterResponse* other);
+  void InternalSwap(SubscribeRequest* other);
 
   private:
   friend class ::google::protobuf::internal::AnyMetadata;
   static ::absl::string_view FullMessageName() {
-    return "kuksa.val.v2.UpdateFilterResponse";
+    return "kuksa.val.v2.SubscribeRequest";
   }
   protected:
-  explicit UpdateFilterResponse(::google::protobuf::Arena* arena);
-  UpdateFilterResponse(::google::protobuf::Arena* arena, const UpdateFilterResponse& from);
+  explicit SubscribeRequest(::google::protobuf::Arena* arena);
+  SubscribeRequest(::google::protobuf::Arena* arena, const SubscribeRequest& from);
   public:
 
   static const ClassData _class_data_;
@@ -332,30 +302,243 @@ class UpdateFilterResponse final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kRequestIdFieldNumber = 1,
-    kFilterErrorFieldNumber = 2,
+    kSignalPathsFieldNumber = 1,
+    kBufferSizeFieldNumber = 2,
   };
-  // uint32 request_id = 1;
-  void clear_request_id() ;
-  ::uint32_t request_id() const;
-  void set_request_id(::uint32_t value);
-
+  // repeated string signal_paths = 1;
+  int signal_paths_size() const;
   private:
-  ::uint32_t _internal_request_id() const;
-  void _internal_set_request_id(::uint32_t value);
+  int _internal_signal_paths_size() const;
 
   public:
-  // .kuksa.val.v2.FilterError filter_error = 2;
-  void clear_filter_error() ;
-  ::kuksa::val::v2::FilterError filter_error() const;
-  void set_filter_error(::kuksa::val::v2::FilterError value);
+  void clear_signal_paths() ;
+  const std::string& signal_paths(int index) const;
+  std::string* mutable_signal_paths(int index);
+  void set_signal_paths(int index, const std::string& value);
+  void set_signal_paths(int index, std::string&& value);
+  void set_signal_paths(int index, const char* value);
+  void set_signal_paths(int index, const char* value, std::size_t size);
+  void set_signal_paths(int index, absl::string_view value);
+  std::string* add_signal_paths();
+  void add_signal_paths(const std::string& value);
+  void add_signal_paths(std::string&& value);
+  void add_signal_paths(const char* value);
+  void add_signal_paths(const char* value, std::size_t size);
+  void add_signal_paths(absl::string_view value);
+  const ::google::protobuf::RepeatedPtrField<std::string>& signal_paths() const;
+  ::google::protobuf::RepeatedPtrField<std::string>* mutable_signal_paths();
 
   private:
-  ::kuksa::val::v2::FilterError _internal_filter_error() const;
-  void _internal_set_filter_error(::kuksa::val::v2::FilterError value);
+  const ::google::protobuf::RepeatedPtrField<std::string>& _internal_signal_paths() const;
+  ::google::protobuf::RepeatedPtrField<std::string>* _internal_mutable_signal_paths();
 
   public:
-  // @@protoc_insertion_point(class_scope:kuksa.val.v2.UpdateFilterResponse)
+  // uint32 buffer_size = 2;
+  void clear_buffer_size() ;
+  ::uint32_t buffer_size() const;
+  void set_buffer_size(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_buffer_size() const;
+  void _internal_set_buffer_size(::uint32_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:kuksa.val.v2.SubscribeRequest)
+ private:
+  class _Internal;
+
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      1, 2, 0,
+      50, 2>
+      _table_;
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+
+        inline explicit constexpr Impl_(
+            ::google::protobuf::internal::ConstantInitialized) noexcept;
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena);
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena, const Impl_& from);
+    ::google::protobuf::RepeatedPtrField<std::string> signal_paths_;
+    ::uint32_t buffer_size_;
+    mutable ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_kuksa_2fval_2fv2_2fval_2eproto;
+};// -------------------------------------------------------------------
+
+class SubscribeByIdRequest final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:kuksa.val.v2.SubscribeByIdRequest) */ {
+ public:
+  inline SubscribeByIdRequest() : SubscribeByIdRequest(nullptr) {}
+  ~SubscribeByIdRequest() override;
+  template<typename = void>
+  explicit PROTOBUF_CONSTEXPR SubscribeByIdRequest(::google::protobuf::internal::ConstantInitialized);
+
+  inline SubscribeByIdRequest(const SubscribeByIdRequest& from)
+      : SubscribeByIdRequest(nullptr, from) {}
+  SubscribeByIdRequest(SubscribeByIdRequest&& from) noexcept
+    : SubscribeByIdRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline SubscribeByIdRequest& operator=(const SubscribeByIdRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SubscribeByIdRequest& operator=(SubscribeByIdRequest&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetArena() == from.GetArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const SubscribeByIdRequest& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const SubscribeByIdRequest* internal_default_instance() {
+    return reinterpret_cast<const SubscribeByIdRequest*>(
+               &_SubscribeByIdRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    7;
+
+  friend void swap(SubscribeByIdRequest& a, SubscribeByIdRequest& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SubscribeByIdRequest* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() != nullptr &&
+        GetArena() == other->GetArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() == other->GetArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SubscribeByIdRequest* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  SubscribeByIdRequest* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<SubscribeByIdRequest>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const SubscribeByIdRequest& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom( const SubscribeByIdRequest& from) {
+    SubscribeByIdRequest::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  ::size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
+  void SharedCtor(::google::protobuf::Arena* arena);
+  void SharedDtor();
+  void InternalSwap(SubscribeByIdRequest* other);
+
+  private:
+  friend class ::google::protobuf::internal::AnyMetadata;
+  static ::absl::string_view FullMessageName() {
+    return "kuksa.val.v2.SubscribeByIdRequest";
+  }
+  protected:
+  explicit SubscribeByIdRequest(::google::protobuf::Arena* arena);
+  SubscribeByIdRequest(::google::protobuf::Arena* arena, const SubscribeByIdRequest& from);
+  public:
+
+  static const ClassData _class_data_;
+  const ::google::protobuf::Message::ClassData*GetClassData() const final;
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kSignalIdsFieldNumber = 1,
+    kBufferSizeFieldNumber = 2,
+  };
+  // repeated int32 signal_ids = 1;
+  int signal_ids_size() const;
+  private:
+  int _internal_signal_ids_size() const;
+
+  public:
+  void clear_signal_ids() ;
+  ::int32_t signal_ids(int index) const;
+  void set_signal_ids(int index, ::int32_t value);
+  void add_signal_ids(::int32_t value);
+  const ::google::protobuf::RepeatedField<::int32_t>& signal_ids() const;
+  ::google::protobuf::RepeatedField<::int32_t>* mutable_signal_ids();
+
+  private:
+  const ::google::protobuf::RepeatedField<::int32_t>& _internal_signal_ids() const;
+  ::google::protobuf::RepeatedField<::int32_t>* _internal_mutable_signal_ids();
+
+  public:
+  // uint32 buffer_size = 2;
+  void clear_buffer_size() ;
+  ::uint32_t buffer_size() const;
+  void set_buffer_size(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_buffer_size() const;
+  void _internal_set_buffer_size(::uint32_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:kuksa.val.v2.SubscribeByIdRequest)
  private:
   class _Internal;
 
@@ -378,8 +561,9 @@ class UpdateFilterResponse final :
                               ::google::protobuf::Arena* arena);
         inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                               ::google::protobuf::Arena* arena, const Impl_& from);
-    ::uint32_t request_id_;
-    int filter_error_;
+    ::google::protobuf::RepeatedField<::int32_t> signal_ids_;
+    mutable ::google::protobuf::internal::CachedSize _signal_ids_cached_byte_size_;
+    ::uint32_t buffer_size_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -501,317 +685,6 @@ class PublishValueResponse final :
   // accessors -------------------------------------------------------
 
   // @@protoc_insertion_point(class_scope:kuksa.val.v2.PublishValueResponse)
- private:
-  class _Internal;
-
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-
-        inline explicit constexpr Impl_(
-            ::google::protobuf::internal::ConstantInitialized) noexcept;
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena);
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena, const Impl_& from);
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  friend struct ::TableStruct_kuksa_2fval_2fv2_2fval_2eproto;
-};// -------------------------------------------------------------------
-
-class ProviderErrorIndication final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:kuksa.val.v2.ProviderErrorIndication) */ {
- public:
-  inline ProviderErrorIndication() : ProviderErrorIndication(nullptr) {}
-  ~ProviderErrorIndication() override;
-  template<typename = void>
-  explicit PROTOBUF_CONSTEXPR ProviderErrorIndication(::google::protobuf::internal::ConstantInitialized);
-
-  inline ProviderErrorIndication(const ProviderErrorIndication& from)
-      : ProviderErrorIndication(nullptr, from) {}
-  ProviderErrorIndication(ProviderErrorIndication&& from) noexcept
-    : ProviderErrorIndication() {
-    *this = ::std::move(from);
-  }
-
-  inline ProviderErrorIndication& operator=(const ProviderErrorIndication& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline ProviderErrorIndication& operator=(ProviderErrorIndication&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetArena() == from.GetArena()
-  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-        && GetArena() != nullptr
-  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-    ) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const ProviderErrorIndication& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const ProviderErrorIndication* internal_default_instance() {
-    return reinterpret_cast<const ProviderErrorIndication*>(
-               &_ProviderErrorIndication_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    32;
-
-  friend void swap(ProviderErrorIndication& a, ProviderErrorIndication& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(ProviderErrorIndication* other) {
-    if (other == this) return;
-  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() != nullptr &&
-        GetArena() == other->GetArena()) {
-   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() == other->GetArena()) {
-  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(ProviderErrorIndication* other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  ProviderErrorIndication* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<ProviderErrorIndication>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const ProviderErrorIndication& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom( const ProviderErrorIndication& from) {
-    ProviderErrorIndication::MergeImpl(*this, from);
-  }
-  private:
-  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  ::size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
-  void SharedCtor(::google::protobuf::Arena* arena);
-  void SharedDtor();
-  void InternalSwap(ProviderErrorIndication* other);
-
-  private:
-  friend class ::google::protobuf::internal::AnyMetadata;
-  static ::absl::string_view FullMessageName() {
-    return "kuksa.val.v2.ProviderErrorIndication";
-  }
-  protected:
-  explicit ProviderErrorIndication(::google::protobuf::Arena* arena);
-  ProviderErrorIndication(::google::protobuf::Arena* arena, const ProviderErrorIndication& from);
-  public:
-
-  static const ClassData _class_data_;
-  const ::google::protobuf::Message::ClassData*GetClassData() const final;
-
-  ::google::protobuf::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kProviderErrorFieldNumber = 1,
-  };
-  // .kuksa.val.v2.ProviderError provider_error = 1;
-  void clear_provider_error() ;
-  ::kuksa::val::v2::ProviderError provider_error() const;
-  void set_provider_error(::kuksa::val::v2::ProviderError value);
-
-  private:
-  ::kuksa::val::v2::ProviderError _internal_provider_error() const;
-  void _internal_set_provider_error(::kuksa::val::v2::ProviderError value);
-
-  public:
-  // @@protoc_insertion_point(class_scope:kuksa.val.v2.ProviderErrorIndication)
- private:
-  class _Internal;
-
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<
-      0, 1, 0,
-      0, 2>
-      _table_;
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-
-        inline explicit constexpr Impl_(
-            ::google::protobuf::internal::ConstantInitialized) noexcept;
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena);
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena, const Impl_& from);
-    int provider_error_;
-    mutable ::google::protobuf::internal::CachedSize _cached_size_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_kuksa_2fval_2fv2_2fval_2eproto;
-};// -------------------------------------------------------------------
-
-class ProvideSignalResponse final :
-    public ::google::protobuf::internal::ZeroFieldsBase /* @@protoc_insertion_point(class_definition:kuksa.val.v2.ProvideSignalResponse) */ {
- public:
-  inline ProvideSignalResponse() : ProvideSignalResponse(nullptr) {}
-  template<typename = void>
-  explicit PROTOBUF_CONSTEXPR ProvideSignalResponse(::google::protobuf::internal::ConstantInitialized);
-
-  inline ProvideSignalResponse(const ProvideSignalResponse& from)
-      : ProvideSignalResponse(nullptr, from) {}
-  ProvideSignalResponse(ProvideSignalResponse&& from) noexcept
-    : ProvideSignalResponse() {
-    *this = ::std::move(from);
-  }
-
-  inline ProvideSignalResponse& operator=(const ProvideSignalResponse& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline ProvideSignalResponse& operator=(ProvideSignalResponse&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetArena() == from.GetArena()
-  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-        && GetArena() != nullptr
-  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-    ) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const ProvideSignalResponse& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const ProvideSignalResponse* internal_default_instance() {
-    return reinterpret_cast<const ProvideSignalResponse*>(
-               &_ProvideSignalResponse_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    26;
-
-  friend void swap(ProvideSignalResponse& a, ProvideSignalResponse& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(ProvideSignalResponse* other) {
-    if (other == this) return;
-  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() != nullptr &&
-        GetArena() == other->GetArena()) {
-   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() == other->GetArena()) {
-  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(ProvideSignalResponse* other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  ProvideSignalResponse* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<ProvideSignalResponse>(arena);
-  }
-  using ::google::protobuf::internal::ZeroFieldsBase::CopyFrom;
-  inline void CopyFrom(const ProvideSignalResponse& from) {
-    ::google::protobuf::internal::ZeroFieldsBase::CopyImpl(*this, from);
-  }
-  using ::google::protobuf::internal::ZeroFieldsBase::MergeFrom;
-  void MergeFrom(const ProvideSignalResponse& from) {
-    ::google::protobuf::internal::ZeroFieldsBase::MergeImpl(*this, from);
-  }
-  public:
-
-  private:
-  friend class ::google::protobuf::internal::AnyMetadata;
-  static ::absl::string_view FullMessageName() {
-    return "kuksa.val.v2.ProvideSignalResponse";
-  }
-  protected:
-  explicit ProvideSignalResponse(::google::protobuf::Arena* arena);
-  ProvideSignalResponse(::google::protobuf::Arena* arena, const ProvideSignalResponse& from);
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // @@protoc_insertion_point(class_scope:kuksa.val.v2.ProvideSignalResponse)
  private:
   class _Internal;
 
@@ -1228,7 +1101,7 @@ class GetServerInfoResponse final :
                &_GetServerInfoResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    39;
+    29;
 
   friend void swap(GetServerInfoResponse& a, GetServerInfoResponse& b) {
     a.Swap(&b);
@@ -1444,7 +1317,7 @@ class GetServerInfoRequest final :
                &_GetServerInfoRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    38;
+    28;
 
   friend void swap(GetServerInfoRequest& a, GetServerInfoRequest& b) {
     a.Swap(&b);
@@ -1519,202 +1392,6 @@ class GetServerInfoRequest final :
                               ::google::protobuf::Arena* arena, const Impl_& from);
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
-  friend struct ::TableStruct_kuksa_2fval_2fv2_2fval_2eproto;
-};// -------------------------------------------------------------------
-
-class GetProviderValueRequest final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:kuksa.val.v2.GetProviderValueRequest) */ {
- public:
-  inline GetProviderValueRequest() : GetProviderValueRequest(nullptr) {}
-  ~GetProviderValueRequest() override;
-  template<typename = void>
-  explicit PROTOBUF_CONSTEXPR GetProviderValueRequest(::google::protobuf::internal::ConstantInitialized);
-
-  inline GetProviderValueRequest(const GetProviderValueRequest& from)
-      : GetProviderValueRequest(nullptr, from) {}
-  GetProviderValueRequest(GetProviderValueRequest&& from) noexcept
-    : GetProviderValueRequest() {
-    *this = ::std::move(from);
-  }
-
-  inline GetProviderValueRequest& operator=(const GetProviderValueRequest& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline GetProviderValueRequest& operator=(GetProviderValueRequest&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetArena() == from.GetArena()
-  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-        && GetArena() != nullptr
-  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-    ) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const GetProviderValueRequest& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const GetProviderValueRequest* internal_default_instance() {
-    return reinterpret_cast<const GetProviderValueRequest*>(
-               &_GetProviderValueRequest_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    33;
-
-  friend void swap(GetProviderValueRequest& a, GetProviderValueRequest& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(GetProviderValueRequest* other) {
-    if (other == this) return;
-  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() != nullptr &&
-        GetArena() == other->GetArena()) {
-   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() == other->GetArena()) {
-  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(GetProviderValueRequest* other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  GetProviderValueRequest* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<GetProviderValueRequest>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const GetProviderValueRequest& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom( const GetProviderValueRequest& from) {
-    GetProviderValueRequest::MergeImpl(*this, from);
-  }
-  private:
-  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  ::size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
-  void SharedCtor(::google::protobuf::Arena* arena);
-  void SharedDtor();
-  void InternalSwap(GetProviderValueRequest* other);
-
-  private:
-  friend class ::google::protobuf::internal::AnyMetadata;
-  static ::absl::string_view FullMessageName() {
-    return "kuksa.val.v2.GetProviderValueRequest";
-  }
-  protected:
-  explicit GetProviderValueRequest(::google::protobuf::Arena* arena);
-  GetProviderValueRequest(::google::protobuf::Arena* arena, const GetProviderValueRequest& from);
-  public:
-
-  static const ClassData _class_data_;
-  const ::google::protobuf::Message::ClassData*GetClassData() const final;
-
-  ::google::protobuf::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kSignalIdsFieldNumber = 2,
-    kRequestIdFieldNumber = 1,
-  };
-  // repeated int32 signal_ids = 2;
-  int signal_ids_size() const;
-  private:
-  int _internal_signal_ids_size() const;
-
-  public:
-  void clear_signal_ids() ;
-  ::int32_t signal_ids(int index) const;
-  void set_signal_ids(int index, ::int32_t value);
-  void add_signal_ids(::int32_t value);
-  const ::google::protobuf::RepeatedField<::int32_t>& signal_ids() const;
-  ::google::protobuf::RepeatedField<::int32_t>* mutable_signal_ids();
-
-  private:
-  const ::google::protobuf::RepeatedField<::int32_t>& _internal_signal_ids() const;
-  ::google::protobuf::RepeatedField<::int32_t>* _internal_mutable_signal_ids();
-
-  public:
-  // uint32 request_id = 1;
-  void clear_request_id() ;
-  ::uint32_t request_id() const;
-  void set_request_id(::uint32_t value);
-
-  private:
-  ::uint32_t _internal_request_id() const;
-  void _internal_set_request_id(::uint32_t value);
-
-  public:
-  // @@protoc_insertion_point(class_scope:kuksa.val.v2.GetProviderValueRequest)
- private:
-  class _Internal;
-
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<
-      1, 2, 0,
-      0, 2>
-      _table_;
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-
-        inline explicit constexpr Impl_(
-            ::google::protobuf::internal::ConstantInitialized) noexcept;
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena);
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena, const Impl_& from);
-    ::google::protobuf::RepeatedField<::int32_t> signal_ids_;
-    mutable ::google::protobuf::internal::CachedSize _signal_ids_cached_byte_size_;
-    ::uint32_t request_id_;
-    mutable ::google::protobuf::internal::CachedSize _cached_size_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
   friend struct ::TableStruct_kuksa_2fval_2fv2_2fval_2eproto;
 };// -------------------------------------------------------------------
 
@@ -2008,32 +1685,6 @@ class PublishValuesResponse_StatusEntry_DoNotUse final
   static const PublishValuesResponse_StatusEntry_DoNotUse* internal_default_instance() {
     return reinterpret_cast<const PublishValuesResponse_StatusEntry_DoNotUse*>(
         &_PublishValuesResponse_StatusEntry_DoNotUse_default_instance_);
-  }
-  static bool ValidateKey(void*) { return true; }
-  static bool ValidateValue(void*) { return true; }
-  ::google::protobuf::Metadata GetMetadata() const final;
-  friend struct ::TableStruct_kuksa_2fval_2fv2_2fval_2eproto;
-};
-// -------------------------------------------------------------------
-
-class ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse final
-    : public ::google::protobuf::internal::MapEntry<
-          ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse, ::int32_t, ::kuksa::val::v2::SampleInterval,
-          ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
-          ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE> {
- public:
-  using SuperType = ::google::protobuf::internal::MapEntry<
-      ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse, ::int32_t, ::kuksa::val::v2::SampleInterval,
-      ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
-      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE>;
-  ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse();
-  template <typename = void>
-  explicit PROTOBUF_CONSTEXPR ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse(
-      ::google::protobuf::internal::ConstantInitialized);
-  explicit ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse(::google::protobuf::Arena* arena);
-  static const ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse* internal_default_instance() {
-    return reinterpret_cast<const ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse*>(
-        &_ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse_default_instance_);
   }
   static bool ValidateKey(void*) { return true; }
   static bool ValidateValue(void*) { return true; }
@@ -2648,7 +2299,7 @@ class BatchActuateStreamResponse final :
                &_BatchActuateStreamResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    28;
+    25;
 
   friend void swap(BatchActuateStreamResponse& a, BatchActuateStreamResponse& b) {
     a.Swap(&b);
@@ -2781,469 +2432,6 @@ class BatchActuateStreamResponse final :
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     ::kuksa::val::v2::SignalID* signal_id_;
     ::kuksa::val::v2::Error* error_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_kuksa_2fval_2fv2_2fval_2eproto;
-};// -------------------------------------------------------------------
-
-class UpdateFilterRequest_FiltersUpdateEntry_DoNotUse final
-    : public ::google::protobuf::internal::MapEntry<
-          UpdateFilterRequest_FiltersUpdateEntry_DoNotUse, ::int32_t, ::kuksa::val::v2::Filter,
-          ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
-          ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE> {
- public:
-  using SuperType = ::google::protobuf::internal::MapEntry<
-      UpdateFilterRequest_FiltersUpdateEntry_DoNotUse, ::int32_t, ::kuksa::val::v2::Filter,
-      ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
-      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE>;
-  UpdateFilterRequest_FiltersUpdateEntry_DoNotUse();
-  template <typename = void>
-  explicit PROTOBUF_CONSTEXPR UpdateFilterRequest_FiltersUpdateEntry_DoNotUse(
-      ::google::protobuf::internal::ConstantInitialized);
-  explicit UpdateFilterRequest_FiltersUpdateEntry_DoNotUse(::google::protobuf::Arena* arena);
-  static const UpdateFilterRequest_FiltersUpdateEntry_DoNotUse* internal_default_instance() {
-    return reinterpret_cast<const UpdateFilterRequest_FiltersUpdateEntry_DoNotUse*>(
-        &_UpdateFilterRequest_FiltersUpdateEntry_DoNotUse_default_instance_);
-  }
-  static bool ValidateKey(void*) { return true; }
-  static bool ValidateValue(void*) { return true; }
-  ::google::protobuf::Metadata GetMetadata() const final;
-  friend struct ::TableStruct_kuksa_2fval_2fv2_2fval_2eproto;
-};
-// -------------------------------------------------------------------
-
-class SubscribeRequest final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:kuksa.val.v2.SubscribeRequest) */ {
- public:
-  inline SubscribeRequest() : SubscribeRequest(nullptr) {}
-  ~SubscribeRequest() override;
-  template<typename = void>
-  explicit PROTOBUF_CONSTEXPR SubscribeRequest(::google::protobuf::internal::ConstantInitialized);
-
-  inline SubscribeRequest(const SubscribeRequest& from)
-      : SubscribeRequest(nullptr, from) {}
-  SubscribeRequest(SubscribeRequest&& from) noexcept
-    : SubscribeRequest() {
-    *this = ::std::move(from);
-  }
-
-  inline SubscribeRequest& operator=(const SubscribeRequest& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline SubscribeRequest& operator=(SubscribeRequest&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetArena() == from.GetArena()
-  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-        && GetArena() != nullptr
-  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-    ) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const SubscribeRequest& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const SubscribeRequest* internal_default_instance() {
-    return reinterpret_cast<const SubscribeRequest*>(
-               &_SubscribeRequest_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    4;
-
-  friend void swap(SubscribeRequest& a, SubscribeRequest& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(SubscribeRequest* other) {
-    if (other == this) return;
-  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() != nullptr &&
-        GetArena() == other->GetArena()) {
-   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() == other->GetArena()) {
-  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(SubscribeRequest* other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  SubscribeRequest* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<SubscribeRequest>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const SubscribeRequest& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom( const SubscribeRequest& from) {
-    SubscribeRequest::MergeImpl(*this, from);
-  }
-  private:
-  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  ::size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
-  void SharedCtor(::google::protobuf::Arena* arena);
-  void SharedDtor();
-  void InternalSwap(SubscribeRequest* other);
-
-  private:
-  friend class ::google::protobuf::internal::AnyMetadata;
-  static ::absl::string_view FullMessageName() {
-    return "kuksa.val.v2.SubscribeRequest";
-  }
-  protected:
-  explicit SubscribeRequest(::google::protobuf::Arena* arena);
-  SubscribeRequest(::google::protobuf::Arena* arena, const SubscribeRequest& from);
-  public:
-
-  static const ClassData _class_data_;
-  const ::google::protobuf::Message::ClassData*GetClassData() const final;
-
-  ::google::protobuf::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kSignalPathsFieldNumber = 1,
-    kFilterFieldNumber = 3,
-    kBufferSizeFieldNumber = 2,
-  };
-  // repeated string signal_paths = 1;
-  int signal_paths_size() const;
-  private:
-  int _internal_signal_paths_size() const;
-
-  public:
-  void clear_signal_paths() ;
-  const std::string& signal_paths(int index) const;
-  std::string* mutable_signal_paths(int index);
-  void set_signal_paths(int index, const std::string& value);
-  void set_signal_paths(int index, std::string&& value);
-  void set_signal_paths(int index, const char* value);
-  void set_signal_paths(int index, const char* value, std::size_t size);
-  void set_signal_paths(int index, absl::string_view value);
-  std::string* add_signal_paths();
-  void add_signal_paths(const std::string& value);
-  void add_signal_paths(std::string&& value);
-  void add_signal_paths(const char* value);
-  void add_signal_paths(const char* value, std::size_t size);
-  void add_signal_paths(absl::string_view value);
-  const ::google::protobuf::RepeatedPtrField<std::string>& signal_paths() const;
-  ::google::protobuf::RepeatedPtrField<std::string>* mutable_signal_paths();
-
-  private:
-  const ::google::protobuf::RepeatedPtrField<std::string>& _internal_signal_paths() const;
-  ::google::protobuf::RepeatedPtrField<std::string>* _internal_mutable_signal_paths();
-
-  public:
-  // .kuksa.val.v2.Filter filter = 3;
-  bool has_filter() const;
-  void clear_filter() ;
-  const ::kuksa::val::v2::Filter& filter() const;
-  PROTOBUF_NODISCARD ::kuksa::val::v2::Filter* release_filter();
-  ::kuksa::val::v2::Filter* mutable_filter();
-  void set_allocated_filter(::kuksa::val::v2::Filter* value);
-  void unsafe_arena_set_allocated_filter(::kuksa::val::v2::Filter* value);
-  ::kuksa::val::v2::Filter* unsafe_arena_release_filter();
-
-  private:
-  const ::kuksa::val::v2::Filter& _internal_filter() const;
-  ::kuksa::val::v2::Filter* _internal_mutable_filter();
-
-  public:
-  // uint32 buffer_size = 2;
-  void clear_buffer_size() ;
-  ::uint32_t buffer_size() const;
-  void set_buffer_size(::uint32_t value);
-
-  private:
-  ::uint32_t _internal_buffer_size() const;
-  void _internal_set_buffer_size(::uint32_t value);
-
-  public:
-  // @@protoc_insertion_point(class_scope:kuksa.val.v2.SubscribeRequest)
- private:
-  class _Internal;
-
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<
-      2, 3, 1,
-      50, 2>
-      _table_;
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-
-        inline explicit constexpr Impl_(
-            ::google::protobuf::internal::ConstantInitialized) noexcept;
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena);
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena, const Impl_& from);
-    ::google::protobuf::internal::HasBits<1> _has_bits_;
-    mutable ::google::protobuf::internal::CachedSize _cached_size_;
-    ::google::protobuf::RepeatedPtrField<std::string> signal_paths_;
-    ::kuksa::val::v2::Filter* filter_;
-    ::uint32_t buffer_size_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_kuksa_2fval_2fv2_2fval_2eproto;
-};// -------------------------------------------------------------------
-
-class SubscribeByIdRequest final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:kuksa.val.v2.SubscribeByIdRequest) */ {
- public:
-  inline SubscribeByIdRequest() : SubscribeByIdRequest(nullptr) {}
-  ~SubscribeByIdRequest() override;
-  template<typename = void>
-  explicit PROTOBUF_CONSTEXPR SubscribeByIdRequest(::google::protobuf::internal::ConstantInitialized);
-
-  inline SubscribeByIdRequest(const SubscribeByIdRequest& from)
-      : SubscribeByIdRequest(nullptr, from) {}
-  SubscribeByIdRequest(SubscribeByIdRequest&& from) noexcept
-    : SubscribeByIdRequest() {
-    *this = ::std::move(from);
-  }
-
-  inline SubscribeByIdRequest& operator=(const SubscribeByIdRequest& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline SubscribeByIdRequest& operator=(SubscribeByIdRequest&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetArena() == from.GetArena()
-  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-        && GetArena() != nullptr
-  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-    ) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const SubscribeByIdRequest& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const SubscribeByIdRequest* internal_default_instance() {
-    return reinterpret_cast<const SubscribeByIdRequest*>(
-               &_SubscribeByIdRequest_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    7;
-
-  friend void swap(SubscribeByIdRequest& a, SubscribeByIdRequest& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(SubscribeByIdRequest* other) {
-    if (other == this) return;
-  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() != nullptr &&
-        GetArena() == other->GetArena()) {
-   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() == other->GetArena()) {
-  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(SubscribeByIdRequest* other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  SubscribeByIdRequest* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<SubscribeByIdRequest>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const SubscribeByIdRequest& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom( const SubscribeByIdRequest& from) {
-    SubscribeByIdRequest::MergeImpl(*this, from);
-  }
-  private:
-  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  ::size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
-  void SharedCtor(::google::protobuf::Arena* arena);
-  void SharedDtor();
-  void InternalSwap(SubscribeByIdRequest* other);
-
-  private:
-  friend class ::google::protobuf::internal::AnyMetadata;
-  static ::absl::string_view FullMessageName() {
-    return "kuksa.val.v2.SubscribeByIdRequest";
-  }
-  protected:
-  explicit SubscribeByIdRequest(::google::protobuf::Arena* arena);
-  SubscribeByIdRequest(::google::protobuf::Arena* arena, const SubscribeByIdRequest& from);
-  public:
-
-  static const ClassData _class_data_;
-  const ::google::protobuf::Message::ClassData*GetClassData() const final;
-
-  ::google::protobuf::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kSignalIdsFieldNumber = 1,
-    kFilterFieldNumber = 3,
-    kBufferSizeFieldNumber = 2,
-  };
-  // repeated int32 signal_ids = 1;
-  int signal_ids_size() const;
-  private:
-  int _internal_signal_ids_size() const;
-
-  public:
-  void clear_signal_ids() ;
-  ::int32_t signal_ids(int index) const;
-  void set_signal_ids(int index, ::int32_t value);
-  void add_signal_ids(::int32_t value);
-  const ::google::protobuf::RepeatedField<::int32_t>& signal_ids() const;
-  ::google::protobuf::RepeatedField<::int32_t>* mutable_signal_ids();
-
-  private:
-  const ::google::protobuf::RepeatedField<::int32_t>& _internal_signal_ids() const;
-  ::google::protobuf::RepeatedField<::int32_t>* _internal_mutable_signal_ids();
-
-  public:
-  // .kuksa.val.v2.Filter filter = 3;
-  bool has_filter() const;
-  void clear_filter() ;
-  const ::kuksa::val::v2::Filter& filter() const;
-  PROTOBUF_NODISCARD ::kuksa::val::v2::Filter* release_filter();
-  ::kuksa::val::v2::Filter* mutable_filter();
-  void set_allocated_filter(::kuksa::val::v2::Filter* value);
-  void unsafe_arena_set_allocated_filter(::kuksa::val::v2::Filter* value);
-  ::kuksa::val::v2::Filter* unsafe_arena_release_filter();
-
-  private:
-  const ::kuksa::val::v2::Filter& _internal_filter() const;
-  ::kuksa::val::v2::Filter* _internal_mutable_filter();
-
-  public:
-  // uint32 buffer_size = 2;
-  void clear_buffer_size() ;
-  ::uint32_t buffer_size() const;
-  void set_buffer_size(::uint32_t value);
-
-  private:
-  ::uint32_t _internal_buffer_size() const;
-  void _internal_set_buffer_size(::uint32_t value);
-
-  public:
-  // @@protoc_insertion_point(class_scope:kuksa.val.v2.SubscribeByIdRequest)
- private:
-  class _Internal;
-
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<
-      2, 3, 1,
-      0, 2>
-      _table_;
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-
-        inline explicit constexpr Impl_(
-            ::google::protobuf::internal::ConstantInitialized) noexcept;
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena);
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena, const Impl_& from);
-    ::google::protobuf::internal::HasBits<1> _has_bits_;
-    mutable ::google::protobuf::internal::CachedSize _cached_size_;
-    ::google::protobuf::RepeatedField<::int32_t> signal_ids_;
-    mutable ::google::protobuf::internal::CachedSize _signal_ids_cached_byte_size_;
-    ::kuksa::val::v2::Filter* filter_;
-    ::uint32_t buffer_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -3401,14 +2589,14 @@ class PublishValuesResponse final :
   ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Error>* _internal_mutable_status();
 
   public:
-  // uint32 request_id = 1;
+  // int32 request_id = 1;
   void clear_request_id() ;
-  ::uint32_t request_id() const;
-  void set_request_id(::uint32_t value);
+  ::int32_t request_id() const;
+  void set_request_id(::int32_t value);
 
   private:
-  ::uint32_t _internal_request_id() const;
-  void _internal_set_request_id(::uint32_t value);
+  ::int32_t _internal_request_id() const;
+  void _internal_set_request_id(::int32_t value);
 
   public:
   // @@protoc_insertion_point(class_scope:kuksa.val.v2.PublishValuesResponse)
@@ -3438,191 +2626,7 @@ class PublishValuesResponse final :
                       ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
                       ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE>
         status_;
-    ::uint32_t request_id_;
-    mutable ::google::protobuf::internal::CachedSize _cached_size_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_kuksa_2fval_2fv2_2fval_2eproto;
-};// -------------------------------------------------------------------
-
-class ProvideSignalRequest final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:kuksa.val.v2.ProvideSignalRequest) */ {
- public:
-  inline ProvideSignalRequest() : ProvideSignalRequest(nullptr) {}
-  ~ProvideSignalRequest() override;
-  template<typename = void>
-  explicit PROTOBUF_CONSTEXPR ProvideSignalRequest(::google::protobuf::internal::ConstantInitialized);
-
-  inline ProvideSignalRequest(const ProvideSignalRequest& from)
-      : ProvideSignalRequest(nullptr, from) {}
-  ProvideSignalRequest(ProvideSignalRequest&& from) noexcept
-    : ProvideSignalRequest() {
-    *this = ::std::move(from);
-  }
-
-  inline ProvideSignalRequest& operator=(const ProvideSignalRequest& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline ProvideSignalRequest& operator=(ProvideSignalRequest&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetArena() == from.GetArena()
-  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-        && GetArena() != nullptr
-  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-    ) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const ProvideSignalRequest& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const ProvideSignalRequest* internal_default_instance() {
-    return reinterpret_cast<const ProvideSignalRequest*>(
-               &_ProvideSignalRequest_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    25;
-
-  friend void swap(ProvideSignalRequest& a, ProvideSignalRequest& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(ProvideSignalRequest* other) {
-    if (other == this) return;
-  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() != nullptr &&
-        GetArena() == other->GetArena()) {
-   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() == other->GetArena()) {
-  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(ProvideSignalRequest* other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  ProvideSignalRequest* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<ProvideSignalRequest>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const ProvideSignalRequest& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom( const ProvideSignalRequest& from) {
-    ProvideSignalRequest::MergeImpl(*this, from);
-  }
-  private:
-  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  ::size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
-  void SharedCtor(::google::protobuf::Arena* arena);
-  void SharedDtor();
-  void InternalSwap(ProvideSignalRequest* other);
-
-  private:
-  friend class ::google::protobuf::internal::AnyMetadata;
-  static ::absl::string_view FullMessageName() {
-    return "kuksa.val.v2.ProvideSignalRequest";
-  }
-  protected:
-  explicit ProvideSignalRequest(::google::protobuf::Arena* arena);
-  ProvideSignalRequest(::google::protobuf::Arena* arena, const ProvideSignalRequest& from);
-  public:
-
-  static const ClassData _class_data_;
-  const ::google::protobuf::Message::ClassData*GetClassData() const final;
-
-  ::google::protobuf::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kSignalsSampleIntervalsFieldNumber = 1,
-  };
-  // map<int32, .kuksa.val.v2.SampleInterval> signals_sample_intervals = 1;
-  int signals_sample_intervals_size() const;
-  private:
-  int _internal_signals_sample_intervals_size() const;
-
-  public:
-  void clear_signals_sample_intervals() ;
-  const ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::SampleInterval>& signals_sample_intervals() const;
-  ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::SampleInterval>* mutable_signals_sample_intervals();
-
-  private:
-  const ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::SampleInterval>& _internal_signals_sample_intervals() const;
-  ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::SampleInterval>* _internal_mutable_signals_sample_intervals();
-
-  public:
-  // @@protoc_insertion_point(class_scope:kuksa.val.v2.ProvideSignalRequest)
- private:
-  class _Internal;
-
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<
-      0, 1, 2,
-      0, 2>
-      _table_;
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-
-        inline explicit constexpr Impl_(
-            ::google::protobuf::internal::ConstantInitialized) noexcept;
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena);
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena, const Impl_& from);
-    ::google::protobuf::internal::MapField<ProvideSignalRequest_SignalsSampleIntervalsEntry_DoNotUse, ::int32_t, ::kuksa::val::v2::SampleInterval,
-                      ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
-                      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE>
-        signals_sample_intervals_;
+    ::int32_t request_id_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -3822,202 +2826,6 @@ class ActuateRequest final :
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     ::kuksa::val::v2::SignalID* signal_id_;
     ::kuksa::val::v2::Value* value_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_kuksa_2fval_2fv2_2fval_2eproto;
-};// -------------------------------------------------------------------
-
-class UpdateFilterRequest final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:kuksa.val.v2.UpdateFilterRequest) */ {
- public:
-  inline UpdateFilterRequest() : UpdateFilterRequest(nullptr) {}
-  ~UpdateFilterRequest() override;
-  template<typename = void>
-  explicit PROTOBUF_CONSTEXPR UpdateFilterRequest(::google::protobuf::internal::ConstantInitialized);
-
-  inline UpdateFilterRequest(const UpdateFilterRequest& from)
-      : UpdateFilterRequest(nullptr, from) {}
-  UpdateFilterRequest(UpdateFilterRequest&& from) noexcept
-    : UpdateFilterRequest() {
-    *this = ::std::move(from);
-  }
-
-  inline UpdateFilterRequest& operator=(const UpdateFilterRequest& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline UpdateFilterRequest& operator=(UpdateFilterRequest&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetArena() == from.GetArena()
-  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-        && GetArena() != nullptr
-  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-    ) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const UpdateFilterRequest& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const UpdateFilterRequest* internal_default_instance() {
-    return reinterpret_cast<const UpdateFilterRequest*>(
-               &_UpdateFilterRequest_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    30;
-
-  friend void swap(UpdateFilterRequest& a, UpdateFilterRequest& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(UpdateFilterRequest* other) {
-    if (other == this) return;
-  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() != nullptr &&
-        GetArena() == other->GetArena()) {
-   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() == other->GetArena()) {
-  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(UpdateFilterRequest* other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  UpdateFilterRequest* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<UpdateFilterRequest>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const UpdateFilterRequest& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom( const UpdateFilterRequest& from) {
-    UpdateFilterRequest::MergeImpl(*this, from);
-  }
-  private:
-  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  ::size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
-  void SharedCtor(::google::protobuf::Arena* arena);
-  void SharedDtor();
-  void InternalSwap(UpdateFilterRequest* other);
-
-  private:
-  friend class ::google::protobuf::internal::AnyMetadata;
-  static ::absl::string_view FullMessageName() {
-    return "kuksa.val.v2.UpdateFilterRequest";
-  }
-  protected:
-  explicit UpdateFilterRequest(::google::protobuf::Arena* arena);
-  UpdateFilterRequest(::google::protobuf::Arena* arena, const UpdateFilterRequest& from);
-  public:
-
-  static const ClassData _class_data_;
-  const ::google::protobuf::Message::ClassData*GetClassData() const final;
-
-  ::google::protobuf::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kFiltersUpdateFieldNumber = 2,
-    kRequestIdFieldNumber = 1,
-  };
-  // map<int32, .kuksa.val.v2.Filter> filters_update = 2;
-  int filters_update_size() const;
-  private:
-  int _internal_filters_update_size() const;
-
-  public:
-  void clear_filters_update() ;
-  const ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Filter>& filters_update() const;
-  ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Filter>* mutable_filters_update();
-
-  private:
-  const ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Filter>& _internal_filters_update() const;
-  ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Filter>* _internal_mutable_filters_update();
-
-  public:
-  // uint32 request_id = 1;
-  void clear_request_id() ;
-  ::uint32_t request_id() const;
-  void set_request_id(::uint32_t value);
-
-  private:
-  ::uint32_t _internal_request_id() const;
-  void _internal_set_request_id(::uint32_t value);
-
-  public:
-  // @@protoc_insertion_point(class_scope:kuksa.val.v2.UpdateFilterRequest)
- private:
-  class _Internal;
-
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<
-      0, 2, 2,
-      0, 2>
-      _table_;
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-
-        inline explicit constexpr Impl_(
-            ::google::protobuf::internal::ConstantInitialized) noexcept;
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena);
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena, const Impl_& from);
-    ::google::protobuf::internal::MapField<UpdateFilterRequest_FiltersUpdateEntry_DoNotUse, ::int32_t, ::kuksa::val::v2::Filter,
-                      ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
-                      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE>
-        filters_update_;
-    ::uint32_t request_id_;
-    mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -4849,32 +3657,6 @@ class GetValueResponse final :
   friend struct ::TableStruct_kuksa_2fval_2fv2_2fval_2eproto;
 };// -------------------------------------------------------------------
 
-class GetProviderValueResponse_EntriesEntry_DoNotUse final
-    : public ::google::protobuf::internal::MapEntry<
-          GetProviderValueResponse_EntriesEntry_DoNotUse, ::int32_t, ::kuksa::val::v2::Datapoint,
-          ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
-          ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE> {
- public:
-  using SuperType = ::google::protobuf::internal::MapEntry<
-      GetProviderValueResponse_EntriesEntry_DoNotUse, ::int32_t, ::kuksa::val::v2::Datapoint,
-      ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
-      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE>;
-  GetProviderValueResponse_EntriesEntry_DoNotUse();
-  template <typename = void>
-  explicit PROTOBUF_CONSTEXPR GetProviderValueResponse_EntriesEntry_DoNotUse(
-      ::google::protobuf::internal::ConstantInitialized);
-  explicit GetProviderValueResponse_EntriesEntry_DoNotUse(::google::protobuf::Arena* arena);
-  static const GetProviderValueResponse_EntriesEntry_DoNotUse* internal_default_instance() {
-    return reinterpret_cast<const GetProviderValueResponse_EntriesEntry_DoNotUse*>(
-        &_GetProviderValueResponse_EntriesEntry_DoNotUse_default_instance_);
-  }
-  static bool ValidateKey(void*) { return true; }
-  static bool ValidateValue(void*) { return true; }
-  ::google::protobuf::Metadata GetMetadata() const final;
-  friend struct ::TableStruct_kuksa_2fval_2fv2_2fval_2eproto;
-};
-// -------------------------------------------------------------------
-
 class BatchActuateStreamRequest final :
     public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:kuksa.val.v2.BatchActuateStreamRequest) */ {
  public:
@@ -4934,7 +3716,7 @@ class BatchActuateStreamRequest final :
                &_BatchActuateStreamRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    27;
+    24;
 
   friend void swap(BatchActuateStreamRequest& a, BatchActuateStreamRequest& b) {
     a.Swap(&b);
@@ -5760,14 +4542,14 @@ class PublishValuesRequest final :
   ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Datapoint>* _internal_mutable_data_points();
 
   public:
-  // uint32 request_id = 1;
+  // int32 request_id = 1;
   void clear_request_id() ;
-  ::uint32_t request_id() const;
-  void set_request_id(::uint32_t value);
+  ::int32_t request_id() const;
+  void set_request_id(::int32_t value);
 
   private:
-  ::uint32_t _internal_request_id() const;
-  void _internal_set_request_id(::uint32_t value);
+  ::int32_t _internal_request_id() const;
+  void _internal_set_request_id(::int32_t value);
 
   public:
   // @@protoc_insertion_point(class_scope:kuksa.val.v2.PublishValuesRequest)
@@ -5797,7 +4579,7 @@ class PublishValuesRequest final :
                       ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
                       ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE>
         data_points_;
-    ::uint32_t request_id_;
+    ::int32_t request_id_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -5863,9 +4645,6 @@ class OpenProviderStreamResponse final :
     kProvideActuationResponse = 1,
     kPublishValuesResponse = 2,
     kBatchActuateStreamRequest = 3,
-    kProvideSignalResponse = 4,
-    kUpdateFilterRequest = 5,
-    kGetProviderValueRequest = 6,
     ACTION_NOT_SET = 0,
   };
 
@@ -5874,7 +4653,7 @@ class OpenProviderStreamResponse final :
                &_OpenProviderStreamResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    37;
+    27;
 
   friend void swap(OpenProviderStreamResponse& a, OpenProviderStreamResponse& b) {
     a.Swap(&b);
@@ -5950,9 +4729,6 @@ class OpenProviderStreamResponse final :
     kProvideActuationResponseFieldNumber = 1,
     kPublishValuesResponseFieldNumber = 2,
     kBatchActuateStreamRequestFieldNumber = 3,
-    kProvideSignalResponseFieldNumber = 4,
-    kUpdateFilterRequestFieldNumber = 5,
-    kGetProviderValueRequestFieldNumber = 6,
   };
   // .kuksa.val.v2.ProvideActuationResponse provide_actuation_response = 1;
   bool has_provide_actuation_response() const;
@@ -6011,63 +4787,6 @@ class OpenProviderStreamResponse final :
   ::kuksa::val::v2::BatchActuateStreamRequest* _internal_mutable_batch_actuate_stream_request();
 
   public:
-  // .kuksa.val.v2.ProvideSignalResponse provide_signal_response = 4;
-  bool has_provide_signal_response() const;
-  private:
-  bool _internal_has_provide_signal_response() const;
-
-  public:
-  void clear_provide_signal_response() ;
-  const ::kuksa::val::v2::ProvideSignalResponse& provide_signal_response() const;
-  PROTOBUF_NODISCARD ::kuksa::val::v2::ProvideSignalResponse* release_provide_signal_response();
-  ::kuksa::val::v2::ProvideSignalResponse* mutable_provide_signal_response();
-  void set_allocated_provide_signal_response(::kuksa::val::v2::ProvideSignalResponse* value);
-  void unsafe_arena_set_allocated_provide_signal_response(::kuksa::val::v2::ProvideSignalResponse* value);
-  ::kuksa::val::v2::ProvideSignalResponse* unsafe_arena_release_provide_signal_response();
-
-  private:
-  const ::kuksa::val::v2::ProvideSignalResponse& _internal_provide_signal_response() const;
-  ::kuksa::val::v2::ProvideSignalResponse* _internal_mutable_provide_signal_response();
-
-  public:
-  // .kuksa.val.v2.UpdateFilterRequest update_filter_request = 5;
-  bool has_update_filter_request() const;
-  private:
-  bool _internal_has_update_filter_request() const;
-
-  public:
-  void clear_update_filter_request() ;
-  const ::kuksa::val::v2::UpdateFilterRequest& update_filter_request() const;
-  PROTOBUF_NODISCARD ::kuksa::val::v2::UpdateFilterRequest* release_update_filter_request();
-  ::kuksa::val::v2::UpdateFilterRequest* mutable_update_filter_request();
-  void set_allocated_update_filter_request(::kuksa::val::v2::UpdateFilterRequest* value);
-  void unsafe_arena_set_allocated_update_filter_request(::kuksa::val::v2::UpdateFilterRequest* value);
-  ::kuksa::val::v2::UpdateFilterRequest* unsafe_arena_release_update_filter_request();
-
-  private:
-  const ::kuksa::val::v2::UpdateFilterRequest& _internal_update_filter_request() const;
-  ::kuksa::val::v2::UpdateFilterRequest* _internal_mutable_update_filter_request();
-
-  public:
-  // .kuksa.val.v2.GetProviderValueRequest get_provider_value_request = 6;
-  bool has_get_provider_value_request() const;
-  private:
-  bool _internal_has_get_provider_value_request() const;
-
-  public:
-  void clear_get_provider_value_request() ;
-  const ::kuksa::val::v2::GetProviderValueRequest& get_provider_value_request() const;
-  PROTOBUF_NODISCARD ::kuksa::val::v2::GetProviderValueRequest* release_get_provider_value_request();
-  ::kuksa::val::v2::GetProviderValueRequest* mutable_get_provider_value_request();
-  void set_allocated_get_provider_value_request(::kuksa::val::v2::GetProviderValueRequest* value);
-  void unsafe_arena_set_allocated_get_provider_value_request(::kuksa::val::v2::GetProviderValueRequest* value);
-  ::kuksa::val::v2::GetProviderValueRequest* unsafe_arena_release_get_provider_value_request();
-
-  private:
-  const ::kuksa::val::v2::GetProviderValueRequest& _internal_get_provider_value_request() const;
-  ::kuksa::val::v2::GetProviderValueRequest* _internal_mutable_get_provider_value_request();
-
-  public:
   void clear_action();
   ActionCase action_case() const;
   // @@protoc_insertion_point(class_scope:kuksa.val.v2.OpenProviderStreamResponse)
@@ -6076,16 +4795,13 @@ class OpenProviderStreamResponse final :
   void set_has_provide_actuation_response();
   void set_has_publish_values_response();
   void set_has_batch_actuate_stream_request();
-  void set_has_provide_signal_response();
-  void set_has_update_filter_request();
-  void set_has_get_provider_value_request();
 
   inline bool has_action() const;
   inline void clear_has_action();
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 6, 6,
+      0, 3, 3,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -6108,209 +4824,10 @@ class OpenProviderStreamResponse final :
       ::kuksa::val::v2::ProvideActuationResponse* provide_actuation_response_;
       ::kuksa::val::v2::PublishValuesResponse* publish_values_response_;
       ::kuksa::val::v2::BatchActuateStreamRequest* batch_actuate_stream_request_;
-      ::kuksa::val::v2::ProvideSignalResponse* provide_signal_response_;
-      ::kuksa::val::v2::UpdateFilterRequest* update_filter_request_;
-      ::kuksa::val::v2::GetProviderValueRequest* get_provider_value_request_;
     } action_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     ::uint32_t _oneof_case_[1];
 
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_kuksa_2fval_2fv2_2fval_2eproto;
-};// -------------------------------------------------------------------
-
-class GetProviderValueResponse final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:kuksa.val.v2.GetProviderValueResponse) */ {
- public:
-  inline GetProviderValueResponse() : GetProviderValueResponse(nullptr) {}
-  ~GetProviderValueResponse() override;
-  template<typename = void>
-  explicit PROTOBUF_CONSTEXPR GetProviderValueResponse(::google::protobuf::internal::ConstantInitialized);
-
-  inline GetProviderValueResponse(const GetProviderValueResponse& from)
-      : GetProviderValueResponse(nullptr, from) {}
-  GetProviderValueResponse(GetProviderValueResponse&& from) noexcept
-    : GetProviderValueResponse() {
-    *this = ::std::move(from);
-  }
-
-  inline GetProviderValueResponse& operator=(const GetProviderValueResponse& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline GetProviderValueResponse& operator=(GetProviderValueResponse&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetArena() == from.GetArena()
-  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-        && GetArena() != nullptr
-  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-    ) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const GetProviderValueResponse& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const GetProviderValueResponse* internal_default_instance() {
-    return reinterpret_cast<const GetProviderValueResponse*>(
-               &_GetProviderValueResponse_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    35;
-
-  friend void swap(GetProviderValueResponse& a, GetProviderValueResponse& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(GetProviderValueResponse* other) {
-    if (other == this) return;
-  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() != nullptr &&
-        GetArena() == other->GetArena()) {
-   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() == other->GetArena()) {
-  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(GetProviderValueResponse* other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  GetProviderValueResponse* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<GetProviderValueResponse>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const GetProviderValueResponse& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom( const GetProviderValueResponse& from) {
-    GetProviderValueResponse::MergeImpl(*this, from);
-  }
-  private:
-  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  ::size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
-  void SharedCtor(::google::protobuf::Arena* arena);
-  void SharedDtor();
-  void InternalSwap(GetProviderValueResponse* other);
-
-  private:
-  friend class ::google::protobuf::internal::AnyMetadata;
-  static ::absl::string_view FullMessageName() {
-    return "kuksa.val.v2.GetProviderValueResponse";
-  }
-  protected:
-  explicit GetProviderValueResponse(::google::protobuf::Arena* arena);
-  GetProviderValueResponse(::google::protobuf::Arena* arena, const GetProviderValueResponse& from);
-  public:
-
-  static const ClassData _class_data_;
-  const ::google::protobuf::Message::ClassData*GetClassData() const final;
-
-  ::google::protobuf::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kEntriesFieldNumber = 2,
-    kRequestIdFieldNumber = 1,
-  };
-  // map<int32, .kuksa.val.v2.Datapoint> entries = 2;
-  int entries_size() const;
-  private:
-  int _internal_entries_size() const;
-
-  public:
-  void clear_entries() ;
-  const ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Datapoint>& entries() const;
-  ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Datapoint>* mutable_entries();
-
-  private:
-  const ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Datapoint>& _internal_entries() const;
-  ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Datapoint>* _internal_mutable_entries();
-
-  public:
-  // uint32 request_id = 1;
-  void clear_request_id() ;
-  ::uint32_t request_id() const;
-  void set_request_id(::uint32_t value);
-
-  private:
-  ::uint32_t _internal_request_id() const;
-  void _internal_set_request_id(::uint32_t value);
-
-  public:
-  // @@protoc_insertion_point(class_scope:kuksa.val.v2.GetProviderValueResponse)
- private:
-  class _Internal;
-
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<
-      0, 2, 2,
-      0, 2>
-      _table_;
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-
-        inline explicit constexpr Impl_(
-            ::google::protobuf::internal::ConstantInitialized) noexcept;
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena);
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena, const Impl_& from);
-    ::google::protobuf::internal::MapField<GetProviderValueResponse_EntriesEntry_DoNotUse, ::int32_t, ::kuksa::val::v2::Datapoint,
-                      ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
-                      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE>
-        entries_;
-    ::uint32_t request_id_;
-    mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -6375,10 +4892,6 @@ class OpenProviderStreamRequest final :
     kProvideActuationRequest = 1,
     kPublishValuesRequest = 2,
     kBatchActuateStreamResponse = 3,
-    kProvideSignalRequest = 4,
-    kUpdateFilterResponse = 5,
-    kGetProviderValueResponse = 6,
-    kProviderErrorIndication = 7,
     ACTION_NOT_SET = 0,
   };
 
@@ -6387,7 +4900,7 @@ class OpenProviderStreamRequest final :
                &_OpenProviderStreamRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    36;
+    26;
 
   friend void swap(OpenProviderStreamRequest& a, OpenProviderStreamRequest& b) {
     a.Swap(&b);
@@ -6463,10 +4976,6 @@ class OpenProviderStreamRequest final :
     kProvideActuationRequestFieldNumber = 1,
     kPublishValuesRequestFieldNumber = 2,
     kBatchActuateStreamResponseFieldNumber = 3,
-    kProvideSignalRequestFieldNumber = 4,
-    kUpdateFilterResponseFieldNumber = 5,
-    kGetProviderValueResponseFieldNumber = 6,
-    kProviderErrorIndicationFieldNumber = 7,
   };
   // .kuksa.val.v2.ProvideActuationRequest provide_actuation_request = 1;
   bool has_provide_actuation_request() const;
@@ -6525,82 +5034,6 @@ class OpenProviderStreamRequest final :
   ::kuksa::val::v2::BatchActuateStreamResponse* _internal_mutable_batch_actuate_stream_response();
 
   public:
-  // .kuksa.val.v2.ProvideSignalRequest provide_signal_request = 4;
-  bool has_provide_signal_request() const;
-  private:
-  bool _internal_has_provide_signal_request() const;
-
-  public:
-  void clear_provide_signal_request() ;
-  const ::kuksa::val::v2::ProvideSignalRequest& provide_signal_request() const;
-  PROTOBUF_NODISCARD ::kuksa::val::v2::ProvideSignalRequest* release_provide_signal_request();
-  ::kuksa::val::v2::ProvideSignalRequest* mutable_provide_signal_request();
-  void set_allocated_provide_signal_request(::kuksa::val::v2::ProvideSignalRequest* value);
-  void unsafe_arena_set_allocated_provide_signal_request(::kuksa::val::v2::ProvideSignalRequest* value);
-  ::kuksa::val::v2::ProvideSignalRequest* unsafe_arena_release_provide_signal_request();
-
-  private:
-  const ::kuksa::val::v2::ProvideSignalRequest& _internal_provide_signal_request() const;
-  ::kuksa::val::v2::ProvideSignalRequest* _internal_mutable_provide_signal_request();
-
-  public:
-  // .kuksa.val.v2.UpdateFilterResponse update_filter_response = 5;
-  bool has_update_filter_response() const;
-  private:
-  bool _internal_has_update_filter_response() const;
-
-  public:
-  void clear_update_filter_response() ;
-  const ::kuksa::val::v2::UpdateFilterResponse& update_filter_response() const;
-  PROTOBUF_NODISCARD ::kuksa::val::v2::UpdateFilterResponse* release_update_filter_response();
-  ::kuksa::val::v2::UpdateFilterResponse* mutable_update_filter_response();
-  void set_allocated_update_filter_response(::kuksa::val::v2::UpdateFilterResponse* value);
-  void unsafe_arena_set_allocated_update_filter_response(::kuksa::val::v2::UpdateFilterResponse* value);
-  ::kuksa::val::v2::UpdateFilterResponse* unsafe_arena_release_update_filter_response();
-
-  private:
-  const ::kuksa::val::v2::UpdateFilterResponse& _internal_update_filter_response() const;
-  ::kuksa::val::v2::UpdateFilterResponse* _internal_mutable_update_filter_response();
-
-  public:
-  // .kuksa.val.v2.GetProviderValueResponse get_provider_value_response = 6;
-  bool has_get_provider_value_response() const;
-  private:
-  bool _internal_has_get_provider_value_response() const;
-
-  public:
-  void clear_get_provider_value_response() ;
-  const ::kuksa::val::v2::GetProviderValueResponse& get_provider_value_response() const;
-  PROTOBUF_NODISCARD ::kuksa::val::v2::GetProviderValueResponse* release_get_provider_value_response();
-  ::kuksa::val::v2::GetProviderValueResponse* mutable_get_provider_value_response();
-  void set_allocated_get_provider_value_response(::kuksa::val::v2::GetProviderValueResponse* value);
-  void unsafe_arena_set_allocated_get_provider_value_response(::kuksa::val::v2::GetProviderValueResponse* value);
-  ::kuksa::val::v2::GetProviderValueResponse* unsafe_arena_release_get_provider_value_response();
-
-  private:
-  const ::kuksa::val::v2::GetProviderValueResponse& _internal_get_provider_value_response() const;
-  ::kuksa::val::v2::GetProviderValueResponse* _internal_mutable_get_provider_value_response();
-
-  public:
-  // .kuksa.val.v2.ProviderErrorIndication provider_error_indication = 7;
-  bool has_provider_error_indication() const;
-  private:
-  bool _internal_has_provider_error_indication() const;
-
-  public:
-  void clear_provider_error_indication() ;
-  const ::kuksa::val::v2::ProviderErrorIndication& provider_error_indication() const;
-  PROTOBUF_NODISCARD ::kuksa::val::v2::ProviderErrorIndication* release_provider_error_indication();
-  ::kuksa::val::v2::ProviderErrorIndication* mutable_provider_error_indication();
-  void set_allocated_provider_error_indication(::kuksa::val::v2::ProviderErrorIndication* value);
-  void unsafe_arena_set_allocated_provider_error_indication(::kuksa::val::v2::ProviderErrorIndication* value);
-  ::kuksa::val::v2::ProviderErrorIndication* unsafe_arena_release_provider_error_indication();
-
-  private:
-  const ::kuksa::val::v2::ProviderErrorIndication& _internal_provider_error_indication() const;
-  ::kuksa::val::v2::ProviderErrorIndication* _internal_mutable_provider_error_indication();
-
-  public:
   void clear_action();
   ActionCase action_case() const;
   // @@protoc_insertion_point(class_scope:kuksa.val.v2.OpenProviderStreamRequest)
@@ -6609,17 +5042,13 @@ class OpenProviderStreamRequest final :
   void set_has_provide_actuation_request();
   void set_has_publish_values_request();
   void set_has_batch_actuate_stream_response();
-  void set_has_provide_signal_request();
-  void set_has_update_filter_response();
-  void set_has_get_provider_value_response();
-  void set_has_provider_error_indication();
 
   inline bool has_action() const;
   inline void clear_has_action();
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 7, 7,
+      0, 3, 3,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -6642,10 +5071,6 @@ class OpenProviderStreamRequest final :
       ::kuksa::val::v2::ProvideActuationRequest* provide_actuation_request_;
       ::kuksa::val::v2::PublishValuesRequest* publish_values_request_;
       ::kuksa::val::v2::BatchActuateStreamResponse* batch_actuate_stream_response_;
-      ::kuksa::val::v2::ProvideSignalRequest* provide_signal_request_;
-      ::kuksa::val::v2::UpdateFilterResponse* update_filter_response_;
-      ::kuksa::val::v2::GetProviderValueResponse* get_provider_value_response_;
-      ::kuksa::val::v2::ProviderErrorIndication* provider_error_indication_;
     } action_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     ::uint32_t _oneof_case_[1];
@@ -7084,97 +5509,6 @@ inline void SubscribeRequest::_internal_set_buffer_size(::uint32_t value) {
   _impl_.buffer_size_ = value;
 }
 
-// .kuksa.val.v2.Filter filter = 3;
-inline bool SubscribeRequest::has_filter() const {
-  bool value = (_impl_._has_bits_[0] & 0x00000001u) != 0;
-  PROTOBUF_ASSUME(!value || _impl_.filter_ != nullptr);
-  return value;
-}
-inline const ::kuksa::val::v2::Filter& SubscribeRequest::_internal_filter() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  const ::kuksa::val::v2::Filter* p = _impl_.filter_;
-  return p != nullptr ? *p : reinterpret_cast<const ::kuksa::val::v2::Filter&>(::kuksa::val::v2::_Filter_default_instance_);
-}
-inline const ::kuksa::val::v2::Filter& SubscribeRequest::filter() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.SubscribeRequest.filter)
-  return _internal_filter();
-}
-inline void SubscribeRequest::unsafe_arena_set_allocated_filter(::kuksa::val::v2::Filter* value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (GetArena() == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.filter_);
-  }
-  _impl_.filter_ = reinterpret_cast<::kuksa::val::v2::Filter*>(value);
-  if (value != nullptr) {
-    _impl_._has_bits_[0] |= 0x00000001u;
-  } else {
-    _impl_._has_bits_[0] &= ~0x00000001u;
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:kuksa.val.v2.SubscribeRequest.filter)
-}
-inline ::kuksa::val::v2::Filter* SubscribeRequest::release_filter() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-
-  _impl_._has_bits_[0] &= ~0x00000001u;
-  ::kuksa::val::v2::Filter* released = _impl_.filter_;
-  _impl_.filter_ = nullptr;
-#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
-  auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
-  released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-  if (GetArena() == nullptr) {
-    delete old;
-  }
-#else   // PROTOBUF_FORCE_COPY_IN_RELEASE
-  if (GetArena() != nullptr) {
-    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-  }
-#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
-  return released;
-}
-inline ::kuksa::val::v2::Filter* SubscribeRequest::unsafe_arena_release_filter() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  // @@protoc_insertion_point(field_release:kuksa.val.v2.SubscribeRequest.filter)
-
-  _impl_._has_bits_[0] &= ~0x00000001u;
-  ::kuksa::val::v2::Filter* temp = _impl_.filter_;
-  _impl_.filter_ = nullptr;
-  return temp;
-}
-inline ::kuksa::val::v2::Filter* SubscribeRequest::_internal_mutable_filter() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_._has_bits_[0] |= 0x00000001u;
-  if (_impl_.filter_ == nullptr) {
-    auto* p = CreateMaybeMessage<::kuksa::val::v2::Filter>(GetArena());
-    _impl_.filter_ = reinterpret_cast<::kuksa::val::v2::Filter*>(p);
-  }
-  return _impl_.filter_;
-}
-inline ::kuksa::val::v2::Filter* SubscribeRequest::mutable_filter() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::kuksa::val::v2::Filter* _msg = _internal_mutable_filter();
-  // @@protoc_insertion_point(field_mutable:kuksa.val.v2.SubscribeRequest.filter)
-  return _msg;
-}
-inline void SubscribeRequest::set_allocated_filter(::kuksa::val::v2::Filter* value) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (message_arena == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.filter_);
-  }
-
-  if (value != nullptr) {
-    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(value)->GetArena();
-    if (message_arena != submessage_arena) {
-      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
-    }
-    _impl_._has_bits_[0] |= 0x00000001u;
-  } else {
-    _impl_._has_bits_[0] &= ~0x00000001u;
-  }
-
-  _impl_.filter_ = reinterpret_cast<::kuksa::val::v2::Filter*>(value);
-  // @@protoc_insertion_point(field_set_allocated:kuksa.val.v2.SubscribeRequest.filter)
-}
-
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
@@ -7275,97 +5609,6 @@ inline void SubscribeByIdRequest::_internal_set_buffer_size(::uint32_t value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.buffer_size_ = value;
-}
-
-// .kuksa.val.v2.Filter filter = 3;
-inline bool SubscribeByIdRequest::has_filter() const {
-  bool value = (_impl_._has_bits_[0] & 0x00000001u) != 0;
-  PROTOBUF_ASSUME(!value || _impl_.filter_ != nullptr);
-  return value;
-}
-inline const ::kuksa::val::v2::Filter& SubscribeByIdRequest::_internal_filter() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  const ::kuksa::val::v2::Filter* p = _impl_.filter_;
-  return p != nullptr ? *p : reinterpret_cast<const ::kuksa::val::v2::Filter&>(::kuksa::val::v2::_Filter_default_instance_);
-}
-inline const ::kuksa::val::v2::Filter& SubscribeByIdRequest::filter() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.SubscribeByIdRequest.filter)
-  return _internal_filter();
-}
-inline void SubscribeByIdRequest::unsafe_arena_set_allocated_filter(::kuksa::val::v2::Filter* value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (GetArena() == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.filter_);
-  }
-  _impl_.filter_ = reinterpret_cast<::kuksa::val::v2::Filter*>(value);
-  if (value != nullptr) {
-    _impl_._has_bits_[0] |= 0x00000001u;
-  } else {
-    _impl_._has_bits_[0] &= ~0x00000001u;
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:kuksa.val.v2.SubscribeByIdRequest.filter)
-}
-inline ::kuksa::val::v2::Filter* SubscribeByIdRequest::release_filter() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-
-  _impl_._has_bits_[0] &= ~0x00000001u;
-  ::kuksa::val::v2::Filter* released = _impl_.filter_;
-  _impl_.filter_ = nullptr;
-#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
-  auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
-  released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-  if (GetArena() == nullptr) {
-    delete old;
-  }
-#else   // PROTOBUF_FORCE_COPY_IN_RELEASE
-  if (GetArena() != nullptr) {
-    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-  }
-#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
-  return released;
-}
-inline ::kuksa::val::v2::Filter* SubscribeByIdRequest::unsafe_arena_release_filter() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  // @@protoc_insertion_point(field_release:kuksa.val.v2.SubscribeByIdRequest.filter)
-
-  _impl_._has_bits_[0] &= ~0x00000001u;
-  ::kuksa::val::v2::Filter* temp = _impl_.filter_;
-  _impl_.filter_ = nullptr;
-  return temp;
-}
-inline ::kuksa::val::v2::Filter* SubscribeByIdRequest::_internal_mutable_filter() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_._has_bits_[0] |= 0x00000001u;
-  if (_impl_.filter_ == nullptr) {
-    auto* p = CreateMaybeMessage<::kuksa::val::v2::Filter>(GetArena());
-    _impl_.filter_ = reinterpret_cast<::kuksa::val::v2::Filter*>(p);
-  }
-  return _impl_.filter_;
-}
-inline ::kuksa::val::v2::Filter* SubscribeByIdRequest::mutable_filter() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::kuksa::val::v2::Filter* _msg = _internal_mutable_filter();
-  // @@protoc_insertion_point(field_mutable:kuksa.val.v2.SubscribeByIdRequest.filter)
-  return _msg;
-}
-inline void SubscribeByIdRequest::set_allocated_filter(::kuksa::val::v2::Filter* value) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (message_arena == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.filter_);
-  }
-
-  if (value != nullptr) {
-    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(value)->GetArena();
-    if (message_arena != submessage_arena) {
-      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
-    }
-    _impl_._has_bits_[0] |= 0x00000001u;
-  } else {
-    _impl_._has_bits_[0] &= ~0x00000001u;
-  }
-
-  _impl_.filter_ = reinterpret_cast<::kuksa::val::v2::Filter*>(value);
-  // @@protoc_insertion_point(field_set_allocated:kuksa.val.v2.SubscribeByIdRequest.filter)
 }
 
 // -------------------------------------------------------------------
@@ -8000,24 +6243,24 @@ inline void PublishValueRequest::set_allocated_data_point(::kuksa::val::v2::Data
 
 // PublishValuesRequest
 
-// uint32 request_id = 1;
+// int32 request_id = 1;
 inline void PublishValuesRequest::clear_request_id() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.request_id_ = 0u;
+  _impl_.request_id_ = 0;
 }
-inline ::uint32_t PublishValuesRequest::request_id() const {
+inline ::int32_t PublishValuesRequest::request_id() const {
   // @@protoc_insertion_point(field_get:kuksa.val.v2.PublishValuesRequest.request_id)
   return _internal_request_id();
 }
-inline void PublishValuesRequest::set_request_id(::uint32_t value) {
+inline void PublishValuesRequest::set_request_id(::int32_t value) {
   _internal_set_request_id(value);
   // @@protoc_insertion_point(field_set:kuksa.val.v2.PublishValuesRequest.request_id)
 }
-inline ::uint32_t PublishValuesRequest::_internal_request_id() const {
+inline ::int32_t PublishValuesRequest::_internal_request_id() const {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
   return _impl_.request_id_;
 }
-inline void PublishValuesRequest::_internal_set_request_id(::uint32_t value) {
+inline void PublishValuesRequest::_internal_set_request_id(::int32_t value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.request_id_ = value;
@@ -8053,24 +6296,24 @@ inline ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Datapoint>* PublishV
 
 // PublishValuesResponse
 
-// uint32 request_id = 1;
+// int32 request_id = 1;
 inline void PublishValuesResponse::clear_request_id() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.request_id_ = 0u;
+  _impl_.request_id_ = 0;
 }
-inline ::uint32_t PublishValuesResponse::request_id() const {
+inline ::int32_t PublishValuesResponse::request_id() const {
   // @@protoc_insertion_point(field_get:kuksa.val.v2.PublishValuesResponse.request_id)
   return _internal_request_id();
 }
-inline void PublishValuesResponse::set_request_id(::uint32_t value) {
+inline void PublishValuesResponse::set_request_id(::int32_t value) {
   _internal_set_request_id(value);
   // @@protoc_insertion_point(field_set:kuksa.val.v2.PublishValuesResponse.request_id)
 }
-inline ::uint32_t PublishValuesResponse::_internal_request_id() const {
+inline ::int32_t PublishValuesResponse::_internal_request_id() const {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
   return _impl_.request_id_;
 }
-inline void PublishValuesResponse::_internal_set_request_id(::uint32_t value) {
+inline void PublishValuesResponse::_internal_set_request_id(::int32_t value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.request_id_ = value;
@@ -8152,40 +6395,6 @@ ProvideActuationRequest::_internal_mutable_actuator_identifiers() {
 // -------------------------------------------------------------------
 
 // ProvideActuationResponse
-
-// -------------------------------------------------------------------
-
-// -------------------------------------------------------------------
-
-// ProvideSignalRequest
-
-// map<int32, .kuksa.val.v2.SampleInterval> signals_sample_intervals = 1;
-inline int ProvideSignalRequest::_internal_signals_sample_intervals_size() const {
-  return _internal_signals_sample_intervals().size();
-}
-inline int ProvideSignalRequest::signals_sample_intervals_size() const {
-  return _internal_signals_sample_intervals_size();
-}
-inline const ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::SampleInterval>& ProvideSignalRequest::_internal_signals_sample_intervals() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.signals_sample_intervals_.GetMap();
-}
-inline const ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::SampleInterval>& ProvideSignalRequest::signals_sample_intervals() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_map:kuksa.val.v2.ProvideSignalRequest.signals_sample_intervals)
-  return _internal_signals_sample_intervals();
-}
-inline ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::SampleInterval>* ProvideSignalRequest::_internal_mutable_signals_sample_intervals() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  return _impl_.signals_sample_intervals_.MutableMap();
-}
-inline ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::SampleInterval>* ProvideSignalRequest::mutable_signals_sample_intervals() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_mutable_map:kuksa.val.v2.ProvideSignalRequest.signals_sample_intervals)
-  return _internal_mutable_signals_sample_intervals();
-}
-
-// -------------------------------------------------------------------
-
-// ProvideSignalResponse
 
 // -------------------------------------------------------------------
 
@@ -8428,261 +6637,6 @@ inline void BatchActuateStreamResponse::set_allocated_error(::kuksa::val::v2::Er
 
 // -------------------------------------------------------------------
 
-// -------------------------------------------------------------------
-
-// UpdateFilterRequest
-
-// uint32 request_id = 1;
-inline void UpdateFilterRequest::clear_request_id() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.request_id_ = 0u;
-}
-inline ::uint32_t UpdateFilterRequest::request_id() const {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.UpdateFilterRequest.request_id)
-  return _internal_request_id();
-}
-inline void UpdateFilterRequest::set_request_id(::uint32_t value) {
-  _internal_set_request_id(value);
-  // @@protoc_insertion_point(field_set:kuksa.val.v2.UpdateFilterRequest.request_id)
-}
-inline ::uint32_t UpdateFilterRequest::_internal_request_id() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.request_id_;
-}
-inline void UpdateFilterRequest::_internal_set_request_id(::uint32_t value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.request_id_ = value;
-}
-
-// map<int32, .kuksa.val.v2.Filter> filters_update = 2;
-inline int UpdateFilterRequest::_internal_filters_update_size() const {
-  return _internal_filters_update().size();
-}
-inline int UpdateFilterRequest::filters_update_size() const {
-  return _internal_filters_update_size();
-}
-inline const ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Filter>& UpdateFilterRequest::_internal_filters_update() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.filters_update_.GetMap();
-}
-inline const ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Filter>& UpdateFilterRequest::filters_update() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_map:kuksa.val.v2.UpdateFilterRequest.filters_update)
-  return _internal_filters_update();
-}
-inline ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Filter>* UpdateFilterRequest::_internal_mutable_filters_update() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  return _impl_.filters_update_.MutableMap();
-}
-inline ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Filter>* UpdateFilterRequest::mutable_filters_update() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_mutable_map:kuksa.val.v2.UpdateFilterRequest.filters_update)
-  return _internal_mutable_filters_update();
-}
-
-// -------------------------------------------------------------------
-
-// UpdateFilterResponse
-
-// uint32 request_id = 1;
-inline void UpdateFilterResponse::clear_request_id() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.request_id_ = 0u;
-}
-inline ::uint32_t UpdateFilterResponse::request_id() const {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.UpdateFilterResponse.request_id)
-  return _internal_request_id();
-}
-inline void UpdateFilterResponse::set_request_id(::uint32_t value) {
-  _internal_set_request_id(value);
-  // @@protoc_insertion_point(field_set:kuksa.val.v2.UpdateFilterResponse.request_id)
-}
-inline ::uint32_t UpdateFilterResponse::_internal_request_id() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.request_id_;
-}
-inline void UpdateFilterResponse::_internal_set_request_id(::uint32_t value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.request_id_ = value;
-}
-
-// .kuksa.val.v2.FilterError filter_error = 2;
-inline void UpdateFilterResponse::clear_filter_error() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.filter_error_ = 0;
-}
-inline ::kuksa::val::v2::FilterError UpdateFilterResponse::filter_error() const {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.UpdateFilterResponse.filter_error)
-  return _internal_filter_error();
-}
-inline void UpdateFilterResponse::set_filter_error(::kuksa::val::v2::FilterError value) {
-  _internal_set_filter_error(value);
-  // @@protoc_insertion_point(field_set:kuksa.val.v2.UpdateFilterResponse.filter_error)
-}
-inline ::kuksa::val::v2::FilterError UpdateFilterResponse::_internal_filter_error() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return static_cast<::kuksa::val::v2::FilterError>(_impl_.filter_error_);
-}
-inline void UpdateFilterResponse::_internal_set_filter_error(::kuksa::val::v2::FilterError value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.filter_error_ = value;
-}
-
-// -------------------------------------------------------------------
-
-// ProviderErrorIndication
-
-// .kuksa.val.v2.ProviderError provider_error = 1;
-inline void ProviderErrorIndication::clear_provider_error() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.provider_error_ = 0;
-}
-inline ::kuksa::val::v2::ProviderError ProviderErrorIndication::provider_error() const {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.ProviderErrorIndication.provider_error)
-  return _internal_provider_error();
-}
-inline void ProviderErrorIndication::set_provider_error(::kuksa::val::v2::ProviderError value) {
-  _internal_set_provider_error(value);
-  // @@protoc_insertion_point(field_set:kuksa.val.v2.ProviderErrorIndication.provider_error)
-}
-inline ::kuksa::val::v2::ProviderError ProviderErrorIndication::_internal_provider_error() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return static_cast<::kuksa::val::v2::ProviderError>(_impl_.provider_error_);
-}
-inline void ProviderErrorIndication::_internal_set_provider_error(::kuksa::val::v2::ProviderError value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.provider_error_ = value;
-}
-
-// -------------------------------------------------------------------
-
-// GetProviderValueRequest
-
-// uint32 request_id = 1;
-inline void GetProviderValueRequest::clear_request_id() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.request_id_ = 0u;
-}
-inline ::uint32_t GetProviderValueRequest::request_id() const {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.GetProviderValueRequest.request_id)
-  return _internal_request_id();
-}
-inline void GetProviderValueRequest::set_request_id(::uint32_t value) {
-  _internal_set_request_id(value);
-  // @@protoc_insertion_point(field_set:kuksa.val.v2.GetProviderValueRequest.request_id)
-}
-inline ::uint32_t GetProviderValueRequest::_internal_request_id() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.request_id_;
-}
-inline void GetProviderValueRequest::_internal_set_request_id(::uint32_t value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.request_id_ = value;
-}
-
-// repeated int32 signal_ids = 2;
-inline int GetProviderValueRequest::_internal_signal_ids_size() const {
-  return _internal_signal_ids().size();
-}
-inline int GetProviderValueRequest::signal_ids_size() const {
-  return _internal_signal_ids_size();
-}
-inline void GetProviderValueRequest::clear_signal_ids() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.signal_ids_.Clear();
-}
-inline ::int32_t GetProviderValueRequest::signal_ids(int index) const {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.GetProviderValueRequest.signal_ids)
-  return _internal_signal_ids().Get(index);
-}
-inline void GetProviderValueRequest::set_signal_ids(int index, ::int32_t value) {
-  _internal_mutable_signal_ids()->Set(index, value);
-  // @@protoc_insertion_point(field_set:kuksa.val.v2.GetProviderValueRequest.signal_ids)
-}
-inline void GetProviderValueRequest::add_signal_ids(::int32_t value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _internal_mutable_signal_ids()->Add(value);
-  // @@protoc_insertion_point(field_add:kuksa.val.v2.GetProviderValueRequest.signal_ids)
-}
-inline const ::google::protobuf::RepeatedField<::int32_t>& GetProviderValueRequest::signal_ids() const
-    ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_list:kuksa.val.v2.GetProviderValueRequest.signal_ids)
-  return _internal_signal_ids();
-}
-inline ::google::protobuf::RepeatedField<::int32_t>* GetProviderValueRequest::mutable_signal_ids()
-    ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_mutable_list:kuksa.val.v2.GetProviderValueRequest.signal_ids)
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  return _internal_mutable_signal_ids();
-}
-inline const ::google::protobuf::RepeatedField<::int32_t>& GetProviderValueRequest::_internal_signal_ids()
-    const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.signal_ids_;
-}
-inline ::google::protobuf::RepeatedField<::int32_t>* GetProviderValueRequest::_internal_mutable_signal_ids() {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return &_impl_.signal_ids_;
-}
-
-// -------------------------------------------------------------------
-
-// -------------------------------------------------------------------
-
-// GetProviderValueResponse
-
-// uint32 request_id = 1;
-inline void GetProviderValueResponse::clear_request_id() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.request_id_ = 0u;
-}
-inline ::uint32_t GetProviderValueResponse::request_id() const {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.GetProviderValueResponse.request_id)
-  return _internal_request_id();
-}
-inline void GetProviderValueResponse::set_request_id(::uint32_t value) {
-  _internal_set_request_id(value);
-  // @@protoc_insertion_point(field_set:kuksa.val.v2.GetProviderValueResponse.request_id)
-}
-inline ::uint32_t GetProviderValueResponse::_internal_request_id() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.request_id_;
-}
-inline void GetProviderValueResponse::_internal_set_request_id(::uint32_t value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.request_id_ = value;
-}
-
-// map<int32, .kuksa.val.v2.Datapoint> entries = 2;
-inline int GetProviderValueResponse::_internal_entries_size() const {
-  return _internal_entries().size();
-}
-inline int GetProviderValueResponse::entries_size() const {
-  return _internal_entries_size();
-}
-inline const ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Datapoint>& GetProviderValueResponse::_internal_entries() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.entries_.GetMap();
-}
-inline const ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Datapoint>& GetProviderValueResponse::entries() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_map:kuksa.val.v2.GetProviderValueResponse.entries)
-  return _internal_entries();
-}
-inline ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Datapoint>* GetProviderValueResponse::_internal_mutable_entries() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  return _impl_.entries_.MutableMap();
-}
-inline ::google::protobuf::Map<::int32_t, ::kuksa::val::v2::Datapoint>* GetProviderValueResponse::mutable_entries() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_mutable_map:kuksa.val.v2.GetProviderValueResponse.entries)
-  return _internal_mutable_entries();
-}
-
-// -------------------------------------------------------------------
-
 // OpenProviderStreamRequest
 
 // .kuksa.val.v2.ProvideActuationRequest provide_actuation_request = 1;
@@ -8910,310 +6864,6 @@ inline ::kuksa::val::v2::BatchActuateStreamResponse* OpenProviderStreamRequest::
 inline ::kuksa::val::v2::BatchActuateStreamResponse* OpenProviderStreamRequest::mutable_batch_actuate_stream_response() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   ::kuksa::val::v2::BatchActuateStreamResponse* _msg = _internal_mutable_batch_actuate_stream_response();
   // @@protoc_insertion_point(field_mutable:kuksa.val.v2.OpenProviderStreamRequest.batch_actuate_stream_response)
-  return _msg;
-}
-
-// .kuksa.val.v2.ProvideSignalRequest provide_signal_request = 4;
-inline bool OpenProviderStreamRequest::has_provide_signal_request() const {
-  return action_case() == kProvideSignalRequest;
-}
-inline bool OpenProviderStreamRequest::_internal_has_provide_signal_request() const {
-  return action_case() == kProvideSignalRequest;
-}
-inline void OpenProviderStreamRequest::set_has_provide_signal_request() {
-  _impl_._oneof_case_[0] = kProvideSignalRequest;
-}
-inline void OpenProviderStreamRequest::clear_provide_signal_request() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (action_case() == kProvideSignalRequest) {
-    if (GetArena() == nullptr) {
-      delete _impl_.action_.provide_signal_request_;
-    }
-    clear_has_action();
-  }
-}
-inline ::kuksa::val::v2::ProvideSignalRequest* OpenProviderStreamRequest::release_provide_signal_request() {
-  // @@protoc_insertion_point(field_release:kuksa.val.v2.OpenProviderStreamRequest.provide_signal_request)
-  if (action_case() == kProvideSignalRequest) {
-    clear_has_action();
-    auto* temp = _impl_.action_.provide_signal_request_;
-    if (GetArena() != nullptr) {
-      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
-    }
-    _impl_.action_.provide_signal_request_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline const ::kuksa::val::v2::ProvideSignalRequest& OpenProviderStreamRequest::_internal_provide_signal_request() const {
-  return action_case() == kProvideSignalRequest ? *_impl_.action_.provide_signal_request_ : reinterpret_cast<::kuksa::val::v2::ProvideSignalRequest&>(::kuksa::val::v2::_ProvideSignalRequest_default_instance_);
-}
-inline const ::kuksa::val::v2::ProvideSignalRequest& OpenProviderStreamRequest::provide_signal_request() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.OpenProviderStreamRequest.provide_signal_request)
-  return _internal_provide_signal_request();
-}
-inline ::kuksa::val::v2::ProvideSignalRequest* OpenProviderStreamRequest::unsafe_arena_release_provide_signal_request() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:kuksa.val.v2.OpenProviderStreamRequest.provide_signal_request)
-  if (action_case() == kProvideSignalRequest) {
-    clear_has_action();
-    auto* temp = _impl_.action_.provide_signal_request_;
-    _impl_.action_.provide_signal_request_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline void OpenProviderStreamRequest::unsafe_arena_set_allocated_provide_signal_request(::kuksa::val::v2::ProvideSignalRequest* value) {
-  // We rely on the oneof clear method to free the earlier contents
-  // of this oneof. We can directly use the pointer we're given to
-  // set the new value.
-  clear_action();
-  if (value) {
-    set_has_provide_signal_request();
-    _impl_.action_.provide_signal_request_ = value;
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:kuksa.val.v2.OpenProviderStreamRequest.provide_signal_request)
-}
-inline ::kuksa::val::v2::ProvideSignalRequest* OpenProviderStreamRequest::_internal_mutable_provide_signal_request() {
-  if (action_case() != kProvideSignalRequest) {
-    clear_action();
-    set_has_provide_signal_request();
-    _impl_.action_.provide_signal_request_ = CreateMaybeMessage<::kuksa::val::v2::ProvideSignalRequest>(GetArena());
-  }
-  return _impl_.action_.provide_signal_request_;
-}
-inline ::kuksa::val::v2::ProvideSignalRequest* OpenProviderStreamRequest::mutable_provide_signal_request() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::kuksa::val::v2::ProvideSignalRequest* _msg = _internal_mutable_provide_signal_request();
-  // @@protoc_insertion_point(field_mutable:kuksa.val.v2.OpenProviderStreamRequest.provide_signal_request)
-  return _msg;
-}
-
-// .kuksa.val.v2.UpdateFilterResponse update_filter_response = 5;
-inline bool OpenProviderStreamRequest::has_update_filter_response() const {
-  return action_case() == kUpdateFilterResponse;
-}
-inline bool OpenProviderStreamRequest::_internal_has_update_filter_response() const {
-  return action_case() == kUpdateFilterResponse;
-}
-inline void OpenProviderStreamRequest::set_has_update_filter_response() {
-  _impl_._oneof_case_[0] = kUpdateFilterResponse;
-}
-inline void OpenProviderStreamRequest::clear_update_filter_response() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (action_case() == kUpdateFilterResponse) {
-    if (GetArena() == nullptr) {
-      delete _impl_.action_.update_filter_response_;
-    }
-    clear_has_action();
-  }
-}
-inline ::kuksa::val::v2::UpdateFilterResponse* OpenProviderStreamRequest::release_update_filter_response() {
-  // @@protoc_insertion_point(field_release:kuksa.val.v2.OpenProviderStreamRequest.update_filter_response)
-  if (action_case() == kUpdateFilterResponse) {
-    clear_has_action();
-    auto* temp = _impl_.action_.update_filter_response_;
-    if (GetArena() != nullptr) {
-      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
-    }
-    _impl_.action_.update_filter_response_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline const ::kuksa::val::v2::UpdateFilterResponse& OpenProviderStreamRequest::_internal_update_filter_response() const {
-  return action_case() == kUpdateFilterResponse ? *_impl_.action_.update_filter_response_ : reinterpret_cast<::kuksa::val::v2::UpdateFilterResponse&>(::kuksa::val::v2::_UpdateFilterResponse_default_instance_);
-}
-inline const ::kuksa::val::v2::UpdateFilterResponse& OpenProviderStreamRequest::update_filter_response() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.OpenProviderStreamRequest.update_filter_response)
-  return _internal_update_filter_response();
-}
-inline ::kuksa::val::v2::UpdateFilterResponse* OpenProviderStreamRequest::unsafe_arena_release_update_filter_response() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:kuksa.val.v2.OpenProviderStreamRequest.update_filter_response)
-  if (action_case() == kUpdateFilterResponse) {
-    clear_has_action();
-    auto* temp = _impl_.action_.update_filter_response_;
-    _impl_.action_.update_filter_response_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline void OpenProviderStreamRequest::unsafe_arena_set_allocated_update_filter_response(::kuksa::val::v2::UpdateFilterResponse* value) {
-  // We rely on the oneof clear method to free the earlier contents
-  // of this oneof. We can directly use the pointer we're given to
-  // set the new value.
-  clear_action();
-  if (value) {
-    set_has_update_filter_response();
-    _impl_.action_.update_filter_response_ = value;
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:kuksa.val.v2.OpenProviderStreamRequest.update_filter_response)
-}
-inline ::kuksa::val::v2::UpdateFilterResponse* OpenProviderStreamRequest::_internal_mutable_update_filter_response() {
-  if (action_case() != kUpdateFilterResponse) {
-    clear_action();
-    set_has_update_filter_response();
-    _impl_.action_.update_filter_response_ = CreateMaybeMessage<::kuksa::val::v2::UpdateFilterResponse>(GetArena());
-  }
-  return _impl_.action_.update_filter_response_;
-}
-inline ::kuksa::val::v2::UpdateFilterResponse* OpenProviderStreamRequest::mutable_update_filter_response() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::kuksa::val::v2::UpdateFilterResponse* _msg = _internal_mutable_update_filter_response();
-  // @@protoc_insertion_point(field_mutable:kuksa.val.v2.OpenProviderStreamRequest.update_filter_response)
-  return _msg;
-}
-
-// .kuksa.val.v2.GetProviderValueResponse get_provider_value_response = 6;
-inline bool OpenProviderStreamRequest::has_get_provider_value_response() const {
-  return action_case() == kGetProviderValueResponse;
-}
-inline bool OpenProviderStreamRequest::_internal_has_get_provider_value_response() const {
-  return action_case() == kGetProviderValueResponse;
-}
-inline void OpenProviderStreamRequest::set_has_get_provider_value_response() {
-  _impl_._oneof_case_[0] = kGetProviderValueResponse;
-}
-inline void OpenProviderStreamRequest::clear_get_provider_value_response() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (action_case() == kGetProviderValueResponse) {
-    if (GetArena() == nullptr) {
-      delete _impl_.action_.get_provider_value_response_;
-    }
-    clear_has_action();
-  }
-}
-inline ::kuksa::val::v2::GetProviderValueResponse* OpenProviderStreamRequest::release_get_provider_value_response() {
-  // @@protoc_insertion_point(field_release:kuksa.val.v2.OpenProviderStreamRequest.get_provider_value_response)
-  if (action_case() == kGetProviderValueResponse) {
-    clear_has_action();
-    auto* temp = _impl_.action_.get_provider_value_response_;
-    if (GetArena() != nullptr) {
-      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
-    }
-    _impl_.action_.get_provider_value_response_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline const ::kuksa::val::v2::GetProviderValueResponse& OpenProviderStreamRequest::_internal_get_provider_value_response() const {
-  return action_case() == kGetProviderValueResponse ? *_impl_.action_.get_provider_value_response_ : reinterpret_cast<::kuksa::val::v2::GetProviderValueResponse&>(::kuksa::val::v2::_GetProviderValueResponse_default_instance_);
-}
-inline const ::kuksa::val::v2::GetProviderValueResponse& OpenProviderStreamRequest::get_provider_value_response() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.OpenProviderStreamRequest.get_provider_value_response)
-  return _internal_get_provider_value_response();
-}
-inline ::kuksa::val::v2::GetProviderValueResponse* OpenProviderStreamRequest::unsafe_arena_release_get_provider_value_response() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:kuksa.val.v2.OpenProviderStreamRequest.get_provider_value_response)
-  if (action_case() == kGetProviderValueResponse) {
-    clear_has_action();
-    auto* temp = _impl_.action_.get_provider_value_response_;
-    _impl_.action_.get_provider_value_response_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline void OpenProviderStreamRequest::unsafe_arena_set_allocated_get_provider_value_response(::kuksa::val::v2::GetProviderValueResponse* value) {
-  // We rely on the oneof clear method to free the earlier contents
-  // of this oneof. We can directly use the pointer we're given to
-  // set the new value.
-  clear_action();
-  if (value) {
-    set_has_get_provider_value_response();
-    _impl_.action_.get_provider_value_response_ = value;
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:kuksa.val.v2.OpenProviderStreamRequest.get_provider_value_response)
-}
-inline ::kuksa::val::v2::GetProviderValueResponse* OpenProviderStreamRequest::_internal_mutable_get_provider_value_response() {
-  if (action_case() != kGetProviderValueResponse) {
-    clear_action();
-    set_has_get_provider_value_response();
-    _impl_.action_.get_provider_value_response_ = CreateMaybeMessage<::kuksa::val::v2::GetProviderValueResponse>(GetArena());
-  }
-  return _impl_.action_.get_provider_value_response_;
-}
-inline ::kuksa::val::v2::GetProviderValueResponse* OpenProviderStreamRequest::mutable_get_provider_value_response() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::kuksa::val::v2::GetProviderValueResponse* _msg = _internal_mutable_get_provider_value_response();
-  // @@protoc_insertion_point(field_mutable:kuksa.val.v2.OpenProviderStreamRequest.get_provider_value_response)
-  return _msg;
-}
-
-// .kuksa.val.v2.ProviderErrorIndication provider_error_indication = 7;
-inline bool OpenProviderStreamRequest::has_provider_error_indication() const {
-  return action_case() == kProviderErrorIndication;
-}
-inline bool OpenProviderStreamRequest::_internal_has_provider_error_indication() const {
-  return action_case() == kProviderErrorIndication;
-}
-inline void OpenProviderStreamRequest::set_has_provider_error_indication() {
-  _impl_._oneof_case_[0] = kProviderErrorIndication;
-}
-inline void OpenProviderStreamRequest::clear_provider_error_indication() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (action_case() == kProviderErrorIndication) {
-    if (GetArena() == nullptr) {
-      delete _impl_.action_.provider_error_indication_;
-    }
-    clear_has_action();
-  }
-}
-inline ::kuksa::val::v2::ProviderErrorIndication* OpenProviderStreamRequest::release_provider_error_indication() {
-  // @@protoc_insertion_point(field_release:kuksa.val.v2.OpenProviderStreamRequest.provider_error_indication)
-  if (action_case() == kProviderErrorIndication) {
-    clear_has_action();
-    auto* temp = _impl_.action_.provider_error_indication_;
-    if (GetArena() != nullptr) {
-      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
-    }
-    _impl_.action_.provider_error_indication_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline const ::kuksa::val::v2::ProviderErrorIndication& OpenProviderStreamRequest::_internal_provider_error_indication() const {
-  return action_case() == kProviderErrorIndication ? *_impl_.action_.provider_error_indication_ : reinterpret_cast<::kuksa::val::v2::ProviderErrorIndication&>(::kuksa::val::v2::_ProviderErrorIndication_default_instance_);
-}
-inline const ::kuksa::val::v2::ProviderErrorIndication& OpenProviderStreamRequest::provider_error_indication() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.OpenProviderStreamRequest.provider_error_indication)
-  return _internal_provider_error_indication();
-}
-inline ::kuksa::val::v2::ProviderErrorIndication* OpenProviderStreamRequest::unsafe_arena_release_provider_error_indication() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:kuksa.val.v2.OpenProviderStreamRequest.provider_error_indication)
-  if (action_case() == kProviderErrorIndication) {
-    clear_has_action();
-    auto* temp = _impl_.action_.provider_error_indication_;
-    _impl_.action_.provider_error_indication_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline void OpenProviderStreamRequest::unsafe_arena_set_allocated_provider_error_indication(::kuksa::val::v2::ProviderErrorIndication* value) {
-  // We rely on the oneof clear method to free the earlier contents
-  // of this oneof. We can directly use the pointer we're given to
-  // set the new value.
-  clear_action();
-  if (value) {
-    set_has_provider_error_indication();
-    _impl_.action_.provider_error_indication_ = value;
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:kuksa.val.v2.OpenProviderStreamRequest.provider_error_indication)
-}
-inline ::kuksa::val::v2::ProviderErrorIndication* OpenProviderStreamRequest::_internal_mutable_provider_error_indication() {
-  if (action_case() != kProviderErrorIndication) {
-    clear_action();
-    set_has_provider_error_indication();
-    _impl_.action_.provider_error_indication_ = CreateMaybeMessage<::kuksa::val::v2::ProviderErrorIndication>(GetArena());
-  }
-  return _impl_.action_.provider_error_indication_;
-}
-inline ::kuksa::val::v2::ProviderErrorIndication* OpenProviderStreamRequest::mutable_provider_error_indication() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::kuksa::val::v2::ProviderErrorIndication* _msg = _internal_mutable_provider_error_indication();
-  // @@protoc_insertion_point(field_mutable:kuksa.val.v2.OpenProviderStreamRequest.provider_error_indication)
   return _msg;
 }
 
@@ -9455,234 +7105,6 @@ inline ::kuksa::val::v2::BatchActuateStreamRequest* OpenProviderStreamResponse::
 inline ::kuksa::val::v2::BatchActuateStreamRequest* OpenProviderStreamResponse::mutable_batch_actuate_stream_request() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   ::kuksa::val::v2::BatchActuateStreamRequest* _msg = _internal_mutable_batch_actuate_stream_request();
   // @@protoc_insertion_point(field_mutable:kuksa.val.v2.OpenProviderStreamResponse.batch_actuate_stream_request)
-  return _msg;
-}
-
-// .kuksa.val.v2.ProvideSignalResponse provide_signal_response = 4;
-inline bool OpenProviderStreamResponse::has_provide_signal_response() const {
-  return action_case() == kProvideSignalResponse;
-}
-inline bool OpenProviderStreamResponse::_internal_has_provide_signal_response() const {
-  return action_case() == kProvideSignalResponse;
-}
-inline void OpenProviderStreamResponse::set_has_provide_signal_response() {
-  _impl_._oneof_case_[0] = kProvideSignalResponse;
-}
-inline void OpenProviderStreamResponse::clear_provide_signal_response() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (action_case() == kProvideSignalResponse) {
-    if (GetArena() == nullptr) {
-      delete _impl_.action_.provide_signal_response_;
-    }
-    clear_has_action();
-  }
-}
-inline ::kuksa::val::v2::ProvideSignalResponse* OpenProviderStreamResponse::release_provide_signal_response() {
-  // @@protoc_insertion_point(field_release:kuksa.val.v2.OpenProviderStreamResponse.provide_signal_response)
-  if (action_case() == kProvideSignalResponse) {
-    clear_has_action();
-    auto* temp = _impl_.action_.provide_signal_response_;
-    if (GetArena() != nullptr) {
-      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
-    }
-    _impl_.action_.provide_signal_response_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline const ::kuksa::val::v2::ProvideSignalResponse& OpenProviderStreamResponse::_internal_provide_signal_response() const {
-  return action_case() == kProvideSignalResponse ? *_impl_.action_.provide_signal_response_ : reinterpret_cast<::kuksa::val::v2::ProvideSignalResponse&>(::kuksa::val::v2::_ProvideSignalResponse_default_instance_);
-}
-inline const ::kuksa::val::v2::ProvideSignalResponse& OpenProviderStreamResponse::provide_signal_response() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.OpenProviderStreamResponse.provide_signal_response)
-  return _internal_provide_signal_response();
-}
-inline ::kuksa::val::v2::ProvideSignalResponse* OpenProviderStreamResponse::unsafe_arena_release_provide_signal_response() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:kuksa.val.v2.OpenProviderStreamResponse.provide_signal_response)
-  if (action_case() == kProvideSignalResponse) {
-    clear_has_action();
-    auto* temp = _impl_.action_.provide_signal_response_;
-    _impl_.action_.provide_signal_response_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline void OpenProviderStreamResponse::unsafe_arena_set_allocated_provide_signal_response(::kuksa::val::v2::ProvideSignalResponse* value) {
-  // We rely on the oneof clear method to free the earlier contents
-  // of this oneof. We can directly use the pointer we're given to
-  // set the new value.
-  clear_action();
-  if (value) {
-    set_has_provide_signal_response();
-    _impl_.action_.provide_signal_response_ = value;
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:kuksa.val.v2.OpenProviderStreamResponse.provide_signal_response)
-}
-inline ::kuksa::val::v2::ProvideSignalResponse* OpenProviderStreamResponse::_internal_mutable_provide_signal_response() {
-  if (action_case() != kProvideSignalResponse) {
-    clear_action();
-    set_has_provide_signal_response();
-    _impl_.action_.provide_signal_response_ = CreateMaybeMessage<::kuksa::val::v2::ProvideSignalResponse>(GetArena());
-  }
-  return _impl_.action_.provide_signal_response_;
-}
-inline ::kuksa::val::v2::ProvideSignalResponse* OpenProviderStreamResponse::mutable_provide_signal_response() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::kuksa::val::v2::ProvideSignalResponse* _msg = _internal_mutable_provide_signal_response();
-  // @@protoc_insertion_point(field_mutable:kuksa.val.v2.OpenProviderStreamResponse.provide_signal_response)
-  return _msg;
-}
-
-// .kuksa.val.v2.UpdateFilterRequest update_filter_request = 5;
-inline bool OpenProviderStreamResponse::has_update_filter_request() const {
-  return action_case() == kUpdateFilterRequest;
-}
-inline bool OpenProviderStreamResponse::_internal_has_update_filter_request() const {
-  return action_case() == kUpdateFilterRequest;
-}
-inline void OpenProviderStreamResponse::set_has_update_filter_request() {
-  _impl_._oneof_case_[0] = kUpdateFilterRequest;
-}
-inline void OpenProviderStreamResponse::clear_update_filter_request() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (action_case() == kUpdateFilterRequest) {
-    if (GetArena() == nullptr) {
-      delete _impl_.action_.update_filter_request_;
-    }
-    clear_has_action();
-  }
-}
-inline ::kuksa::val::v2::UpdateFilterRequest* OpenProviderStreamResponse::release_update_filter_request() {
-  // @@protoc_insertion_point(field_release:kuksa.val.v2.OpenProviderStreamResponse.update_filter_request)
-  if (action_case() == kUpdateFilterRequest) {
-    clear_has_action();
-    auto* temp = _impl_.action_.update_filter_request_;
-    if (GetArena() != nullptr) {
-      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
-    }
-    _impl_.action_.update_filter_request_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline const ::kuksa::val::v2::UpdateFilterRequest& OpenProviderStreamResponse::_internal_update_filter_request() const {
-  return action_case() == kUpdateFilterRequest ? *_impl_.action_.update_filter_request_ : reinterpret_cast<::kuksa::val::v2::UpdateFilterRequest&>(::kuksa::val::v2::_UpdateFilterRequest_default_instance_);
-}
-inline const ::kuksa::val::v2::UpdateFilterRequest& OpenProviderStreamResponse::update_filter_request() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.OpenProviderStreamResponse.update_filter_request)
-  return _internal_update_filter_request();
-}
-inline ::kuksa::val::v2::UpdateFilterRequest* OpenProviderStreamResponse::unsafe_arena_release_update_filter_request() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:kuksa.val.v2.OpenProviderStreamResponse.update_filter_request)
-  if (action_case() == kUpdateFilterRequest) {
-    clear_has_action();
-    auto* temp = _impl_.action_.update_filter_request_;
-    _impl_.action_.update_filter_request_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline void OpenProviderStreamResponse::unsafe_arena_set_allocated_update_filter_request(::kuksa::val::v2::UpdateFilterRequest* value) {
-  // We rely on the oneof clear method to free the earlier contents
-  // of this oneof. We can directly use the pointer we're given to
-  // set the new value.
-  clear_action();
-  if (value) {
-    set_has_update_filter_request();
-    _impl_.action_.update_filter_request_ = value;
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:kuksa.val.v2.OpenProviderStreamResponse.update_filter_request)
-}
-inline ::kuksa::val::v2::UpdateFilterRequest* OpenProviderStreamResponse::_internal_mutable_update_filter_request() {
-  if (action_case() != kUpdateFilterRequest) {
-    clear_action();
-    set_has_update_filter_request();
-    _impl_.action_.update_filter_request_ = CreateMaybeMessage<::kuksa::val::v2::UpdateFilterRequest>(GetArena());
-  }
-  return _impl_.action_.update_filter_request_;
-}
-inline ::kuksa::val::v2::UpdateFilterRequest* OpenProviderStreamResponse::mutable_update_filter_request() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::kuksa::val::v2::UpdateFilterRequest* _msg = _internal_mutable_update_filter_request();
-  // @@protoc_insertion_point(field_mutable:kuksa.val.v2.OpenProviderStreamResponse.update_filter_request)
-  return _msg;
-}
-
-// .kuksa.val.v2.GetProviderValueRequest get_provider_value_request = 6;
-inline bool OpenProviderStreamResponse::has_get_provider_value_request() const {
-  return action_case() == kGetProviderValueRequest;
-}
-inline bool OpenProviderStreamResponse::_internal_has_get_provider_value_request() const {
-  return action_case() == kGetProviderValueRequest;
-}
-inline void OpenProviderStreamResponse::set_has_get_provider_value_request() {
-  _impl_._oneof_case_[0] = kGetProviderValueRequest;
-}
-inline void OpenProviderStreamResponse::clear_get_provider_value_request() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (action_case() == kGetProviderValueRequest) {
-    if (GetArena() == nullptr) {
-      delete _impl_.action_.get_provider_value_request_;
-    }
-    clear_has_action();
-  }
-}
-inline ::kuksa::val::v2::GetProviderValueRequest* OpenProviderStreamResponse::release_get_provider_value_request() {
-  // @@protoc_insertion_point(field_release:kuksa.val.v2.OpenProviderStreamResponse.get_provider_value_request)
-  if (action_case() == kGetProviderValueRequest) {
-    clear_has_action();
-    auto* temp = _impl_.action_.get_provider_value_request_;
-    if (GetArena() != nullptr) {
-      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
-    }
-    _impl_.action_.get_provider_value_request_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline const ::kuksa::val::v2::GetProviderValueRequest& OpenProviderStreamResponse::_internal_get_provider_value_request() const {
-  return action_case() == kGetProviderValueRequest ? *_impl_.action_.get_provider_value_request_ : reinterpret_cast<::kuksa::val::v2::GetProviderValueRequest&>(::kuksa::val::v2::_GetProviderValueRequest_default_instance_);
-}
-inline const ::kuksa::val::v2::GetProviderValueRequest& OpenProviderStreamResponse::get_provider_value_request() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:kuksa.val.v2.OpenProviderStreamResponse.get_provider_value_request)
-  return _internal_get_provider_value_request();
-}
-inline ::kuksa::val::v2::GetProviderValueRequest* OpenProviderStreamResponse::unsafe_arena_release_get_provider_value_request() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:kuksa.val.v2.OpenProviderStreamResponse.get_provider_value_request)
-  if (action_case() == kGetProviderValueRequest) {
-    clear_has_action();
-    auto* temp = _impl_.action_.get_provider_value_request_;
-    _impl_.action_.get_provider_value_request_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline void OpenProviderStreamResponse::unsafe_arena_set_allocated_get_provider_value_request(::kuksa::val::v2::GetProviderValueRequest* value) {
-  // We rely on the oneof clear method to free the earlier contents
-  // of this oneof. We can directly use the pointer we're given to
-  // set the new value.
-  clear_action();
-  if (value) {
-    set_has_get_provider_value_request();
-    _impl_.action_.get_provider_value_request_ = value;
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:kuksa.val.v2.OpenProviderStreamResponse.get_provider_value_request)
-}
-inline ::kuksa::val::v2::GetProviderValueRequest* OpenProviderStreamResponse::_internal_mutable_get_provider_value_request() {
-  if (action_case() != kGetProviderValueRequest) {
-    clear_action();
-    set_has_get_provider_value_request();
-    _impl_.action_.get_provider_value_request_ = CreateMaybeMessage<::kuksa::val::v2::GetProviderValueRequest>(GetArena());
-  }
-  return _impl_.action_.get_provider_value_request_;
-}
-inline ::kuksa::val::v2::GetProviderValueRequest* OpenProviderStreamResponse::mutable_get_provider_value_request() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::kuksa::val::v2::GetProviderValueRequest* _msg = _internal_mutable_get_provider_value_request();
-  // @@protoc_insertion_point(field_mutable:kuksa.val.v2.OpenProviderStreamResponse.get_provider_value_request)
   return _msg;
 }
 
