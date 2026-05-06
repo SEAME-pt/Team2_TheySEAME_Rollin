@@ -29,6 +29,14 @@ set(SOURCES_LKA
 	SlidingWindow.cpp
 )
 
+set(SOURCES_TSR
+	mainTsr.cpp
+	Frame.hpp
+	Frame.cpp
+	SlidingWindow.hpp
+	SlidingWindow.cpp
+)
+
 add_compile_options(-fsanitize=address -g)
 add_link_options(-fsanitize=address)
 
@@ -47,8 +55,12 @@ if(CMAKE_CROSSCOMPILING)
 	add_executable(Lka ${SOURCES_LKA})
 	target_link_libraries(Lka PUBLIC comms mode middleware kuksa actuator
 		opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_videoio)
+	add_executable(Tsr ${SOURCES_TSR})
+	target_link_libraries(Tsr PUBLIC comms mode middleware kuksa actuator
+		opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_videoio)
 	install(TARGETS CarControl DESTINATION ${RPI_BIN_DIR})
 	install(TARGETS Lka DESTINATION ${RPI_BIN_DIR})
+	install(TARGETS Tsr DESTINATION ${RPI_BIN_DIR})
 else()
 	if(BUILD_TESTS)
 		add_subdirectory(tests)
