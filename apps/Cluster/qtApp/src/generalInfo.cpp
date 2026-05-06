@@ -108,10 +108,27 @@ int generalInfo::getTrafficSignInfo() const
 {
     return _trafficSign;
 }
-void generalInfo::kuksaDataReceiver(const int sign) {
+
+int generalInfo::getTrafficSignSpeedLimit() const
+{
+    return _trafficSignSpeedLimit;
+}
+
+void generalInfo::updateTrafficSign(int sign)
+{
+    if (_trafficSign != sign) {
         _trafficSign = sign;
         emit trafficSignInfoChanged();
-};
+    }
+}
+
+void generalInfo::updateSpeedLimit(int speedLimit)
+{
+    if (_trafficSignSpeedLimit != speedLimit) {
+        _trafficSignSpeedLimit = speedLimit;
+        emit trafficSignSpeedLimitUpdated();
+    }
+}
 
 void generalInfo::fetchWeatherData()
 {

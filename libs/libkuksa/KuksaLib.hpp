@@ -57,7 +57,7 @@ private:
     // ADAS - Traffic Sign Recognition
     std::atomic<bool> tsrEnabled{false};
     std::atomic<float> tsrDetectedSpeedLimit{0.0f};
-    std::atomic<int> tsrDetectedSign{0};
+    std::atomic<int> tsrDetectedSignType{0};
 
     // ADAS - Parking Assist
     std::atomic<bool> paEnabled{false};
@@ -104,7 +104,7 @@ private:
 
     void setTsrEnabled(bool v);
     void setTsrDetectedSpeedLimit(float v);
-    void setTsrDetectedSign(int v);
+    void setTsrDetectedSignType(int v);
 
     void setPaEnabled(bool v);
     void setPaActive(bool v);
@@ -114,6 +114,8 @@ private:
 public:
     kuksaLib();
     ~kuksaLib();
+
+	void asyncSub();
 
     bool subscribeFromKuksa();
 
@@ -157,7 +159,8 @@ public:
     bool getBsdWarning() const { return bsdWarning.load(); }
 
     bool getTsrEnabled() const { return tsrEnabled.load(); }
-    int getTsrDetectedSign() const { return tsrDetectedSign.load(); }
+    float getTsrDetectedSpeedLimit() const { return tsrDetectedSpeedLimit.load(); }
+    int getTsrDetectedSignType() const { return tsrDetectedSignType.load(); }
 
     bool getPaEnabled() const { return paEnabled.load(); }
     bool getPaActive() const { return paActive.load(); }

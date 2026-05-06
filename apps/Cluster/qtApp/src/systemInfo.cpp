@@ -93,7 +93,8 @@ bool systemInfo::start()
             setBattery(static_cast<int>(_kuksa.getBattery()));
             setCruiseActive(_kuksa.getCcActive());
             setTargetSpeed(static_cast<int>(_kuksa.getCcTargetSpeed()));
-            emit trafficSignUpdated(static_cast<int>(_kuksa.getTsrDetectedSign()));
+            emit trafficSignUpdated(static_cast<int>(_kuksa.getTsrDetectedSignType()));
+            emit speedLimitUpdated(static_cast<int>(_kuksa.getTsrDetectedSpeedLimit()));
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
 

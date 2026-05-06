@@ -53,10 +53,11 @@ if(SYSTEMD_FOUND)
 endif()
 
 target_sources(qtAppLib PRIVATE
-  ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/types.pb.cc
-  ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/val.pb.cc
-  ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/val.grpc.pb.cc
+  ${CMAKE_SOURCE_DIR}/../../../libs/libkuksa/kuksa/val/v2/types.pb.cc
+  ${CMAKE_SOURCE_DIR}/../../../libs/libkuksa/kuksa/val/v2/val.pb.cc
+  ${CMAKE_SOURCE_DIR}/../../../libs/libkuksa/kuksa/val/v2/val.grpc.pb.cc
   ${CMAKE_SOURCE_DIR}/../../../libs/libkuksa/KuksaLib.cpp
+  
 )
 
 add_executable(qtAppExec
@@ -80,18 +81,18 @@ add_custom_target(car_mesh ALL
 add_dependencies(qtAppExec car_mesh)
 
 target_include_directories(qtAppLib PRIVATE
-  ${CMAKE_SOURCE_DIR}/../../middleware
-  ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2
+  ${CMAKE_SOURCE_DIR}/../../../libs/libkuksa/
+  ${CMAKE_SOURCE_DIR}/../../../libs/libkuksa/kuksa/val/v2
   ${CMAKE_BINARY_DIR}
 )
 target_include_directories(qtAppExec PRIVATE
-  ${CMAKE_SOURCE_DIR}/../../middleware
-  ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2
+  ${CMAKE_SOURCE_DIR}/../../../libs/libkuksa/
+  ${CMAKE_SOURCE_DIR}/../../../libs/libkuksa/kuksa/val/v2
 )
 target_sources(qtAppLib PRIVATE
-  ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/types.pb.cc
-  ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/val.pb.cc
-  ${CMAKE_SOURCE_DIR}/../../middleware/kuksa/val/v2/val.grpc.pb.cc
+  ${CMAKE_SOURCE_DIR}/../../../libs/libkuksa/kuksa/val/v2/types.pb.cc
+  ${CMAKE_SOURCE_DIR}/../../../libs/libkuksa/kuksa/val/v2/val.pb.cc
+  ${CMAKE_SOURCE_DIR}/../../../libs/libkuksa/kuksa/val/v2/val.grpc.pb.cc
 )
 
 target_link_libraries(qtAppExec

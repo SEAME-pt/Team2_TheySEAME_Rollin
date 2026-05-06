@@ -11,9 +11,9 @@
 #include <atomic>
 #include <mutex>
 #include <google/protobuf/stubs/common.h>
-#include "../../../middleware/kuksa/val/v2/val.grpc.pb.h"
-#include "../../../middleware/kuksa/val/v2/types.pb.h"
-#include "../../../libs/libkuksa/KuksaLib.hpp"
+#include "val.grpc.pb.h"
+#include "types.pb.h"
+#include "KuksaLib.hpp"
 
  
 using kuksa::val::v2::VAL;
@@ -143,6 +143,7 @@ signals:
     void cruiseActiveUpdated(bool active);
     void targetSpeedUpdated(int speed);
     void trafficSignUpdated(int sign);
+    void speedLimitUpdated(int speedLimit);
 private:
     std::atomic<int> _battery{0};
     std::atomic<int> _speed{0};

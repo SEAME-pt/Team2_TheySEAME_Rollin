@@ -16,7 +16,10 @@ int main(int argc, char *argv[])
     generalInfo info;
     systemInfo sysInfo;
     QObject::connect(&sysInfo, &systemInfo::trafficSignUpdated,
-                 &info, &generalInfo::kuksaDataReceiver);
+                 &info, &generalInfo::updateTrafficSign);
+
+    QObject::connect(&sysInfo, &systemInfo::speedLimitUpdated,
+                    &info, &generalInfo::updateSpeedLimit);
 
     if (!sysInfo.start()) {
         std::cerr << "Failed to communicate with kuksa" << std::endl;

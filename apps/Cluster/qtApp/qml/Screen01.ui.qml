@@ -580,21 +580,53 @@ Rectangle {
 //    }
 
     Rectangle {
-        id: trafficSignPanel
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.rightMargin: 0
-        anchors.bottomMargin: 10
-        width: 160
-        height: 80
+        id: speedLimitPanel
+        x: 760
+        y: 120
+        width: 70
+        height: 70
         color: "transparent"
-        z: 999
+        z: 1000
+        parent: rectangle
+
+        property var speedImages: {
+            "30": "speed_30",
+            "50": "speed_50",
+            "60": "speed_60",
+            "80": "speed_80",
+            "100": "speed_100",
+            "120": "speed_120"
+        }
+
+        Image {
+            anchors.centerIn: parent
+            width: 60
+            height: 60
+            fillMode: Image.PreserveAspectFit
+            source: {
+                var limit = generalInfo ? generalInfo.trafficSignSpeedLimit.toString() : "0"
+                var img = speedLimitPanel.speedImages[limit]
+                if (!img) return ""
+                return "qrc:/qml/images/" + img + ".png"
+            }
+            visible: source !== ""
+        }
+    }
+
+    Rectangle {
+        id: trafficSignPanel
+        x: 840
+        y: 120
+        width: 70
+        height: 70
+        color: "transparent"
+        z: 1000
+        parent: rectangle
 
         property var signImages: [
-            "", "stop", "speed_30", "speed_50", "speed_100",
-            "speed_80", "speed_120", "yield", "no_entry",
+            "", "stop", "yield", "no_entry",
             "turn_left", "turn_right", "pedestrian",
-            "traffic_light", "warning", "no_parking", "no_overtaking"
+            "traffic_light", "one_way", "no_parking", "no_overtaking"
         ]
 
         Image {
@@ -609,6 +641,7 @@ Rectangle {
             }
         }
     }
+
     Rectangle {
         id: cruiseControl
         anchors.left: parent.left

@@ -49,7 +49,8 @@ void kuksaLib::setBsdWarning(bool v) { bsdWarning.store(v); }
 
 // TSR setters
 void kuksaLib::setTsrEnabled(bool v) { tsrEnabled.store(v); }
-void kuksaLib::setTsrDetectedSign(int v) { tsrDetectedSign.store(v); }
+void kuksaLib::setTsrDetectedSpeedLimit(float v) { tsrDetectedSpeedLimit.store(v); }
+void kuksaLib::setTsrDetectedSignType(int v) { tsrDetectedSignType.store(v); }
 
 // PA setters
 void kuksaLib::setPaEnabled(bool v) { paEnabled.store(v); }
@@ -100,6 +101,7 @@ bool kuksaLib::subscribeFromKuksa()
 
     // ADAS - TSR
     req.add_signal_paths("Vehicle.ADAS.TrafficSignRecognition.Enabled");
+    req.add_signal_paths("Vehicle.ADAS.TrafficSignRecognition.DetectedSpeedLimit");
     req.add_signal_paths("Vehicle.ADAS.TrafficSignRecognition.DetectedSignType");
 
     // ADAS - Parking Assist
@@ -216,9 +218,12 @@ bool kuksaLib::subscribeFromKuksa()
             } else if (path == "Vehicle.ADAS.TrafficSignRecognition.Enabled") {
                 bool v = false;
                 if (valueToType(value, v)) setTsrEnabled(v);
+            } else if (path == "Vehicle.ADAS.TrafficSignRecognition.DetectedSpeedLimit") {
+                float v = 0.0f;
+                if (valueToType(value, v)) setTsrDetectedSpeedLimit(v);
             } else if (path == "Vehicle.ADAS.TrafficSignRecognition.DetectedSignType") {
                 int v = 0;
-                if (valueToType(value, v)) setTsrDetectedSign(v);
+                if (valueToType(value, v)) setTsrDetectedSignType(v);
 
             // Parking Assist
             } else if (path == "Vehicle.ADAS.ParkingAssist.Enabled") {

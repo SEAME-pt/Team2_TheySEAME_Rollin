@@ -17,6 +17,7 @@ class generalInfo : public QObject
     Q_PROPERTY(QString localTime READ getLocalTime NOTIFY localTimeChanged)
     Q_PROPERTY(QString currentDate READ getCurrentDate NOTIFY currentDateChanged)
     Q_PROPERTY(int trafficSignInfo READ getTrafficSignInfo NOTIFY trafficSignInfoChanged)
+    Q_PROPERTY(int trafficSignSpeedLimit READ getTrafficSignSpeedLimit NOTIFY trafficSignSpeedLimitUpdated)
 public:
     /**
     * @brief The generalInfo class
@@ -99,11 +100,19 @@ public:
     */
     int getTrafficSignInfo() const;
 
+    /**
+    * @brief Returns the speed limit associated with the current traffic sign.
+    * 
+    * @return int representing speed limit (e.g., 50 for "Speed Limit 50 km/h")
+    */
+    int getTrafficSignSpeedLimit() const;
+
 private:
     QString _weatherInfo;
     int _temperature;
     QString _localTime;
     int _trafficSign;
+    int _trafficSignSpeedLimit;
     QDate   _currentDate;
     QNetworkAccessManager* _manager = nullptr;
     QGeoPositionInfoSource* _positionSource = nullptr;
@@ -117,6 +126,7 @@ signals:
     void localTimeChanged();
     void currentDateChanged();
     void trafficSignInfoChanged();
+    void trafficSignSpeedLimitUpdated();
 public slots:
 
     /**
@@ -140,5 +150,6 @@ public slots:
     */
     void onWeatherDataReceived(QNetworkReply* reply);
 
-    void kuksaDataReceiver(const int sign);
+    void updateTrafficSign(int sign);
+    void updateSpeedLimit(int speedLimit);
 };
