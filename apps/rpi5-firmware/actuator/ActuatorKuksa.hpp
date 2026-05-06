@@ -13,6 +13,8 @@ public:
 	virtual void setSteering(const int steering);
 	virtual void setGear(const short gear);
 	virtual void setCruiseControl(const bool flag, const int targetSpeed);
+	virtual void setTrafficSign(const int trafficSign);
+	virtual void setSpeedLimit(const int speedLimit);
 
 private:
 
