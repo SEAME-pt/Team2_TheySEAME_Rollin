@@ -1,6 +1,6 @@
 #include "Tsr.hpp"
 
-Tsr::Tsr(/* args */)
+Tsr::Tsr(CarActuator *car) : _car(car)
 {
 }
 
@@ -8,9 +8,14 @@ Tsr::~Tsr()
 {
 }
 
-void Tsr::handleTrafficSign(const int trafficSign)  
+const TsrHeader& Tsr::getLastDetection() {
+    return _lastDetection;
+}
+
+void Tsr::handleTrafficSign(const TsrHeader &tsrData)
 {
-    switch (static_cast<TrafficSign>(trafficSign)) {
+    _lastDetection = tsrData;
+    switch (static_cast<TrafficSign>(tsrData.trafficSign)) {
         case TrafficSign::STOP:
             _car->setTrafficSign(static_cast<int>(TrafficSign::STOP));
             break;

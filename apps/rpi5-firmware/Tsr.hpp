@@ -3,7 +3,10 @@
 #include "Subject.hpp"
 #include "CarActuator.hpp"
 #include "KuksaLib.hpp"
+#include "Utils.hpp"
+#include <arpa/inet.h>
 
+#define FRAME_NMBR 77000
 
 enum class TrafficSign : int {
 	UNKNOWN = 0,
@@ -42,11 +45,13 @@ class Tsr
 	
 	/**
 	 * @brief Handle Traffic Sign
-	 * This function takes an integer representing a traffic sign and performs the corresponding action on the car using the CarActuator interface. The traffic sign is determined by the integer value, which is cast to the Traffic 
+	 * This function takes a TsrData struct representing a traffic sign and performs the corresponding action on the car using the CarActuator interface.
 	 */
-	void handleTrafficSign(const int trafficSign);
+	void handleTrafficSign(const TsrHeader &tsrData);
 
-	private:
+	const TsrHeader& getLastDetection();
 	
+	private:
 	CarActuator *_car;
+	TsrHeader _lastDetection;
 };
