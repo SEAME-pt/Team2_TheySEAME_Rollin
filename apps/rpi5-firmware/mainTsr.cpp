@@ -12,37 +12,47 @@ void *header = malloc(sizeof(struct TsrHeader));
 
 void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCount)
 {
-    volatile struct TsrHeader *tmp;
+    TsrHeader raw;
     TsrHeader headerBE;
-    size_t read;
 
-    read = fread(header, sizeof(struct TsrHeader), 1, pipe);
-    if (read != 1) {
+    if (fread(&raw, sizeof(TsrHeader), 1, pipe) != 1) {
         std::cout << "Pipe closed or read error" << std::endl;
         return;
     }
 
-    tmp = (struct TsrHeader *)header;
+    uint32_t frameNbr      = ntohl(raw.frameNbr);
+    uint16_t numDetections = ntohs(raw.numDetections);
 
-    headerBE.frameNbr      = ntohl(tmp->frameNbr);
-    headerBE.numDetections = ntohs(tmp->numDetections);
-    headerBE.trafficSign   = ntohl(tmp->trafficSign);
-    headerBE.x             = ntohl(tmp->x);
-    headerBE.y             = ntohl(tmp->y);
-    headerBE.width         = ntohl(tmp->width);
-    headerBE.height        = ntohl(tmp->height);
+    if (frameNbr != FRAME_NMBR) {
+        std::cout << "Sync Problem (got " << frameNbr << ")" << std::endl;
+        return;
+    }
 
-    uint32_t accRaw = ntohl(*(uint32_t *)&tmp->accuracy);
-    memcpy(&headerBE.accuracy, &accRaw, sizeof(float));
+    auto decode = [](const TsrHeader &r) -> TsrHeader {
+        TsrHeader d;
+        d.frameNbr      = ntohl(r.frameNbr);
+        d.numDetections = ntohs(r.numDetections);
+        d.trafficSign   = ntohs(r.trafficSign);
+        d.x             = ntohl(r.x);
+        d.y             = ntohl(r.y);
+        d.width         = ntohl(r.width);
+        d.height        = ntohl(r.height);
+        uint32_t accRaw = ntohl(*(uint32_t *)&r.accuracy);
+        memcpy(&d.accuracy, &accRaw, sizeof(float));
+        return d;
+    };
 
-    std::cout << "Frame: "  << headerBE.frameNbr
-              << " Sign: "  << headerBE.trafficSign
-              << " Acc: "   << headerBE.accuracy
-              << " Dets: "  << headerBE.numDetections << std::endl;
+    detections.push_back(decode(raw));
+
+    for (int i = 1; i < numDetections; i++) {
+        if (fread(&raw, sizeof(TsrHeader), 1, pipe) != 1) {
+            std::cout << "Failed to read detection " << i << std::endl;
+            return;
+        }
+        detections.push_back(decode(raw));
+    }
 
     frameCount++;
-
-    detections.push_back(headerBE);
 }
 
 int main() {

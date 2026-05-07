@@ -31,14 +31,12 @@ set(SOURCES_LKA
 
 set(SOURCES_TSR
 	mainTsr.cpp
-	Frame.hpp
-	Frame.cpp
-	SlidingWindow.hpp
-	SlidingWindow.cpp
+	Tsr.hpp
+	Tsr.cpp
 )
 
-add_compile_options(-fsanitize=address -g)
-add_link_options(-fsanitize=address)
+# add_compile_options(-fsanitize=address -g)
+# add_link_options(-fsanitize=address)
 
 include_directories(${SDK_PATH}/sysroots/aarch64-agl-linux/usr/include/opencv4/ .)
 
