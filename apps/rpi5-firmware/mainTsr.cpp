@@ -24,7 +24,7 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
     uint16_t numDetections = ntohs(raw.numDetections);
 
     if (frameNbr != FRAME_NMBR) {
-        std::cout << "Sync Problem (got " << frameNbr << ")" << std::endl;
+        // std::cout << "Sync Problem (got " << frameNbr << ")" << std::endl;
         return;
     }
 
@@ -39,20 +39,24 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
         d.height        = ntohl(r.height);
         uint32_t accRaw = ntohl(*(uint32_t *)&r.accuracy);
         memcpy(&d.accuracy, &accRaw, sizeof(float));
+        std::cout << "Frame Nmb: " << d.frameNbr << ", Detections: " << d.numDetections << ", Traffic Sign: " << d.trafficSign << 
+        ", Accuracy: " << d.accuracy << ", x: " << d.x << ", y: " << d.y << ", width: " << d.width << ", height: " << d.height << std::endl;
         return d;
     };
 
     detections.push_back(decode(raw));
     
-
-    // for (int i = 1; i < numDetections; i++) {
-    //     if (fread(&raw, sizeof(TsrHeader), 1, pipe) != 1) {
-    //         std::cout << "Failed to read detection " << i << std::endl;
-    //         return;
-    //     }
-    //     std::cout << "Trafic Sign: " << detections[i].trafficSign << std::endl;
-    //     detections.push_back(decode(raw));
-    // }
+    
+    for (int i = 1; i < numDetections; i++) {
+        if (fread(&raw, sizeof(TsrHeader), 1, pipe) != 1) {
+            std::cout << "Failed to read detection " << i << std::endl;
+            return;
+        }
+         std::cout << "Frame Nmb: " << frameNbr << ", Detections: " << numDetections << ", Traffic Sign: " << raw.trafficSign << 
+        ", Accuracy: " << raw.accuracy << ", x: " << raw.x << ", y: " << raw.y << ", width: " << raw.width << ", height: " << raw.height << std::endl;
+        // std::cout << "Trafic Sign: " << detections[i].trafficSign << std::endl;
+        detections.push_back(decode(raw));
+    }
 
     frameCount++;
 }
