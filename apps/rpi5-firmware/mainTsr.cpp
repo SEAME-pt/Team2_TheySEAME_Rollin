@@ -43,14 +43,16 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
     };
 
     detections.push_back(decode(raw));
+    
 
-    for (int i = 1; i < numDetections; i++) {
-        if (fread(&raw, sizeof(TsrHeader), 1, pipe) != 1) {
-            std::cout << "Failed to read detection " << i << std::endl;
-            return;
-        }
-        detections.push_back(decode(raw));
-    }
+    // for (int i = 1; i < numDetections; i++) {
+    //     if (fread(&raw, sizeof(TsrHeader), 1, pipe) != 1) {
+    //         std::cout << "Failed to read detection " << i << std::endl;
+    //         return;
+    //     }
+    //     std::cout << "Trafic Sign: " << detections[i].trafficSign << std::endl;
+    //     detections.push_back(decode(raw));
+    // }
 
     frameCount++;
 }
@@ -76,8 +78,11 @@ int main() {
             break;
         }
 
-        for (auto &d : detections)
+        for (auto &d : detections) {
+            std::cout << "Trafic Sign: " << d.trafficSign << std::endl;
             tsr.handleTrafficSign(d);
+        }
+
     }
 
     fclose(pipe);
