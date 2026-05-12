@@ -42,6 +42,8 @@ public:
 	void asyncSub();
 
     bool subscribeFromKuksa();
+
+    bool subscribeFromKuksa();
     template<typename T>
     bool sendValueToKuksa(const std::string& path, const T& value);
     template<typename T>

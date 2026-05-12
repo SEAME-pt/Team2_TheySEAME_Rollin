@@ -12,10 +12,10 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 | Field | Details |
 |-------|----------|
-| **Sprint Number** | Sprint 8 |
-| **Sprint Goal** | Full Car assembly and testing via Remote control|
-| **Sprint Duration** | Feb 02 – Feb 16, 2026 |
-| **Focus Areas** | Tests, Kuksa, OFT enhancement, OTA updates. |
+| **Sprint Number** | Sprint 12 |
+| **Sprint Goal** | Perform Lap Test in CARLA. |
+| **Sprint Duration** | Apr 13 – Apr 24 2026 |
+| **Focus Areas** | PID, YOLO, CARLA, Model Training |
 
 
 ## 📅 Scrum Team

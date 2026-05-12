@@ -33,6 +33,8 @@ void RemoteControl::getEvent() {
 					notify(Events::CAR_THROTTLE);
 				} else if (event.code == JoyZ) {
 					notify(Events::CAR_STEERING);
+				} else if (event.code == DpadY) {
+					notify(Events::CAR_CRUISE_CONTROL);
 				}
 				break;
 			case EV_KEY:

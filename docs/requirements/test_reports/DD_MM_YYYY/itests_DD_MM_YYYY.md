@@ -229,3 +229,80 @@ Evidence: `docs/requirements/evidence/safety_emergency_response_integration_test
 - `emergency_stop_can_traces/`
 - `remote_emergency_brake_tests/`
 ```
+
+## Test Case 4 - Cruise Control Integration Test
+
+| Date Completed | Time Completed | Author(s) | Team | Testing Type |
+|-------|-------| -------|-------|-------|
+| DD/MM/YYYY | HH:MM | maugustooo | Team 2 - They SEA:ME Rolling | Integration Testing |
+
+```
+
+`itest~cruise-control-integration~1`
+
+Status: proposed
+
+Description: Comprehensive verification of cruise control activation, target-speed management, throttle authority, deactivation behavior, and steady-state speed regulation under valid operating conditions.
+
+Preconditions:
+- Cruise control software is installed and configured on the target system
+- Vehicle is in a safe test environment or on a test bench / HIL setup
+- Vehicle speed signal is available and valid
+- Brake pedal and accelerator pedal signals are available and functional
+- Cruise control command inputs (`+` and `-`) are available and functional
+- No active cruise-control communication fault is present at test start
+- Data logging is available for: `cruise_active`, `vehicle_speed`, `target_speed`, `driver_accelerator`, `driver_brake`, `fault_status`, `throttle_command`, and `throttle_authority`
+
+Test Steps:
+1. - [x] Set vehicle speed to a valid activation speed (for example, 60 hm/h), with brake pedal released, accelerator pedal released, and no active speed-sensor-related fault codes
+2. - [x] Actuate the `+` cruise control command
+    Expected:   Cruise control activates only after `+` is actuated and all activation conditions are satisfied
+3. - [X] Verify the initial target speed after activation
+    Expected:   Initial target speed equals the current vehicle speed at the instant of activation
+4. - [x] While cruise control is active, actuate the `+` command once
+    Expected:   Active target speed increases by 1 hm/h
+5. - [x] While cruise control is active, actuate the `+` command two additional times
+    Expected:   Active target speed increases by 1 hm/h for each command actuation
+6. - [x] While cruise control is active, actuate the `-` command once
+    Expected:   Active target speed decreases by 1 hm/h
+8. - [x] Allow the vehicle to reach steady-state operation at the active target speed under stable road-load or simulated-load conditions
+    Expected:   Vehicle speed is regulated to within ±2 hm/h of the active target speed
+9. - [x] Actuate the brake pedal while cruise control is active
+    Expected:   Cruise control deactivates and throttle authority transfers back to the driver
+10. - [x] While cruise control is active, actuate the accelerator pedal
+    Expected:   Cruise control deactivates and throttle authority transfers back to the driver
+11. - [x] Re-establish valid activation conditions and reactivate cruise control using the `+` command
+    Expected:   Cruise control activates again correctly and stores the current speed as the new target speed
+12. - [ ] Inject a cruise-control communication fault while cruise control is active
+    Expected:   Cruise control deactivates and throttle authority transfers back to the driver
+13. - [x] Attempt to activate cruise control with target speed below 15 hm/h
+    Expected:   Cruise control does not activate
+14. - [x] Attempt to activate cruise control with target speed above 130 hm/h
+    Expected:   Cruise control does not activate
+15. - [x] Attempt to activate cruise control with brake pedal actuated
+    Expected:   Cruise control does not activate
+16. - [x] Attempt to activate cruise control with accelerator pedal actuated
+    Expected:   Cruise control does not activate
+17. - [ ] Attempt to activate cruise control with an active vehicle-speed-sensor-related fault code present
+    Expected:   Cruise control does not activate
+
+Postconditions:
+- Cruise control activation behavior verified under valid and invalid conditions
+- Initial target speed capture verified
+- Target speed increment and decrement behavior verified
+- Throttle authority transfer between cruise controller and driver verified
+- Driver-triggered and fault-triggered deactivation verified
+- Steady-state speed regulation accuracy verified within specified tolerance
+- System behavior documented for integration evidence and requirement traceability
+
+Covers:
+- `dsn~cruise-control-activation-command~1`
+- `dsn~cruise-control-activation-conditions~1`
+- `dsn~cruise-control-initial-target-speed~1`
+- `dsn~cruise-control-target-speed-increment~1`
+- `dsn~cruise-control-target-speed-decrement~1`
+- `dsn~cruise-control-throttle-authority~1`
+- `dsn~cruise-control-driver-deactivation~1`
+- `dsn~cruise-control-fault-deactivation~1`
+- `dsn~cruise-control-speed-regulation-accuracy~1`
+```

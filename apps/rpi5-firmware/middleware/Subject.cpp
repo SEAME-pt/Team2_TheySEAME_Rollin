@@ -43,6 +43,6 @@ void Subject::notify(Events event) {
 		if (_obs[i] == NULL) {
 			continue;
 		}
-		_obs[i]->update(event);
+		_obs[i]->update(this, event);
 	}
 }
