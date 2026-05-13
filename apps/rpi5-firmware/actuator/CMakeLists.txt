@@ -16,5 +16,5 @@ set(SOURCES
 
 add_library(actuator STATIC ${SOURCES})
 target_include_directories(actuator PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(actuator PRIVATE kuksa)
+target_link_libraries(actuator PRIVATE kuksa comms mode middleware)
 

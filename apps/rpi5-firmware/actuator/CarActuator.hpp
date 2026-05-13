@@ -54,12 +54,5 @@ public:
 	 */
 	virtual void brake(const bool flag) = 0;
 
-	/**
-	 * @brief Get Gear
-	 *
-	 * Get the current Gear in the Car
-	 */
-	virtual short getGear() const = 0;
-
 	virtual void setCruiseControl(const bool flag, const int targetSpeed) = 0;
 };
