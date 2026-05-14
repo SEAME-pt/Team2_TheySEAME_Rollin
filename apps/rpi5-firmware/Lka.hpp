@@ -64,8 +64,9 @@ public:
 	 */
 	void poly(Frame &frame);
 
-	void putLinesInScreen(Frame &frame, std::vector<cv::Point> &leftLane, std::vector<cv::Point> &rightLane);
+	void putLinesInScreen(std::vector<cv::Point> &leftLane, std::vector<cv::Point> &rightLane);
 	int calcAngle(Frame &frame, const std::vector<cv::Point> &leftLanePtns, const std::vector<cv::Point> &rightLanePtns);
+	void makeVirtualLane(std::vector<cv::Point> &lanePtns, std::vector<cv::Point> &virtualLanePtns, const int dir);
 
 private:
 
@@ -73,7 +74,7 @@ private:
 	SlidingWindow _slwin;
 	int _angle;
 	int _nbrPtns;
-	int _laneSize = 200;
+	int _laneWidth;
 	std::vector<cv::Point> _lastLeftLane;
 	std::vector<cv::Point> _lastRightLane;
 };

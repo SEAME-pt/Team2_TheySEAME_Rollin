@@ -43,7 +43,6 @@ void Bev::applyBevToFrame(Frame &frame) {
 	show.open();
 	// Show Bev Frame
 	//frame.showInScreen("WIN");
-	//show.showInScreen("WIN2");
 }
 
 cv::Mat &Bev::getReverseMatrix() {

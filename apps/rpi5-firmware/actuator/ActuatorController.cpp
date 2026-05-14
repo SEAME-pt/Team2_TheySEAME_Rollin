@@ -16,7 +16,7 @@ int ActuatorController::processSteering(const int rawSteering) {
 }
 
 void ActuatorController::steering(const int angle) {
-	const int steering = std::clamp(angle, -27, 27);
+	const int steering = std::clamp(angle, -30, 30);
 
 	_car->setSteering(steering);
 	std::cout << "Changed Steering " << steering << std::endl;
@@ -96,7 +96,7 @@ void ActuatorController::update(Subject *subj, Events event) {
 		}
 	} else {
 		steering(_lka->getAngle());
-		throttle(-40);
+		throttle(-35);
 	}
 }
 

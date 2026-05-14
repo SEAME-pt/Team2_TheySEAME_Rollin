@@ -30,6 +30,7 @@ int readFrameFromPipe(FILE *pipe, void *frameData, const size_t size) {
 	headerBE.frameNbr = ntohl(tmp->frameNbr);
 	headerBE.width = ntohs(tmp->width);
 	headerBE.heigth = ntohs(tmp->heigth);
+	//std::cout << "Header: " << headerBE.frameNbr << " " << headerBE.heigth << " " << headerBE.width << std::endl;
 	if (headerBE.heigth != frameH) {
 		return (1);
 	}
@@ -81,7 +82,6 @@ int main() {
 		return (-1);
 	}
 	cv::namedWindow("WIN", cv::WINDOW_NORMAL);
-	cv::namedWindow("WIN2", cv::WINDOW_NORMAL);
 
 	while (run.load()) {
 		//usleep(50000);
