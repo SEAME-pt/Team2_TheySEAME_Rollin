@@ -8,7 +8,7 @@
 #define YELLOW cv::Scalar(0, 255, 255)
 #define WHITE cv::Scalar(255, 255, 255)
 
-#define WHITE_PIXEL 1
+#define WHITE_PIXEL 255
 
 // This is all 1 channel Types
 #define BINARY_FRAME CV_8U
@@ -74,6 +74,20 @@ public:
 	 * @return New Frame equal to the passed one
 	 */
 	Frame &operator=(const Frame &frame);
+
+	/**
+	 * @brief Frame Overload * operator
+	 *
+	 * Multiplies the underlying cv::Mat object by the mult value
+	 * Typically used to transform a [0->1] image to [0->255] image
+	 *
+	 * Only use this function to multiply the frame itself
+	 *
+	 * @param mult Multiplier value
+	 *
+	 * @return The same frame but multiplied by 255
+	 */
+	Frame &operator*(const int mult);
 
 	/**
 	 * @brief Warp a Frame
@@ -185,6 +199,8 @@ public:
 	 * @brief Save a Frame as an Image
 	 *
 	 * Save the current Frame as an Image
+	 * This saves all images in a camera/ directory, so the final image path
+	 * will be "./camera/ + filename"
 	 *
 	 * @param filename Image name
 	 */
@@ -198,6 +214,8 @@ public:
 	 * @param winName opencv Window name
 	 */
 	void showInScreen(const std::string &winName);
+
+	void combineFrames(const Frame &frame);
 
 	/**
 	 * @brief Get Frame height

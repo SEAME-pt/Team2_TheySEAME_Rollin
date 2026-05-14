@@ -30,12 +30,20 @@ Bev::Bev(const int fov, const cv::Rect &roi) {
 Bev::~Bev() {}
 
 void Bev::applyBevToFrame(Frame &frame) {
-	frame.save("./OrigFrame.jpg");
 	frame.cropp(_roi);
+	// Debug Cropp Line
+	//cv::Point pt1(0, _roi.y);
+	//cv::Point pt2(frame.getWidth(), _roi.y);
+	//show.drawLine(pt1, pt2, RED, 5);
+	//show.showInScreen("WIN");
+	show.cropp(_roi);
 	frame.warp(_M);
-	frame.save("./WarpFrame.jpg");
-	//frame.open();
-	frame.save("./Garf.jpg");
+	frame.open();
+	show.warp(_M);
+	show.open();
+	// Show Bev Frame
+	//frame.showInScreen("WIN");
+	//show.showInScreen("WIN2");
 }
 
 cv::Mat &Bev::getReverseMatrix() {

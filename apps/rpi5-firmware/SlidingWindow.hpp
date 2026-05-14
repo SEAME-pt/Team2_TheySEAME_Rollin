@@ -79,7 +79,7 @@ public:
 	 *
 	 * @return int X coordinate of a lane marking
 	 */
-	int getLaneX(std::vector<int> &histogram);
+	int getLaneX(std::vector<int> &histogram, std::vector<int>::iterator hstart, std::vector<int>::iterator hend);
 
 private:
 

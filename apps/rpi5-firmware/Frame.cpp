@@ -26,18 +26,21 @@ Frame &Frame::operator=(const Frame &frame) {
 	return (*this);
 }
 
+Frame &Frame::operator*(const int mult) {
+	_frameRaw *= 255;
+	return (*this);
+}
+
 void Frame::warp(cv::Mat matrix) {
 	cv::warpPerspective(_frameRaw, _frameRaw, matrix, _frameRaw.size());
 }
 
 void Frame::open() {
 	cv::morphologyEx(_frameRaw, _frameRaw, cv::MORPH_OPEN, _kernel);
-	//cv::medianBlur(_frameRaw, _frameRaw, 15);
 }
 
 void Frame::close() {
 	cv::morphologyEx(_frameRaw, _frameRaw, cv::MORPH_CLOSE, _kernel);
-	//cv::medianBlur(_frameRaw, _frameRaw, 9);
 }
 
 void Frame::canny() {
@@ -59,9 +62,9 @@ void Frame::cropp(const cv::Rect &rect) {
 }
 
 void Frame::histogram(std::vector<int> &histogram) {
-	//cv::Mat lowerHalf = _frameRaw(cv::Range(getHeight(), getHeight()), cv::Range::all());
+	cv::Mat lowerHalf = _frameRaw(cv::Range(_frameRaw.rows - (_frameRaw.rows / 2), _frameRaw.rows), cv::Range::all());
 
-	cv::reduce(_frameRaw, histogram, 0, cv::REDUCE_SUM, CV_32S);
+	cv::reduce(lowerHalf, histogram, 0, cv::REDUCE_SUM, CV_32S);
 }
 
 void Frame::transformToBinary(const int thresh) {
@@ -81,13 +84,18 @@ void Frame::drawLine(cv::Point &pt1, cv::Point &pt2, const cv::Scalar &color, co
 }
 
 void Frame::save(const std::string &filename) {
-	cv::imwrite(filename, _frameRaw);
+	cv::imwrite("./camera/" + filename, _frameRaw);
+}
+
+void Frame::combineFrames(const Frame &frame) {
+	cv::hconcat(_frameRaw, frame._frameRaw, _frameRaw);
 }
 
 void Frame::showInScreen(const std::string &winName) {
 	cv::Mat resized;
-	//cv::resize(_frameRaw, resized, cv::Size(1200, 300));
-	cv::imshow("WIN", _frameRaw * 255);
+	
+	cv::resize(_frameRaw, resized, cv::Size(this->getWidth(), 300));
+	cv::imshow(winName, resized);
 	cv::waitKey(1);
 }
 

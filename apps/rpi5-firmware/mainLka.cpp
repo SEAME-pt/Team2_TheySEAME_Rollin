@@ -11,13 +11,14 @@ std::atomic<bool> run = true;
 const int frameH = 640;
 const int frameW = 640;
 int frameCount = 1;
+Frame show(frameH, frameW, BINARY_FRAME);
 void *header = malloc(sizeof(struct FrameHeader));
 
 void signal_handler(int signal) {
 	run.store(false);
 }
 
-void readFrameFromPipe(FILE *pipe, void *frameData, const size_t size) {
+int readFrameFromPipe(FILE *pipe, void *frameData, const size_t size) {
 	volatile struct FrameHeader *tmp;
 	volatile struct FrameHeader headerBE;
 	size_t read;
@@ -29,27 +30,31 @@ void readFrameFromPipe(FILE *pipe, void *frameData, const size_t size) {
 	headerBE.frameNbr = ntohl(tmp->frameNbr);
 	headerBE.width = ntohs(tmp->width);
 	headerBE.heigth = ntohs(tmp->heigth);
-	std::cout << "Frame Number: " << headerBE.frameNbr << " " << frameCount << std::endl;
-	std::cout << "Size: " << headerBE.heigth << " " << headerBE.width << std::endl;
-	if (headerBE.frameNbr != 88000) {
-		std::cout << "Sync Problem" << std::endl;
-		return;
+	if (headerBE.heigth != frameH) {
+		return (1);
 	}
 	
 	// Read actual Binary Mask
 	read = fread(frameData, size, 1, pipe);
 	if (read != 1) {
 		std::cout << "Read Problem" << std::endl;
-		return;
+		return (1);
 	}
 	frameCount++;
+	return (0);
 }
 
 int handleFrame(FILE *pipe, Lka &lka) {
 	Frame frame(frameH, frameW, BINARY_FRAME);
 
-	readFrameFromPipe(pipe, frame.getRawData(), frameH * frameW);
+	if (readFrameFromPipe(pipe, frame.getRawData(), frameH * frameW)) {
+		std::cout << "Sync Problem" << std::endl;
+		return (0);
+	}
 
+	frame = frame * 255;
+	show = frame;
+	show = show.getColoredFrame();
 	lka.poly(frame);
 
 	return (0);
@@ -59,7 +64,7 @@ int main() {
 	CAN can("can0", 500, 0, 0);
 	CarActuator *car = new ActuatorCAN(can);
 	//Lka lka(400, 0, 250, 960, 390); // Carla Setup
-	Lka lka(150, 0, 180, frameW, frameH - 180, 8);
+	Lka lka(90, 0, 120, frameW, frameH - 120, 12);
 	kuksaLib kuksa;
 	//CarActuator *car = new ActuatorKuksa(
 	//	new ActuatorCAN(can),
@@ -76,6 +81,7 @@ int main() {
 		return (-1);
 	}
 	cv::namedWindow("WIN", cv::WINDOW_NORMAL);
+	cv::namedWindow("WIN2", cv::WINDOW_NORMAL);
 
 	while (run.load()) {
 		//usleep(50000);

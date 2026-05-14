@@ -14,13 +14,13 @@ public:
 
 	void update(Subject *subj, Events event);
 	void test();
+	void throttle(const int throttle);
 
 private:
 
 	int processThrottle(const int rawThrottle);
 	int processSteering(const int rawSteering);
 	void steering(const int angle);
-	void throttle(const int throttle);
 	void gear(const short gear);
 	void cruiseControl(const bool flag, const int targetSpeed);
 	void brake(const bool flag);

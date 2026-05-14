@@ -12,6 +12,8 @@
 #include "ActuatorController.hpp"
 #include <opencv4/opencv2/highgui.hpp>
 
+Frame show;
+
 std::atomic<bool> run = true;
 
 void signal_handler(int signal) {
