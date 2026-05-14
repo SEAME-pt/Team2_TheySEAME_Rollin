@@ -25,3 +25,11 @@ void ActuatorDecorator::brake(const bool flag) {
 void ActuatorDecorator::setCruiseControl(const bool flag, const int targetSpeed) {
 	_car->setCruiseControl(flag, targetSpeed);
 }
+
+void ActuatorDecorator::setTrafficSign(const int trafficSign) {
+	_car->setTrafficSign(trafficSign);
+}
+
+void ActuatorDecorator::setSpeedLimit(const int speedLimit) {
+	_car->setSpeedLimit(speedLimit);
+}

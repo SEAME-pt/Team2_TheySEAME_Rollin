@@ -13,7 +13,8 @@ public:
 	virtual void setGear(const short gear);
 	virtual void brake(const bool brake);
 	virtual void setCruiseControl(const bool flag, const int targetSpeed);
-
+	virtual void setTrafficSign(const int trafficSign);
+	virtual void setSpeedLimit(const int speedLimit);
 private:
 
 	CarActuator *_car;
