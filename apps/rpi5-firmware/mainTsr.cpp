@@ -24,7 +24,7 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
     uint16_t numDetections = ntohs(raw.numDetections);
 
     if (frameNbr != FRAME_NMBR) {
-        // std::cout << "Sync Problem (got " << frameNbr << ")" << std::endl;
+        std::cout << "Sync Problem (got " << frameNbr << ", expected " << FRAME_NMBR << ")" << std::endl;
         return;
     }
 
@@ -39,8 +39,6 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
         d.height        = ntohl(r.height);
         uint32_t accRaw = ntohl(*(uint32_t *)&r.accuracy);
         memcpy(&d.accuracy, &accRaw, sizeof(float));
-        std::cout << "Frame Nmb: " << d.frameNbr << ", Detections: " << d.numDetections << ", Traffic Sign: " << d.trafficSign << 
-        ", Accuracy: " << d.accuracy << ", x: " << d.x << ", y: " << d.y << ", width: " << d.width << ", height: " << d.height << std::endl;
         return d;
     };
 
@@ -52,10 +50,16 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
             std::cout << "Failed to read detection " << i << std::endl;
             return;
         }
-         std::cout << "Frame Nmb: " << frameNbr << ", Detections: " << numDetections << ", Traffic Sign: " << raw.trafficSign << 
-        ", Accuracy: " << raw.accuracy << ", x: " << raw.x << ", y: " << raw.y << ", width: " << raw.width << ", height: " << raw.height << std::endl;
-        // std::cout << "Trafic Sign: " << detections[i].trafficSign << std::endl;
         detections.push_back(decode(raw));
+        // std::cout << "header: frameNbr=" << detections.back().frameNbr
+        //           << " numDetections=" << detections.back().numDetections
+        //           << " trafficSign=" << detections.back().trafficSign
+        //           << " accuracy=" << detections.back().accuracy
+        //           << " x=" << detections.back().x
+        //           << " y=" << detections.back().y
+        //           << " width=" << detections.back().width
+        //           << " height=" << detections.back().height
+        //           << std::endl;
     }
 
     frameCount++;
@@ -66,16 +70,19 @@ int main() {
     kuksaLib kuksa;
     CarActuator *car = new ActuatorKuksa(new ActuatorCAN(can), kuksa);
     Tsr tsr(car);
-
     FILE *pipe = fopen("NamedPipeTsr", "r");
     if (pipe == NULL) {
         std::cout << "Failed to open NamedPipeTsr" << std::endl;
         return (-1);
     }
 
+    std::cout << "NamedPipeTsr opened successfully" << std::endl;
+
     while (true) {
         std::vector<TsrHeader> detections;
         readFromPipe(pipe, detections, frameCount);
+
+        std::cout << "Detections in frame: " << detections.size() << std::endl;
 
         if (feof(pipe)) {
             std::cout << "Pipe EOF" << std::endl;
@@ -83,7 +90,7 @@ int main() {
         }
 
         for (auto &d : detections) {
-            std::cout << "Trafic Sign: " << d.trafficSign << std::endl;
+            std::cout << "Dispatching trafficSign=" << d.trafficSign << std::endl;
             tsr.handleTrafficSign(d);
         }
 
