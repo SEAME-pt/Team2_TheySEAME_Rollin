@@ -6,7 +6,6 @@
 #include <cstdio>
 #include <cstring>
 #include <iostream>
-#include <poll.h>
 
 CAN::CAN(const std::string &interface) : _interface(interface) {
 	_up = false;
