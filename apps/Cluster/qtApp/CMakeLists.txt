@@ -81,11 +81,13 @@ add_custom_target(car_mesh ALL
 add_dependencies(qtAppExec car_mesh)
 
 target_include_directories(qtAppLib PRIVATE
+  ${CMAKE_SOURCE_DIR}/../../../libs/libkuksa
   ${CMAKE_SOURCE_DIR}/../../../libs/libkuksa/build
   ${CMAKE_SOURCE_DIR}/../../../libs/libkuksa/build/kuksa/val/v2
   ${CMAKE_BINARY_DIR}
 )
 target_include_directories(qtAppExec PRIVATE
+  ${CMAKE_SOURCE_DIR}/../../../libs/libkuksa
   ${CMAKE_SOURCE_DIR}/../../../libs/libkuksa/build
   ${CMAKE_SOURCE_DIR}/../../../libs/libkuksa/build/kuksa/val/v2
 )

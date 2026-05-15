@@ -96,6 +96,7 @@ bool systemInfo::start()
             emit trafficSignUpdated(static_cast<int>(_kuksa.getTsrDetectedSignType()));
             emit speedLimitUpdated(static_cast<int>(_kuksa.getTsrDetectedSpeedLimit()));
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::cout << "Traffic Sign: " << _kuksa.getTsrDetectedSignType() << ", Speed Limit: " << _kuksa.getTsrDetectedSpeedLimit() << std::endl;
         }
 
         if (subThread && subThread->joinable()) {

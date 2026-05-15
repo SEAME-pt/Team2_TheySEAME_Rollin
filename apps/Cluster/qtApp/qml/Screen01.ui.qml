@@ -625,9 +625,22 @@ Rectangle {
         parent: rectangle
 
         property var signImages: [
-            "", "stop", "yield", "no_entry",
-            "turn_left", "turn_right", "pedestrian",
-            "traffic_light", "one_way", "no_parking", "no_overtaking"
+            "",            // 0 UNKNOWN
+            "stop",        // 1 STOP
+            "",            // 2 SPEED_LIMIT_30 (shown in speedLimitPanel)
+            "",            // 3 SPEED_LIMIT_50 (shown in speedLimitPanel)
+            "",            // 4 SPEED_LIMIT_80 (shown in speedLimitPanel)
+            "",            // 5 SPEED_LIMIT_100 (shown in speedLimitPanel)
+            "",            // 6 SPEED_LIMIT_120 (shown in speedLimitPanel)
+            "yield",       // 7 YIELD
+            "no_entry",    // 8 NO_ENTRY
+            "turn_left",   // 9 TURN_LEFT
+            "turn_right",  // 10 TURN_RIGHT
+            "pedestrian",  // 11 PEDESTRIAN
+            "traffic_light", // 12 TRAFFIC_LIGHT
+            "one_way",     // 13 ONE_WAY
+            "no_parking",  // 14 NO_PARKING
+            "no_overtaking" // 15 NO_OVERTAKING
         ]
 
         Image {
@@ -637,7 +650,7 @@ Rectangle {
             fillMode: Image.PreserveAspectFit
             source: {
                 var idx = generalInfo ? generalInfo.trafficSignInfo : 0
-                if (idx <= 0 || idx >= trafficSignPanel.signImages.length) return ""
+                if (idx < 0 || idx >= trafficSignPanel.signImages.length) return ""
                 return "qrc:/qml/images/" + trafficSignPanel.signImages[idx] + ".png"
             }
         }
