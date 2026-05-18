@@ -109,13 +109,13 @@ AI Process
  └── heartbeat/watchdog thread
 ```
  ### Reccomended runtime frequencies
-|  Module	  | Frequency |
-| --------- | --------- |
-| Supervisor |	10–20 Hz  |
-|Motion Arbiter |	50–100 Hz |
-|CAN TX	| 100 Hz        |
-|RC Input	| 50–100 Hz |
-|LKA	|20–50 Hz|
+|  Module	  | Frequency | Rationale |
+| --------- | --------- | |
+| Supervisor |	10–20 Hz  | Mode change isn't the highest priority |
+| Motion Arbiter |	50–100 Hz | Should be higher than Supervisor, lower than CAN and around higher than RC/LKA to capture every frame |
+| CAN TX	| 100 Hz        |  Highest priority = highest frequency |
+| RC Input	| 50–100 Hz |  |
+| LKA	|20–50 Hz|  Should match the Perception output rate|
 
  ### Inter-process communication
  Either ROS2 or ZeroMQ. ZeroMQ is simpler and allows pub/sub patterns.
