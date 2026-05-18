@@ -178,7 +178,7 @@ void Control_Thread_Entry(ULONG thread_input) {
                 if (ControlQueue_GetOccupancy(&occ) == TX_SUCCESS) {
                     char occ_buf[64];
                     snprintf(occ_buf, sizeof(occ_buf), "[CONTROL] Queue occupancy=%u\r\n", occ);
-                    Debug_Print(occ_buf);
+                    // Debug_Print(occ_buf);
                 }
             }
 
