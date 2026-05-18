@@ -20,6 +20,7 @@ extern void Debug_Print(const char *msg);
 #else
 #define Debug_Print(msg) ((void)0)
 #endif
+
 char comm_uart_buf[128];
 char rx_uart_buf[128];
 extern UART_HandleTypeDef huart1;
@@ -299,12 +300,12 @@ static void drain_and_process_can_messages(VehicleCommand_t *out_last_cmd, uint3
     while (MCP2515_ReceiveMessage(&rx_can_id, rx_data, &rx_length)) {
         /* Print raw frame */
         snprintf(rx_uart_buf, sizeof(rx_uart_buf), "[RX] ID=0x%08lX DLC=%d Data=", (unsigned long)rx_can_id, rx_length);
-        RX_Print(rx_uart_buf);
+        // RX_Print(rx_uart_buf);
         for (int i = 0; i < rx_length; i++) {
             snprintf(rx_uart_buf, sizeof(rx_uart_buf), "%02X ", rx_data[i]);
-            RX_Print(rx_uart_buf);
+            // RX_Print(rx_uart_buf);
         }
-        RX_Print("\r\n");
+        // RX_Print("\r\n");
 
         int updated = handle_rx_frame(rx_can_id, rx_data, rx_length);
         if (!updated) continue;

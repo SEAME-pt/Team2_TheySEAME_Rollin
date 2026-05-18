@@ -201,7 +201,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   status = tx_thread_create(&distance_thread, "Distance Thread",
                                   Distance_Thread_Entry, 0,
                                   distance_thread_stack, sizeof(distance_thread_stack),
-                                  14, 14, TX_NO_TIME_SLICE, TX_AUTO_START);
+                    10, 10, TX_NO_TIME_SLICE, TX_AUTO_START);
   if (status != TX_SUCCESS) {
       return TX_THREAD_ERROR;
   }
