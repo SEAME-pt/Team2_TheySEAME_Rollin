@@ -110,7 +110,7 @@ AI Process
 ```
  ### Reccomended runtime frequencies
 |  Module	  | Frequency | Rationale |
-| --------- | --------- | |
+| --------- | --------- | ------- |
 | Supervisor |	10–20 Hz  | Mode change isn't the highest priority |
 | Motion Arbiter |	50–100 Hz | Should be higher than Supervisor, lower than CAN and around higher than RC/LKA to capture every frame |
 | CAN TX	| 100 Hz        |  Highest priority = highest frequency |
