@@ -120,3 +120,68 @@ AI Process
  ### Inter-process communication
  Either ROS2 or ZeroMQ. ZeroMQ is simpler and allows pub/sub patterns.
 
+## Proposed file structure (Rpi)
+```
+src/
+├── supervisor/
+│   ├── main.cpp
+│   ├── state_machine.cpp
+│   ├── mode_manager.cpp
+│   ├── fault_manager.cpp
+│   ├── watchdog.cpp   # If necessary
+│   └── health_monitor.cpp
+│
+├── motion_arbiter/
+│   ├── motion_arbiter.cpp
+│
+├── lka/
+│   ├── main.cpp
+│   ├── lka_controller.cpp
+│   ├── lane_tracker.cpp
+│   └── steering_controller.cpp
+│
+├── remote/
+│   ├── main.cpp
+│   ├── manual_control.cpp
+│   └── joystick.cpp
+│
+├── perception/
+│   ├── run_ai_pipeline.py
+│   ├── camera.py
+│   ├── inference.py
+│   ├── postprocess.py
+│
+├── can/
+│   ├── main.cpp
+│   ├── kuksa_client.cpp
+│   ├── can.cpp
+│   ├── can_rx.cpp
+│   ├── can_tx.cpp
+│   └── stm32_protocol.cpp
+│
+├── common/
+│   ├── messages/
+│   │   ├── vehicle_state.hpp
+│   │   ├── control_command.hpp
+│   │   ├── health_status.hpp
+│   │   └── lane_detection.hpp
+│   │
+│   ├── ipc/
+│   │   ├── zmq_pub.hpp
+│   │   ├── zmq_sub.hpp
+│   │   └── topics.hpp
+│   │
+│   ├── utils/
+│   │   ├── logger.hpp
+│   │   ├── timer.hpp
+│   │   └── config.hpp
+│   │
+│   └── enums/
+│       ├── vehicle_mode.hpp
+│       └── fault_codes.hpp
+│
+└── configs/
+    ├── supervisor.yaml
+    ├── can.yaml
+    └── perception.yaml
+  ```
