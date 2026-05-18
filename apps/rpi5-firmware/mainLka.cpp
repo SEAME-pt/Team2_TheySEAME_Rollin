@@ -65,7 +65,7 @@ int main() {
 	CAN can("can0", 500, 0, 0);
 	CarActuator *car = new ActuatorCAN(can);
 	//Lka lka(400, 0, 250, 960, 390); // Carla Setup
-	Lka lka(90, 0, 120, frameW, frameH - 120, 12);
+	Lka lka(90, 0, 240, frameW, frameH - 240, 12);
 	kuksaLib kuksa;
 	//CarActuator *car = new ActuatorKuksa(
 	//	new ActuatorCAN(can),
