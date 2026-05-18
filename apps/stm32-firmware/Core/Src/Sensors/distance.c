@@ -41,90 +41,120 @@ void send_cmd(bool brake, VehicleCommand_t cmd)
     }
 }
 
-void Automatic_Brake_Assist(uint16_t distance_cm) {
+#define DT_SECONDS          0.02f
+#define TTC_THRESHOLD_MS    500.0f
+#define BRAKE_THRESHOLD_CM  30
+#define CLEAR_DIST_CM       100
+
+static uint16_t dist_old     = 80;
+static float    velocity_cms = 0.0f;
+static float    ttc_ms       = 9999.0f;
+
+void Automatic_Brake_Assist(uint16_t distance_cm)
+{
     VehicleData_t recvs;
     VehicleCommand_t Vcmd;
-
     snapshot_vehicle_command(&Vcmd);
     snapshot_vehicle_data(&recvs);
 
-    const float DECEL_MS2    = 6.0f;
-    const float REACTION_S   = 0.05f;
-    const uint16_t OBSTACLE_THRESHOLD_CM = 10;
-    const uint16_t RELEASE_HYSTERESIS_CM = 5; /* avoid chatter when releasing brake */
+    if (distance_cm > CLEAR_DIST_CM || distance_cm == 0) {
+        dist_old = distance_cm;
+        if (Vcmd.brake) send_cmd(false, Vcmd);
+        return;
+    }
 
     float current_speed = recvs.vehicle_speed;
-    float distance_m = distance_cm / 100.0f;
-    float d_stop     = (current_speed * current_speed) / (2.0f * DECEL_MS2);
-    float d_reaction = current_speed * REACTION_S;
-    float d_required = d_stop + d_reaction + 0.15f;
-    
-    /* If vehicle is stationary, ensure brake is released and exit */
+    float current_speed_cms = current_speed * 100.0f;
+
+    int16_t delta = (int16_t)dist_old - (int16_t)distance_cm;
+    if (abs(delta) > 1)
+        velocity_cms = (float)delta / DT_SECONDS;
+    else
+        velocity_cms = 0.0f;
+
+    float closing_cms = (velocity_cms > current_speed_cms) ? velocity_cms : current_speed_cms;
+
+    if (closing_cms > 10.0f)
+        ttc_ms = ((float)distance_cm / closing_cms) * 1000.0f;
+    else
+        ttc_ms = 9999.0f;
+
+    char info_buf[96];
+    snprintf(info_buf, sizeof(info_buf),
+        "[ABA] Dist=%dcm Vel=%.1fcm/s TTC=%.0fms Speed=%.2fm/s\r\n",
+        distance_cm, velocity_cms, ttc_ms, current_speed);
+    // Debug_Print(info_buf);
+
     if (current_speed <= 0.1f) {
-        if (Vcmd.brake)
-            send_cmd(false, Vcmd);
+        if (Vcmd.brake) send_cmd(false, Vcmd);
+        dist_old = distance_cm;
         return;
     }
 
-    /* If not in drive (gear 3), ensure brake is not asserted by AEB */
     if (Vcmd.gear != 3) {
-        if (Vcmd.brake)
-            send_cmd(false, Vcmd);
+        if (Vcmd.brake) send_cmd(false, Vcmd);
+        dist_old = distance_cm;
         return;
     }
 
-    /* protect against division by zero or extremely small required distance */
-    if (d_required <= 1e-4f) {
-        return;
+    if (ttc_ms < TTC_THRESHOLD_MS || distance_cm <= BRAKE_THRESHOLD_CM) {
+        snprintf(info_buf, sizeof(info_buf),
+            "[ABA] BRAKE | TTC=%.0fms Dist=%dcm\r\n", ttc_ms, distance_cm);
+        // Debug_Print(info_buf);
+        send_cmd(true, Vcmd);
+    } else {
+        if (Vcmd.brake) send_cmd(false, Vcmd);
     }
 
-    if (distance_m <= d_required) {
-        float urgency = 1.0f - (distance_m / d_required);
-        if (urgency < 0.0f) urgency = 0.0f;
-        else if (urgency > 1.0f) urgency = 1.0f;
-
-        char info_buf[64];
-        snprintf(info_buf, sizeof(info_buf), "[ABA] Distance=%.2fm, Required=%.2fm, Urgency=%.2f%%\r\n",
-                 distance_m, d_required, urgency * 100.0f);
-        Debug_Print(info_buf);
-        if (urgency > 0.4f || distance_m < 0.20f) {
-            send_cmd(true, Vcmd);
-        }
-        return;
-    }
-
-    /* release brake only when obstacle is sufficiently far (with hysteresis) */
-    if (distance_cm > (OBSTACLE_THRESHOLD_CM + RELEASE_HYSTERESIS_CM))
-        send_cmd(false, Vcmd);
+    dist_old = distance_cm;
 }
 
 void Distance_Thread_Entry(ULONG thread_input)
 {
     uint16_t distance = 0;
-    uint8_t light = 0;
-    uint8_t buffer[4];
-    char msg[64];
-    
+    uint8_t  light    = 0;
+    uint8_t  buffer[4];
+    char     msg[64];
+
+    uint8_t range_reg = 35;
+    uint8_t gain_reg  = 5;
+    HAL_I2C_Mem_Write(&hi2c2, 0xE0, 0x02, 1, &range_reg, 1, 100);
+    HAL_I2C_Mem_Write(&hi2c2, 0xE0, 0x01, 1, &gain_reg,  1, 100);
+    tx_thread_sleep(10);
+
     while (1)
     {
         uint8_t cmd = 0x51;
         HAL_I2C_Mem_Write(&hi2c2, 0xE0, 0x00, 1, &cmd, 1, 100);
-    
-        tx_thread_sleep(20); 
-        
-        if(HAL_I2C_Mem_Read(&hi2c2, 0xE0, 0x00, 1, buffer, 4, 100) == HAL_OK)
+
+        uint8_t status = 0xFF;
+        uint32_t timeout = 20;
+        while (status == 0xFF && timeout > 0)
         {
-            light = buffer[0]; 
-            distance = 200;
-            distance = (buffer[2] << 8) | buffer[3];
-            sprintf(msg, "[DIST] %d cm | [LIGHT] %d\r\n", distance, light);
-            Automatic_Brake_Assist(distance);
-            // Debug_Print(msg); 
+            tx_thread_sleep(2);
+            timeout -= 2;
+            HAL_I2C_Mem_Read(&hi2c2, 0xE0, 0x00, 1, &status, 1, 100);
         }
-        else 
+
+        if (timeout == 0)
+        {
+            Debug_Print("[DIST] Sensor timeout!\r\n");
+            continue;
+        }
+
+        if (HAL_I2C_Mem_Read(&hi2c2, 0xE0, 0x00, 1, buffer, 4, 100) == HAL_OK)
+        {
+            light    = buffer[1];
+            distance = (buffer[2] << 8) | buffer[3];
+
+            snprintf(msg, sizeof(msg), "[DIST] %d cm | [LIGHT] %d\r\n", distance, light);
+            Debug_Print(msg);
+
+            Automatic_Brake_Assist(distance);
+        }
+        else
         {
             Debug_Print("[Distance THREAD] Error!\r\n");
         }
-
     }
 }
