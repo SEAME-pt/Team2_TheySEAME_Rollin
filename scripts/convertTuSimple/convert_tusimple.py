@@ -1,8 +1,6 @@
 import os
 import shutil
 import json
-import cv2
-import numpy as np
 import argparse
 from pathlib import Path
 from sklearn.model_selection import train_test_split
