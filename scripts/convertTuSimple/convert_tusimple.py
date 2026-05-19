@@ -17,11 +17,11 @@ class TuSimpleConverter:
 
 	def create_yaml(self):
 		yaml_content = "\n".join([
-			f"path: {self.output_dir}",
-			"train: images/train",
-			"val: images/val",
-			"nc: 1",
-			"names: ['lane']",
+            f"path: {self.output_dir}",
+            "train: images/train",
+            "val: images/val",
+            "nc: 1",
+            "names: ['lane']",
 		]) + "\n"
 		with open(os.path.join(self.output_dir, "data.yaml"), 'w', encoding='utf-8') as yaml_file:
 			yaml_file.write(yaml_content)
