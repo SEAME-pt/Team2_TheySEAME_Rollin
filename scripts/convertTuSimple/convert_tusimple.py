@@ -1,8 +1,6 @@
 import os
 import shutil
 import json
-import cv2
-import numpy as np
 import argparse
 from pathlib import Path
 from sklearn.model_selection import train_test_split
@@ -18,13 +16,15 @@ class TuSimpleConverter:
 		self.val_clips = set()
 
 	def create_yaml(self):
-		yaml_content = f"""path: {self.output_dir}
-			train: images/train
-			val: images/val
-			nc: 1
-			names: ['lane']
-			"""
-		open(os.path.join(self.output_dir, "data.yaml"), 'w').write(yaml_content)
+		yaml_content = "\n".join([
+			f"path: {self.output_dir}",
+			"train: images/train",
+			"val: images/val",
+			"nc: 1",
+			"names: ['lane']",
+		]) + "\n"
+		with open(os.path.join(self.output_dir, "data.yaml"), 'w', encoding='utf-8') as yaml_file:
+			yaml_file.write(yaml_content)
 
 	def split_clips(self, data):
 		"""Extract unique clips and split them into train/val by clip (not by frame)."""
