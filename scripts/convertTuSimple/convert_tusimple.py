@@ -18,12 +18,13 @@ class TuSimpleConverter:
 		self.val_clips = set()
 
 	def create_yaml(self):
-		yaml_content = f"""path: {self.output_dir}
-			train: images/train
-			val: images/val
-			nc: 1
-			names: ['lane']
-			"""
+		yaml_content = "\n".join([
+			f"path: {self.output_dir}",
+			"train: images/train",
+			"val: images/val",
+			"nc: 1",
+			"names: ['lane']",
+		]) + "\n"
 		open(os.path.join(self.output_dir, "data.yaml"), 'w').write(yaml_content)
 
 	def split_clips(self, data):
