@@ -93,6 +93,8 @@ $$u^{(i+1)} = u^{(i)} - α ∇J$$
 
 or via QP/SQP methods.
 
+An overview of the Optimization Algorithms is provided in:
+
 Constraints applied:
 
 - $$∣δ_k∣≤δ_{max}$$
