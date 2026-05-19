@@ -25,7 +25,7 @@ class TuSimpleConverter:
 			"nc: 1",
 			"names: ['lane']",
 		]) + "\n"
-		with open(os.path.join(self.output_dir, "data.yaml"), 'w') as yaml_file:
+		with open(os.path.join(self.output_dir, "data.yaml"), 'w', encoding='utf-8') as yaml_file:
 			yaml_file.write(yaml_content)
 
 	def split_clips(self, data):
