@@ -36,9 +36,9 @@ uint32_t SensorsQueue_GetDrops(void) {
 
 UINT SensorsQueue_GetOccupancy(UINT *count) {
     if (count == NULL) return 1;
-    UINT message_count = 0;
+    ULONG message_count = 0;
     UINT status = tx_queue_info_get(&sensors_q, NULL, &message_count, NULL, NULL, NULL, NULL);
     if (status != TX_SUCCESS) return status;
-    *count = message_count;
+    *count = (UINT)message_count;
     return TX_SUCCESS;
 }

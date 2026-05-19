@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Events.hpp"
+#include "Subject.hpp"
+
+class Subject;
 
 /**
  * @interface Observer
@@ -21,5 +24,5 @@ public:
 	 *
 	 * @param event Describe the Event that triggered the notify
 	 */
-	virtual void update(Events event) = 0;
+	virtual void update(Subject *subj, Events event) = 0;
 };
