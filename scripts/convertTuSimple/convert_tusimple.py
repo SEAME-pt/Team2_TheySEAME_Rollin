@@ -25,7 +25,8 @@ class TuSimpleConverter:
 			"nc: 1",
 			"names: ['lane']",
 		]) + "\n"
-		open(os.path.join(self.output_dir, "data.yaml"), 'w').write(yaml_content)
+		with open(os.path.join(self.output_dir, "data.yaml"), 'w') as yaml_file:
+			yaml_file.write(yaml_content)
 
 	def split_clips(self, data):
 		"""Extract unique clips and split them into train/val by clip (not by frame)."""
