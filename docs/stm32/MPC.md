@@ -1,57 +1,114 @@
-# Model Predictive Control
+# Model Predictive Control (MPC)
 
-Model predictive control (MPC) is an advanced method of process control that is used to control a process while satisfying a set of constraints. They rely on dynamic models of the process (e.g. bycicle model), most often linear empirical models obtained by system identification.
-The main advantage of MPC is the fact that it allows the current timeslot to be optimized, while keeping future timeslots in account. 
-This is achieved by optimizing a finite time-horizon, but only implementing the current timeslot and then optimizing again, repeatedly, thus differing from a linear–quadratic regulator (LQR). 
+Model Predictive Control (MPC) is an advanced control method used to optimize system behavior while respecting constraints. It relies on a dynamic model of the system (e.g., bicycle model), typically derived from system identification or physics-based modeling.
+
+The key idea is to optimize over a finite horizon, but only apply the first control input, then repeat the process at the next timestep (receding horizon control). This differs from classical controllers like LQR.
+
+---
+
+## System Overview
+
+```mermaid
+flowchart LR
+A[Camera / Hailo Lane Detection] --> B[State Estimation]
+B --> C[MPC Optimizer]
+C --> D[Control Output]
+D --> E[CAN]
+E --> A
+```
+
+---
 
 ## Scope
-- Lane Perception is done by Hailo and it retrives binary masks of lanes
-- Based on masks we need to calculate/measure the vehicle state [$e_{y}$, $\Psi_{error}$, $v$], where $e_{y}$ is the car/lane center offset, $\Psi_{error}$ is the actual angle minus the desired angle and $v$ is the current velocity
-- The MPC will compute the new steering angle and acceleration based on this state
-- The acceleration can be achieved using the PID
+
+- Lane perception is performed using Hailo inference (binary lane masks)
+- Vehicle state is extracted:
+  - e_y: lateral offset from lane center
+  - ψ_error: heading error
+  - v: velocity
+- MPC computes:
+  - steering angle δ
+  - acceleration a
+- Acceleration can be implemented via PID or direct throttle control
+
+---
 
 ## Goals
-- Enhanced constraints: max steering, max speed (e.g., speed limit)
-- Softer turns: model takes into account the Center of Mass of the vehicle and rotates around it and also modifies the speed to enhance curve description
 
-## Working Principle
-Each run the MPC will take the input state [$e_{y}$, $\Psi_{error}$, $v$] where:
-- $e_{y}$ is the car/lane center offset
-- $\Psi_{error}$ is the actual angle minus the desired angle
-- $v$ is the current velocity
+- Respect physical constraints:
+  - max steering angle
+  - max speed
+  - potentially: drivable area (obstacle avoidance)
+- Improve smoothness of turns
+- Account for curvature via velocity adaptation
+- We can potentially introduce a global planner as a constraint, allowing us to optimize the path from A to B
 
-And compute:
+---
 
-$$\{\delta_0, a_0, \delta_1, a_1, \ldots, \delta_{N-1}, a_{N-1}\}$$
+## MPC Loop (High-Level)
 
-where,
-- $\delta$ is the desired angle
-- $a$ is the acceleration
-- 
-Each step \(N\) is used to compute the cost:
+```mermaid
+flowchart TD
+S1[1. Initialize control guess δ, a] --> S2
+S2[2. Predict future trajectory] --> S3
+S3[3. Compute cost J] --> S4
+S4[4. Optimize controls] --> S5
+S5[5. Apply first control input] --> S1
+```
 
-$$J = \sum_{k=0}^{N-1} \left(Q_e e_{y,k}^2+ Q_\psi \psi_{error,k}^2+ Q_v (v_k - v_{ref})^2+ R_\delta \delta_k^2+ R_a a_k^2\right)$$
+---
 
-While also enforcing the constraints.
-The output state is [ $\delta$, $a$] = [ $\delta_0$, $a_0$]
+## Detailed Algorithm
 
-## Discrete-Time System Dynamics (Local Frame)
-These equations model the evolution of the input parameters over $N$ steps and can be used in the cost calculation.
-Using Euler discretization with sampling time \( \Delta t \):
+## 1. Initialization: State and Control Guess
 
-### Lateral error dynamics
-$$e_{y,k+1} = e_{y,k} + v_k \sin(\psi_{error,k}) \Delta t$$
+Each cycle begins with measured state:
 
-### Heading error dynamics
-$$\psi_{error,k+1} = \psi_{error,k} + \frac{v_k}{L} \tan(\delta_k)\Delta t$$
+[ $e_y$, $ψ_{error}$, $v$]
 
-### Velocity dynamics
-$$v_{k+1} = v_k + a_k \Delta t$$
+Initial control sequence:
 
-## General Overview of algorithm
-At each cycle, the solver:
-1) Starts with a guess for [ $\delta$, $a$]
-2) Applies system dynamics → predicts trajectory
-3) Computes cost J
-4) Adjusts inputs iteratively (gradient/QP search/etc.)
-5) Repeats until cost is minimized
+{δ0, a0, δ1, a1, ..., δN-1, aN-1}
+
+---
+
+## 2. Trajectory Prediction (System Dynamics)
+
+$$e_{y,k+1} = e_{y,k} + v_k sin(ψ_error,k) Δt$$
+$$ψ_{error,k+1} = ψ_{error,k} + (v_k / L) tan(δ_k) Δt$$
+$$v_{k+1} = v_k + a_k Δt$$
+
+---
+
+## 3. Cost Evaluation
+
+$$J = \sum(Q_e e_y^2 + Q_ψ ψ_error^2 + Q_v (v - v_ref)^2 + R_δ δ^2 + R_a a^2)$$
+
+---
+
+## 4. Iterative Optimization
+The optimizer improves the control sequence:
+
+$$u^{(i+1)} = u^{(i)} - α ∇J$$
+
+or via QP/SQP methods.
+
+Constraints applied:
+
+- $$∣δ_k∣≤δ_{max}$$
+- $$∣a_k∣≤a_{max}$$
+- steering rate limits
+
+---
+
+## 5. Execution (Receding Horizon)
+
+Apply only:
+
+[ $δ0$, $a0$]
+
+---
+
+## Key Insight
+
+MPC continuously replans by predicting future behavior and optimizing only the first control action.
