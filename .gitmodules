@@ -13,3 +13,7 @@
 [submodule "apps/stm32-firmware/Drivers/BSP/Components/ism330dhcx"]
 	path = apps/stm32-firmware/Drivers/BSP/Components/ism330dhcx
 	url = https://github.com/STMicroelectronics/stm32-ism330dhcx.git
+[submodule "scripts/AGL/layers/meta-hailo"]
+	path = scripts/AGL/layers/meta-hailo
+	url = git@github.com:hailo-ai/meta-hailo.git
+	branch = hailo8-scarthgap

@@ -1,0 +1,11 @@
+[Unit]
+Description=CarControl Application
+Wants=network-online.target
+After=systemd-networkd.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/CarControl
+
+[Install]
+WantedBy=multi-user.target
