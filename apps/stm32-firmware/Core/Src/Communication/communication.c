@@ -14,8 +14,11 @@
 #include "../Control/control_queue.h"
 #include "../Sensors/sensors_queue.h"
 #include <stdio.h>
+#include <string.h>
 
-#ifndef COMM_DEBUG
+#ifdef COMM_DEBUG
+extern void Debug_Print(const char *msg);
+#else
 #define Debug_Print(msg) ((void)0)
 #endif
 char comm_uart_buf[128];
@@ -325,17 +328,14 @@ static void drain_and_process_can_messages(VehicleCommand_t *out_last_cmd, uint3
 
 void Communication_Thread_Entry(ULONG thread_input) {
     (void) thread_input;
-    
+
     Debug_Print("\r\n\r\n=== COMMUNICATION THREAD STARTED ===\r\n");
     Debug_Print("[COMM] Initializing MCP2515 CAN controller...\r\n");
-    
-    // Wait for other threads to initialize
-    tx_thread_sleep(50);  // 500ms delay
-    
-    // Test MCP2515 connection
+
+    tx_thread_sleep(50); /* 500ms: let other threads initialize */
+
     MCP2515_TestConnection();
-    
-    // Initialize MCP2515
+
     if (MCP2515_Init(CAN_SPEED_500KBPS) == HAL_OK) {
         Debug_Print("[COMM] MCP2515 initialized (500 kbps) - NORMAL MODE\r\n");
         MCP2515_PrintDetailedStatus();
@@ -343,7 +343,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
         Debug_Print("[COMM] MCP2515 initialization FAILED!\r\n");
         MCP2515_PrintDetailedStatus();
     }
-    
+
     Debug_Print("[COMM] Starting CAN loop (TX every 200ms, RX continuous)\r\n");
     Debug_Print("[COMM] Reading sensor samples directly from sensors queue\r\n\r\n");
     
@@ -361,7 +361,7 @@ void Communication_Thread_Entry(ULONG thread_input) {
      */
     VehicleCommand_t last_cmd = { .driving_mode = 0, .desired_velocity = 0.0f, .steering_angle = 0, .current_velocity = 0.0f, .command_valid = 1 };
     uint32_t last_cmd_ts = HAL_GetTick();
-    int have_last_cmd = 1; /* start with default command enabled */
+    int have_last_cmd = 1;
 
     Debug_Print("[COMM] Heartbeat initialized with default SAFE command\r\n");
 
@@ -409,31 +409,9 @@ void Communication_Thread_Entry(ULONG thread_input) {
                 }
                 
             } else {
-                Debug_Print("[CAN_TX] Waiting for valid sensor data...\r\n");
+                Debug_Print("[COMM] Skipping TX - no valid data\r\n");
             }
         }
-        
-        // Check for received CAN messages (commands from controller)
-        // Process ALL pending messages in buffer to prevent backlog
-        uint32_t rx_can_id;
-        uint8_t rx_data[8];
-        uint8_t rx_length;
-        
-        while (MCP2515_ReceiveMessage(&rx_can_id, rx_data, &rx_length)) {
-            // Always print received frame: ID + raw bytes
-            snprintf(rx_uart_buf, sizeof(rx_uart_buf),
-                    "[RX] ID=0x%08lX DLC=%d Data=", (unsigned long)rx_can_id, rx_length);
-            RX_Print(rx_uart_buf);
-            for (int i = 0; i < rx_length; i++) {
-                snprintf(rx_uart_buf, sizeof(rx_uart_buf), "%02X ", rx_data[i]);
-                RX_Print(rx_uart_buf);
-            }
-            RX_Print("\r\n");
-            
-            // Process received CAN messages
-            // Controller (RPi): 0x100 DLC=3 → [mode, throttle, steering] combined format
-            // Kuksa: Individual IDs per README spec
-            int cmd_updated = 0;
 
             if (rx_can_id == 0x100 && rx_length == 3) {
                 // Legacy Controller combined frame: [mode, throttle, steering]
@@ -607,32 +585,31 @@ void Communication_Thread_Entry(ULONG thread_input) {
             UINT sensors_occ = 0;
             ControlQueue_GetOccupancy(&control_occ);
             SensorsQueue_GetOccupancy(&sensors_occ);
-            snprintf(status_buf, sizeof(status_buf), "[COMM] Control drops=%u occ=%u, Sensors drops=%u occ=%u\r\n", ControlQueue_GetDrops(), control_occ, SensorsQueue_GetDrops(), sensors_occ);
+            snprintf(status_buf, sizeof(status_buf), "[COMM] Control drops=%u occ=%u, Sensors drops=%u occ=%u\r\n",
+                     ControlQueue_GetDrops(), control_occ, SensorsQueue_GetDrops(), sensors_occ);
             Debug_Print(status_buf);
         }
 
-        // Heartbeat: re-send last command if we haven't seen a command recently
+        /* Heartbeat: resend last command every HEARTBEAT_MS if nothing new */
         if (have_last_cmd) {
             uint32_t now = HAL_GetTick();
             if ((now - last_cmd_ts) > HEARTBEAT_MS) {
                 last_cmd.current_velocity = vehicle_speed;  // Update with current speed
                 if (ControlQueue_TrySend(&last_cmd)) {
-                    /* Log heartbeat at most once per resend (HEARTBEAT_MS) to avoid flooding */
                     Debug_Print("[COMM] Heartbeat: re-sent last command to Control queue\r\n");
                 } else {
                     Debug_Print("[COMM] Heartbeat: Control queue full on re-send\r\n");
                 }
-                last_cmd_ts = now; // update to avoid flooding
+                last_cmd_ts = now;
             }
         }
 
-        // Print detailed status every 5000 iterations (50 seconds at 10ms loop)
-        if (count % 5000 == 0) {
+        if ((loop_counter % DETAILED_STATUS_INTERVAL_LOOPS) == 0) {
             Debug_Print("\r\n=== CAN Status Report ===\r\n");
             MCP2515_PrintDetailedStatus();
         }
-        
-        count++;
-        tx_thread_sleep(1);  // 10ms - responsive control loop (100Hz)
+
+        loop_counter++;
+        tx_thread_sleep(COMM_LOOP_SLEEP_TICKS);
     }
 }

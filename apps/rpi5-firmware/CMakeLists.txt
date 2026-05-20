@@ -34,6 +34,7 @@ add_link_options(-fsanitize=address)
 
 include_directories(${SDK_PATH}/sysroots/aarch64-agl-linux/usr/include/opencv4/ .)
 
+add_subdirectory(${CMAKE_SOURCE_DIR}/../../libs/libkuksa ${CMAKE_BINARY_DIR}/libkuksa)
 add_subdirectory(mode_manager)
 add_subdirectory(middleware)
 add_subdirectory(actuator)
@@ -53,4 +54,4 @@ else()
 		add_subdirectory(tests)
 	endif()
 endif()
-
+ 

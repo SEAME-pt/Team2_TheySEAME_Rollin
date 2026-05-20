@@ -43,7 +43,7 @@ BO_ 513 BatteryMsg: 8 STM32
  SG_ StateOfCharge : 0|8@1+ (1,0) [0|100] "%" RASPI
 
 BO_ 256 ThrottleMsg: 8 RASPI
- SG_ throttle : 0|16@1+ (1,0) [0|100] "%" STM32
+ SG_ throttle : 0|16@1+ (0.1,0) [0|100] "%" STM32
 
 BO_ 258 AngleMsg: 8 RASPI
  SG_ angle : 0|16@1- (1,0) [-30|30] "deg" STM32
