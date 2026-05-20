@@ -93,10 +93,10 @@ int main() {
 	// Kuksa Thread
 	//std::thread vhState(&kuksaLib::subscribeFromKuksa, &kuksa);
 
-	while (run.load()) {
-		usleep(50000);
-		ctrl.test();
-	}
+	//while (run.load()) {
+	//	usleep(50000);
+	//	ctrl.test();
+	//}
 
 	//lkaThread.join();
 	remoteThread.join();
