@@ -35,7 +35,6 @@
 "./Core/Startup/startup_stm32u585aiixq.o"
 "./Drivers/BSP/B-U585I-IOT02A/b_u585i_iot02a.o"
 "./Drivers/BSP/B-U585I-IOT02A/b_u585i_iot02a_motion_sensors.o"
-"./Drivers/BSP/Components/iis2mdc/iis2mdc.o"
 "./Drivers/BSP/Components/iis2mdc/iis2mdc_reg.o"
 "./Drivers/BSP/Components/ism330dhcx/ism330dhcx.o"
 "./Drivers/BSP/Components/ism330dhcx/ism330dhcx_reg.o"

@@ -5,15 +5,12 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Drivers/BSP/Components/iis2mdc/iis2mdc.c \
 ../Drivers/BSP/Components/iis2mdc/iis2mdc_reg.c 
 
 OBJS += \
-./Drivers/BSP/Components/iis2mdc/iis2mdc.o \
 ./Drivers/BSP/Components/iis2mdc/iis2mdc_reg.o 
 
 C_DEPS += \
-./Drivers/BSP/Components/iis2mdc/iis2mdc.d \
 ./Drivers/BSP/Components/iis2mdc/iis2mdc_reg.d 
 
 
@@ -24,7 +21,7 @@ Drivers/BSP/Components/iis2mdc/%.o Drivers/BSP/Components/iis2mdc/%.su Drivers/B
 clean: clean-Drivers-2f-BSP-2f-Components-2f-iis2mdc
 
 clean-Drivers-2f-BSP-2f-Components-2f-iis2mdc:
-	-$(RM) ./Drivers/BSP/Components/iis2mdc/iis2mdc.cyclo ./Drivers/BSP/Components/iis2mdc/iis2mdc.d ./Drivers/BSP/Components/iis2mdc/iis2mdc.o ./Drivers/BSP/Components/iis2mdc/iis2mdc.su ./Drivers/BSP/Components/iis2mdc/iis2mdc_reg.cyclo ./Drivers/BSP/Components/iis2mdc/iis2mdc_reg.d ./Drivers/BSP/Components/iis2mdc/iis2mdc_reg.o ./Drivers/BSP/Components/iis2mdc/iis2mdc_reg.su
+	-$(RM) ./Drivers/BSP/Components/iis2mdc/iis2mdc_reg.cyclo ./Drivers/BSP/Components/iis2mdc/iis2mdc_reg.d ./Drivers/BSP/Components/iis2mdc/iis2mdc_reg.o ./Drivers/BSP/Components/iis2mdc/iis2mdc_reg.su
 
 .PHONY: clean-Drivers-2f-BSP-2f-Components-2f-iis2mdc
 
