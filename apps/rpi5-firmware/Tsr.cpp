@@ -43,7 +43,11 @@ TrafficSign mapModelClassToTrafficSign(uint16_t classId)
         case static_cast<uint16_t>(ModelTrafficSignClass::YIELD):
             return TrafficSign::YIELD;
         case static_cast<uint16_t>(ModelTrafficSignClass::TRAFFIC_LIGHT_GREEN):
+            return TrafficSign::TRAFFIC_LIGHT;
+        case static_cast<uint16_t>(ModelTrafficSignClass::TRAFFIC_LIGHT_OFF):
+            return TrafficSign::TRAFFIC_LIGHT;
         case static_cast<uint16_t>(ModelTrafficSignClass::TRAFFIC_LIGHT_RED):
+            return TrafficSign::TRAFFIC_LIGHT;
         case static_cast<uint16_t>(ModelTrafficSignClass::TRAFFIC_LIGHT_YELLOW):
             return TrafficSign::TRAFFIC_LIGHT;
         default:
