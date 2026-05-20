@@ -42,8 +42,8 @@ void send_cmd(bool brake, VehicleCommand_t cmd)
 }
 
 #define DT_SECONDS          0.02f
-#define TTC_THRESHOLD_MS    500.0f
-#define BRAKE_THRESHOLD_CM  30
+#define TTC_THRESHOLD_MS    350.0f
+#define BRAKE_THRESHOLD_CM  20
 #define CLEAR_DIST_CM       100
 
 static uint16_t dist_old     = 80;
@@ -60,6 +60,18 @@ void Automatic_Brake_Assist(uint16_t distance_cm)
     if (distance_cm > CLEAR_DIST_CM || distance_cm == 0) {
         dist_old = distance_cm;
         if (Vcmd.brake) send_cmd(false, Vcmd);
+        return;
+    }
+
+    if (Vcmd.gear == 2) {
+        if (Vcmd.brake) send_cmd(false, Vcmd);
+        dist_old = distance_cm;
+        return;
+    }
+
+    if (Vcmd.brake && distance_cm <= 15) {
+        send_cmd(true, Vcmd);
+        dist_old = distance_cm;
         return;
     }
 
@@ -91,11 +103,6 @@ void Automatic_Brake_Assist(uint16_t distance_cm)
         return;
     }
 
-    if (Vcmd.gear != 3) {
-        if (Vcmd.brake) send_cmd(false, Vcmd);
-        dist_old = distance_cm;
-        return;
-    }
 
     if (ttc_ms < TTC_THRESHOLD_MS || distance_cm <= BRAKE_THRESHOLD_CM) {
         snprintf(info_buf, sizeof(info_buf),
