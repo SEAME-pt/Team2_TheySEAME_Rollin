@@ -1,19 +1,19 @@
 /**
- * @file test_cruise_control.c
- * @brief Unit tests for cruise_control.c
+ * @file test_PID.c
+ * @brief Unit tests for PID.c
  *
  * Covers:  
  *   dsn~pid-output-clamping~1
  *   dsn~pid-anti-windup~1
  *
- * Build alongside cruise_control.c (with stubs below) and link Unity.
+ * Build alongside PID.c (with stubs below) and link Unity.
  */
 
 #include "unity.h"
-#include "../../Src/Control/cruise_control.h"
+#include "../../Src/Control/PID.h"
 #include <stdbool.h>
 #include "Sensors/sensors.h"
-TEST_SOURCE_FILE("../Src/Control/cruise_control.c")
+TEST_SOURCE_FILE("../Src/Control/PID.c")
 
 /* -----------------------------------------------------------------------
  * Minimal stubs – replace platform calls that are unavailable in host

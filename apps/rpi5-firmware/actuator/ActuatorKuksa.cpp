@@ -35,3 +35,7 @@ void ActuatorKuksa::setSpeedLimit(const int speedLimit) {
 	ActuatorDecorator::setSpeedLimit(speedLimit);
 	_kuksa.sendValueToKuksa("Vehicle.ADAS.TrafficSignRecognition.DetectedSpeedLimit", static_cast<float>(speedLimit));
 }
+void ActuatorKuksa::setAEb_Enabled(const bool autonomous) {
+	ActuatorDecorator::setAEb_Enabled(autonomous);
+	_kuksa.sendValueToKuksa("Vehicle.ADAS.AutomaticEmergencyBraking.Enabled", (bool)autonomous);
+}

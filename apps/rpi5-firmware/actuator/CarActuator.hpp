@@ -58,4 +58,5 @@ public:
 
 	virtual void setTrafficSign(const int trafficSign, const float distance) = 0;
 	virtual void setSpeedLimit(const int speedLimit) = 0;
+	virtual void setAEb_Enabled(const bool autonomous) = 0;
 };

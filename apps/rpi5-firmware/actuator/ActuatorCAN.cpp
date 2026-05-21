@@ -60,3 +60,9 @@ void ActuatorCAN::setSpeedLimit(const int speedLimit) {
 	data[0] = speedLimit;
 	_can.sendFrame(SPEED_LIMIT, data, sizeof(data));
 }
+void ActuatorCAN::setAEb_Enabled(const bool autonomous) {
+	uint8_t data[1];
+
+	data[0] = autonomous;
+	_can.sendFrame(AEB_ENABLED, data, sizeof(data));
+}

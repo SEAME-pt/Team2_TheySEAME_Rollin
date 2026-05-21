@@ -33,3 +33,6 @@ void ActuatorDecorator::setTrafficSign(const int trafficSign, const float distan
 void ActuatorDecorator::setSpeedLimit(const int speedLimit) {
 	_car->setSpeedLimit(speedLimit);
 }
+void ActuatorDecorator::setAEb_Enabled(bool autonomous) {
+	_car->setAEb_Enabled(autonomous);
+}

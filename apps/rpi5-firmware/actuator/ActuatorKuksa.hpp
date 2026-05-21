@@ -16,6 +16,7 @@ public:
 	virtual void setTrafficSign(const int trafficSign, const float distance);
 	virtual void setSpeedLimit(const int speedLimit);
 
+	virtual void setAEb_Enabled(const bool autonomous);
 private:
 
 	kuksaLib &_kuksa;

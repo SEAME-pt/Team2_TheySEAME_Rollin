@@ -55,6 +55,7 @@ TX_THREAD speed_thread;
 TX_THREAD sensors_proc_thread;
 TX_THREAD test_thread;
 TX_THREAD control_thread;
+TX_THREAD distance_thread;
 
 UCHAR sensors_proc_thread_stack[2048];
 UCHAR test_thread_stack[2048];
@@ -62,6 +63,7 @@ UCHAR speed_thread_stack[2048];
 UCHAR battery_thread_stack[2048];
 UCHAR communication_thread_stack[2048];
 UCHAR control_thread_stack[2048];
+UCHAR distance_thread_stack[2048];
 
 extern void Battery_Thread_Entry(ULONG thread_input);
 extern void Communication_Thread_Entry(ULONG thread_input);
@@ -69,7 +71,7 @@ extern void Control_Thread_Entry(ULONG thread_input);
 extern void Test_Thread_Entry(ULONG thread_input);
 extern void Speed_Thread_Entry(ULONG thread_input);
 extern void SensorsProcessor_Thread_Entry(ULONG thread_input);
-
+extern void Distance_Thread_Entry(ULONG thread_input);
 
 /* Global vehicle data and mutex */
 VehicleData_t g_vehicle_data;
@@ -79,7 +81,7 @@ TX_MUTEX g_vehicle_data_mutex;
 VehicleCommand_t g_vehicle_command;
 TX_MUTEX g_vehicle_command_mutex;
 /* USER CODE END PV */
-
+uint16_t g_aeb_brake = 0;
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
 
@@ -113,6 +115,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
     g_vehicle_command.cruise_control_target_speed = 0;
     g_vehicle_command.traffic_sign = 0;
     g_vehicle_command.traffic_sign_distance = 0.0f;
+    g_vehicle_command.aeb_enabled = 1;
     // Initialize global vehicle data structure
     g_vehicle_data.battery_voltage = 0;
     g_vehicle_data.battery_percentage = 0.0f;
@@ -120,6 +123,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
     g_vehicle_data.vehicle_speed = 0.0f;
     g_vehicle_data.data_valid = 0;
     g_vehicle_data.cruise_control_active = 0;
+    g_vehicle_data.distance = 0;
     // Create mutex for protecting global vehicle data
     UINT status = tx_mutex_create(&g_vehicle_data_mutex, "VehicleData Mutex", TX_NO_INHERIT);
     if (status != TX_SUCCESS) {
@@ -197,6 +201,13 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
       return TX_THREAD_ERROR;
   }
 
+  status = tx_thread_create(&distance_thread, "Distance Thread",
+                                  Distance_Thread_Entry, 0,
+                                  distance_thread_stack, sizeof(distance_thread_stack),
+                    10, 10, TX_NO_TIME_SLICE, TX_AUTO_START);
+  if (status != TX_SUCCESS) {
+      return TX_THREAD_ERROR;
+  }
   /* Register all threads with SEGGER SystemView for detailed profiling */
   sysview_register_thread(&battery_thread);
   sysview_register_thread(&communication_thread);
