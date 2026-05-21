@@ -69,7 +69,11 @@ int CAN::sendFrame(const canid_t id, const uint8_t *data, const uint8_t len) {
 
 	nbytes = write(_sock, &frame, sizeof(struct can_frame));
 	if (nbytes < 0) {
-		std::perror("Error in write");
+		if (errno == EWOULDBLOCK || errno == EAGAIN) {
+			std::cout << "Would Block" << std::endl;
+			return (0);
+		}
+		std::perror("CAN write");
 		return (-1);
 	}
 	return (0);
@@ -80,7 +84,11 @@ int CAN::readFrame(struct can_frame &frame) {
 
 	nbytes = read(_sock, &frame, sizeof(struct can_frame));
 	if (nbytes < 0) {
-		std::perror("Error in read");
+		if (errno == EWOULDBLOCK || errno == EAGAIN) {
+			std::cout << "Would Block" << std::endl;
+			return (0);
+		}
+		std::perror("CAN read");
 		return (-1);
 	}
 	return (0);
@@ -94,7 +102,7 @@ int CAN::openSocket() {
 		return (-1);
 	}
 	_up = true;
-	_sock = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+	_sock = socket(PF_CAN, SOCK_RAW | SOCK_NONBLOCK, CAN_RAW);
 	if (_sock < 0) {
 		return (-1);
 	}
