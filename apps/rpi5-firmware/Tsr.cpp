@@ -79,5 +79,5 @@ void Tsr::handleTrafficSign(const TsrHeader &tsrData)
         return;
     }
     std::cout << "Detected Traffic Sign Class ID: " << tsrData.trafficSign << ", Accuracy: " << tsrData.accuracy << std::endl;
-    _car->setTrafficSign(static_cast<int>(mapModelClassToTrafficSign(tsrData.trafficSign)));
+    _car->setTrafficSign(static_cast<int>(mapModelClassToTrafficSign(tsrData.trafficSign, )));
 }

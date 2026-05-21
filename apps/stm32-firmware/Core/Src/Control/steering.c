@@ -144,7 +144,7 @@ void Control_Thread_Entry(ULONG thread_input) {
     uint8_t last_throttle = 0xFF;
     int last_traffic_sign = -1;
     int8_t last_steering = 0x7F;
-    uint8_t last_aeb = 0xFF;
+    uint8_t last_aeb_enabled = 0xFF;
 
     const ULONG cmd_wait_ticks = 10; // 100ms wait for command before timeout handling
     ULONG no_cmd_ticks = 0;
