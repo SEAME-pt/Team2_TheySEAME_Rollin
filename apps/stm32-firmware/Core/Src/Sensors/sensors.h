@@ -41,6 +41,8 @@ typedef struct {
     uint8_t command_valid;      /**< Flag: 1 if command received, 0 otherwise */
     bool cruise_control_enabled; /**< Flag: 1 if cruise control is enabled, 0 otherwise */
     uint8_t cruise_control_target_speed; /**< Desired cruise control speed in hm/h (valid if cruise_control_enabled) */
+    int traffic_sign;            /**< Detected traffic sign type (e.g. 0=none, 1=stop, 2=speed limit, etc.) */
+    float traffic_sign_distance; /**< Distance to detected traffic sign in meters */
 } VehicleCommand_t;
 
 /**

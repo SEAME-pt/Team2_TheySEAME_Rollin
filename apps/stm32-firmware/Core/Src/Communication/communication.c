@@ -50,6 +50,7 @@ enum CAN_IDs {
     CAN_ID_TX_SPEED            = 0x200,
     CAN_ID_TX_BATTERY          = 0x201,
     CAN_ID_CRUISE_CONTROL      = 0x212,
+    CAN_ID_TSR                 = 0x226,
 };
 
 static const uint32_t HEARTBEAT_MS = 1000; /* resend every 1s if no command seen */
@@ -279,6 +280,23 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
                 }
                 snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Cruise Control: %s, Target=%u hm/h\r\n",
                          enabled ? "ENABLED" : "DISABLED", target_speed);
+                Debug_Print(comm_uart_buf);
+                updated = 1;
+            }
+            break;
+        case CAN_ID_TSR:
+            if (dlc >= 5) {
+                int sign_type = data[0];
+                uint32_t distance_raw = (uint32_t)data[1] | ((uint32_t)data[2] << 8) | ((uint32_t)data[3] << 16) | ((uint32_t)data[4] << 24);
+                float distance;
+                memcpy(&distance, &distance_raw, sizeof(float));
+                if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                    g_vehicle_command.traffic_sign = sign_type;
+                    g_vehicle_command.traffic_sign_distance = distance;
+                    g_vehicle_command.command_valid = 1;
+                    tx_mutex_put(&g_vehicle_command_mutex);
+                }
+                snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] TSR: Sign=%d Distance=%.2f m\r\n", sign_type, distance);
                 Debug_Print(comm_uart_buf);
                 updated = 1;
             }

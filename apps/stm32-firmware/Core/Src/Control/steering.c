@@ -9,6 +9,32 @@
 extern I2C_HandleTypeDef hi2c1;
 char control_uart_buf[128];
 
+typedef enum {
+    TRAFFIC_SIGN_UNKNOWN = 0,
+    TRAFFIC_SIGN_STOP = 1,
+    TRAFFIC_SIGN_SPEED_LIMIT_30 = 2,
+    TRAFFIC_SIGN_SPEED_LIMIT_50 = 3,
+    TRAFFIC_SIGN_SPEED_LIMIT_100 = 4,
+    TRAFFIC_SIGN_SPEED_LIMIT_80 = 5,
+    TRAFFIC_SIGN_SPEED_LIMIT_120 = 6,
+    TRAFFIC_SIGN_YIELD = 7,
+    TRAFFIC_SIGN_NO_ENTRY = 8,
+    TRAFFIC_SIGN_TURN_LEFT = 9,
+    TRAFFIC_SIGN_TURN_RIGHT = 10,
+    TRAFFIC_SIGN_PEDESTRIAN = 11,
+    TRAFFIC_SIGN_TRAFFIC_LIGHT = 12,
+    TRAFFIC_SIGN_ONE_WAY = 13,
+    TRAFFIC_SIGN_NO_PARKING = 14,
+    TRAFFIC_SIGN_NO_OVERTAKING = 15
+} TrafficSignType;
+
+static uint8_t Control_ApplyTrafficSignThrottle(uint8_t throttle_percent, int traffic_sign) {
+    if (traffic_sign == TRAFFIC_SIGN_SPEED_LIMIT_50) {
+        return (uint8_t)(((uint16_t)throttle_percent * 75U) / 100U);
+    }
+    return throttle_percent;
+}
+
 /* Helper: safely snapshot global vehicle data with mutex protection */
 static int snapshot_vehicle_data(VehicleData_t *out) {
     if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
@@ -111,6 +137,7 @@ void Control_Thread_Entry(ULONG thread_input) {
     uint8_t last_brake = 0xFF;
     uint8_t last_gear = 0xFF;
     uint8_t last_throttle = 0xFF;
+    int last_traffic_sign = -1;
     int8_t last_steering = 0x7F;
 
     const ULONG cmd_wait_ticks = 10; // 100ms wait for command before timeout handling
@@ -192,13 +219,22 @@ void Control_Thread_Entry(ULONG thread_input) {
                     local_cmd.gear != last_gear ||
                     local_cmd.throttle != last_throttle || 
                     local_cmd.steering_angle != last_steering ||
-                    local_cmd.brake != last_brake) {
+                    local_cmd.brake != last_brake ||
+                    local_cmd.traffic_sign != last_traffic_sign) {
 
                     // Convert steering to normalized float
                     float steering_normalized = (float)local_cmd.steering_angle / 100.0f;
+                    uint8_t applied_throttle = Control_ApplyTrafficSignThrottle(local_cmd.throttle,
+                                                                               local_cmd.traffic_sign);
 
                     Control_SetSteering(steering_normalized);
-                    Control_SetThrottle(local_cmd.throttle, local_cmd.gear, local_cmd.brake);
+                    Control_SetThrottle(applied_throttle, local_cmd.gear, local_cmd.brake);
+
+                    snprintf(control_uart_buf, sizeof(control_uart_buf),
+                             "[CONTROL] Sign=%d Throttle=%u%% -> %u%%\r\n",
+                             local_cmd.traffic_sign,
+                             applied_throttle);
+                    Debug_Print(control_uart_buf);
 
                     // Print status
                     const char* gear_names[] = {"P", "N", "R", "D"};
@@ -215,6 +251,7 @@ void Control_Thread_Entry(ULONG thread_input) {
                     last_mode = local_cmd.driving_mode;
                     last_gear = local_cmd.gear;
                     last_throttle = local_cmd.throttle;
+                    last_traffic_sign = local_cmd.traffic_sign;
                     last_steering = local_cmd.steering_angle;
                     last_brake = local_cmd.brake;
                 }
