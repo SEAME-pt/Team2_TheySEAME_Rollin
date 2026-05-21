@@ -26,8 +26,8 @@ void ActuatorDecorator::setCruiseControl(const bool flag, const int targetSpeed)
 	_car->setCruiseControl(flag, targetSpeed);
 }
 
-void ActuatorDecorator::setTrafficSign(const int trafficSign) {
-	_car->setTrafficSign(trafficSign);
+void ActuatorDecorator::setTrafficSign(const int trafficSign, const float distance) {
+	_car->setTrafficSign(trafficSign, distance);
 }
 
 void ActuatorDecorator::setSpeedLimit(const int speedLimit) {

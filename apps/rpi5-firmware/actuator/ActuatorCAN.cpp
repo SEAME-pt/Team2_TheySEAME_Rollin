@@ -46,10 +46,11 @@ void ActuatorCAN::setCruiseControl(const bool flag, const int targetSpeed) {
 	_can.sendFrame(CRUISE_CONTROL, data, sizeof(data));
 }
 
-void ActuatorCAN::setTrafficSign(const int trafficSign) {
-	uint8_t data[1];
+void ActuatorCAN::setTrafficSign(const int trafficSign, const float distance) {
+	uint8_t data[2];
 
 	data[0] = trafficSign;
+	data[1] = static_cast<uint8_t>(distance);
 	_can.sendFrame(TRAFFIC_SIGN, data, sizeof(data));
 }
 
