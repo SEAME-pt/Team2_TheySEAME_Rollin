@@ -17,9 +17,9 @@ CAM_HEIGHT = 640
 CAM_WIDTH = 640
 MODEL_HEIGHT = 640
 MODEL_WIDTH = 640
-PRINT_OUTPUT_TENSORS_ONCE = True
+MODEL_NAME = "yolov8s_seg"
 LANE_CLASS_ID = 0
-LANE_CONFIDENCE_THRESHOLD = 0.6
+LANE_CONFIDENCE_THRESHOLD = 0.57
 MODEL_FAMILY = "yolov8"
 DISPLAY_MASK_ONLY = False
 DEBUG_LANE_MASK = False
@@ -103,17 +103,11 @@ if __name__ == '__main__':
 			if not pipe_available:
 				print(f"Warning: Named pipe not available at {args.named_pipe}", file=sys.stderr if stream_masks else sys.stdout)
 
-		infer_engine = Inference(camera, "/root/perception/lanes/trained_models/yolov8n_seg_2c_100e_16.hef")
-		post_processor = PostProcessor(input_size=(MODEL_HEIGHT, MODEL_WIDTH), strides=(8, 16, 32))
+		infer_engine = Inference(camera, "/root/trained_models/yolov8s_40e.hef")
+		post_processor = PostProcessor(input_size=(MODEL_HEIGHT, MODEL_WIDTH), strides=(8, 16, 32), model_name=MODEL_NAME)
 		sent_one_frame = False
 		for frame, infer_results in infer_engine.run_inference():
 			frame_index += 1
-			if PRINT_OUTPUT_TENSORS_ONCE and not printed_tensor_info:
-				print("=== Model output tensors ===", file=sys.stderr if stream_masks else sys.stdout)
-				for out_name, out_tensor in infer_results.items():
-					print(f"{out_name}: shape={out_tensor.shape}, dtype={out_tensor.dtype}", file=sys.stderr if stream_masks else sys.stdout)
-				print("============================", file=sys.stderr if stream_masks else sys.stdout)
-				printed_tensor_info = True
 			lane_result = post_processor.decode(
 				infer_results,
 				quant_params=infer_engine.get_quant_params(),
@@ -124,29 +118,43 @@ if __name__ == '__main__':
 			masks = lane_result.get("masks", None)
 			scores = lane_result.get("scores", None)
 			scales = lane_result.get("scales", None)
+			classes = lane_result.get("classes", None)
 
 			if masks is None:
 				lane_mask = None
 			else:
-				# If decoder returned a list of masks, stack/merge them into a single 2D mask.
-				if isinstance(masks, list):
-					if len(masks) == 0:
-						lane_mask = None
-					else:
-						try:
-							lane_mask = np.any(np.stack(masks, axis=0), axis=0).astype(np.uint8)
-						except Exception:
-							# Fallback: use the first mask element
-							lane_mask = np.asarray(masks[0])
+				if classes is not None and len(masks) > 0:
+					lane_indices = np.where(np.asarray(classes) == LANE_CLASS_ID)[0]
 				else:
-					lane_mask = np.asarray(masks)
+					lane_indices = np.arange(len(masks)) if isinstance(masks, list) else np.array([0])
+
+				if lane_indices.size == 0:
+					lane_mask = None
+				else:
+					selected_masks = []
+					for index in lane_indices:
+						try:
+							selected_masks.append(np.asarray(masks[index]))
+						except Exception:
+							continue
+
+					if len(selected_masks) == 0:
+						lane_mask = None
+					elif len(selected_masks) == 1:
+						lane_mask = selected_masks[0]
+					else:
+						lane_mask = np.any(np.stack(selected_masks, axis=0), axis=0).astype(np.uint8)
 
 			# Pick first score/scale if arrays are returned, else default values
 			if scores is None or (hasattr(scores, "size") and scores.size == 0):
 				lane_score = 0.0
 			else:
 				try:
-					lane_score = float(scores[0])
+					if classes is not None and len(scores) > 0:
+						lane_scores = np.asarray(scores)[np.asarray(classes) == LANE_CLASS_ID]
+						lane_score = float(np.max(lane_scores)) if lane_scores.size > 0 else float(scores[0])
+					else:
+						lane_score = float(scores[0])
 				except Exception:
 					lane_score = float(scores)
 
@@ -190,7 +198,7 @@ if __name__ == '__main__':
 			if lane_mask is not None:
 				points = polyfit_lines(lane_mask)
 				if points.size > 0:
-					cv2.polylines(frame, [points], isClosed=False, color=(255, 0, 0), thickness=5)
+				#	cv2.polylines(frame, [points], isClosed=False, color=(255, 0, 0), thickness=5)
 					cv2.putText(
 						frame,
 						f"Lane Detected {lane_score:.2f}",
@@ -212,7 +220,6 @@ if __name__ == '__main__':
 					)
 			else:
 				cv2.putText(frame, "No Lane", (0, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-			cv2.putText(frame, "Inference Active", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
 			if DISPLAY_MASK_ONLY:
 				ok = post_processor.write_segmentation_mask_to_display(
