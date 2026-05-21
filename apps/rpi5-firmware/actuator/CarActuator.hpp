@@ -55,4 +55,6 @@ public:
 	virtual void brake(const bool flag) = 0;
 
 	virtual void setCruiseControl(const bool flag, const int targetSpeed) = 0;
+
+	virtual void setAEb_Enabled(const bool autonomous) = 0;
 };

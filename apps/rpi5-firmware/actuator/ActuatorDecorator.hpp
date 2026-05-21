@@ -13,7 +13,7 @@ public:
 	virtual void setGear(const short gear);
 	virtual void brake(const bool brake);
 	virtual void setCruiseControl(const bool flag, const int targetSpeed);
-
+	virtual void setAEb_Enabled(const bool autonomous);
 private:
 
 	CarActuator *_car;

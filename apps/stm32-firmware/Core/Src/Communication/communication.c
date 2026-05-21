@@ -51,6 +51,7 @@ enum CAN_IDs {
     CAN_ID_TX_SPEED            = 0x200,
     CAN_ID_TX_BATTERY          = 0x201,
     CAN_ID_CRUISE_CONTROL      = 0x212,
+    CAN_ID_AEB_CMD             = 0x20D,
 };
 
 static const uint32_t HEARTBEAT_MS = 1000; /* resend every 1s if no command seen */
@@ -283,6 +284,20 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
                 updated = 1;
             }
             break;
+        case CAN_ID_AEB_CMD: /* Automatic Emergency Braking: byte0=enabled(0/1) */
+            if (dlc >= 1) {
+                uint8_t enabled = data[0] > 0 ? 1 : 0;
+               if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                    g_vehicle_command.aeb_enabled = enabled;
+                    g_vehicle_command.command_valid = 1;
+                    tx_mutex_put(&g_vehicle_command_mutex);
+                }
+                snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] Automatic Emergency Braking: %s\r\n",
+                         enabled ? "ENABLED" : "DISABLED");
+                Debug_Print(comm_uart_buf);
+                updated = 1;
+            }
+            break;
         default:
             /* Unknown CAN ID - ignore */
             break;
@@ -350,7 +365,17 @@ void Communication_Thread_Entry(ULONG thread_input) {
     uint32_t loop_counter = 0;
     VehicleData_t snapshot = {0};
 
-    VehicleCommand_t last_cmd = { .driving_mode = 0, .throttle = 0, .steering_angle = 0, .command_valid = 1 };
+    VehicleCommand_t last_cmd = {
+        .driving_mode = 0,
+        .gear = 3,
+        .throttle = 0,
+        .brake = false,
+        .steering_angle = 0,
+        .command_valid = 1,
+        .cruise_control_enabled = false,
+        .cruise_control_target_speed = 0,
+        .aeb_enabled = true
+    };
     uint32_t last_cmd_ts = HAL_GetTick();
     int have_last_cmd = 1;
 

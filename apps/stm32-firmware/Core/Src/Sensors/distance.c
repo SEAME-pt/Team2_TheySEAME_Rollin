@@ -24,7 +24,7 @@ void snapshot_vehicle_data(VehicleData_t *out) {
     }
 }
 
-void send_cmd(bool brake, VehicleCommand_t cmd)
+void send_cmd(bool brake)
 {
     VehicleCommand_t local_cmd;
     if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
@@ -57,23 +57,30 @@ void Automatic_Brake_Assist(uint16_t distance_cm)
     snapshot_vehicle_command(&Vcmd);
     snapshot_vehicle_data(&recvs);
 
+    if (Vcmd.aeb_enabled == false) {
+         if (Vcmd.brake) send_cmd(false);
+         dist_old = distance_cm;
+         return;
+    }    
+    
+    if (Vcmd.brake && distance_cm <= BRAKE_THRESHOLD_CM && distance_cm > 0 && Vcmd.gear != 2) {
+        send_cmd(true);
+        dist_old = distance_cm;
+        return;
+    }
+
     if (distance_cm > CLEAR_DIST_CM || distance_cm == 0) {
         dist_old = distance_cm;
-        if (Vcmd.brake) send_cmd(false, Vcmd);
+        if (Vcmd.brake) send_cmd(false);
         return;
     }
 
     if (Vcmd.gear == 2) {
-        if (Vcmd.brake) send_cmd(false, Vcmd);
+        if (Vcmd.brake) send_cmd(false);
         dist_old = distance_cm;
         return;
     }
 
-    if (Vcmd.brake && distance_cm <= 15) {
-        send_cmd(true, Vcmd);
-        dist_old = distance_cm;
-        return;
-    }
 
     float current_speed = recvs.vehicle_speed;
     float current_speed_cms = current_speed * 100.0f;
@@ -91,26 +98,17 @@ void Automatic_Brake_Assist(uint16_t distance_cm)
     else
         ttc_ms = 9999.0f;
 
-    char info_buf[96];
-    snprintf(info_buf, sizeof(info_buf),
-        "[ABA] Dist=%dcm Vel=%.1fcm/s TTC=%.0fms Speed=%.2fm/s\r\n",
-        distance_cm, velocity_cms, ttc_ms, current_speed);
-    // Debug_Print(info_buf);
-
     if (current_speed <= 0.1f) {
-        if (Vcmd.brake) send_cmd(false, Vcmd);
+        if (Vcmd.brake) send_cmd(false);
         dist_old = distance_cm;
         return;
     }
 
 
     if (ttc_ms < TTC_THRESHOLD_MS || distance_cm <= BRAKE_THRESHOLD_CM) {
-        snprintf(info_buf, sizeof(info_buf),
-            "[ABA] BRAKE | TTC=%.0fms Dist=%dcm\r\n", ttc_ms, distance_cm);
-        // Debug_Print(info_buf);
-        send_cmd(true, Vcmd);
+        send_cmd(true);
     } else {
-        if (Vcmd.brake) send_cmd(false, Vcmd);
+        if (Vcmd.brake) send_cmd(false);
     }
 
     dist_old = distance_cm;
@@ -155,7 +153,7 @@ void Distance_Thread_Entry(ULONG thread_input)
             distance = (buffer[2] << 8) | buffer[3];
 
             snprintf(msg, sizeof(msg), "[DIST] %d cm | [LIGHT] %d\r\n", distance, light);
-            Debug_Print(msg);
+            // Debug_Print(msg);
 
             Automatic_Brake_Assist(distance);
         }

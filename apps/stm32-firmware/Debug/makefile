@@ -15,6 +15,7 @@ RM := rm -rf
 -include Middlewares/SEGGER/RTT/subdir.mk
 -include Middlewares/SEGGER/Config/subdir.mk
 -include Drivers/STM32U5xx_HAL_Driver/Src/subdir.mk
+-include Drivers/BSP/Components/iis2mdc/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/utils/subdir.mk
 -include Core/Src/Sensors/subdir.mk
