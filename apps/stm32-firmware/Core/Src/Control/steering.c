@@ -3,10 +3,22 @@
 #include "../Sensors/sensors.h"
 #include "control_queue.h"
 #include "../Sensors/sensors_queue.h"
+#include "PID.h"
 #include <stdio.h>
 
 extern I2C_HandleTypeDef hi2c1;
 char control_uart_buf[128];
+
+/* Helper: safely snapshot global vehicle data with mutex protection */
+static int snapshot_vehicle_data(VehicleData_t *out) {
+    if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+        *out = g_vehicle_data;
+        tx_mutex_put(&g_vehicle_data_mutex);
+        return 1;  // Success
+    }
+    Debug_Print("[COMM] Failed to acquire vehicle data mutex\r\n");
+    return 0;  // Failure
+}
 
 void PCA9685_SetServoAngle(uint8_t channel, float angle) {
     // Implementation note: API documented in `control.h` (Doxygen comments live in header)
@@ -26,12 +38,12 @@ void PCA9685_SetServoAngle(uint8_t channel, float angle) {
 }
 
 void Control_SetSteering(float steering_normalized) {
-    // Convert normalized steering (-1.0 to +1.0) to servo angle (-30 to +30 degrees)
-    float angle = steering_normalized * 30.0f;
+    float angle = steering_normalized;
     PCA9685_SetServoAngle(0, angle);  // Channel 0 for steering servo
 }
 
-void Control_SetThrottle(uint8_t throttle_percent, uint8_t gear) {
+void Control_SetThrottle(uint8_t throttle_percent, uint8_t gear, bool brake) {
+    
     // Clamp throttle to 0-100%
     if (throttle_percent > 100) throttle_percent = 100;
     
@@ -46,14 +58,16 @@ void Control_SetThrottle(uint8_t throttle_percent, uint8_t gear) {
         dir_high = dir_low;
         dir_low = temp;
     }
-    
+    if (brake) {
+        speed_pwm = 0;
+    }
     if (throttle_percent > 0 && gear != 0 && gear != 1) { // Don't move if P or N
         // Motor 1 (channels 0,1,2,3)
         PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 0, 0, speed_pwm);  // M1 speed
         PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 1, 0, dir_high);   // M1 DIR1
         PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 2, 0, dir_low);    // M1 DIR2
         PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 3, 0, 0);          // Unused
-        
+
         // Motor 2 (channels 4,5,6,7)
         PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 4, 0, speed_pwm);  // M2 speed
         PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 5, 0, dir_low);    // M2 DIR2
@@ -91,7 +105,9 @@ void Control_Thread_Entry(ULONG thread_input) {
     tx_thread_sleep(100);  // 1 second
     
     VehicleCommand_t local_cmd;
+    memset(&local_cmd, 0, sizeof(local_cmd));
     uint8_t last_mode = 0xFF;
+    uint8_t last_brake = 0xFF;
     uint8_t last_gear = 0xFF;
     uint8_t last_throttle = 0xFF;
     int8_t last_steering = 0x7F;
@@ -99,6 +115,8 @@ void Control_Thread_Entry(ULONG thread_input) {
     const ULONG cmd_wait_ticks = 10; // 100ms wait for command before timeout handling
     ULONG no_cmd_ticks = 0;
     const ULONG no_cmd_threshold = 10; // 10 * 100ms = 1s without command -> stop motors
+    const float tx_tick_s = 1.0f / (float)TX_TIMER_TICKS_PER_SECOND;
+    ULONG last_cc_tick = 0;
 
     /* Rate limit safety prints so operator can read them (ms) */
     const uint32_t SAFETY_PRINT_MS = 5000; // 5 seconds
@@ -106,7 +124,43 @@ void Control_Thread_Entry(ULONG thread_input) {
 
     while(1) {
         VehicleCommand_t recv;
+        VehicleData_t recvs;
         UINT r = ControlQueue_Receive(&recv, cmd_wait_ticks);
+        float current_speed = 0.0f;
+        bool active_cruise_control = false;
+        ULONG now_cc_tick = tx_time_get();
+        ULONG dt_ticks = (last_cc_tick == 0U) ? cmd_wait_ticks : (now_cc_tick - last_cc_tick);
+        float cc_dt = (float)dt_ticks * tx_tick_s;
+        last_cc_tick = now_cc_tick;
+        if (snapshot_vehicle_data(&recvs))
+            current_speed = recvs.vehicle_speed;
+        if (r == TX_SUCCESS) {
+            local_cmd = recv;
+
+            // Update global copy for diagnostics/backwards compatibility
+            if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                g_vehicle_command = recv;
+                tx_mutex_put(&g_vehicle_command_mutex);
+            }
+        }
+
+        if (local_cmd.cruise_control_enabled == true && local_cmd.brake == false) {
+            active_cruise_control = cruise_control(local_cmd.cruise_control_target_speed,
+                                                   current_speed,
+                                                   local_cmd.cruise_control_enabled,
+                                                   cc_dt);
+            if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                g_vehicle_data.cruise_control_active = active_cruise_control;
+                tx_mutex_put(&g_vehicle_data_mutex);
+            }
+        }
+        else {
+            if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                g_vehicle_data.cruise_control_active = false;
+                tx_mutex_put(&g_vehicle_data_mutex);
+            }
+        }
+        // steer_control(0, recvs.lane_pos, cc_dt);
         if (r == TX_SUCCESS) {
             // Got a command - reset timeout counter
             no_cmd_ticks = 0;
@@ -136,31 +190,32 @@ void Control_Thread_Entry(ULONG thread_input) {
                 if (local_cmd.driving_mode != last_mode || 
                     local_cmd.gear != last_gear ||
                     local_cmd.throttle != last_throttle || 
-                    local_cmd.steering_angle != last_steering) {
+                    local_cmd.steering_angle != last_steering ||
+                    local_cmd.brake != last_brake) {
 
                     // Convert steering to normalized float
-                    float steering_normalized = (float)local_cmd.steering_angle / 100.0f;
+                    float steering_normalized = (float)local_cmd.steering_angle;
 
-                    // Apply commands
                     Control_SetSteering(steering_normalized);
-                    Control_SetThrottle(local_cmd.throttle, local_cmd.gear);
+                    Control_SetThrottle(local_cmd.throttle, local_cmd.gear, local_cmd.brake);
 
                     // Print status
                     const char* gear_names[] = {"P", "N", "R", "D"};
                     int steering_int = (int)(steering_normalized * 1000);
-                    snprintf(control_uart_buf, sizeof(control_uart_buf),
-                            "[CONTROL] Mode=%d Gear=%s | Throttle=%d%% | Steering=%d.%03d\r\n",
-                            local_cmd.driving_mode, 
-                            local_cmd.gear <= 3 ? gear_names[local_cmd.gear] : "?",
-                            local_cmd.throttle, 
-                            steering_int/1000, abs(steering_int%1000));
-                    Debug_Print(control_uart_buf);
+                    // snprintf(control_uart_buf, sizeof(control_uart_buf),
+                    //         "[CONTROL] Mode=%d Gear=%s | Throttle=%d%% | Steering=%d.%03d\r\n",
+                    //         local_cmd.driving_mode, 
+                    //         local_cmd.gear <= 3 ? gear_names[local_cmd.gear] : "?",
+                    //         local_cmd.throttle, 
+                    //         steering_int/1000, abs(steering_int%1000));
+                    // Debug_Print(control_uart_buf);
 
                     // Update last values
                     last_mode = local_cmd.driving_mode;
                     last_gear = local_cmd.gear;
                     last_throttle = local_cmd.throttle;
                     last_steering = local_cmd.steering_angle;
+                    last_brake = local_cmd.brake;
                 }
             }
         } else {
