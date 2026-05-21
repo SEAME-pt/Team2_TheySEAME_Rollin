@@ -24,6 +24,8 @@ MODEL_FAMILY = "yolov8"
 DISPLAY_MASK_ONLY = False
 DEBUG_LANE_MASK = False
 DEBUG_EVERY_N_FRAMES = 10
+IOU_THRESHOLD = 0.5
+MASK_SMOOTHING_ALPHA = 0.7
 
 
 def polyfit_lines(tensor):
@@ -48,6 +50,20 @@ def polyfit_lines(tensor):
 
 	points = np.column_stack((x_values, y_values)).astype(np.int32)
 	return points.reshape(-1, 1, 2)
+
+
+def smooth_lane_mask(previous_mask, current_mask, alpha=MASK_SMOOTHING_ALPHA):
+	if current_mask is None:
+		if previous_mask is None:
+			return None
+		current_mask = np.zeros_like(previous_mask, dtype=np.float32)
+	else:
+		current_mask = np.asarray(current_mask, dtype=np.float32)
+
+	if previous_mask is None or previous_mask.shape != current_mask.shape:
+		return current_mask
+
+	return alpha * current_mask + (1.0 - alpha) * previous_mask
 
 def _parse_args():
 	parser = argparse.ArgumentParser(description="Run AI pipeline with either Pi camera or CARLA camera")
@@ -82,6 +98,7 @@ if __name__ == '__main__':
 	printed_tensor_info = False
 	frame_index = 0
 	stream_masks = getattr(args, "stream_masks", False)
+	smoothed_lane_mask = None
 	try:
 		if args.use_carla_camera:
 			camera = CARLACamera(
@@ -112,9 +129,10 @@ if __name__ == '__main__':
 				infer_results,
 				quant_params=infer_engine.get_quant_params(),
 				conf_th=LANE_CONFIDENCE_THRESHOLD,
-				iou_th=0.5,
+				iou_th=IOU_THRESHOLD,
 			)
 			# Normalize decoder outputs: `masks` may be a list of 2D arrays.
+			boxes = lane_result.get("boxes", None)
 			masks = lane_result.get("masks", None)
 			scores = lane_result.get("scores", None)
 			scales = lane_result.get("scales", None)
@@ -144,6 +162,12 @@ if __name__ == '__main__':
 						lane_mask = selected_masks[0]
 					else:
 						lane_mask = np.any(np.stack(selected_masks, axis=0), axis=0).astype(np.uint8)
+
+			smoothed_lane_mask = smooth_lane_mask(smoothed_lane_mask, lane_mask)
+			if smoothed_lane_mask is not None:
+				lane_mask = (np.asarray(smoothed_lane_mask) >= 0.5).astype(np.uint8)
+			else:
+				lane_mask = None
 
 			# Pick first score/scale if arrays are returned, else default values
 			if scores is None or (hasattr(scores, "size") and scores.size == 0):
@@ -220,6 +244,44 @@ if __name__ == '__main__':
 					)
 			else:
 				cv2.putText(frame, "No Lane", (0, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+
+			if boxes is not None and len(boxes) > 0:
+				if classes is not None and len(classes) == len(boxes):
+					lane_box_indices = np.where(np.asarray(classes) == LANE_CLASS_ID)[0]
+				else:
+					lane_box_indices = np.arange(len(boxes))
+
+				for index in lane_box_indices:
+					try:
+						x1, y1, x2, y2 = np.asarray(boxes[index]).astype(int)
+					except Exception:
+						continue
+
+					x1 = max(0, min(x1, frame.shape[1] - 1))
+					y1 = max(0, min(y1, frame.shape[0] - 1))
+					x2 = max(0, min(x2, frame.shape[1] - 1))
+					y2 = max(0, min(y2, frame.shape[0] - 1))
+
+					if x2 <= x1 or y2 <= y1:
+						continue
+
+					score_text = "n/a"
+					if scores is not None and len(scores) > index:
+						try:
+							score_text = f"{float(np.asarray(scores)[index]):.2f}"
+						except Exception:
+							score_text = "n/a"
+
+					cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+					cv2.putText(
+						frame,
+						f"Lane {score_text}",
+						(x1, max(0, y1 - 8)),
+						cv2.FONT_HERSHEY_SIMPLEX,
+						0.6,
+						(0, 255, 0),
+						2,
+					)
 
 			if DISPLAY_MASK_ONLY:
 				ok = post_processor.write_segmentation_mask_to_display(
