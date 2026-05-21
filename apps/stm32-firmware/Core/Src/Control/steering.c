@@ -227,7 +227,7 @@ void Control_Thread_Entry(ULONG thread_input) {
                     local_cmd.aeb_enabled != last_aeb_enabled) {
 
                     // Convert steering to normalized float
-                    float steering_normalized = (float)local_cmd.steering_angle / 100.0f;
+                    float steering_normalized = (float)local_cmd.steering_angle;
                     uint8_t applied_throttle = Control_ApplyTrafficSignThrottle(local_cmd.throttle,
                                                                                local_cmd.traffic_sign);
 
@@ -237,6 +237,7 @@ void Control_Thread_Entry(ULONG thread_input) {
                     snprintf(control_uart_buf, sizeof(control_uart_buf),
                              "[CONTROL] Sign=%d Throttle=%u%% -> %u%%\r\n",
                              local_cmd.traffic_sign,
+                             local_cmd.throttle,
                              applied_throttle);
                     Debug_Print(control_uart_buf);
 

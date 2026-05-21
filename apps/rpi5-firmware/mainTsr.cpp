@@ -9,8 +9,7 @@
 int frameCount = 0;
 void *header = malloc(sizeof(struct TsrHeader));
 
-
-void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCount)
+void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCount, Tsr &tsr)
 {
     TsrHeader raw;
     TsrHeader headerBE;
@@ -45,21 +44,23 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
     detections.push_back(decode(raw));
     
     
+    TsrHeader decoded;
     for (int i = 1; i < numDetections; i++) {
         if (fread(&raw, sizeof(TsrHeader), 1, pipe) != 1) {
             std::cout << "Failed to read detection " << i << std::endl;
             return;
         }
-        detections.push_back(decode(raw));
-        // std::cout << "header: frameNbr=" << detections.back().frameNbr
-        //           << " numDetections=" << detections.back().numDetections
-        //           << " trafficSign=" << detections.back().trafficSign
-        //           << " accuracy=" << detections.back().accuracy
-        //           << " x=" << detections.back().x
-        //           << " y=" << detections.back().y
-        //           << " width=" << detections.back().width
-        //           << " height=" << detections.back().height
-        //           << std::endl;
+        decoded = decode(raw);
+        detections.push_back(decoded);
+        std::cout << "header: frameNbr=" << detections.back().frameNbr
+                  << " numDetections=" << detections.back().numDetections
+                  << " trafficSign=" << detections.back().trafficSign
+                  << " accuracy=" << detections.back().accuracy
+                  << " x=" << detections.back().x
+                  << " y=" << detections.back().y
+                  << " width=" << detections.back().width
+                  << " height=" << detections.back().height
+                  << std::endl;
     }
 
     frameCount++;
@@ -70,6 +71,7 @@ int main() {
     kuksaLib kuksa;
     CarActuator *car = new ActuatorKuksa(new ActuatorCAN(can), kuksa);
     Tsr tsr(car);
+    tsr.applyScaleCalibration(44.0f, 49.0f);
     FILE *pipe = fopen("NamedPipeTsr", "r");
     if (pipe == NULL) {
         std::cout << "Failed to open NamedPipeTsr" << std::endl;
@@ -79,10 +81,10 @@ int main() {
     std::cout << "NamedPipeTsr opened successfully" << std::endl;
 
     while (true) {
-        std::vector<TsrHeader> detections;
-        readFromPipe(pipe, detections, frameCount);
+        std::vector<TsrHeader> detections;  
+        readFromPipe(pipe, detections, frameCount, tsr);
 
-        std::cout << "Detections in frame: " << detections.size() << std::endl;
+        // std::cout << "Detections in frame: " << detections.size() << std::endl;
 
         if (feof(pipe)) {
             std::cout << "Pipe EOF" << std::endl;
@@ -90,7 +92,7 @@ int main() {
         }
 
         for (auto &d : detections) {
-            std::cout << "Dispatching trafficSign=" << d.trafficSign << std::endl;
+            // std::cout << "Dispatching trafficSign=" << d.trafficSign << std::endl;
             tsr.handleTrafficSign(d);
         }
 

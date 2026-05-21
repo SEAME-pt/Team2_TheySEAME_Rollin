@@ -1,4 +1,5 @@
 #include "Tsr.hpp"
+#include <iostream>
 
 namespace {
 
@@ -61,6 +62,10 @@ Tsr::Tsr(CarActuator *car) : _car(car)
 {
 }
 
+// Valores iniciais para FX/FY (podem ser recalibrados em tempo de execução)
+float FX_PX = 606.34f; // CAM_STANDARD default
+float FY_PX = 1081.08f; // CAM_STANDARD default
+
 Tsr::~Tsr()
 {
 }
@@ -72,12 +77,84 @@ const TsrHeader& Tsr::getLastDetection() {
 void Tsr::handleTrafficSign(const TsrHeader &tsrData)
 {
     _lastDetection = tsrData;
+    estimateDistance(tsrData);
     int speedLimit = 0;
     if (mapModelClassToSpeedLimit(tsrData.trafficSign, speedLimit)) {
-        std::cout << "Detected Speed Limit: " << speedLimit << " km/h, Accuracy: " << tsrData.accuracy << std::endl;
+        // std::cout << "Detected Speed Limit: " << speedLimit << " km/h, Accuracy: " << tsrData.accuracy << std::endl;
         _car->setSpeedLimit(speedLimit);
         return;
     }
-    std::cout << "Detected Traffic Sign Class ID: " << tsrData.trafficSign << ", Accuracy: " << tsrData.accuracy << std::endl;
-    _car->setTrafficSign(static_cast<int>(mapModelClassToTrafficSign(tsrData.trafficSign, )));
+    // std::cout << "Detected Traffic Sign Class ID: " << tsrData.trafficSign << ", Accuracy: " << tsrData.accuracy << std::endl;
+    _car->setTrafficSign(static_cast<int>(mapModelClassToTrafficSign(tsrData.trafficSign)), _distance.back().second);
+}
+
+float Tsr::estimateDistance(const TsrHeader& det)
+{
+    int speedLimit = 0;
+    TrafficSign mapped;
+
+    if (det.width < 8 || det.height < 8)
+        return -1.0f;
+    mapped = mapModelClassToTrafficSign(det.trafficSign);
+    if (static_cast<int>(mapped) == 0)
+        mapped = mapModelClassToSpeedLimit(det.trafficSign, speedLimit) ? static_cast<TrafficSign>(det.trafficSign) : TrafficSign::UNKNOWN;
+    uint16_t signKey = static_cast<uint16_t>(mapped);
+
+    if (mapped == TrafficSign::UNKNOWN)
+        return -1.0f;
+
+    auto it = SIGN_SIZES.find(signKey);
+    if (it == SIGN_SIZES.end())
+        return -1.0f;
+
+    const SignSize& s = it->second;
+
+    float dist_x = (s.width_cm  * FX_PX) / static_cast<float>(det.width);
+    float dist_y = (s.height_cm * FY_PX) / static_cast<float>(det.height);
+    float dist = (dist_x + dist_y) * 0.5f;
+
+    _distBuffer.push_back(dist);
+    if (_distBuffer.size() > DIST_FILTER_SIZE)
+        _distBuffer.pop_front();
+
+    float smoothed = 0.0f;
+    for (float d : _distBuffer) smoothed += d;
+    smoothed /= static_cast<float>(_distBuffer.size());
+
+    std::cout << "Estimated distance to sign (raw): " << dist << " cm, smoothed: " << smoothed << " cm"
+        << "FX_PX: " << FX_PX << "FY_PX: " << FY_PX << "bbox height: " << det.height  << "bbox width: " << det.width << std::endl;
+    float corrected = smoothed;
+    if (smoothed > SIGN_HEIGHT_OFFSET_CM) {
+        corrected = sqrtf(smoothed * smoothed 
+                        - SIGN_HEIGHT_OFFSET_CM * SIGN_HEIGHT_OFFSET_CM);
+    }
+
+    _distance.push_back(std::make_pair(signKey, corrected));
+    return corrected;
+}
+
+void Tsr::applyScaleCalibration(float measured_dist, float true_dist_cm)
+{
+    if (measured_dist <= 0.0f) {
+        std::cout << "applyScaleCalibration: measured_dist invalido" << std::endl;
+        return;
+    }
+    float scale = true_dist_cm / measured_dist;
+    FX_PX *= scale;
+    FY_PX *= scale;
+    std::cout << "applyScaleCalibration: escala=" << scale << ", FX_PX=" << FX_PX << ", FY_PX=" << FY_PX << std::endl;
+}
+
+float Tsr::lookupDistance(float bboxPx) {
+    if (bboxPx >= DIST_LUT.front().first) return DIST_LUT.front().second;
+    if (bboxPx <= DIST_LUT.back().first)  return DIST_LUT.back().second;
+    
+    for (int i = 0; i < DIST_LUT.size() - 1; i++) {
+        auto &a = DIST_LUT[i], &b = DIST_LUT[i+1];
+        if (bboxPx <= a.first && bboxPx >= b.first) {
+            float t = (bboxPx - a.first) / (b.first - a.first);
+            return a.second + t * (b.second - a.second);
+        }
+    }
+    return -1.0f;
 }

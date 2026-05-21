@@ -392,7 +392,9 @@ void Communication_Thread_Entry(ULONG thread_input) {
         .command_valid = 1,
         .cruise_control_enabled = false,
         .cruise_control_target_speed = 0,
-        .aeb_enabled = true
+        .aeb_enabled = true,
+        .traffic_sign = 0,
+        .traffic_sign_distance = 0.0f,
     };
     uint32_t last_cmd_ts = HAL_GetTick();
     int have_last_cmd = 1;
