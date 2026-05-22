@@ -29,9 +29,8 @@ set(SOURCES_LKA
 	SlidingWindow.cpp
 )
 
-# Leaks and Ub Debug
-#add_compile_options(-fsanitize=address -g)
-#add_link_options(-fsanitize=address)
+# add_compile_options(-fsanitize=address -g)
+# add_link_options(-fsanitize=address)
 
 include_directories(${SDK_PATH}/sysroots/aarch64-agl-linux/usr/include/opencv4/ .)
 

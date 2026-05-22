@@ -84,6 +84,9 @@ BO_ 522 LaneDepartureWarningMsg: 8 STM32
  SG_ LDW_Enabled : 0|1@1+ (1,0) [0|1] "" RASPI
  SG_ LDW_Warning : 1|1@1+ (1,0) [0|1] "" RASPI
 
+BO_ 525 AutomaticEmergencyBrakingCmdMsg: 8 RASPI
+ SG_ AEB_Enabled : 0|1@1+ (1,0) [0|1] "" STM32
+ 
 BO_ 530 CruiseControlCmdMsg: 8 RASPI
  SG_ CC_Enabled : 0|1@1+ (1,0) [0|1] "" STM32
  SG_ CC_TargetSpeed : 8|16@1+ (0.1,0) [0|250] "hm/h" STM32

@@ -24,6 +24,7 @@ private:
 	void gear(const short gear);
 	void cruiseControl(const bool flag, const int targetSpeed);
 	void brake(const bool flag);
+	void setAEb_Enabled(bool enabled);
 
 	CarActuator *_car;
 	RemoteControl *_remote;
