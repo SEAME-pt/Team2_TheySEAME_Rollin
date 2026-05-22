@@ -71,6 +71,7 @@ int main() {
     kuksaLib kuksa;
     CarActuator *car = new ActuatorKuksa(new ActuatorCAN(can), kuksa);
     Tsr tsr(car);
+    tsr.resetKuksa();
     tsr.applyScaleCalibration(44.0f, 49.0f);
     FILE *pipe = fopen("NamedPipeTsr", "r");
     if (pipe == NULL) {
@@ -92,9 +93,10 @@ int main() {
         }
 
         for (auto &d : detections) {
-            // std::cout << "Dispatching trafficSign=" << d.trafficSign << std::endl;
+            std::cout << "Dispatching trafficSign=" << d.trafficSign << std::endl;
             tsr.handleTrafficSign(d);
         }
+        tsr.tick();
 
     }
 

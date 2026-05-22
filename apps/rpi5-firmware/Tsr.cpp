@@ -76,16 +76,46 @@ const TsrHeader& Tsr::getLastDetection() {
 
 void Tsr::handleTrafficSign(const TsrHeader &tsrData)
 {
+    int speedLimit = 0;
+    
+    _lastSignalTime = std::chrono::steady_clock::now();
+    _hasSignal      = true;
+
     _lastDetection = tsrData;
     estimateDistance(tsrData);
-    int speedLimit = 0;
     if (mapModelClassToSpeedLimit(tsrData.trafficSign, speedLimit)) {
-        // std::cout << "Detected Speed Limit: " << speedLimit << " km/h, Accuracy: " << tsrData.accuracy << std::endl;
         _car->setSpeedLimit(speedLimit);
         return;
     }
-    // std::cout << "Detected Traffic Sign Class ID: " << tsrData.trafficSign << ", Accuracy: " << tsrData.accuracy << std::endl;
-    _car->setTrafficSign(static_cast<int>(mapModelClassToTrafficSign(tsrData.trafficSign)), _distance.back().second);
+    _car->setTrafficSign(
+        static_cast<int>(mapModelClassToTrafficSign(tsrData.trafficSign)),
+        _distance.back().second
+    );
+}
+
+void Tsr::tick()
+{
+    if (!_hasSignal)
+        return;
+
+    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::steady_clock::now() - _lastSignalTime
+    ).count();
+
+    if (elapsed >= TSR_TIMEOUT_MS) {
+        std::cout << "[TSR] Timeout (" << elapsed
+                  << " ms sem sinal) — reset KUKSA para 0" << std::endl;
+        resetKuksa();
+        _hasSignal = false;
+        _distBuffer.clear();
+        _distance.clear();
+    }
+}
+
+void Tsr::resetKuksa()
+{
+    _car->setTrafficSign(static_cast<int>(TrafficSign::UNKNOWN), 0.0f);
+    std::cout << "kuksa reset: speed limit 0, traffic sign UNKNOWN" << std::endl;
 }
 
 float Tsr::estimateDistance(const TsrHeader& det)

@@ -7,10 +7,10 @@
 #include <arpa/inet.h>
 #include <unordered_map>
 
-// Focal lengths (pixels) — definidas em tempo de execução e inicializadas em Tsr.cpp
 extern float FX_PX;
 extern float FY_PX;
-static constexpr float SIGN_HEIGHT_OFFSET_CM = 4.5f; // ajusta ao teu setup
+static constexpr float SIGN_HEIGHT_OFFSET_CM = 4.5f;
+static constexpr int   TSR_TIMEOUT_MS        = 500;
 #define FRAME_NMBR 77000
 
 struct SignSize {
@@ -66,35 +66,28 @@ static const std::vector<std::pair<float,float>> DIST_LUT = {
 
 class Tsr
 {
-	public:
-
-	/**
-	 * @brief Tsr Constructor
-	 * Constructor for Tsr class which takes a CarActuator pointer as an argument to control the car based on traffic sign recognition
-	 */
+public:
     Tsr(CarActuator *car);
-
-	/**
-	 * @brief Tsr Destructor
-	 * Destructor for Tsr class
-	 */
     ~Tsr();
-	
-	/**
-	 * @brief Handle Traffic Sign
-	 * This function takes a TsrData struct representing a traffic sign and performs the corresponding action on the car using the CarActuator interface.
-	 */
-	void handleTrafficSign(const TsrHeader &tsrData);
 
-	const TsrHeader& getLastDetection();
+    void handleTrafficSign(const TsrHeader &tsrData);
+    void tick();
 
-	float estimateDistance(const TsrHeader& det);
-	void applyScaleCalibration(float measured_dist, float true_dist_cm);
-	float lookupDistance(float bboxPx);
-	private:
-	CarActuator *_car;
-	TsrHeader _lastDetection;
-	std::vector<std::pair<uint16_t, float>> _distance;
-	static constexpr int DIST_FILTER_SIZE = 10;
+    const TsrHeader& getLastDetection();
+    float estimateDistance(const TsrHeader& det);
+    void applyScaleCalibration(float measured_dist, float true_dist_cm);
+    float lookupDistance(float bboxPx);
+    void resetKuksa();
+
+private:
+
+    CarActuator *_car;
+    TsrHeader    _lastDetection;
+
+    std::chrono::steady_clock::time_point _lastSignalTime;
+    bool _hasSignal = false;
+
+    std::vector<std::pair<uint16_t, float>> _distance;
+    static constexpr int DIST_FILTER_SIZE = 10;
     std::deque<float> _distBuffer;
 };
