@@ -196,6 +196,8 @@ bool kuksaLib::sendValueToKuksa(const std::string& path, const T& value)
         val->set_int32(value);
     } else if constexpr (std::is_same_v<T, uint32_t>) {
         val->set_uint32(value);
+    } else if constexpr (std::is_same_v<T, uint8_t>) {
+        val->set_uint32(value);
     } else if constexpr (std::is_same_v<T, bool>) {
         val->set_bool_(value);
     } else if constexpr (std::is_same_v<T, std::string>) {
