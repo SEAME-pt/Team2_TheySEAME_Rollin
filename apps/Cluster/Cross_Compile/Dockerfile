@@ -106,30 +106,15 @@ RUN mkdir -p build_arm && cd build_arm \
     && find . -name "*.a" -exec cp -v {} /build/qt-cross-build/lib/ \; \
     && cp -r ../include/* /build/qt-cross-build/include/
 
-# Copy KUKSA protobuf definitions.
-RUN mkdir -p /middleware/kuksa/proto
-COPY apps/middleware/kuksa/proto/ /middleware/kuksa/proto/
-
-# Generate KUKSA protobuf and gRPC sources.
-RUN set -e && \
-    mkdir -p /tmp/kuksa_gen && \
-    protoc -I /middleware/kuksa/proto --cpp_out=/tmp/kuksa_gen \
-      /middleware/kuksa/proto/kuksa/val/v2/types.proto \
-      /middleware/kuksa/proto/kuksa/val/v2/val.proto && \
-    protoc -I /middleware/kuksa/proto --grpc_out=/tmp/kuksa_gen \
-      --plugin=protoc-gen-grpc=/usr/local/bin/grpc_cpp_plugin \
-      /middleware/kuksa/proto/kuksa/val/v2/val.proto && \
-    mkdir -p /middleware/kuksa/val/v2 && \
-    cp -f /tmp/kuksa_gen/kuksa/val/v2/*.pb.* /middleware/kuksa/val/v2/ && \
-    rm -rf /tmp/kuksa_gen
     
-# Configure Qt host build.
+    # Configure Qt host build.
 WORKDIR /build/qt-host-build
 RUN cmake /build/qt-everywhere-src-6.7.3 -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/build/qt-host-build \
     -DQT_BUILD_EXAMPLES=OFF \
     -DQT_BUILD_TESTS=OFF \
+    -DBUILD_qtquick3d=ON \
     -DFEATURE_system_protobuf=ON \
     -DFEATURE_system_grpc=ON
     
@@ -153,13 +138,31 @@ RUN set -e && \
     -DFEATURE_wayland=ON \
     -DFEATURE_eglfs=ON \
     -DSKIP_qtwebengine=ON \
+    -DBUILD_qtquick3d=ON \
     -DBUILD_qtnetwork=ON \
     -DBUILD_qtnetworkauth=ON \
     -DBUILD_qtpositioning=ON \
     -DFEATURE_system_protobuf=ON \
     -DFEATURE_system_grpc=ON \
- && . /build/agl-sysroot-sdk/environment-setup-aarch64-agl-linux && ninja -j 16 \
- && ninja install
+    && . /build/agl-sysroot-sdk/environment-setup-aarch64-agl-linux && ninja -j 16 \
+    && ninja install
+    
+# Copy KUKSA protobuf definitions.
+RUN mkdir -p /libs/libkuksa/
+COPY libs/libkuksa/ /libs/libkuksa/
+    
+# Generate KUKSA protobuf and gRPC sources.
+RUN set -e && \
+    mkdir -p /tmp/kuksa_gen && \
+    protoc -I /libs/libkuksa/ --cpp_out=/tmp/kuksa_gen \
+        /libs/libkuksa/kuksa/val/v2/types.proto \
+        /libs/libkuksa/kuksa/val/v2/val.proto && \
+    protoc -I /libs/libkuksa/ --grpc_out=/tmp/kuksa_gen \
+        --plugin=protoc-gen-grpc=/usr/local/bin/grpc_cpp_plugin \
+        /libs/libkuksa/kuksa/val/v2/val.proto && \
+    mkdir -p /libs/libkuksa/kuksa/val/v2 && \
+    cp -f /tmp/kuksa_gen/kuksa/val/v2/*.pb.* /libs/libkuksa/kuksa/val/v2/ && \
+    rm -rf /tmp/kuksa_gen
 
 # Prepare project build directory.
 RUN mkdir -p /build/project

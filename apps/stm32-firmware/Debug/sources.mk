@@ -33,6 +33,7 @@ Core/Startup \
 Drivers/BSP/B-U585I-IOT02A \
 Drivers/BSP/Components/iis2mdc \
 Drivers/BSP/Components/ism330dhcx \
+Drivers/BSP/Components/iis2mdc \
 Drivers/STM32U5xx_HAL_Driver/Src \
 Middlewares/SEGGER/Config \
 Middlewares/SEGGER/RTT \

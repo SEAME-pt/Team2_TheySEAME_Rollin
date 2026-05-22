@@ -7,6 +7,7 @@
 C_SRCS += \
 ../Core/Src/Sensors/battery.c \
 ../Core/Src/Sensors/imu.c \
+../Core/Src/Sensors/distance.c \
 ../Core/Src/Sensors/sensors_processor.c \
 ../Core/Src/Sensors/sensors_queue.c \
 ../Core/Src/Sensors/speed.c 
@@ -14,6 +15,7 @@ C_SRCS += \
 OBJS += \
 ./Core/Src/Sensors/battery.o \
 ./Core/Src/Sensors/imu.o \
+./Core/Src/Sensors/distance.o \
 ./Core/Src/Sensors/sensors_processor.o \
 ./Core/Src/Sensors/sensors_queue.o \
 ./Core/Src/Sensors/speed.o 
@@ -21,6 +23,7 @@ OBJS += \
 C_DEPS += \
 ./Core/Src/Sensors/battery.d \
 ./Core/Src/Sensors/imu.d \
+./Core/Src/Sensors/distance.d \
 ./Core/Src/Sensors/sensors_processor.d \
 ./Core/Src/Sensors/sensors_queue.d \
 ./Core/Src/Sensors/speed.d 
@@ -34,6 +37,7 @@ clean: clean-Core-2f-Src-2f-Sensors
 
 clean-Core-2f-Src-2f-Sensors:
 	-$(RM) ./Core/Src/Sensors/battery.cyclo ./Core/Src/Sensors/battery.d ./Core/Src/Sensors/battery.o ./Core/Src/Sensors/battery.su ./Core/Src/Sensors/imu.cyclo ./Core/Src/Sensors/imu.d ./Core/Src/Sensors/imu.o ./Core/Src/Sensors/imu.su ./Core/Src/Sensors/sensors_processor.cyclo ./Core/Src/Sensors/sensors_processor.d ./Core/Src/Sensors/sensors_processor.o ./Core/Src/Sensors/sensors_processor.su ./Core/Src/Sensors/sensors_queue.cyclo ./Core/Src/Sensors/sensors_queue.d ./Core/Src/Sensors/sensors_queue.o ./Core/Src/Sensors/sensors_queue.su ./Core/Src/Sensors/speed.cyclo ./Core/Src/Sensors/speed.d ./Core/Src/Sensors/speed.o ./Core/Src/Sensors/speed.su
+	-$(RM) ./Core/Src/Sensors/battery.cyclo ./Core/Src/Sensors/battery.d ./Core/Src/Sensors/battery.o ./Core/Src/Sensors/battery.su ./Core/Src/Sensors/distance.cyclo ./Core/Src/Sensors/distance.d ./Core/Src/Sensors/distance.o ./Core/Src/Sensors/distance.su ./Core/Src/Sensors/sensors_processor.cyclo ./Core/Src/Sensors/sensors_processor.d ./Core/Src/Sensors/sensors_processor.o ./Core/Src/Sensors/sensors_processor.su ./Core/Src/Sensors/sensors_queue.cyclo ./Core/Src/Sensors/sensors_queue.d ./Core/Src/Sensors/sensors_queue.o ./Core/Src/Sensors/sensors_queue.su ./Core/Src/Sensors/speed.cyclo ./Core/Src/Sensors/speed.d ./Core/Src/Sensors/speed.o ./Core/Src/Sensors/speed.su
 
 .PHONY: clean-Core-2f-Src-2f-Sensors
 

@@ -15,6 +15,7 @@ enum Keys {
 	Y = BTN_Y,
 	A = BTN_A,
 	DpadY = ABS_HAT0Y,
+	DpadX = ABS_HAT0X,
 };
 
 /**

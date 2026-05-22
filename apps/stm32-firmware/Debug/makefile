@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (13.3.rel1)
+# Toolchain: GNU Tools for STM32 (14.3.rel1)
 ################################################################################
 
 -include ../makefile.init
@@ -18,6 +18,7 @@ RM := rm -rf
 -include Drivers/BSP/Components/ism330dhcx/subdir.mk
 -include Drivers/BSP/Components/iis2mdc/subdir.mk
 -include Drivers/BSP/B-U585I-IOT02A/subdir.mk
+-include Drivers/BSP/Components/iis2mdc/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/utils/subdir.mk
 -include Core/Src/Sensors/subdir.mk
@@ -76,6 +77,8 @@ main-build: STM32.elf secondary-outputs
 # Tool invocations
 STM32.elf STM32.map: $(OBJS) $(USER_OBJS) /home/jsobreir/Team2_TheySEAME_Rollin/tempppp/apps/stm32-firmware/STM32U585AIIXQ_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	arm-none-eabi-gcc -o "STM32.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m33 -T"/home/jsobreir/Team2_TheySEAME_Rollin/tempppp/apps/stm32-firmware/STM32U585AIIXQ_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32.map" -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+STM32.elf STM32.map: $(OBJS) $(USER_OBJS) /home/team2/Documents/Team2_TheySEAME_Rollin/apps/stm32-firmware/STM32U585AIIXQ_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "STM32.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m33 -T"/home/team2/Documents/Team2_TheySEAME_Rollin/apps/stm32-firmware/STM32U585AIIXQ_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32.map" -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

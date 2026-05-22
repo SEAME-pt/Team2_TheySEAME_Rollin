@@ -12,6 +12,8 @@
 #include "ActuatorController.hpp"
 #include <opencv4/opencv2/highgui.hpp>
 
+Frame show;
+
 std::atomic<bool> run = true;
 
 void signal_handler(int signal) {
@@ -20,7 +22,7 @@ void signal_handler(int signal) {
 
 int handleFrame(cv::VideoCapture &cam, Lka &lka) {
 	int i = 0;
-	
+
 	cv::Mat frameRaw;
 	cam.read(frameRaw);
 	if (frameRaw.empty()) {
@@ -74,11 +76,11 @@ int main() {
 	RemoteControl remote(evdev);
 	CAN can("can0", 500, 0, 0);
 	kuksaLib kuksa;
-	CarActuator *car = new ActuatorCAN(can);
-	//CarActuator *car = new ActuatorKuksa(
-	//	new ActuatorCAN(can),
-	//	kuksa
-	//);
+	// CarActuator *car = new ActuatorCAN(can);
+	CarActuator *car = new ActuatorKuksa(
+		new ActuatorCAN(can),
+		kuksa
+	);
 	//Lka lka(400, 0, 250, 960, 390); // Carla Setup
 	Lka lka(400, 0, 400, 1536, 464, 8); // Track Setup
 	ActuatorController ctrl(car, &remote, &lka, kuksa);
@@ -91,12 +93,12 @@ int main() {
 	//std::thread lkaThread(pathPlanning, &lka);
 	std::thread remoteThread(remoteControl, &remote, &evdev);
 	// Kuksa Thread
-	//std::thread vhState(&kuksaLib::subscribeFromKuksa, &kuksa);
+	std::thread vhState(&kuksaLib::subscribeFromKuksa, &kuksa);
 
-	//while (run.load()) {
-	//	usleep(50000);
-	//	ctrl.test();
-	//}
+	while (run.load()) {
+		usleep(50000);
+		ctrl.test();
+	}
 
 	//lkaThread.join();
 	remoteThread.join();

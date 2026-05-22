@@ -36,6 +36,9 @@ private:
     std::atomic<bool> ldwEnabled{false};
     std::atomic<bool> ldwWarning{false};
 
+    // ADAS - AEB
+    std::atomic<bool> aebEnabled{false};
+
     // ADAS - Cruise Control
     std::atomic<bool> ccEnabled{false};
     std::atomic<bool> ccActive{false};
@@ -86,6 +89,8 @@ private:
 
     void setLdwEnabled(bool v);
     void setLdwWarning(bool v);
+
+    void setAEb_Enabled(bool v);
 
     void setCcEnabled(bool v);
     void setCcActive(bool v);
@@ -143,6 +148,8 @@ public:
     bool getLdwEnabled() const { return ldwEnabled.load(); }
     bool getLdwWarning() const { return ldwWarning.load(); }
 
+    bool getAebEnabled() const { return aebEnabled.load(); }
+    
     bool getCcEnabled() const { return ccEnabled.load(); }
     bool getCcActive() const { return ccActive.load(); }
     float getCcTargetSpeed() const { return ccTargetSpeed.load(); }
@@ -188,6 +195,8 @@ bool kuksaLib::sendValueToKuksa(const std::string& path, const T& value)
     } else if constexpr (std::is_same_v<T, int32_t>) {
         val->set_int32(value);
     } else if constexpr (std::is_same_v<T, uint32_t>) {
+        val->set_uint32(value);
+    } else if constexpr (std::is_same_v<T, uint8_t>) {
         val->set_uint32(value);
     } else if constexpr (std::is_same_v<T, bool>) {
         val->set_bool_(value);

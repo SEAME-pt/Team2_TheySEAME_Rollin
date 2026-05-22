@@ -24,3 +24,8 @@ void ActuatorKuksa::setCruiseControl(const bool flag, const int targetSpeed) {
 	_kuksa.sendValueToKuksa("Vehicle.ADAS.CruiseControl.Enabled", (bool)flag);
 	_kuksa.sendValueToKuksa("Vehicle.ADAS.CruiseControl.TargetSpeed", (float)targetSpeed);
 }
+
+void ActuatorKuksa::setAEb_Enabled(const bool autonomous) {
+	ActuatorDecorator::setAEb_Enabled(autonomous);
+	_kuksa.sendValueToKuksa("Vehicle.ADAS.AutomaticEmergencyBraking.Enabled", (bool)autonomous);
+}
