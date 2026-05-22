@@ -4,6 +4,7 @@
 #include <iostream>
 #include <chrono>
 #include <ctime>
+#include <cstdlib>
 #include "src/generalInfo.hpp"
 #include "src/systemInfo.hpp"
 
@@ -14,6 +15,12 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     generalInfo info;
     systemInfo sysInfo;
+    QObject::connect(&sysInfo, &systemInfo::trafficSignUpdated,
+                 &info, &generalInfo::updateTrafficSign);
+
+    QObject::connect(&sysInfo, &systemInfo::speedLimitUpdated,
+                    &info, &generalInfo::updateSpeedLimit);
+
     if (!sysInfo.start()) {
         std::cerr << "Failed to communicate with kuksa" << std::endl;
     }

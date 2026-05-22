@@ -3,5 +3,7 @@ typeinfo qtApp.qmltypes
 prefer :/qml/
 Main 1.0 qml/Main.qml
 Screen01 1.0 qml/Screen01.ui.qml
+Surroundings2D 1.0 qml/Surroundings2D.qml
+Surroundings3D 1.0 qml/Surroundings3D.qml
 Constants 1.0 qml/Constants.qml
 
