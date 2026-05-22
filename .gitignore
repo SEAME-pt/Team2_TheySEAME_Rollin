@@ -18,3 +18,6 @@ latex/
 
 # Datasets
 datasets/*
+
+# VsCode
+.project
