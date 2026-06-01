@@ -12,42 +12,24 @@ from hailo_lib import Inference
 from hailo_lib import Camera
 from hailo_lib.CameraCarla import CARLACamera
 from hailo_lib.NamedPipeWriter import NamedPipeWriter
+from detector import build_lane_result, create_trapezoid_roi
 
 CAM_HEIGHT = 640
 CAM_WIDTH = 640
 MODEL_HEIGHT = 640
 MODEL_WIDTH = 640
-PRINT_OUTPUT_TENSORS_ONCE = True
+MODEL_NAME = "yolov8s_seg"
 LANE_CLASS_ID = 0
-LANE_CONFIDENCE_THRESHOLD = 0.6
+LANE_CONFIDENCE_THRESHOLD = 0.57
 MODEL_FAMILY = "yolov8"
-DISPLAY_MASK_ONLY = False
-DEBUG_LANE_MASK = False
 DEBUG_EVERY_N_FRAMES = 10
+IOU_THRESHOLD = 0.5
+ENABLE_POLYFIT = True
+ENABLE_LANE_ROI = True
+ENABLE_LANE_ROI_VISUALIZATION = True
 
-
-def polyfit_lines(tensor):
-	tensor = np.asarray(tensor)
-	if tensor.ndim == 4:
-		if tensor.shape[0] == 0:
-			return np.empty((0, 1, 2), dtype=np.int32)
-		lane_mask = tensor[0, :, :, 0] > 0
-	elif tensor.ndim == 2:
-		lane_mask = tensor > 0
-	else:
-		return np.empty((0, 1, 2), dtype=np.int32)
-
-	y_coords, x_coords = np.where(lane_mask)
-	if x_coords.size < 3:
-		return np.empty((0, 1, 2), dtype=np.int32)
-
-	coefficients = np.polyfit(y_coords, x_coords, 2)
-	y_values = np.linspace(0, lane_mask.shape[0] - 1, 100)
-	x_values = coefficients[0] * y_values**2 + coefficients[1] * y_values + coefficients[2]
-	x_values = np.clip(x_values, 0, lane_mask.shape[1] - 1)
-
-	points = np.column_stack((x_values, y_values)).astype(np.int32)
-	return points.reshape(-1, 1, 2)
+# Lane Dection Parameters
+MIN_LANE_AREA = 500
 
 def _parse_args():
 	parser = argparse.ArgumentParser(description="Run AI pipeline with either Pi camera or CARLA camera")
@@ -103,50 +85,43 @@ if __name__ == '__main__':
 			if not pipe_available:
 				print(f"Warning: Named pipe not available at {args.named_pipe}", file=sys.stderr if stream_masks else sys.stdout)
 
-		infer_engine = Inference(camera, "/root/perception/lanes/trained_models/yolov8n_seg_2c_100e_16.hef")
-		post_processor = PostProcessor(input_size=(MODEL_HEIGHT, MODEL_WIDTH), strides=(8, 16, 32))
+		infer_engine = Inference(camera, "/root/trained_models/yolov8s_40e.hef")
+		post_processor = PostProcessor(input_size=(MODEL_HEIGHT, MODEL_WIDTH), strides=(8, 16, 32), model_name=MODEL_NAME)
 		sent_one_frame = False
+
 		for frame, infer_results in infer_engine.run_inference():
 			frame_index += 1
-			if PRINT_OUTPUT_TENSORS_ONCE and not printed_tensor_info:
-				print("=== Model output tensors ===", file=sys.stderr if stream_masks else sys.stdout)
-				for out_name, out_tensor in infer_results.items():
-					print(f"{out_name}: shape={out_tensor.shape}, dtype={out_tensor.dtype}", file=sys.stderr if stream_masks else sys.stdout)
-				print("============================", file=sys.stderr if stream_masks else sys.stdout)
-				printed_tensor_info = True
 			lane_result = post_processor.decode(
 				infer_results,
 				quant_params=infer_engine.get_quant_params(),
 				conf_th=LANE_CONFIDENCE_THRESHOLD,
-				iou_th=0.5,
+				iou_th=IOU_THRESHOLD,
 			)
 			# Normalize decoder outputs: `masks` may be a list of 2D arrays.
 			masks = lane_result.get("masks", None)
 			scores = lane_result.get("scores", None)
 			scales = lane_result.get("scales", None)
-
-			if masks is None:
-				lane_mask = None
-			else:
-				# If decoder returned a list of masks, stack/merge them into a single 2D mask.
-				if isinstance(masks, list):
-					if len(masks) == 0:
-						lane_mask = None
-					else:
-						try:
-							lane_mask = np.any(np.stack(masks, axis=0), axis=0).astype(np.uint8)
-						except Exception:
-							# Fallback: use the first mask element
-							lane_mask = np.asarray(masks[0])
-				else:
-					lane_mask = np.asarray(masks)
+			classes = lane_result.get("classes", None)
+	
+			# Start lane detection post-processing
+			lane_mask, lane_instances = build_lane_result(
+				masks,
+				classes=classes,
+				lane_class_id=LANE_CLASS_ID,
+				min_area=MIN_LANE_AREA,
+				use_roi=ENABLE_LANE_ROI,
+			)
 
 			# Pick first score/scale if arrays are returned, else default values
 			if scores is None or (hasattr(scores, "size") and scores.size == 0):
 				lane_score = 0.0
 			else:
 				try:
-					lane_score = float(scores[0])
+					if classes is not None and len(scores) > 0:
+						lane_scores = np.asarray(scores)[np.asarray(classes) == LANE_CLASS_ID]
+						lane_score = float(np.max(lane_scores)) if lane_scores.size > 0 else float(scores[0])
+					else:
+						lane_score = float(scores[0])
 				except Exception:
 					lane_score = float(scores)
 
@@ -163,69 +138,39 @@ if __name__ == '__main__':
 				pipe_writer.write_mask(lane_mask, frame_index, lane_score)
 				sent_one_frame = True
 
-			if DEBUG_LANE_MASK:
-				if lane_mask is None:
-					if frame_index % DEBUG_EVERY_N_FRAMES == 0:
-						print(f"[lane_mask] frame={frame_index} mask=None")
-				else:
-					nonzero_count = int(np.count_nonzero(lane_mask))
-					total_count = int(lane_mask.size)
-					nonzero_ratio = (nonzero_count / total_count) if total_count > 0 else 0.0
-					if frame_index % DEBUG_EVERY_N_FRAMES == 0:
-						unique_vals = np.unique(lane_mask)
-						print(
-							f"[lane_mask] frame={frame_index} nonzero={nonzero_count}/{total_count} "
-							f"({nonzero_ratio * 100:.2f}%) unique={unique_vals.tolist()}"
-						)
-					cv2.putText(
-						frame,
-						f"Mask nz: {nonzero_count} ({nonzero_ratio * 100:.2f}%)",
-						(0, 185),
-						cv2.FONT_HERSHEY_SIMPLEX,
-						0.75,
-						(0, 255, 255) if nonzero_count > 0 else (0, 0, 255),
-						2,
-					)
+			for lane_index, lane_instance in enumerate(lane_instances):
+				x1, y1, x2, y2 = lane_instance["bbox"]
+				centroid_x, centroid_y = lane_instance["centroid"]
+				polyline = lane_instance["polyline"]
+				component_score = lane_score
 
-			if lane_mask is not None:
-				points = polyfit_lines(lane_mask)
-				if points.size > 0:
-					cv2.polylines(frame, [points], isClosed=False, color=(255, 0, 0), thickness=5)
-					cv2.putText(
-						frame,
-						f"Lane Detected {lane_score:.2f}",
-						(0, 150),
-						cv2.FONT_HERSHEY_SIMPLEX,
-						1,
-						(255, 0, 0),
-						2,
-					)
-				else:
-					cv2.putText(
-						frame,
-						"Lane Mask Found",
-						(0, 150),
-						cv2.FONT_HERSHEY_SIMPLEX,
-						1,
-						(255, 0, 0),
-						2,
-					)
-			else:
-				cv2.putText(frame, "No Lane", (0, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-			cv2.putText(frame, "Inference Active", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+				# Boundary check for text placement
+				cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
-			if DISPLAY_MASK_ONLY:
-				ok = post_processor.write_segmentation_mask_to_display(
-					camera.display_proc,
-					lane_mask,
-					base_frame=None,
+				if ENABLE_POLYFIT and polyline.size > 0:
+					cv2.polylines(frame, [polyline], isClosed=False, color=(0, 255, 255), thickness=3)
+				
+				cv2.putText(
+					frame,
+					f"Lane {lane_index + 1} x={int(centroid_x)}",
+					(x1, max(0, y1 - 8)),
+					cv2.FONT_HERSHEY_SIMPLEX,
+					0.6,
+					(0, 255, 255),
+					2,
 				)
-			else:
-				ok = post_processor.write_segmentation_mask_to_display(
-					camera.display_proc,
-					lane_mask,
-					base_frame=frame,
-				)
+
+			if ENABLE_LANE_ROI_VISUALIZATION:
+				_, roi_polygon = create_trapezoid_roi(frame.shape)
+				overlay = frame.copy()
+				cv2.fillPoly(overlay, roi_polygon, (0, 0, 255))
+				frame = cv2.addWeighted(overlay, 0.18, frame, 0.82, 0)
+			
+			ok = post_processor.write_segmentation_mask_to_display(
+				camera.display_proc,
+				lane_mask,
+				base_frame=frame,
+			)
 
 			if not ok:
 				break
