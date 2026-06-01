@@ -6,6 +6,8 @@
 
 #define LEFT -1
 #define RIGHT 1
+// In Lka.h
+float _lookaheadDist = 80.0f;  // pixels — adjust based on your image height
 
 /**
  * @class Lka

@@ -40,19 +40,49 @@ cv::Point2f normalize(const cv::Point2f &vect) {
 }
 
 int Lka::calcAngle(Frame &frame, const std::vector<cv::Point> &leftLanePtns, const std::vector<cv::Point> &rightLanePtns) {
-	float angle = 0;
-	float laneSize = 0;
-	cv::Point carPos(frame.getWidth() / 2, frame.getHeight());
-	const size_t end = _nbrPtns;
+	cv::Point2f carPos(frame.getWidth() / 2.0f, frame.getHeight());
 
-	for (size_t i = 0; i < end; i++) {
-		cv::Point midDist = (leftLanePtns[i] + rightLanePtns[i]) / 2;
-		float distX = midDist.x - carPos.x;
-		float distY = carPos.y - midDist.y;
-		angle += atan(distX / distY);
+	// 1. Find the lookahead point on the lane centre
+	cv::Point2f lookahead;
+	bool found = false;
+
+	for (size_t i = 0; i < _nbrPtns; i++) {
+		cv::Point2f mid = (cv::Point2f)(leftLanePtns[i] + rightLanePtns[i]) / 2.0f;
+
+		float dx = mid.x - carPos.x;
+		float dy = carPos.y - mid.y;  // positive = ahead (image y is flipped)
+		float dist = std::sqrt(dx * dx + dy * dy);
+
+		if (dist >= _lookaheadDist) {
+			lookahead = mid;
+			found = true;
+			break;
+		}
 	}
-	_laneWidth = vecLenght(cv::Point2f(rightLanePtns[0].x - leftLanePtns[0].x, rightLanePtns[0].y - leftLanePtns[0].y));
-	return ((angle / end) * (180 / M_PI));
+
+	// Fall back to the farthest point if nothing reaches lookahead distance
+	if (!found) {
+		lookahead = (cv::Point2f)(leftLanePtns[_nbrPtns - 1] + rightLanePtns[_nbrPtns - 1]) / 2.0f;
+	}
+
+	// 2. Transform lookahead into the robot's local frame
+	//    x = forward (up in image), y = lateral (left is positive)
+	float y = lookahead.x - carPos.x;   // lateral offset
+	float x = carPos.y - lookahead.y;   // forward distance
+
+	float L = std::sqrt(x * x + y * y); // actual lookahead distance
+
+	// 3. Pure pursuit curvature: kappa = 2y / L^2
+	//    Equivalent steering angle: alpha = atan2(2y, L^2) — or simply atan2(y, x)
+	//    atan2(y, x) is the angle to the target in the robot frame, which is what you want
+	float angle = std::atan2(y, x);  // radians
+
+	_laneWidth = vecLenght(cv::Point2f(
+		rightLanePtns[0].x - leftLanePtns[0].x,
+		rightLanePtns[0].y - leftLanePtns[0].y
+	));
+
+	return static_cast<int>(angle * (180.0f / M_PI));
 }
 
 void Lka::makeVirtualLane(std::vector<cv::Point> &lanePtns, std::vector<cv::Point> &virtualLanePtns, const int dir) {
