@@ -12,10 +12,10 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 | Field | Details |
 |-------|----------|
-| **Sprint Number** | Sprint 14 |
-| **Sprint Goal** | Implement TSR pipeline and Improve LKA |
-| **Sprint Duration** | May 12 – May 22 2026 |
-| **Focus Areas** | Model Training, LKA, TSR |
+| **Sprint Number** | Sprint 15 |
+| **Sprint Goal** | Finish TSR, refactor LKA and research about Mobility Scenarios |
+| **Sprint Duration** | June 01 – June 12 2026 |
+| **Focus Areas** | LKA, TSR, Mobility |
 
 
 ## 📅 Scrum Team
