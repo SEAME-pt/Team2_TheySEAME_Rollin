@@ -26,7 +26,7 @@ This application encompasses the algorithms for the ADAS part of the **Car** and
 This is only needed if the **purePursuit** files were altered. If not the next step is not needed
 
 For the LKA (Lane-keep-Assist) to work, it is needed to copy the **purePursuit/purePursuit.so** file
-into the TARGET (RPI5) **/usr/lib/** directory.
+into the TARGET (RPI5) in the same directory where the python command is run
 
 The LKA is run throught the python script
 
