@@ -2,7 +2,7 @@
 #include <iostream>
 #include <algorithm>
 
-ActuatorController::ActuatorController(CarActuator *car, RemoteControl *remote, Lka *lka, kuksaLib &kuksa) : _car(car), _remote(remote), _lka(lka), _kuksa(kuksa) {
+ActuatorController::ActuatorController(CarActuator *car, RemoteControl *remote, PurePursuit *pp, kuksaLib &kuksa) : _car(car), _remote(remote), _pp(pp), _kuksa(kuksa) {
 }
 
 ActuatorController::~ActuatorController() {}
@@ -95,7 +95,7 @@ void ActuatorController::update(Subject *subj, Events event) {
 				break;
 		}
 	} else {
-		steering(_lka->getAngle());
+		steering(_pp->getAngle());
 		throttle(-35);
 	}
 }

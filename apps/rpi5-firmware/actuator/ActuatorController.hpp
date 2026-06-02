@@ -4,12 +4,12 @@
 #include "CarActuator.hpp"
 #include "RemoteControl.hpp"
 #include "KuksaLib.hpp"
-#include "Lka.hpp"
+#include "PurePursuit.hpp"
 
 class ActuatorController : public Observer {
 public:
 
-	ActuatorController(CarActuator *_car, RemoteControl *remote, Lka *lka, kuksaLib &kuksa);
+	ActuatorController(CarActuator *_car, RemoteControl *remote, PurePursuit *lka, kuksaLib &kuksa);
 	~ActuatorController();
 
 	void update(Subject *subj, Events event);
@@ -27,6 +27,6 @@ private:
 
 	CarActuator *_car;
 	RemoteControl *_remote;
-	Lka *_lka;
+	PurePursuit *_pp;
 	kuksaLib &_kuksa;
 };

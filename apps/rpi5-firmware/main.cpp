@@ -12,27 +12,13 @@
 #include "ActuatorController.hpp"
 #include <opencv4/opencv2/highgui.hpp>
 
-Frame show;
+const int frameH = 640;
+const int frameW = 640;
 
 std::atomic<bool> run = true;
 
 void signal_handler(int signal) {
 	run.store(false);
-}
-
-int handleFrame(cv::VideoCapture &cam, Lka &lka) {
-	int i = 0;
-	
-	cv::Mat frameRaw;
-	cam.read(frameRaw);
-	if (frameRaw.empty()) {
-		std::cout << "Failed to get Frame" << std::endl;
-		return (-1);
-	}
-	Frame frame(frameRaw);
-
-	lka.poly(frame);
-	return (0);
 }
 
 void pathPlanning(Lka *lka) {
@@ -46,9 +32,6 @@ void pathPlanning(Lka *lka) {
 	}
 	while (run.load()) {
 		//usleep(50000);
-		if (handleFrame(cam, *lka) == -1) {
-			break;
-		}
 	}
 	cam.release();
 	cv::destroyAllWindows();
@@ -82,7 +65,7 @@ int main() {
 	//	kuksa
 	//);
 	//Lka lka(400, 0, 250, 960, 390); // Carla Setup
-	Lka lka(400, 0, 400, 1536, 464, 8); // Track Setup
+	Lka lka; // Track Setup
 	ActuatorController ctrl(car, &remote, &lka, kuksa);
 
 	lka.attach(&ctrl);

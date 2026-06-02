@@ -3,7 +3,7 @@
 #include "CAN.hpp"
 #include "ActuatorCAN.hpp"
 #include "Utils.hpp"
-#include "Lka.hpp"
+#include "PurePursuit.hpp"
 #include <csignal>
 #include <arpa/inet.h>
 
@@ -11,7 +11,6 @@ std::atomic<bool> run = true;
 const int frameH = 640;
 const int frameW = 640;
 int frameCount = 1;
-Frame show(frameH, frameW, BINARY_FRAME);
 void *header = malloc(sizeof(struct FrameHeader));
 
 void signal_handler(int signal) {
@@ -45,36 +44,20 @@ int readFrameFromPipe(FILE *pipe, void *frameData, const size_t size) {
 	return (0);
 }
 
-int handleFrame(FILE *pipe, Lka &lka) {
-	Frame frame(frameH, frameW, BINARY_FRAME);
-
-	if (readFrameFromPipe(pipe, frame.getRawData(), frameH * frameW)) {
-		std::cout << "Sync Problem" << std::endl;
-		return (0);
-	}
-
-	frame = frame * 255;
-	show = frame;
-	show = show.getColoredFrame();
-	lka.poly(frame);
-
-	return (0);
-}
-
 int main() {
 	CAN can("can0", 500, 0, 0);
 	CarActuator *car = new ActuatorCAN(can);
 	//Lka lka(400, 0, 250, 960, 390); // Carla Setup
-	Lka lka(90, 0, 240, frameW, frameH - 240, 12);
+	PurePursuit pp;
 	kuksaLib kuksa;
 	//CarActuator *car = new ActuatorKuksa(
 	//	new ActuatorCAN(can),
 	//	kuksa
 	//);
-	ActuatorController ctrl(car, NULL, &lka, kuksa);
+	ActuatorController ctrl(car, NULL, &pp, kuksa);
 
 	std::signal(SIGINT, signal_handler);
-	lka.attach(&ctrl);
+	pp.attach(&ctrl);
 
 	FILE *pipe = fopen("NamedPipe", "r");
 	if (pipe == NULL) {
@@ -85,9 +68,6 @@ int main() {
 
 	while (run.load()) {
 		//usleep(50000);
-		if (handleFrame(pipe, lka) == -1) {
-			break;
-		}
 	}
 	fclose(pipe);
 	cv::destroyAllWindows();
