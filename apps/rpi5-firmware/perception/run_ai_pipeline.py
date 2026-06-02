@@ -14,6 +14,7 @@ from hailo_lib.NamedPipeWriter import NamedPipeWriter
 from lka.bev import Bev
 from lka.sliding_window import SlidingWindow
 from lka.lane_viz import fit_lane
+from lka.virtual_lane import VirtualLane
 
 MODEL_PATH = "./trained_models/yolov8s_40e.hef"
 CAM_HEIGHT = 640
@@ -23,7 +24,7 @@ MODEL_WIDTH = 640
 DISPLAY_WIDTH = 1280
 DISPLAY_HEIGHT = 640
 LANE_CLASS_ID = 0
-LANE_CONFIDENCE_THRESHOLD = 0.6
+LANE_CONFIDENCE_THRESHOLD = 0.55
 MODEL_FAMILY = "yolov8"
 DEBUG_EVERY_N_FRAMES = 10
 
@@ -66,6 +67,20 @@ def polyfit_lines(tensor):
 	return points.reshape(-1, 1, 2)
 
 
+def _draw_polyline(img, pts, color, thickness, dashed=False, chunk=6):
+	"""Draw a polyline solid, or dashed when `dashed` (every other run of
+	`chunk` segments is skipped) so a synthesized lane reads as distinct."""
+	pts = pts.reshape(-1, 2)
+	if not dashed:
+		cv2.polylines(img, [pts.reshape(-1, 1, 2)], isClosed=False,
+		              color=color, thickness=thickness)
+		return
+	for i in range(len(pts) - 1):
+		if (i // chunk) % 2 == 0:
+			cv2.line(img, tuple(int(v) for v in pts[i]),
+			         tuple(int(v) for v in pts[i + 1]), color, thickness)
+
+
 def _bev_to_cam(pts: np.ndarray, M_inv: np.ndarray, roi_sy: int) -> np.ndarray:
 	"""Map BEV-space (x, y) points back to original camera frame coordinates."""
 	warped = cv2.perspectiveTransform(pts.reshape(-1, 1, 2).astype(np.float32), M_inv)
@@ -83,6 +98,7 @@ def _build_left_panel(
 	left_coeffs,
 	right_coeffs,
 	lane_score: float,
+	virtual_side=None,
 ) -> np.ndarray:
 	"""Camera view: mask overlay, ROI boundary, polyfit curves, status bar, coeff corner."""
 	out = frame.copy()
@@ -109,7 +125,9 @@ def _build_left_panel(
 
 		# Fitted lane curves (BEV → camera space). x is clipped to the enlarged
 		# BEV canvas width (ow), not the ROI width, so curved lanes are kept.
-		for coeffs, color in ((left_coeffs, _C_LEFT), (right_coeffs, _C_RIGHT)):
+		for side, coeffs, color in (
+			("left", left_coeffs, _C_LEFT), ("right", right_coeffs, _C_RIGHT)
+		):
 			if coeffs is None:
 				continue
 			y_bev = np.linspace(0, oh - 1, 150)
@@ -117,8 +135,7 @@ def _build_left_panel(
 			pts_cam = _bev_to_cam(np.column_stack((x_bev, y_bev)), M_inv, sy)
 			pts_cam[:, 0] = np.clip(pts_cam[:, 0], 0, w - 1)
 			pts_cam[:, 1] = np.clip(pts_cam[:, 1], 0, h - 1)
-			cv2.polylines(out, [pts_cam.reshape(-1, 1, 2)],
-			              isClosed=False, color=color, thickness=4)
+			_draw_polyline(out, pts_cam, color, 4, dashed=(side == virtual_side))
 
 		# Sliding window center circles
 		for pts_list, color in ((left_pts, _C_LEFT_DIM), (right_pts, _C_RIGHT_DIM)):
@@ -135,7 +152,10 @@ def _build_left_panel(
 	cv2.rectangle(out, (0, 0), (w, bar_h), _C_BAR, -1)
 	cv2.putText(out, "CAMERA VIEW", (10, 27),
 	            cv2.FONT_HERSHEY_SIMPLEX, 0.62, _C_LABEL, 1)
-	if lane_score > 0:
+	if virtual_side is not None:
+		status_txt = f"VIRTUAL {'R' if virtual_side == 'right' else 'L'}"
+		status_col = _C_ROI
+	elif lane_score > 0:
 		status_txt = f"LANE  {lane_score:.2f}"
 		status_col = _C_GOOD
 	else:
@@ -171,6 +191,7 @@ def _build_right_panel(
 	right_coeffs,
 	mask,
 	bev: "Bev | None",
+	virtual_side=None,
 ) -> np.ndarray:
 	"""BEV panel: dark background with only sliding-window polynomial tracks."""
 	panel_h = DISPLAY_HEIGHT
@@ -214,13 +235,17 @@ def _build_right_panel(
 		colored[mask_resized[:, :, 0] > 0] = _C_MASK
 		panel[header_h:, :] = cv2.addWeighted(panel[header_h:, :], 1.0, colored, 0.5, 0)
 
-	# for coeffs, color in ((left_coeffs, _C_LEFT), (right_coeffs, _C_RIGHT)):
-	# 	if coeffs is None:
-	# 		continue
-	# 	y_vals = np.linspace(0, roi_h - 1, 200)
-	# 	x_vals = np.clip(np.polyval(coeffs, y_vals), 0, roi_w - 1)
-	# 	pts = np.array([bev_to_panel(x, y) for x, y in zip(x_vals, y_vals)], dtype=np.int32)
-	# 	cv2.polylines(panel, [pts.reshape(-1, 1, 2)], isClosed=False, color=color, thickness=3)
+	# Fitted lane curves — the synthesized side is drawn dashed.
+	for side, coeffs, color in (
+		("left", left_coeffs, _C_LEFT), ("right", right_coeffs, _C_RIGHT)
+	):
+		if coeffs is None:
+			continue
+		y_vals = np.linspace(0, out_h - 1, 200)
+		x_vals = np.clip(np.polyval(coeffs, y_vals), 0, out_w - 1)
+		pts = np.array([bev_to_panel(x, y) for x, y in zip(x_vals, y_vals)],
+		               dtype=np.int32)
+		_draw_polyline(panel, pts, color, 3, dashed=(side == virtual_side))
 
 	# Sliding window center circles
 	for pts_list, fill, outline in (
@@ -326,10 +351,12 @@ if __name__ == '__main__':
 		# Initialize LKA perception modules if requested
 		lka_bev = None
 		lka_sw = None
+		lka_vl = None
 		if args.enable_lka:
 			# ROI and FOV matching mainLka.cpp: Lka(150, 0, 180, 640, 460, 8)
 			lka_bev = Bev(fov=150, roi=(0, 250, CAM_WIDTH, CAM_HEIGHT - 200), margin=0)
 			lka_sw = SlidingWindow()
+			lka_vl = VirtualLane()
 
 		infer_engine = Inference(camera, MODEL_PATH)
 		post_processor = PostProcessor(input_size=(MODEL_HEIGHT, MODEL_WIDTH), strides=(8, 16, 32))
@@ -383,6 +410,7 @@ if __name__ == '__main__':
 			right_pts: list = []
 			left_coeffs = None
 			right_coeffs = None
+			virtual_side = None
 			bev_frame = None
 
 			if lka_bev is not None and lane_mask is not None:
@@ -390,6 +418,10 @@ if __name__ == '__main__':
 				left_pts, right_pts = lka_sw.get_lane_points(bev_frame, n_points=8)
 				left_coeffs = fit_lane(left_pts)
 				right_coeffs = fit_lane(right_pts)
+				ow, oh = lka_bev.out_size
+				left_coeffs, right_coeffs, virtual_side = lka_vl.update(
+					left_coeffs, right_coeffs, oh, ow
+				)
 			elif lka_bev is None and lane_mask is not None:
 				# Fallback simple polyfit on camera frame (no BEV)
 				points = polyfit_lines(lane_mask)
@@ -400,9 +432,11 @@ if __name__ == '__main__':
 			left_panel  = _build_left_panel(
 				frame, lane_mask, lka_bev,
 				left_pts, right_pts, left_coeffs, right_coeffs, lane_score,
+				virtual_side,
 			)
 			right_panel = _build_right_panel(
-				left_pts, right_pts, left_coeffs, right_coeffs, bev_frame, lka_bev
+				left_pts, right_pts, left_coeffs, right_coeffs, bev_frame, lka_bev,
+				virtual_side,
 			)
 
 			ok = _write_ui(

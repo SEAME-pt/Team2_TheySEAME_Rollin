@@ -16,7 +16,7 @@ class Camera:
 		disp_w = display_width or CAM_WIDTH
 		disp_h = display_height or CAM_HEIGHT
 		self.rpicam_cmd = [
-			"rpicam-vid", "-t", "0", "--rotation", "180", "--width", "1280", "--height", "720",
+			"rpicam-vid", "-t", "0", "--rotation", "180", "--width", "640", "--height", "640",
 			"--nopreview", "--codec", "yuv420", "-o", "-"
 		]
 		self.gst_display_cmd = (
