@@ -44,6 +44,7 @@ typedef struct {
     uint8_t cruise_control_target_speed; /**< Desired cruise control speed in hm/h (valid if cruise_control_enabled) */
     int traffic_sign;            /**< Detected traffic sign type (e.g. 0=none, 1=stop, 2=speed limit, etc.) */
     float traffic_sign_distance; /**< Distance to detected traffic sign in meters */
+    uint8_t detected_speed_limit; /**< Detected speed limit in km/h (0 if no limit detected) */
     bool aeb_enabled;              /**< Flag: 1 if automatic emergency braking is enabled, 0 otherwise */
 } VehicleCommand_t;
 

@@ -52,6 +52,7 @@ enum CAN_IDs {
     CAN_ID_TX_BATTERY          = 0x201,
     CAN_ID_CRUISE_CONTROL      = 0x212,
     CAN_ID_TSR                 = 0x226,
+    CAN_ID_TSR_SPEED           = 0x227,
     CAN_ID_AEB_CMD             = 0x20D,
 };
 
@@ -297,7 +298,20 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
                     g_vehicle_command.command_valid = 1;
                     tx_mutex_put(&g_vehicle_command_mutex);
                 }
-                snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] TSR: Sign=%d Distance=%.2f m\r\n", sign_type, distance);
+                snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] TSR SIGNS: Sign=%d Distance=%.2f m\r\n", sign_type, distance);
+                Debug_Print(comm_uart_buf);
+                updated = 1;
+            }
+            break;
+        case CAN_ID_TSR_SPEED:
+            if (dlc >= 5) {
+                uint8_t speed_limit = data[0];
+                if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
+                    g_vehicle_command.detected_speed_limit = speed_limit;
+                    g_vehicle_command.command_valid = 1;
+                    tx_mutex_put(&g_vehicle_command_mutex);
+                }
+                snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] TSR SPEED: Limit=%u hm/h m\r\n", speed_limit);
                 Debug_Print(comm_uart_buf);
                 updated = 1;
             }
