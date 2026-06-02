@@ -119,7 +119,7 @@ if __name__ == '__main__':
 			if not pipe_available:
 				print(f"Warning: Named pipe not available at {args.named_pipe}", file=sys.stderr if stream_masks else sys.stdout)
 
-		infer_engine = Inference(camera, "/root/perception/lanes/trained_models/yolov8n_seg_2c_100e_16.hef")
+		infer_engine = Inference(camera, "./trained_models/yolov8s_seg.hef")
 		post_processor = PostProcessor(input_size=(MODEL_HEIGHT, MODEL_WIDTH), strides=(8, 16, 32))
 		sent_one_frame = False
 		for frame, infer_results in infer_engine.run_inference():
