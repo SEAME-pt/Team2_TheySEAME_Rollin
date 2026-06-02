@@ -4,12 +4,6 @@
 #include "Subject.hpp"
 #include "Utils.hpp"
 
-#define LEFT -1
-#define RIGHT 1
-
-extern const int frameH;
-extern const int frameW;
-
 /**
  * @class PurePursuit
  * @brief PurePursuit class
@@ -65,7 +59,7 @@ public:
 	 *
 	 * @param frame to apply the lka algo
 	 */
-	void control(struct quadFunc leftfunc, struct quadFunc rightfunc);
+	void control(struct quadFunc leftfunc, struct quadFunc rightfunc, const int frameH, const int frameW);
 
 
 private:

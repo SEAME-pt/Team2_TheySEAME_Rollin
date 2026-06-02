@@ -5,7 +5,7 @@ project(purePursuit)
 set(SOURCES
 	PurePursuit.cpp
 	PurePursuit.hpp
-	pythonLka.cpp
+	pythonPurePursuit.cpp
 )
 
 #add_compile_options(-fPIC)

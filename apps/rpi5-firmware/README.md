@@ -23,14 +23,21 @@ This application encompasses the algorithms for the ADAS part of the **Car** and
 5. Pass the binaries to the RPI5 ```scp bin/<binary-file> <user>@<ip>:<target-path>```
 6. Run the binary in the RPI5 ```./<target-path>/<binary-file>```
 
-For the LKA (Lane-keep-Assist) to work, it needs to be integrated with the AI pipeline script.
-This is a python script that returns a binary mask produced by the **Hailo8**.
-It's in the ```perception``` directory, inside the RPI5
+This is only needed if the **purePursuit** files were altered. If not the next step is not needed
 
-To use run these commands in the following order:
+For the LKA (Lane-keep-Assist) to work, it is needed to copy the **purePursuit/purePursuit.so** file
+into the TARGET (RPI5) **/usr/lib/** directory.
 
-In one tty, run the python program
-- ```python3 run_ai_pipeline.py --named-pipe NamedPipe```
+The LKA is run throught the python script
 
-In another, run the LKA binary
-- ```./<LKA-binary>```
+- ```python3 run_ai_pipeline.py```
+
+## Python Bindings
+
+We use boost.python to call C++ classes, functions in python
+
+Here's the boost.python [docs](https://www.boost.org/doc/libs/1_45_0/libs/python/doc/tutorial/doc/html/index.html)
+
+Only the purePursuit is callable in python so, only alter the **pythonPurePursuit.cpp** file if you want to make changes
+
+

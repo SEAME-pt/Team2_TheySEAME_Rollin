@@ -28,8 +28,8 @@ float solveQuadY(struct quadFunc f, const int y) {
 	return (res);
 }
 
-void PurePursuit::control(struct quadFunc leftfunc, struct quadFunc rightfunc) {
-	cv::Point2f carPos(640 / 2.0f, 640);
+void PurePursuit::control(struct quadFunc leftfunc, struct quadFunc rightfunc, const int frameH, const int frameW) {
+	cv::Point2f carPos(frameW / 2.0f, frameH);
 	cv::Point2f leftLanePtn;
 	cv::Point2f rightLanePtn;
 	cv::Point2f lookahead;

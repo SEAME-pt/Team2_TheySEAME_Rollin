@@ -9,12 +9,8 @@ set(SOURCES
 	mainRemote.cpp
 )
 
-set(SOURCES_LKA
-	mainLka.cpp
-)
-
 add_compile_options(-fPIC)
-add_link_options()
+#add_link_options()
 
 include_directories(
 	${SDK_PATH}/sysroots/aarch64-agl-linux/usr/include/opencv4/ 
@@ -34,11 +30,7 @@ if(CMAKE_CROSSCOMPILING)
 	# Manual Car Executable
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
 	target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC comms mode middleware kuksa actuator purePursuit)
-	# Autonomous Car Executable
-	add_executable(Lka ${SOURCES_LKA})
-	target_link_libraries(Lka PUBLIC comms mode middleware kuksa actuator purePursuit
-		opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_videoio)
-	install(TARGETS CarControl Lka DESTINATION ${RPI_BIN_DIR})
+	install(TARGETS CarControl DESTINATION ${RPI_BIN_DIR})
 else()
 	if(BUILD_TESTS)
 		add_subdirectory(tests)
