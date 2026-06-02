@@ -12,6 +12,9 @@ from hailo_lib import Inference
 from hailo_lib import Camera
 from hailo_lib.CameraCarla import CARLACamera
 from hailo_lib.NamedPipeWriter import NamedPipeWriter
+from lka.bev import Bev
+from lka.sliding_window import SlidingWindow
+from lka.lane_viz import fit_lane, draw_lane_overlay
 
 CAM_HEIGHT = 640
 CAM_WIDTH = 640
@@ -73,6 +76,11 @@ def _parse_args():
 		default=5005,
 		help="TCP port used by CARLA camera stream (default: 5005)",
 	)
+	parser.add_argument(
+		"--enable-lka",
+		action="store_true",
+		help="Enable BEV + sliding window lane detection with polyfit overlay",
+	)
 	return parser.parse_args()
 
 if __name__ == '__main__':
@@ -95,6 +103,14 @@ if __name__ == '__main__':
 		else:
 			camera = Camera(CAM_HEIGHT, CAM_WIDTH, MODEL_HEIGHT, MODEL_WIDTH)
 			print("Using Raspberry Pi camera", file=sys.stderr if stream_masks else sys.stdout)
+
+		# Initialize LKA perception modules if requested
+		lka_bev = None
+		lka_sw = None
+		if args.enable_lka:
+			# ROI and FOV matching mainLka.cpp: Lka(150, 0, 180, 640, 460, 8)
+			lka_bev = Bev(fov=150, roi=(0, 180, CAM_WIDTH, CAM_HEIGHT - 180))
+			lka_sw = SlidingWindow()
 
 		# Initialize named pipe writer if requested
 		if args.named_pipe:
@@ -187,7 +203,24 @@ if __name__ == '__main__':
 						2,
 					)
 
-			if lane_mask is not None:
+			if lka_bev is not None and lane_mask is not None:
+				bev_frame = lka_bev.apply(lane_mask)
+				left_pts, right_pts = lka_sw.get_lane_points(bev_frame, n_points=8)
+				left_coeffs = fit_lane(left_pts)
+				right_coeffs = fit_lane(right_pts)
+				frame = draw_lane_overlay(frame, lka_bev, left_pts, right_pts, left_coeffs, right_coeffs)
+				cv2.putText(
+					frame,
+					f"Lane Detected {lane_score:.2f}",
+					(0, 150),
+					cv2.FONT_HERSHEY_SIMPLEX,
+					1,
+					(255, 255, 255),
+					2,
+				)
+			elif lka_bev is not None:
+				cv2.putText(frame, "No Lane", (0, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+			elif lane_mask is not None:
 				points = polyfit_lines(lane_mask)
 				if points.size > 0:
 					cv2.polylines(frame, [points], isClosed=False, color=(255, 0, 0), thickness=5)
