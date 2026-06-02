@@ -23,7 +23,7 @@ class VirtualLane:
 	_EMA_ALPHA = 0.1
 	# A lane must be absent this many consecutive frames before it is synthesized,
 	# so intermittent detection does not flicker the virtual lane on and off.
-	_LOST_FRAMES = 10
+	_LOST_FRAMES = 3
 	# Two fits whose bottom-row separation is below this fraction of the lane
 	# width are treated as the same physical lane found twice (phantom peak).
 	_MIN_WIDTH_FRAC = 0.2
