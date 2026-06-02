@@ -1,5 +1,6 @@
 #include "ActuatorCAN.hpp"
 #include <iostream>
+#include <cstring>
 
 ActuatorCAN::ActuatorCAN(ICAN &can) : _can(can) {
 	std::cout << "CarCAN constructor" << std::endl;
@@ -47,10 +48,10 @@ void ActuatorCAN::setCruiseControl(const bool flag, const int targetSpeed) {
 }
 
 void ActuatorCAN::setTrafficSign(const int trafficSign, const float distance) {
-	uint8_t data[2];
+	uint8_t data[5];
 
 	data[0] = trafficSign;
-	data[1] = static_cast<uint8_t>(distance);
+    memcpy(&data[1], &distance, sizeof(float));
 	_can.sendFrame(TRAFFIC_SIGN, data, sizeof(data));
 }
 
