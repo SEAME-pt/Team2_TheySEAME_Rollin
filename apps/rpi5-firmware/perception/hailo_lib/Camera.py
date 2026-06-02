@@ -10,15 +10,18 @@ from hailo_platform import (HEF, VDevice, HailoStreamInterface, InferVStreams,
 	ConfigureParams, InputVStreamParams, OutputVStreamParams, FormatType)
 
 class Camera:
-	def __init__(self, CAM_HEIGHT, CAM_WIDTH, MODEL_HEIGHT, MODEL_WIDTH):
+	def __init__(self, CAM_HEIGHT, CAM_WIDTH, MODEL_HEIGHT, MODEL_WIDTH,
+	             display_width=None, display_height=None):
 		self.display_fps = 20
+		disp_w = display_width or CAM_WIDTH
+		disp_h = display_height or CAM_HEIGHT
 		self.rpicam_cmd = [
-			"rpicam-vid", "-t", "0", "--rotation", "180", "--width", "640", "--height", "640",
+			"rpicam-vid", "-t", "0", "--rotation", "180", "--width", "1280", "--height", "720",
 			"--nopreview", "--codec", "yuv420", "-o", "-"
 		]
 		self.gst_display_cmd = (
 			"gst-launch-1.0 fdsrc do-timestamp=true ! "
-			f"rawvideoparse format=bgr width={CAM_WIDTH} height={CAM_HEIGHT} framerate={self.display_fps}/1 ! "
+			f"rawvideoparse format=bgr width={disp_w} height={disp_h} framerate={self.display_fps}/1 ! "
 			"queue leaky=downstream max-size-buffers=2 max-size-bytes=0 max-size-time=0 ! "
 			"videoconvert ! waylandsink sync=false qos=false max-lateness=-1"
 		)

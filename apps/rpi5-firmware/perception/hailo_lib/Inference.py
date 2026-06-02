@@ -12,8 +12,8 @@ from hailo_platform import (
 	OutputVStreamParams,
 )
 
-CAM_HEIGHT = 640
-CAM_WIDTH = 640
+CAM_HEIGHT = 720
+CAM_WIDTH = 1280
 MODEL_HEIGHT = 640
 MODEL_WIDTH = 640
 
