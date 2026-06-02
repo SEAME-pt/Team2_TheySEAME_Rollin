@@ -21,9 +21,9 @@ Features:
 Inputs:
 -------
 - outputs (dict):
-    Dictionary of tensors returned by `HEF.infer()`
+	Dictionary of tensors returned by `HEF.infer()`
 - quant_params (dict):
-    Dictionary mapping tensor names to (scale, zero_point)
+	Dictionary mapping tensor names to (scale, zero_point)
 
 Outputs:
 --------
@@ -50,46 +50,65 @@ import cv2
 # ---------------------------
 
 def sigmoid(x):
-	return 1.0 / (1.0 + np.exp(-x))
+		return 1.0 / (1.0 + np.exp(-x))
 
 
 def softmax(x, axis=-1):
-	x = x - np.max(x, axis=axis, keepdims=True)
-	e = np.exp(x)
-	return e / np.sum(e, axis=axis, keepdims=True)
+		x = x - np.max(x, axis=axis, keepdims=True)
+		e = np.exp(x)
+		return e / np.sum(e, axis=axis, keepdims=True)
 
 
 def dequant(tensor, scale, zero_point):
-	return (tensor.astype(np.float32) - zero_point) * scale
+		return (tensor.astype(np.float32) - zero_point) * scale
 
 
 def nms(boxes, scores, iou_th=0.5):
-	if len(boxes) == 0:
-		return []
+		if len(boxes) == 0:
+				return []
 
-	x1, y1, x2, y2 = boxes.T
-	areas = (x2 - x1) * (y2 - y1)
-	order = scores.argsort()[::-1]
+		x1, y1, x2, y2 = boxes.T
+		areas = (x2 - x1) * (y2 - y1)
+		order = scores.argsort()[::-1]
 
-	keep = []
-	while order.size > 0:
-		i = order[0]
-		keep.append(i)
+		keep = []
+		while order.size > 0:
+				i = order[0]
+				keep.append(i)
 
-		xx1 = np.maximum(x1[i], x1[order[1:]])
-		yy1 = np.maximum(y1[i], y1[order[1:]])
-		xx2 = np.minimum(x2[i], x2[order[1:]])
-		yy2 = np.minimum(y2[i], y2[order[1:]])
+				xx1 = np.maximum(x1[i], x1[order[1:]])
+				yy1 = np.maximum(y1[i], y1[order[1:]])
+				xx2 = np.minimum(x2[i], x2[order[1:]])
+				yy2 = np.minimum(y2[i], y2[order[1:]])
 
-		w = np.maximum(0, xx2 - xx1)
-		h = np.maximum(0, yy2 - yy1)
-		inter = w * h
-		iou = inter / (areas[i] + areas[order[1:]] - inter + 1e-6)
+				w = np.maximum(0, xx2 - xx1)
+				h = np.maximum(0, yy2 - yy1)
+				inter = w * h
+				iou = inter / (areas[i] + areas[order[1:]] - inter + 1e-6)
 
-		order = order[1:][iou < iou_th]
+				order = order[1:][iou < iou_th]
 
-	return keep
+		return keep
 
+
+def class_aware_nms(boxes, scores, classes, iou_th=0.5, class_iou_ths=None):
+		if len(boxes) == 0:
+				return []
+
+		class_iou_ths = class_iou_ths or {}
+		keep_indices = []
+		for class_id in np.unique(classes):
+				class_indices = np.where(classes == class_id)[0]
+				class_iou_th = class_iou_ths.get(int(class_id), iou_th)
+				class_keep = nms(boxes[class_indices], scores[class_indices], class_iou_th)
+				keep_indices.extend(class_indices[class_keep].tolist())
+
+		if len(keep_indices) == 0:
+				return []
+
+		keep_indices = np.asarray(keep_indices, dtype=np.int32)
+		order = scores[keep_indices].argsort()[::-1]
+		return keep_indices[order].tolist()
 
 # ---------------------------
 # Main Decoder
@@ -97,156 +116,165 @@ def nms(boxes, scores, iou_th=0.5):
 
 class PostProcessor:
 
-	def __init__(self, input_size=(640, 640), strides=(8, 16, 32)):
-		self.input_size = input_size
-		self.strides = strides
+		def __init__(self, input_size=(640, 640), strides=(8, 16, 32), model_name="self.model_name"):
+				self.input_size = input_size
+				self.strides = strides
+				self.model_name = model_name
 
-	def decode(self, outputs, quant_params, conf_th=0.3, iou_th=0.5):
+		def decode(self, outputs, quant_params, conf_th=0.3, iou_th=0.5):
 
-		# ---------------------------
-		# Dequantize all tensors
-		# ---------------------------
-		def dq(name):
-			scale, zp = quant_params[name]
-			return dequant(outputs[name], scale, zp)[0]
+				# ---------------------------
+				# Dequantize all tensors
+				# ---------------------------
+				def dq(name):
+						scale, zp = quant_params[name]
+						return dequant(outputs[name], scale, zp)[0]
+				proto = dq(f"{self.model_name}/conv48")
+				scales = [
+						(f"{self.model_name}/conv44", f"{self.model_name}/conv45", f"{self.model_name}/conv46", 8),
+						(f"{self.model_name}/conv60", f"{self.model_name}/conv61", f"{self.model_name}/conv62", 16),
+						(f"{self.model_name}/conv73", f"{self.model_name}/conv74", f"{self.model_name}/conv75", 32),
+				]
+				all_boxes = []
+				all_scores = []
+				all_classes = []
+				all_coeffs = []
+				all_scales = []
 
-		proto = dq("yolov8n_seg/conv48")
+				for box_name, cls_name, coeff_name, stride in scales:
 
-		scales = [
-			("yolov8n_seg/conv44", "yolov8n_seg/conv45", "yolov8n_seg/conv46", 8),
-			("yolov8n_seg/conv60", "yolov8n_seg/conv61", "yolov8n_seg/conv62", 16),
-			("yolov8n_seg/conv73", "yolov8n_seg/conv74", "yolov8n_seg/conv75", 32),
-		]
+						boxes = dq(box_name)
+						classes = dq(cls_name)
+						coeffs = dq(coeff_name)
 
-		all_boxes = []
-		all_scores = []
-		all_classes = []
-		all_coeffs = []
-		all_scales = []
+						H, W, _ = classes.shape
 
-		for box_name, cls_name, coeff_name, stride in scales:
+						# ---- decode bbox (DFL)
+						# boxes shape: (H, W, 4 * bins) where bins is typically 16. Each set of 4 values corresponds to the DFL distribution for l, t, r, b.
+						bins = boxes.shape[-1] // 4
+						# Reshape to (H, W, 4, bins) for easier processing
+						boxes = boxes.reshape(H, W, 4, bins)
 
-			boxes = dq(box_name)
-			classes = dq(cls_name)
-			coeffs = dq(coeff_name)
+						# Softmax to get probabilities, then compute expected values for distances
+						prob = softmax(boxes, axis=-1)
+						bins_range = np.arange(bins, dtype=np.float32)
 
-			H, W, _ = classes.shape
+						distances = np.sum(prob * bins_range, axis=-1)
 
-			# ---- decode bbox (DFL)
-			bins = boxes.shape[-1] // 4
-			boxes = boxes.reshape(H, W, 4, bins)
+						# ---- grid
+						ys, xs = np.meshgrid(np.arange(H), np.arange(W), indexing="ij")
 
-			prob = softmax(boxes, axis=-1)
-			bins_range = np.arange(bins, dtype=np.float32)
+						cx = (xs + 0.5) * stride
+						cy = (ys + 0.5) * stride
 
-			distances = np.sum(prob * bins_range, axis=-1)
+						l, t, r, b = distances[..., 0], distances[..., 1], distances[..., 2], distances[..., 3]
 
-			# ---- grid
-			ys, xs = np.meshgrid(np.arange(H), np.arange(W), indexing="ij")
+						x1 = cx - l * stride
+						y1 = cy - t * stride
+						x2 = cx + r * stride
+						y2 = cy + b * stride
 
-			cx = (xs + 0.5) * stride
-			cy = (ys + 0.5) * stride
+						# ---- class scores
+						cls_prob = sigmoid(classes)
+						scores = np.max(cls_prob, axis=-1)
+						class_ids = np.argmax(cls_prob, axis=-1)
 
-			l, t, r, b = distances[..., 0], distances[..., 1], distances[..., 2], distances[..., 3]
+						mask = scores > conf_th
 
-			x1 = cx - l * stride
-			y1 = cy - t * stride
-			x2 = cx + r * stride
-			y2 = cy + b * stride
+						all_boxes.append(np.stack([x1, y1, x2, y2], axis=-1)[mask])
+						all_scores.append(scores[mask])
+						all_classes.append(class_ids[mask])
+						all_coeffs.append(coeffs[mask])
+						all_scales.extend([stride] * int(np.count_nonzero(mask)))
 
-			# ---- class scores
-			cls_prob = sigmoid(classes)
-			scores = np.max(cls_prob, axis=-1)
-			class_ids = np.argmax(cls_prob, axis=-1)
+				if len(all_boxes) == 0:
+						return {
+								"boxes": np.empty((0, 4), dtype=np.float32),
+								"score": 0.0,
+								"scale": None,
+								"classes": np.empty((0,), dtype=np.int32),
+								"mask": None,
+								"masks": [],
+						}
 
-			mask = scores > conf_th
+				boxes = np.concatenate(all_boxes)
+				scores = np.concatenate(all_scores)
+				classes = np.concatenate(all_classes)
+				coeffs = np.concatenate(all_coeffs)
+				scales = np.asarray(all_scales, dtype=np.int32)
 
-			all_boxes.append(np.stack([x1, y1, x2, y2], axis=-1)[mask])
-			all_scores.append(scores[mask])
-			all_classes.append(class_ids[mask])
-			all_coeffs.append(coeffs[mask])
-			all_scales.extend([stride] * int(np.count_nonzero(mask)))
+				# ---------------------------
+				# NMS
+				# ---------------------------
+				lane_class_id = 0
+				lane_iou_th = max(iou_th, 0.75)
+				keep = class_aware_nms(
+					boxes,
+					scores,
+					classes,
+					iou_th,
+					class_iou_ths={lane_class_id: lane_iou_th},
+				)
 
-		if len(all_boxes) == 0:
-			return {
-				"boxes": np.empty((0, 4), dtype=np.float32),
-				"score": 0.0,
-				"scale": None,
-				"classes": np.empty((0,), dtype=np.int32),
-				"mask": None,
-				"masks": [],
-			}
+				boxes = boxes[keep]
+				scores = scores[keep]
+				classes = classes[keep]
+				coeffs = coeffs[keep]
+				scales = scales[keep]
 
-		boxes = np.concatenate(all_boxes)
-		scores = np.concatenate(all_scores)
-		classes = np.concatenate(all_classes)
-		coeffs = np.concatenate(all_coeffs)
-		scales = np.asarray(all_scales, dtype=np.int32)
+				# ---------------------------
+				# Masks
+				# ---------------------------
+				proto = proto.astype(np.float32)
 
-		# ---------------------------
-		# NMS
-		# ---------------------------
-		keep = nms(boxes, scores, iou_th)
+				masks = []
+				for i in range(len(boxes)):
+						m = np.tensordot(proto, coeffs[i], axes=([2], [0]))
+						m = sigmoid(m)
 
-		boxes = boxes[keep]
-		scores = scores[keep]
-		classes = classes[keep]
-		coeffs = coeffs[keep]
-		scales = scales[keep]
+						m = cv2.resize(m, self.input_size[::-1])
+						m = (m > 0.5).astype(np.uint8)
 
-		# ---------------------------
-		# Masks
-		# ---------------------------
-		proto = proto.astype(np.float32)
+						# crop to box
+						x1, y1, x2, y2 = boxes[i].astype(int)
+						cropped = np.zeros_like(m)
+						cropped[y1:y2, x1:x2] = m[y1:y2, x1:x2]
 
-		masks = []
-		for i in range(len(boxes)):
-			m = np.tensordot(proto, coeffs[i], axes=([2], [0]))
-			m = sigmoid(m)
+						masks.append(cropped)
 
-			m = cv2.resize(m, self.input_size[::-1])
-			m = (m > 0.5).astype(np.uint8)
+				return {
+						"boxes": boxes,
+						"scores": scores,
+						"scales": scales,
+						"classes": classes,
+						"mask": masks[0] if masks else None,
+						"masks": masks,
+				}
 
-			# crop to box
-			x1, y1, x2, y2 = boxes[i].astype(int)
-			cropped = np.zeros_like(m)
-			cropped[y1:y2, x1:x2] = m[y1:y2, x1:x2]
+		def render_segmentation_mask(self, mask, base_frame=None, color=(0, 255, 0), alpha=0.8):
+				if mask is None:
+						if base_frame is None:
+								return np.zeros((self.input_size[0], self.input_size[1], 3), dtype=np.uint8)
+						return base_frame
 
-			masks.append(cropped)
+				if base_frame is None:
+						base = np.zeros((self.input_size[0], self.input_size[1], 3), dtype=np.uint8)
+				else:
+						base = base_frame.copy()
 
-		return {
-			"boxes": boxes,
-			"scores": scores,
-			"scales": scales,
-			"classes": classes,
-			"mask": masks[0] if masks else None,
-			"masks": masks,
-		}
+				binary = (mask > 0).astype(np.uint8)
+				overlay = np.zeros_like(base)
+				overlay[binary > 0] = color
+				return cv2.addWeighted(base, alpha, overlay, alpha, 0)
 
-	def render_segmentation_mask(self, mask, base_frame=None, color=(0, 255, 0), alpha=0.8):
-		if mask is None:
-			if base_frame is None:
-				return np.zeros((self.input_size[0], self.input_size[1], 3), dtype=np.uint8)
-			return base_frame
+		def write_segmentation_mask_to_display(self, display_proc, mask, base_frame, color=(0, 255, 0), alpha=0.65):
+				if display_proc is None or getattr(display_proc, "stdin", None) is None:
+						return False
 
-		if base_frame is None:
-			base = np.zeros((self.input_size[0], self.input_size[1], 3), dtype=np.uint8)
-		else:
-			base = base_frame.copy()
-
-		binary = (mask > 0).astype(np.uint8)
-		overlay = np.zeros_like(base)
-		overlay[binary > 0] = color
-		return cv2.addWeighted(base, alpha, overlay, alpha, 0)
-
-	def write_segmentation_mask_to_display(self, display_proc, mask, base_frame, color=(0, 255, 0), alpha=0.65):
-		if display_proc is None or getattr(display_proc, "stdin", None) is None:
-			return False
-
-		frame_to_write = self.render_segmentation_mask(mask, base_frame=base_frame, color=color, alpha=alpha)
-		try:
-			display_proc.stdin.write(frame_to_write.tobytes())
-			display_proc.stdin.flush()
-			return True
-		except BrokenPipeError:
-			return False
+				frame_to_write = self.render_segmentation_mask(mask, base_frame=base_frame, color=color, alpha=alpha)
+				try:
+						display_proc.stdin.write(frame_to_write.tobytes())
+						display_proc.stdin.flush()
+						return True
+				except BrokenPipeError:
+						return False
