@@ -40,4 +40,37 @@ Here's the boost.python [docs](https://www.boost.org/doc/libs/1_45_0/libs/python
 
 Only the purePursuit is callable in python so, only alter the **pythonPurePursuit.cpp** file if you want to make changes
 
+### How to use the bindings in python
+
+Here's an example on how to use the C++ python bindings
+
+```python
+from purePursuit import PurePursuit
+from purePursuit import quadFunc
+
+# Example frame dimensions
+frameHeight = 640
+frameWidth = 640
+
+# Class constructor
+pp = PurePursuit()
+
+# Left Lane Polynomial
+leftquad = quadFunc()
+
+# Right Lane Polynomial
+rightquad = quadFunc()
+
+# Fill the Polynomial coefficients
+leftquad.a = 2
+leftquad.b = 2
+leftquad.c = 2
+rightquad.a = 2
+rightquad.b = 2
+rightquad.c = 2
+
+# Call the Pure Pursuit
+pp.control(leftquad, rightquad, frameHeight, frameWidth)
+```
+
 
