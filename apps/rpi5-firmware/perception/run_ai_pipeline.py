@@ -14,9 +14,10 @@ from hailo_lib.NamedPipeWriter import NamedPipeWriter
 from lka.bev import Bev
 from lka.sliding_window import SlidingWindow
 from lka.lane_viz import fit_lane
+from lka.lane_model import curvature, sample_xy
 from lka.virtual_lane import VirtualLane
 
-MODEL_PATH = "./trained_models/yolov8s_40e.hef"
+MODEL_PATH = "../trained_models/yolov8n_seg_100e_16.hef"
 CAM_HEIGHT = 640
 CAM_WIDTH = 640
 MODEL_HEIGHT = 640
@@ -24,7 +25,7 @@ MODEL_WIDTH = 640
 DISPLAY_WIDTH = 1280
 DISPLAY_HEIGHT = 640
 LANE_CLASS_ID = 0
-LANE_CONFIDENCE_THRESHOLD = 0.6
+LANE_CONFIDENCE_THRESHOLD = 0.55
 MODEL_FAMILY = "yolov8"
 DEBUG_EVERY_N_FRAMES = 10
 
@@ -34,7 +35,7 @@ _C_RIGHT     = (60, 140, 255)   # blue-orange  — right lane
 _C_LEFT_DIM  = (0, 150, 0)
 _C_RIGHT_DIM = (0, 80, 180)
 _C_ROI       = (0, 200, 255)    # cyan — ROI boundary
-_C_MASK      = (200, 0, 80)     # green — segmentation mask tint
+_C_MASK      = (255, 0, 0)     # green — segmentation mask tint
 _C_BAR       = (20, 20, 20)     # dark header/footer bar
 _C_LABEL     = (190, 190, 190)  # light gray label text
 _C_GRID      = (28, 28, 28)     # subtle BEV grid
@@ -81,6 +82,22 @@ def _draw_polyline(img, pts, color, thickness, dashed=False, chunk=6):
 			         tuple(int(v) for v in pts[i + 1]), color, thickness)
 
 
+def _lane_readout(coeffs) -> str:
+	"""Human-readable geometry of a parametric lane: turn radius (px) and bottom x.
+
+	Replaces the old a/b/c print — with the parametric (2,3) representation those
+	raw coefficients are no longer intuitive, whereas radius + lateral offset are.
+	"""
+	if coeffs is None:
+		return "--"
+	k = np.abs(curvature(coeffs, np.linspace(0.0, 1.0, 11)))
+	k = k[np.isfinite(k)]
+	kmax = float(np.max(k)) if k.size else 0.0
+	x0 = float(np.polyval(coeffs[0], 0.0))  # x at the bottom (ego) end
+	radius = "straight" if kmax < 1e-6 else f"R={1.0 / kmax:5.0f}px"
+	return f"{radius}  x0={x0:.0f}"
+
+
 def _bev_to_cam(pts: np.ndarray, M_inv: np.ndarray, roi_sy: int) -> np.ndarray:
 	"""Map BEV-space (x, y) points back to original camera frame coordinates."""
 	warped = cv2.perspectiveTransform(pts.reshape(-1, 1, 2).astype(np.float32), M_inv)
@@ -111,7 +128,7 @@ def _build_left_panel(
 			mask_bin = cv2.resize(mask_bin, (w, h), interpolation=cv2.INTER_NEAREST)
 		overlay = np.zeros_like(out)
 		overlay[mask_bin > 0] = _C_MASK
-		out = cv2.addWeighted(out, 1.0, overlay, 0.4, 0)
+		out = cv2.addWeighted(out, 0.6, overlay, 0.9, 0)
 
 	if bev is not None:
 		sx, sy, rw, rh = bev.roi
@@ -130,8 +147,9 @@ def _build_left_panel(
 		):
 			if coeffs is None:
 				continue
-			y_bev = np.linspace(0, oh - 1, 150)
-			x_bev = np.clip(np.polyval(coeffs, y_bev), 0, ow - 1)
+			x_bev, y_bev = sample_xy(coeffs, 150)
+			x_bev = np.clip(x_bev, 0, ow - 1)
+			y_bev = np.clip(y_bev, 0, oh - 1)
 			pts_cam = _bev_to_cam(np.column_stack((x_bev, y_bev)), M_inv, sy)
 			pts_cam[:, 0] = np.clip(pts_cam[:, 0], 0, w - 1)
 			pts_cam[:, 1] = np.clip(pts_cam[:, 1], 0, h - 1)
@@ -172,8 +190,7 @@ def _build_left_panel(
 	y_text = h - box_h + 17
 	for label, coeffs, color in (("L", left_coeffs, _C_LEFT), ("R", right_coeffs, _C_RIGHT)):
 		if coeffs is not None:
-			a, b, c = coeffs
-			txt = f"{label}: a={a:.2e}  b={b:.3f}  c={c:.1f}"
+			txt = f"{label}: {_lane_readout(coeffs)}"
 		else:
 			txt = f"{label}: --"
 			color = (70, 70, 70)
@@ -241,8 +258,9 @@ def _build_right_panel(
 	):
 		if coeffs is None:
 			continue
-		y_vals = np.linspace(0, out_h - 1, 200)
-		x_vals = np.clip(np.polyval(coeffs, y_vals), 0, out_w - 1)
+		x_vals, y_vals = sample_xy(coeffs, 200)
+		x_vals = np.clip(x_vals, 0, out_w - 1)
+		y_vals = np.clip(y_vals, 0, out_h - 1)
 		pts = np.array([bev_to_panel(x, y) for x, y in zip(x_vals, y_vals)],
 		               dtype=np.int32)
 		_draw_polyline(panel, pts, color, 3, dashed=(side == virtual_side))
@@ -419,6 +437,10 @@ if __name__ == '__main__':
 				left_coeffs = fit_lane(left_pts)
 				right_coeffs = fit_lane(right_pts)
 				ow, oh = lka_bev.out_size
+				# Drop geometrically impossible lanes so VirtualLane re-synthesizes them.
+				left_coeffs, right_coeffs = lka_sw.validate_lanes(
+					left_coeffs, right_coeffs, oh, ow
+				)
 				left_coeffs, right_coeffs, virtual_side = lka_vl.update(
 					left_coeffs, right_coeffs, oh, ow
 				)
