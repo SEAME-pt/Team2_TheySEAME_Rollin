@@ -166,6 +166,14 @@ def test_validate_rejects_inconsistent_width():
 	assert (lo is None) != (ro is None)
 
 
+def test_validate_drops_coincident():
+	sw = SlidingWindow()
+	a = _coeffs(_vertical_points(200))
+	b = _coeffs(_vertical_points(208))   # 8 px apart << 0.08 * 640 = 51 px
+	lo, ro = sw.validate_lanes(a, b, H, W)
+	assert (lo is None) != (ro is None)  # exactly one survives; VirtualLane takes over
+
+
 # ── virtual lane ─────────────────────────────────────────────────────────────
 
 def test_virtual_offset_synthesizes_missing_lane():

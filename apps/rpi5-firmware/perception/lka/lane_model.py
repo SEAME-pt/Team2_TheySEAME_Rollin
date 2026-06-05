@@ -4,8 +4,8 @@ Shared lane-curve primitives.
 A lane is represented as a *parametric* quadratic in normalized arc-length
 ``t in [0, 1]``::
 
-    x(t) = ax*t**2 + bx*t + cx
-    y(t) = ay*t**2 + by*t + cy
+	x(t) = ax*t**2 + bx*t + cx
+	y(t) = ay*t**2 + by*t + cy
 
 stored as an ``np.ndarray`` of shape ``(2, 3)`` — row 0 = x coefficients
 ``[ax, bx, cx]`` (np.polyval order, highest power first), row 1 = y coefficients
@@ -21,6 +21,7 @@ follower, the validation checks, and the virtual-lane perpendicular offset).
 """
 
 import numpy as np
+from scipy.optimize import brentq
 
 
 def arc_t(xs: np.ndarray, ys: np.ndarray) -> np.ndarray:
@@ -80,7 +81,7 @@ def curvature(coeffs: np.ndarray, t) -> np.ndarray:
 	"""
 	Signed curvature kappa at ``t``::
 
-	    kappa = (x'*y'' - y'*x'') / (x'**2 + y'**2)**1.5
+		kappa = (x'*y'' - y'*x'') / (x'**2 + y'**2)**1.5
 
 	The radius of the turn is ``1 / |kappa|``.
 	"""
@@ -131,7 +132,7 @@ def sample_xy(coeffs: np.ndarray, n: int) -> tuple:
 
 
 def resample(coeffs: np.ndarray, n: int, w: "int | None" = None,
-             h: "int | None" = None) -> list:
+			 h: "int | None" = None) -> list:
 	"""
 	Sample ``n`` integer ``(x, y)`` points along the curve, bottom (t=0) to top
 	(t=1). Optionally clip to a ``w`` x ``h`` canvas.
@@ -142,3 +143,28 @@ def resample(coeffs: np.ndarray, n: int, w: "int | None" = None,
 	if h is not None:
 		ys = np.clip(ys, 0, h - 1)
 	return [(int(round(x)), int(round(y))) for x, y in zip(xs, ys)]
+
+def find_x_at_y(coeffs: np.ndarray, y_target: float) -> "float | None":
+	"""
+	Finds the exact x coordinate for a specific y_target along the parametric curve.
+	Returns None if the target y is outside the curve's t boundary [0, 1].
+	"""
+	# 1. Define the root objective function: y(t) - y_target = 0
+	def objective(t):
+		_, y_val = eval_curve(coeffs, t)
+		return y_val - y_target
+
+	# 2. Grab boundaries to ensure a valid zero-crossing exists
+	y_start = objective(0.0)
+	y_end = objective(1.0)
+
+	# If the signs are identical, the target y doesn't cross our [0, 1] arc segment
+	if np.sign(y_start) == np.sign(y_end):
+		return None
+
+	# 3. Securely track down the exact t value
+	t_solution = brentq(objective, 0.0, 1.0)
+
+	# 4. Drop that t back into eval_curve to get your final x
+	x_solution, _ = eval_curve(coeffs, t_solution)
+	return float(x_solution)

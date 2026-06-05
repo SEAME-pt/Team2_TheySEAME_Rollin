@@ -1,47 +1,34 @@
-import math
-
 import numpy as np
 
-from .lane_model import curvature, eval_curve, fit_parametric, nearest_widths, resample
+from .lane_model import curvature, eval_curve, nearest_widths
 
 
 class SlidingWindow:
 	"""
-	Sliding window lane point extractor with a *tangent-following* search.
+	Sliding window lane point extractor.
+	Port of SlidingWindow.cpp — vectorized with NumPy instead of pixel-by-pixel loops.
+	Expects a binary frame with WHITE_PIXEL == 1 (matching C++ Frame.hpp constant).
 
 	The window walk does *association* only — it decides which white pixels belong
-	to each lane and follows the lane up the image. Unlike the original vertical
-	walk (which stepped straight up and searched a thin horizontal slab, losing
-	lanes that turn steep), this version steps along the lane's local **tangent**:
-	after each detection the search direction is updated from the movement vector,
-	so the windows curve sideways to chase near-horizontal lanes produced by sharp
-	turns in the bird's-eye view.
-
-	The detections are then fit to a *parametric* quadratic ``(x(t), y(t))`` (see
-	:mod:`lane_model`) and resampled, so the returned points trace the real lane
-	curvature regardless of orientation.
-
-	Expects a binary frame with WHITE_PIXEL == 1 (matching C++ Frame.hpp constant).
+	to each lane and follows the lane up the image with horizontal momentum so it
+	keeps tracking through gaps (e.g. dashed markings or the upper part of a curve
+	the camera barely sees). The returned points are then *generated from a
+	polynomial* fitted to the real detections, so empty rows follow the lane's
+	curvature instead of being extrapolated straight up.
 	"""
 
+	# Horizontal momentum carried into windows that find no pixels. Decayed each
+	# empty step so a long blind stretch coasts to a stop instead of flying off.
+	_MOMENTUM_DECAY = 0.7
 	# Point-count thresholds for the polynomial degree. A quadratic needs enough
 	# real detections or it overfits a near-straight stub into a wild curl.
 	_MIN_PTS_QUADRATIC = 6
-	_MIN_PTS_LINEAR = 3
-	# Walk control.
-	_MAX_TURN = math.radians(45.0)   # max heading change per step (rejects jumps)
-	_TURN_SMOOTH = 0.5               # 0 = snap to new heading, 1 = keep old heading
-	_MAX_MISSES = 3                  # consecutive empty windows before giving up
-	_STEP_OVERSHOOT = 3             # walk up to this * n_points windows along a curve
+	_MIN_PTS_LINEAR = 2
 
-	# ── validation thresholds (heuristic, BEV pixel space — calibrate on footage) ─
-	_N_SAMPLES = 20
-	# Smallest believable turn radius in BEV pixels; tighter => curvature spike.
-	_R_MIN_PX = 12.0
-	# Lanes whose lateral separation drops below this (px) are treated as crossing.
-	_MIN_SEP = 4.0
-	# Max coefficient of variation of lane width before the pair is inconsistent.
-	_WIDTH_CV_TOL = 0.35
+	# validate_lanes thresholds
+	_MAX_CURVATURE   = 1.0 / 12   # reject lane if turn radius < 12 px
+	_MAX_WIDTH_CV    = 0.35        # reject lane pair if width CV exceeds this
+	_COINCIDENT_FRAC = 0.08        # treat lanes as same line if bottom sep < 8% of W
 
 	def get_lane_points(
 		self,
@@ -53,14 +40,19 @@ class SlidingWindow:
 		in BEV-frame coordinates, ordered bottom-to-top. A lane with too few
 		detections to fit a curve returns an empty list.
 		"""
-		histogram = frame.sum(axis=0).astype(np.int64)
+		# Use only the bottom third of the frame so peaks reflect lane positions
+		# near the car. A full-frame sum misplaces the peak on sharp curves,
+		# causing the right lane to be labeled left and wrong-side virtual synthesis.
+		search_rows = frame.shape[0] // 3
+		histogram = frame[-search_rows:].sum(axis=0).astype(np.int64)
+		rect_w = frame.shape[1] // 12
 
 		hist = histogram.copy()
 		lane_x1 = self._get_lane_x(hist)
 		lane_x2 = self._get_lane_x(hist)
 
-		pts1 = self._sliding_window(frame, lane_x1, n_points)
-		pts2 = self._sliding_window(frame, lane_x2, n_points)
+		pts1 = self._sliding_window(frame, lane_x1, n_points, rect_w)
+		pts2 = self._sliding_window(frame, lane_x2, n_points, rect_w)
 
 		if lane_x1 > lane_x2:
 			pts1, pts2 = pts2, pts1
@@ -79,175 +71,156 @@ class SlidingWindow:
 		frame: np.ndarray,
 		start_x: int,
 		n_points: int,
+		rect_w: int,
 	) -> list[tuple[int, int]]:
 		h, w = frame.shape
-		step = max(8, h // n_points)
-		half = step // 2
+		step_y = h // n_points
+		x = start_x
+		dx = 0.0  # horizontal momentum (px per window step), learned from detections
+		y = h - step_y
 
-		# Position and heading (unit vector). Start at the bottom, pointing up.
-		px, py = float(start_x), float(h - 1)
-		dx, dy = 0.0, -1.0
-		det: list[tuple[float, float]] = []
-		misses = 0
+		row_ys: list[int] = []          # y-centre of every window, bottom-to-top
+		det_x: list[int] = []           # x of windows that actually found pixels
+		det_y: list[int] = []           # matching y for those detections
 
-		# Anchor t=0 by sampling the seed location at the bottom first.
-		seed = self._window_centroid(frame, px, py, half)
-		if seed is not None:
-			px, py = seed
-			det.append(seed)
+		for _ in range(n_points):
+			# Place the window where momentum predicts the lane continues, so the
+			# search follows the curve into rows the previous window couldn't see.
+			x_pred = int(round(x + dx))
+			x_pred = max(0, min(w - 1, x_pred))
 
-		max_steps = self._STEP_OVERSHOOT * n_points
-		for _ in range(max_steps):
-			# Predict where the lane continues along the current tangent.
-			cx = px + step * dx
-			cy = py + step * dy
-			if cx < -half or cx > w - 1 + half or cy < -half or cy > h - 1 + half:
-				break
+			x1 = max(0, x_pred - rect_w // 2)
+			x2 = min(w, x_pred + rect_w // 2)
+			y1 = max(0, y)
+			y2 = min(h, y + step_y)
+			yc = y + step_y // 2
 
-			centroid = self._window_centroid(frame, cx, cy, half)
-			if centroid is not None:
-				mx, my = centroid
-				vx, vy = mx - px, my - py
-				vmag = math.hypot(vx, vy)
-				if vmag > 1e-6:
-					dx, dy = self._steer(dx, dy, vx / vmag, vy / vmag)
-				px, py = mx, my
-				det.append(centroid)
-				misses = 0
+			roi = frame[y1:y2, x1:x2]
+			white_cols = np.where(roi == 1)[1]
+
+			if len(white_cols) > 0:
+				measured_x = x1 + int(np.mean(white_cols))
+				dx = measured_x - x      # update velocity from real movement
+				x = measured_x
+				det_x.append(measured_x)
+				det_y.append(yc)
 			else:
-				# No evidence: coast along the current heading and count the miss.
-				px, py = cx, cy
-				misses += 1
-				if misses >= self._MAX_MISSES:
-					break
+				# No evidence: coast along the learned curve and fade momentum.
+				dx *= self._MOMENTUM_DECAY
+				x = x_pred
 
-		return self._fit_and_resample(det, n_points, w, h)
+			row_ys.append(yc)
+			y -= step_y
 
-	def _window_centroid(
-		self, frame: np.ndarray, cx: float, cy: float, half: int
-	) -> "tuple[float, float] | None":
-		"""Centroid of white pixels in a square window centred at (cx, cy)."""
-		h, w = frame.shape
-		x1 = int(max(0, round(cx - half)))
-		x2 = int(min(w, round(cx + half) + 1))
-		y1 = int(max(0, round(cy - half)))
-		y2 = int(min(h, round(cy + half) + 1))
-		if x2 <= x1 or y2 <= y1:
-			return None
-		roi = frame[y1:y2, x1:x2]
-		ys_idx, xs_idx = np.where(roi == 1)
-		if xs_idx.size == 0:
-			return None
-		return (x1 + float(xs_idx.mean()), y1 + float(ys_idx.mean()))
+		return self._fit_and_generate(det_x, det_y, row_ys, w)
 
-	def _steer(self, dx: float, dy: float, nx: float, ny: float) -> tuple[float, float]:
-		"""
-		Blend the current heading toward the measured movement direction, clamping
-		the turn to ``_MAX_TURN`` per step so a stray pixel cluster cannot whip the
-		search off the lane.
-		"""
-		a_old = math.atan2(dy, dx)
-		a_new = math.atan2(ny, nx)
-		da = math.atan2(math.sin(a_new - a_old), math.cos(a_new - a_old))
-		da *= (1.0 - self._TURN_SMOOTH)
-		da = max(-self._MAX_TURN, min(self._MAX_TURN, da))
-		a = a_old + da
-		return math.cos(a), math.sin(a)
-
-	def _fit_and_resample(
+	def _fit_and_generate(
 		self,
-		det: list[tuple[float, float]],
-		n_points: int,
+		det_x: list[int],
+		det_y: list[int],
+		row_ys: list[int],
 		w: int,
-		h: int,
 	) -> list[tuple[int, int]]:
 		"""
-		Fit a parametric quadratic to the ordered detections and resample it at
-		``n_points`` points, bottom-to-top. Degree drops to 1 when detections are
-		too few to trust a quadratic; too few even for a line returns [].
+		Fit x = f(y) to the real detections and evaluate it at every window row.
+		Empty rows are filled by the *curve* (extrapolated), not a straight line.
+		Degree drops to 1 when detections are too few to trust a quadratic.
 		"""
-		n = len(det)
+		n = len(det_x)
 		if n >= self._MIN_PTS_QUADRATIC:
 			degree = 2
 		elif n >= self._MIN_PTS_LINEAR:
 			degree = 1
 		else:
+			return []  # not enough evidence to claim a lane
+
+		try:
+			coeffs = np.polyfit(np.asarray(det_y, dtype=float),
+			                    np.asarray(det_x, dtype=float), degree)
+		except (np.linalg.LinAlgError, ValueError):
 			return []
 
-		coeffs = fit_parametric(det, degree)
-		if coeffs is None:
-			return []
-		return resample(coeffs, n_points, w, h)
-
-	# ── validation ───────────────────────────────────────────────────────────
+		poly = np.poly1d(coeffs)
+		points: list[tuple[int, int]] = []
+		for yc in row_ys:
+			xv = int(round(float(poly(yc))))
+			xv = max(0, min(w - 1, xv))
+			points.append((xv, yc))
+		return points
 
 	def validate_lanes(
 		self,
 		left: "np.ndarray | None",
 		right: "np.ndarray | None",
-		out_h: int,
-		out_w: int,
+		h: int,
+		w: int,
 	) -> "tuple[np.ndarray | None, np.ndarray | None]":
 		"""
-		Reject geometrically impossible lanes, returning ``(left, right)`` with any
-		failing lane replaced by ``None`` (so ``VirtualLane`` can re-synthesize it).
+		Filter implausible lane fits.  Returns (left, right) with None for any
+		lane that fails a geometric sanity check.
 
-		Checks, in BEV pixel space:
-		  * Curvature sanity — drop a lane whose turn radius dips below
-		    ``_R_MIN_PX`` anywhere, or whose curvature is non-finite.
-		  * Non-crossing — if the left/right boundaries touch or cross inside the
-		    canvas, drop the more suspect (more sharply curved) lane.
-		  * Width consistency — if the spacing between the lanes varies more than
-		    ``_WIDTH_CV_TOL`` (coefficient of variation), drop the more suspect lane.
+		Gates (applied in order — a lane nulled early skips later gates):
+		1. Curvature: reject if turn radius < 12 px.
+		2. Coincidence: if both curves share the same physical line, drop the
+		   weaker one so VirtualLane can synthesise the missing side (Bug 1).
+		3. Crossing: drop the lane that ends up on the wrong side of the other.
+		4. Width consistency: drop the lane causing diverging lane width.
 		"""
-		left = None if left is None else np.asarray(left, dtype=float)
-		right = None if right is None else np.asarray(right, dtype=float)
+		# Gate 1: per-lane curvature sanity
+		if left is not None:
+			if self._max_curvature(np.asarray(left, dtype=float)) > self._MAX_CURVATURE:
+				left = None
+		if right is not None:
+			if self._max_curvature(np.asarray(right, dtype=float)) > self._MAX_CURVATURE:
+				right = None
 
-		# 1. Per-lane curvature sanity.
-		if left is not None and not self._curvature_ok(left):
-			left = None
-		if right is not None and not self._curvature_ok(right):
-			right = None
+		# Gate 2: coincidence — same physical line tracked twice
+		if left is not None and right is not None:
+			lc = np.asarray(left, dtype=float)
+			rc = np.asarray(right, dtype=float)
+			lx0 = float(eval_curve(lc, 0.0)[0])
+			rx0 = float(eval_curve(rc, 0.0)[0])
+			if abs(rx0 - lx0) < self._COINCIDENT_FRAC * w:
+				if self._max_curvature(lc) > self._max_curvature(rc):
+					left = None
+				else:
+					right = None
 
-		if left is None or right is None:
-			return left, right
+		# Gate 3: crossing
+		if left is not None and right is not None:
+			lc = np.asarray(left, dtype=float)
+			rc = np.asarray(right, dtype=float)
+			ts = np.linspace(0.0, 1.0, 7)
+			lxs = eval_curve(lc, ts)[0]
+			rxs = eval_curve(rc, ts)[0]
+			if np.any(rxs < lxs):
+				if self._max_curvature(lc) > self._max_curvature(rc):
+					left = None
+				else:
+					right = None
 
-		ts = np.linspace(0.0, 1.0, self._N_SAMPLES)
-		lx, ly = eval_curve(left, ts)
-		rx, ry = eval_curve(right, ts)
-
-		# 2. Non-crossing: left must stay left of right across the canvas.
-		sep = rx - lx
-		if np.min(sep) < self._MIN_SEP:
-			if self._more_suspect(left, right) == "left":
-				return None, right
-			return left, None
-
-		# 3. Width consistency via nearest-point spacing (orientation-agnostic).
-		widths = nearest_widths(lx, ly, rx, ry)
-		mean = float(np.mean(widths))
-		if mean > 1e-6:
-			cv = float(np.std(widths)) / mean
-			if cv > self._WIDTH_CV_TOL:
-				if self._more_suspect(left, right) == "left":
-					return None, right
-				return left, None
+		# Gate 4: width consistency
+		if left is not None and right is not None:
+			lc = np.asarray(left, dtype=float)
+			rc = np.asarray(right, dtype=float)
+			ts = np.linspace(0.0, 1.0, 10)
+			lx, ly = eval_curve(lc, ts)
+			rx, ry = eval_curve(rc, ts)
+			widths = nearest_widths(lx, ly, rx, ry)
+			if len(widths) > 1 and float(widths.mean()) > 0:
+				cv = float(widths.std() / widths.mean())
+				if cv > self._MAX_WIDTH_CV:
+					l_range = float(np.max(lx) - np.min(lx))
+					r_range = float(np.max(rx) - np.min(rx))
+					if l_range >= r_range:
+						left = None
+					else:
+						right = None
 
 		return left, right
 
-	def _curvature_ok(self, coeffs: np.ndarray) -> bool:
-		ts = np.linspace(0.0, 1.0, self._N_SAMPLES)
-		k = curvature(coeffs, ts)
-		if not np.all(np.isfinite(k)):
-			return False
-		return float(np.max(np.abs(k))) <= 1.0 / self._R_MIN_PX
-
-	def _max_abs_curvature(self, coeffs: np.ndarray) -> float:
-		ts = np.linspace(0.0, 1.0, self._N_SAMPLES)
-		k = curvature(coeffs, ts)
-		k = k[np.isfinite(k)]
-		return float(np.max(np.abs(k))) if k.size else float("inf")
-
-	def _more_suspect(self, left: np.ndarray, right: np.ndarray) -> str:
-		"""The lane with the higher peak curvature is the more suspect one."""
-		return "left" if self._max_abs_curvature(left) >= self._max_abs_curvature(right) else "right"
+	@staticmethod
+	def _max_curvature(coeffs: np.ndarray) -> float:
+		k = curvature(coeffs, np.linspace(0.0, 1.0, 11))
+		finite = np.abs(k[np.isfinite(k)])
+		return float(finite.max()) if len(finite) > 0 else 0.0

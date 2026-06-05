@@ -17,7 +17,9 @@ from lka.lane_viz import fit_lane
 from lka.lane_model import curvature, sample_xy
 from lka.virtual_lane import VirtualLane
 
-MODEL_PATH = "../trained_models/yolov8n_seg_100e_16.hef"
+#MODEL_PATH = "../trained_models/yolov8n_seg_100e_16.hef"
+MODEL_PATH = "../trained_models/yolov8s_40e.hef"
+MODEL_FAMILY = "yolov8s_seg"
 CAM_HEIGHT = 640
 CAM_WIDTH = 640
 MODEL_HEIGHT = 640
@@ -25,8 +27,7 @@ MODEL_WIDTH = 640
 DISPLAY_WIDTH = 1280
 DISPLAY_HEIGHT = 640
 LANE_CLASS_ID = 0
-LANE_CONFIDENCE_THRESHOLD = 0.55
-MODEL_FAMILY = "yolov8"
+LANE_CONFIDENCE_THRESHOLD = 0.57
 DEBUG_EVERY_N_FRAMES = 10
 
 # ── Colour palette ─────────────────────────────────────────────────────────────
@@ -377,7 +378,7 @@ if __name__ == '__main__':
 			lka_vl = VirtualLane()
 
 		infer_engine = Inference(camera, MODEL_PATH)
-		post_processor = PostProcessor(input_size=(MODEL_HEIGHT, MODEL_WIDTH), strides=(8, 16, 32))
+		post_processor = PostProcessor(input_size=(MODEL_HEIGHT, MODEL_WIDTH), strides=(8, 16, 32), model_name=MODEL_FAMILY)
 		for frame, infer_results in infer_engine.run_inference():
 			frame_index += 1
 			lane_result = post_processor.decode(

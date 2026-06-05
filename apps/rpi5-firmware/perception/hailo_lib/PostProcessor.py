@@ -116,7 +116,7 @@ def class_aware_nms(boxes, scores, classes, iou_th=0.5, class_iou_ths=None):
 
 class PostProcessor:
 
-		def __init__(self, input_size=(640, 640), strides=(8, 16, 32), model_name="yolov8n_seg"):
+		def __init__(self, input_size=(640, 640), strides=(8, 16, 32), model_name="yolov8s_seg"):
 				self.input_size = input_size
 				self.strides = strides
 				self.model_name = model_name

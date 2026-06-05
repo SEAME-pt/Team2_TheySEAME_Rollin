@@ -86,11 +86,15 @@ class VirtualLane:
 		width = self._current_width(out_w)
 		virtual_side = None
 		if right is None and left is not None and self._lost_right >= self._LOST_FRAMES:
-			right = self._offset(left, +1.0, width, out_h, out_w)
-			virtual_side = "right"
+			candidate = self._offset(left, +1.0, width, out_h, out_w)
+			if float(eval_curve(candidate, 0.0)[0]) > float(eval_curve(left, 0.0)[0]):
+				right = candidate
+				virtual_side = "right"
 		elif left is None and right is not None and self._lost_left >= self._LOST_FRAMES:
-			left = self._offset(right, -1.0, width, out_h, out_w)
-			virtual_side = "left"
+			candidate = self._offset(right, -1.0, width, out_h, out_w)
+			if float(eval_curve(candidate, 0.0)[0]) < float(eval_curve(right, 0.0)[0]):
+				left = candidate
+				virtual_side = "left"
 
 		return left, right, virtual_side
 
