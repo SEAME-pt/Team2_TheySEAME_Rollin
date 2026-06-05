@@ -18,7 +18,7 @@ This application encompasses the algorithms for the ADAS part of the **Car** and
 ### 3.2 Target (RPI5)
 1. ```source <sdk-env-path>```
 2. ```mkdir build/target && cd build/target```
-3. ```cmake ../..```
+3. ```cmake ../.. -DSDK_PATH=<absolute-path-to-SDK-sysroots>```
 4. ```make install```
 
 The next step depends on which binary you want to run
@@ -26,7 +26,7 @@ The next step depends on which binary you want to run
 There's the **Manual Driving** (Remote Control) and the **Automatic Driving** (LKA) binaries
 
 ### Manual Driving Binary
-5. Pass the binaries to the RPI5 ```scp bin/<binary-file> <user>@<ip>:<target-path>```
+5. Pass the binaries to the RPI5 ```scp bin/CarControl <user>@<ip>:<target-path>```
 6. Run the binary in the RPI5 ```./<target-path>/<binary-file>```
 
 ### Automatic Driving Binary (LKA)

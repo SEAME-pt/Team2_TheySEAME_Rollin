@@ -8,8 +8,6 @@ set(SOURCES
 	pythonPurePursuit.cpp
 )
 
-#add_compile_options(-fPIC)
-
 add_library(purePursuit SHARED ${SOURCES})
 set_target_properties(purePursuit PROPERTIES PREFIX "")
 target_include_directories(
@@ -21,7 +19,6 @@ target_include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
 )
 target_link_libraries(purePursuit PRIVATE middleware
-	opencv_core opencv_imgproc opencv_imgcodecs
-	opencv_highgui opencv_videoio boost_python312 python3.12
+	opencv_core boost_python312 python3.12
 )
 
