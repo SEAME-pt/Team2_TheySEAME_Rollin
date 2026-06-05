@@ -9,31 +9,7 @@
 extern I2C_HandleTypeDef hi2c1;
 char control_uart_buf[128];
 
-typedef enum {
-    TRAFFIC_SIGN_UNKNOWN = 0,
-    TRAFFIC_SIGN_STOP = 1,
-    TRAFFIC_SIGN_SPEED_LIMIT_30 = 2,
-    TRAFFIC_SIGN_SPEED_LIMIT_50 = 3,
-    TRAFFIC_SIGN_SPEED_LIMIT_100 = 4,
-    TRAFFIC_SIGN_SPEED_LIMIT_80 = 5,
-    TRAFFIC_SIGN_SPEED_LIMIT_120 = 6,
-    TRAFFIC_SIGN_YIELD = 7,
-    TRAFFIC_SIGN_NO_ENTRY = 8,
-    TRAFFIC_SIGN_TURN_LEFT = 9,
-    TRAFFIC_SIGN_TURN_RIGHT = 10,
-    TRAFFIC_SIGN_PEDESTRIAN = 11,
-    TRAFFIC_SIGN_TRAFFIC_LIGHT = 12,
-    TRAFFIC_SIGN_ONE_WAY = 13,
-    TRAFFIC_SIGN_NO_PARKING = 14,
-    TRAFFIC_SIGN_NO_OVERTAKING = 15
-} TrafficSignType;
 
-static uint8_t Control_ApplyTrafficSignThrottle(uint8_t throttle_percent, int speed_limit) {
-    if (speed_limit == 50) {
-        return (uint8_t)(((uint16_t)throttle_percent * 75U) / 100U);
-    }
-    return throttle_percent;
-}
 
 /* Helper: safely snapshot global vehicle data with mutex protection */
 static int snapshot_vehicle_data(VehicleData_t *out) {
@@ -142,9 +118,6 @@ void Control_Thread_Entry(ULONG thread_input) {
     uint8_t last_brake = 0xFF;
     uint8_t last_gear = 0xFF;
     uint8_t last_throttle = 0xFF;
-    int last_traffic_sign = -1;
-    float last_traffic_sign_distance = -1.0f;
-    uint8_t last_detected_speed_limit = 0xFF;
     int8_t last_steering = 0x7F;
     uint8_t last_aeb_enabled = 0xFF;
 
@@ -225,26 +198,17 @@ void Control_Thread_Entry(ULONG thread_input) {
                     local_cmd.throttle != last_throttle || 
                     local_cmd.steering_angle != last_steering ||
                     local_cmd.brake != last_brake ||
-                    local_cmd.detected_speed_limit != last_detected_speed_limit ||
-                    local_cmd.traffic_sign != last_traffic_sign ||
-                    local_cmd.traffic_sign_distance != last_traffic_sign_distance ||
                     local_cmd.aeb_enabled != last_aeb_enabled) {
 
                     // Convert steering to normalized float
                     float steering_normalized = (float)local_cmd.steering_angle;
-                    uint8_t applied_throttle = Control_ApplyTrafficSignThrottle(local_cmd.throttle,
-                                                                               local_cmd.detected_speed_limit);
-                    if (local_cmd.traffic_sign == TRAFFIC_SIGN_STOP && local_cmd.traffic_sign_distance >= 0 && local_cmd.traffic_sign_distance < 10.0f)
-                       local_cmd.brake = 1;
-                    else
-                        local_cmd.brake = 0;
+                    uint8_t applied_throttle = local_cmd.throttle;
 
                     Control_SetSteering(steering_normalized);
                     Control_SetThrottle(applied_throttle, local_cmd.gear, local_cmd.brake);
 
                     snprintf(control_uart_buf, sizeof(control_uart_buf),
-                             "[CONTROL] Speed Limit=%u Throttle=%u%% -> %u%%\r\n",
-                             local_cmd.detected_speed_limit,
+                             "[CONTROL] Throttle=%u%% -> %u%%\r\n",
                              local_cmd.throttle,
                              applied_throttle);
                     Debug_Print(control_uart_buf);
@@ -265,9 +229,6 @@ void Control_Thread_Entry(ULONG thread_input) {
                     last_mode = local_cmd.driving_mode;
                     last_gear = local_cmd.gear;
                     last_throttle = local_cmd.throttle;
-                    last_detected_speed_limit = local_cmd.detected_speed_limit;
-                    last_traffic_sign = local_cmd.traffic_sign;
-                    last_traffic_sign_distance = local_cmd.traffic_sign_distance;
                     last_steering = local_cmd.steering_angle;
                     last_brake = local_cmd.brake;
                     last_aeb_enabled = local_cmd.aeb_enabled;

@@ -51,8 +51,6 @@ enum CAN_IDs {
     CAN_ID_TX_SPEED            = 0x200,
     CAN_ID_TX_BATTERY          = 0x201,
     CAN_ID_CRUISE_CONTROL      = 0x212,
-    CAN_ID_TSR                 = 0x226,
-    CAN_ID_TSR_SPEED           = 0x227,
     CAN_ID_AEB_CMD             = 0x20D,
 };
 
@@ -286,36 +284,6 @@ static int handle_rx_frame(uint32_t can_id, const uint8_t *data, uint8_t dlc) {
                 updated = 1;
             }
             break;
-        case CAN_ID_TSR:
-            if (dlc >= 5) {
-                int sign_type = data[0];
-                uint32_t distance_raw = (uint32_t)data[1] | ((uint32_t)data[2] << 8) | ((uint32_t)data[3] << 16) | ((uint32_t)data[4] << 24);
-                float distance;
-                memcpy(&distance, &distance_raw, sizeof(float));
-                if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                    g_vehicle_command.traffic_sign = sign_type;
-                    g_vehicle_command.traffic_sign_distance = distance;
-                    g_vehicle_command.command_valid = 1;
-                    tx_mutex_put(&g_vehicle_command_mutex);
-                }
-                snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] TSR SIGNS: Sign=%d Distance=%.2f m\r\n", sign_type, distance);
-                Debug_Print(comm_uart_buf);
-                updated = 1;
-            }
-            break;
-        case CAN_ID_TSR_SPEED:
-            if (dlc >= 5) {
-                uint8_t speed_limit = data[0];
-                if (tx_mutex_get(&g_vehicle_command_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
-                    g_vehicle_command.detected_speed_limit = speed_limit;
-                    g_vehicle_command.command_valid = 1;
-                    tx_mutex_put(&g_vehicle_command_mutex);
-                }
-                snprintf(comm_uart_buf, sizeof(comm_uart_buf), "[CMD] TSR SPEED: Limit=%u hm/h m\r\n", speed_limit);
-                Debug_Print(comm_uart_buf);
-                updated = 1;
-            }
-            break;
         case CAN_ID_AEB_CMD: /* Automatic Emergency Braking: byte0=enabled(0/1) */
             if (dlc >= 1) {
                 uint8_t enabled = data[0] > 0 ? 1 : 0;
@@ -407,8 +375,6 @@ void Communication_Thread_Entry(ULONG thread_input) {
         .cruise_control_enabled = false,
         .cruise_control_target_speed = 0,
         .aeb_enabled = true,
-        .traffic_sign = 0,
-        .traffic_sign_distance = 0.0f,
     };
     uint32_t last_cmd_ts = HAL_GetTick();
     int have_last_cmd = 1;

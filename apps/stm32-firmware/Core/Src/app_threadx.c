@@ -113,9 +113,6 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
     g_vehicle_command.command_valid = 0;
     g_vehicle_command.cruise_control_enabled = 0;
     g_vehicle_command.cruise_control_target_speed = 0;
-    g_vehicle_command.traffic_sign = 0;
-    g_vehicle_command.traffic_sign_distance = 0.0f;
-    g_vehicle_command.detected_speed_limit = 0;
     g_vehicle_command.aeb_enabled = 1;
     // Initialize global vehicle data structure
     g_vehicle_data.battery_voltage = 0;
