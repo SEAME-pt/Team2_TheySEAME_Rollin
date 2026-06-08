@@ -2,6 +2,7 @@
 #include "Tsr.hpp"
 #include "ActuatorKuksa.hpp"
 #include "ActuatorCAN.hpp"
+#include "ActuatorController.hpp"
 #include "CAN.hpp"
 #include <arpa/inet.h>
 #include <iostream>
@@ -52,15 +53,15 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
         }
         decoded = decode(raw);
         detections.push_back(decoded);
-        std::cout << "header: frameNbr=" << detections.back().frameNbr
-                  << " numDetections=" << detections.back().numDetections
-                  << " trafficSign=" << detections.back().trafficSign
-                  << " accuracy=" << detections.back().accuracy
-                  << " x=" << detections.back().x
-                  << " y=" << detections.back().y
-                  << " width=" << detections.back().width
-                  << " height=" << detections.back().height
-                  << std::endl;
+        // std::cout << "header: frameNbr=" << detections.back().frameNbr
+        //           << " numDetections=" << detections.back().numDetections
+        //           << " trafficSign=" << detections.back().trafficSign
+        //           << " accuracy=" << detections.back().accuracy
+        //           << " x=" << detections.back().x
+        //           << " y=" << detections.back().y
+        //           << " width=" << detections.back().width
+        //           << " height=" << detections.back().height
+        //           << std::endl;
     }
 
     frameCount++;
@@ -71,6 +72,8 @@ int main() {
     kuksaLib kuksa;
     CarActuator *car = new ActuatorKuksa(new ActuatorCAN(can), kuksa);
     Tsr tsr(car);
+    ActuatorController controller(car, nullptr, nullptr, kuksa, &tsr);
+    tsr.attach(&controller);
     tsr.resetKuksa();
     tsr.applyScaleCalibration(44.0f, 49.0f);
     FILE *pipe = fopen("NamedPipeTsr", "r");
@@ -93,7 +96,7 @@ int main() {
         }
 
         for (auto &d : detections) {
-            std::cout << "Dispatching trafficSign=" << d.trafficSign << std::endl;
+            // std::cout << "Dispatching trafficSign=" << d.trafficSign << std::endl;
             tsr.handleTrafficSign(d);
         }
         tsr.tick();

@@ -58,8 +58,9 @@ TrafficSign mapModelClassToTrafficSign(uint16_t classId)
 
 }
 
-Tsr::Tsr(CarActuator *car) : _car(car)
+Tsr::Tsr(CarActuator *car)
 {
+    (void)car;
 }
 
 // Valores iniciais para FX/FY (podem ser recalibrados em tempo de execução)
@@ -74,23 +75,41 @@ const TsrHeader& Tsr::getLastDetection() {
     return _lastDetection;
 }
 
+const std::vector<uint16_t>& Tsr::getDetectedSigns() const {
+    return _detectedSigns;
+}
+
+int Tsr::getSpeedLimit() const {
+    return _speedLimit;
+}
+
+bool Tsr::isStopBrakeActive() const {
+    return _stopBrakeActive;
+}
+
 void Tsr::handleTrafficSign(const TsrHeader &tsrData)
 {
-    int speedLimit = 0;
-    
+    int speedLimit = 0;    
     _lastSignalTime = std::chrono::steady_clock::now();
     _hasSignal      = true;
-
     _lastDetection = tsrData;
-    estimateDistance(tsrData);
-    if (mapModelClassToSpeedLimit(tsrData.trafficSign, speedLimit)) {
-        _car->setSpeedLimit(speedLimit);
+
+    float distance = estimateDistance(tsrData);
+    _detectedSigns.push_back(tsrData.trafficSign);
+
+    TrafficSign mappedSign = mapModelClassToTrafficSign(tsrData.trafficSign);
+    if (mappedSign == TrafficSign::UNKNOWN) {
+        std::cout << "[TSR] Detected unknown sign class " << tsrData.trafficSign << " — ignoring" << std::endl;
         return;
     }
-    _car->setTrafficSign(
-        static_cast<int>(mapModelClassToTrafficSign(tsrData.trafficSign)),
-        _distance.back().second
-    );
+    std::cout << "[TSR] Detected sign: " << static_cast<int>(mappedSign) << " at estimated distance " << distance << " cm" << std::endl;
+    notify(Events::CAR_TRAFFIC_SIGN);
+    
+    if (mapModelClassToSpeedLimit(tsrData.trafficSign, speedLimit)) {
+        _speedLimit = speedLimit;
+        notify(Events::CAR_SPEED_LIMIT);
+        return;
+    }
 }
 
 void Tsr::tick()
@@ -114,7 +133,7 @@ void Tsr::tick()
 
 void Tsr::resetKuksa()
 {
-    _car->setTrafficSign(static_cast<int>(TrafficSign::UNKNOWN), 0.0f);
+    _speedLimit = 0;
     std::cout << "kuksa reset: speed limit 0, traffic sign UNKNOWN" << std::endl;
 }
 
@@ -151,8 +170,8 @@ float Tsr::estimateDistance(const TsrHeader& det)
     for (float d : _distBuffer) smoothed += d;
     smoothed /= static_cast<float>(_distBuffer.size());
 
-    std::cout << "Estimated distance to sign (raw): " << dist << " cm, smoothed: " << smoothed << " cm"
-        << "FX_PX: " << FX_PX << "FY_PX: " << FY_PX << "bbox height: " << det.height  << "bbox width: " << det.width << std::endl;
+    // std::cout << "Estimated distance to sign (raw): " << dist << " cm, smoothed: " << smoothed << " cm"
+    //     << "FX_PX: " << FX_PX << "FY_PX: " << FY_PX << "bbox height: " << det.height  << "bbox width: " << det.width << std::endl;
     float corrected = smoothed;
     if (smoothed > SIGN_HEIGHT_OFFSET_CM) {
         corrected = sqrtf(smoothed * smoothed 

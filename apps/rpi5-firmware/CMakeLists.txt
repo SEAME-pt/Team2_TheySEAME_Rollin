@@ -11,6 +11,8 @@ set(SOURCES
 	Bev.cpp
 	Lka.cpp
 	Lka.hpp
+	Tsr.cpp
+	Tsr.hpp
 	Frame.hpp
 	Frame.cpp
 	SlidingWindow.hpp
@@ -23,6 +25,8 @@ set(SOURCES_LKA
 	Bev.cpp
 	Lka.cpp
 	Lka.hpp
+	Tsr.cpp
+	Tsr.hpp
 	Frame.hpp
 	Frame.cpp
 	SlidingWindow.hpp
@@ -33,6 +37,14 @@ set(SOURCES_TSR
 	mainTsr.cpp
 	Tsr.hpp
 	Tsr.cpp
+	Lka.hpp
+	Lka.cpp
+	SlidingWindow.hpp
+	SlidingWindow.cpp
+	Frame.hpp
+	Frame.cpp
+	Bev.hpp
+	Bev.cpp
 )
 
 # add_compile_options(-fsanitize=address -g)

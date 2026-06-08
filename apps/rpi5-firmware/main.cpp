@@ -81,7 +81,7 @@ int main() {
 	// );
 	//Lka lka(400, 0, 250, 960, 390); // Carla Setup
 	Lka lka(400, 0, 400, 1536, 464, 8); // Track Setup
-	ActuatorController ctrl(car, &remote, &lka, kuksa);
+	ActuatorController ctrl(car, &remote, &lka, kuksa, nullptr);
 
 	lka.attach(&ctrl);
 	remote.attach(&ctrl);

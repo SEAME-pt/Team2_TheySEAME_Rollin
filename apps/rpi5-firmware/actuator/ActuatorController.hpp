@@ -5,11 +5,12 @@
 #include "RemoteControl.hpp"
 #include "KuksaLib.hpp"
 #include "Lka.hpp"
+#include "Tsr.hpp"
 
 class ActuatorController : public Observer {
 public:
 
-	ActuatorController(CarActuator *_car, RemoteControl *remote, Lka *lka, kuksaLib &kuksa);
+	ActuatorController(CarActuator *_car, RemoteControl *remote, Lka *lka, kuksaLib &kuksa, Tsr *tsr);
 	~ActuatorController();
 
 	void update(Subject *subj, Events event);
@@ -31,11 +32,8 @@ private:
 	CarActuator *_car;
 	RemoteControl *_remote;
 	Lka *_lka;
+	Tsr *_tsr;
 	kuksaLib &_kuksa;
 
 	int _activeSpeedLimit = 0;
-	static constexpr float SPEED_REDUCTION_FACTOR = 0.75f;
-
-	static constexpr int STOP_SIGN = 1;
-	static constexpr float STOP_BRAKE_DISTANCE_M = 10000.0f;
 };

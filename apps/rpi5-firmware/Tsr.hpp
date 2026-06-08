@@ -64,7 +64,7 @@ static const std::vector<std::pair<float,float>> DIST_LUT = {
     {  28.0f, 80.0f },
 };
 
-class Tsr
+class Tsr : public Subject
 {
 public:
     Tsr(CarActuator *car);
@@ -74,6 +74,9 @@ public:
     void tick();
 
     const TsrHeader& getLastDetection();
+    const std::vector<uint16_t>& getDetectedSigns() const;
+    int getSpeedLimit() const;
+    bool isStopBrakeActive() const;
     float estimateDistance(const TsrHeader& det);
     void applyScaleCalibration(float measured_dist, float true_dist_cm);
     float lookupDistance(float bboxPx);
@@ -81,11 +84,13 @@ public:
 
 private:
 
-    CarActuator *_car;
     TsrHeader    _lastDetection;
 
     std::chrono::steady_clock::time_point _lastSignalTime;
     bool _hasSignal = false;
+    bool _stopBrakeActive = false;
+    int _speedLimit = 80;
+    std::vector<uint16_t> _detectedSigns;
 
     std::vector<std::pair<uint16_t, float>> _distance;
     static constexpr int DIST_FILTER_SIZE = 10;
