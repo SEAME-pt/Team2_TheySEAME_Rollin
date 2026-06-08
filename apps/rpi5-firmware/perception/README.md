@@ -137,8 +137,25 @@ If you need a single lane, choose the instance with the largest area or the cent
 
 If you need multiple lanes, keep the list sorted left-to-right and polyfit each component independently.
 
+## Dual lane + TSR pipeline
+
+`run_dual_pipeline.py` runs lane segmentation and TSR detection from **one camera** and **one Hailo VDevice** (two HEFs, sequential inference per frame).
+
+```bash
+python3 run_dual_pipeline.py \
+  --seg-hef trained_models/yolov8s_seg.hef \
+  --det-hef ../tsr/models/yolov8s.hef \
+  --labels ../tsr/models/labels.txt \
+  --seg-model-name yolov8s_seg \
+  --tsr-pipe /root/tsr/NamedPipeTsr
+```
+
+Optional `--lane-pipe` writes lane masks for LKA firmware. Use `--no-display` for headless runs.
+
 ## Relevant Files
 
 - [run_ai_pipeline.py](run_ai_pipeline.py)
+- [run_dual_pipeline.py](run_dual_pipeline.py)
 - [hailo_lib/PostProcessor.py](hailo_lib/PostProcessor.py)
+- [hailo_lib/DualInference.py](hailo_lib/DualInference.py)
 - [../README.md](../README.md)
