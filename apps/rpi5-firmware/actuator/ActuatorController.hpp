@@ -13,6 +13,8 @@ public:
 	~ActuatorController();
 
 	void update(Subject *subj, Events event);
+	void setSpeedLimit(const int speedLimit);
+	void setTrafficSign(const int trafficSign, const float distance);
 	void test();
 
 private:
@@ -30,4 +32,10 @@ private:
 	RemoteControl *_remote;
 	Lka *_lka;
 	kuksaLib &_kuksa;
+
+	int _activeSpeedLimit = 0;
+	static constexpr float SPEED_REDUCTION_FACTOR = 0.75f;
+
+	static constexpr int STOP_SIGN = 1;
+	static constexpr float STOP_BRAKE_DISTANCE_M = 10000.0f;
 };

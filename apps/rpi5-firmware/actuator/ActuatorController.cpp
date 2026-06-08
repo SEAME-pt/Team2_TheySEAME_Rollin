@@ -26,18 +26,39 @@ void ActuatorController::steering(const int angle) {
 }
 
 void ActuatorController::throttle(const int throttle) {
-	if (throttle < 0) {
-		gear(DRIVE);
-	} else if (throttle > 0) {
-		gear(REVERSE);
+		int appliedThrottle = throttle;
+		if (_activeSpeedLimit == 50 && throttle > 0) {
+			appliedThrottle = static_cast<int>(std::round(throttle * SPEED_REDUCTION_FACTOR));
+			std::cout << "[TSR] Speed limit 50: reducing throttle " << throttle << "% -> "
+					  << appliedThrottle << "%" << std::endl;
+		}
+
+		if (appliedThrottle < 0) {
+			gear(DRIVE);
+		} else if (appliedThrottle > 0) {
+			gear(REVERSE);
+		}
+		else {
+			gear(NEUTRAL);
+		}
+		
+		cruiseControl(false, 0);
+		_car->setThrottle(appliedThrottle);
+		std::cout << "Changed Throttle" << std::endl;
+}
+
+void ActuatorController::setSpeedLimit(const int speedLimit) {
+	_activeSpeedLimit = speedLimit;
+	_car->setSpeedLimit(speedLimit);
+}
+
+void ActuatorController::setTrafficSign(const int trafficSign, const float distance) {
+	_car->setTrafficSign(trafficSign, distance);
+	if (trafficSign == STOP_SIGN && distance >= 0 && distance < STOP_BRAKE_DISTANCE_M) {
+		std::cout << "[TSR] STOP sign at " << distance << "m (< " << STOP_BRAKE_DISTANCE_M
+					<< "m) → BRAKE!" << std::endl;
+		_car->brake(true);
 	}
-	else {
-		gear(NEUTRAL);
-	}
-	
-	cruiseControl(false, 0);
-	_car->setThrottle(throttle);
-	std::cout << "Changed Throttle" << std::endl;
 }
 
 void ActuatorController::gear(const short gear) {
