@@ -28,7 +28,9 @@ void ActuatorController::steering(const int angle) {
 
 void ActuatorController::throttle(const int throttle) {
 	int appliedThrottle = throttle;
-	if (_activeSpeedLimit == 50)
+	std::cout << "Raw Throttle: " << throttle << std::endl;
+	std::cout << "Current Speed Limit: " << _kuksa.getTsrDetectedSpeedLimit() << std::endl;
+	if (_kuksa.getTsrDetectedSpeedLimit() == 50)
 		appliedThrottle = throttle * 0.75f;
 	else
 		appliedThrottle = throttle;
@@ -43,12 +45,12 @@ void ActuatorController::throttle(const int throttle) {
 	}
 	
 	cruiseControl(false, 0);
+	_currentThrottle = appliedThrottle;
 	_car->setThrottle(appliedThrottle);
 	std::cout << "Changed Throttle" << std::endl;
 }
 
 void ActuatorController::setSpeedLimit(const int speedLimit) {
-	_activeSpeedLimit = speedLimit;
 	_car->setSpeedLimit(speedLimit);
 }
 
@@ -83,8 +85,11 @@ void ActuatorController::brake(const bool flag) {
 }
 
 void ActuatorController::update(Subject *subj, Events event) {
-	std::cout << "Received notify " << event << " sub: " << subj << std::endl;
+	// std::cout << "Received notify " << event << " sub: " << subj << std::endl;
+	std::lock_guard<std::mutex> lock(_mutex);
 	std::vector<uint16_t> signs;
+	bool stopDetected;
+	int lastSpeedLimit;
 	if (subj == _remote) {
 		switch (event) {
 			case Events::CAR_THROTTLE:
@@ -128,19 +133,28 @@ void ActuatorController::update(Subject *subj, Events event) {
 				for (const auto &sign : signs) {
 					setTrafficSign(sign, _tsr->estimateDistance(_tsr->getLastDetection()));
 				}
-				if (std::find(signs.begin(), signs.end(), static_cast<uint16_t>(TrafficSign::STOP)) != signs.end()) {
-					std::cout << "STOP sign detected, applying brake!" << std::endl;
-					brake(true);
+				stopDetected = std::find(signs.begin(), signs.end(),
+					static_cast<uint16_t>(TrafficSign::STOP)) != signs.end();
+
+				if (stopDetected) {
+					if (!_isBraking) {
+						std::cout << "STOP sign detected, applying brake!" << std::endl;
+						brake(true);
+						_isBraking = true;
+					}
 				} else {
-					brake(false);
+					if (_isBraking) {
+						brake(false);
+						_isBraking = false;
+					}
 				}
 				break;
 			case Events::CAR_SPEED_LIMIT:
+				std::cout << lastSpeedLimit << " → " << _tsr->getSpeedLimit() << std::endl;
+				if (lastSpeedLimit == 80 && _tsr->getSpeedLimit() == 50)
+					throttle(_currentThrottle * 0.75f);
 				setSpeedLimit(_tsr->getSpeedLimit());
-				if (_tsr->getSpeedLimit() == 50)
-					_activeSpeedLimit = 50;
-				else
-					_activeSpeedLimit = 80;
+				lastSpeedLimit = _tsr->getSpeedLimit();
 				break;
 			default:
 				break;

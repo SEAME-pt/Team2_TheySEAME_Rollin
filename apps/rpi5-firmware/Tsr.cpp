@@ -58,10 +58,7 @@ TrafficSign mapModelClassToTrafficSign(uint16_t classId)
 
 }
 
-Tsr::Tsr(CarActuator *car)
-{
-    (void)car;
-}
+Tsr::Tsr() {}
 
 // Valores iniciais para FX/FY (podem ser recalibrados em tempo de execução)
 float FX_PX = 606.34f; // CAM_STANDARD default
@@ -69,6 +66,10 @@ float FY_PX = 1081.08f; // CAM_STANDARD default
 
 Tsr::~Tsr()
 {
+}
+
+void Tsr::clearDetectedSigns() {
+    _detectedSigns.clear();
 }
 
 const TsrHeader& Tsr::getLastDetection() {
@@ -95,14 +96,13 @@ void Tsr::handleTrafficSign(const TsrHeader &tsrData)
     _lastDetection = tsrData;
 
     float distance = estimateDistance(tsrData);
-    _detectedSigns.push_back(tsrData.trafficSign);
-
     TrafficSign mappedSign = mapModelClassToTrafficSign(tsrData.trafficSign);
+    _detectedSigns.push_back(static_cast<uint16_t>(mappedSign));
+
     if (mappedSign == TrafficSign::UNKNOWN) {
         std::cout << "[TSR] Detected unknown sign class " << tsrData.trafficSign << " — ignoring" << std::endl;
-        return;
     }
-    std::cout << "[TSR] Detected sign: " << static_cast<int>(mappedSign) << " at estimated distance " << distance << " cm" << std::endl;
+    // std::cout << "[TSR] Detected sign: " << static_cast<int>(mappedSign) << " at estimated distance " << distance << " cm" << std::endl;
     notify(Events::CAR_TRAFFIC_SIGN);
     
     if (mapModelClassToSpeedLimit(tsrData.trafficSign, speedLimit)) {

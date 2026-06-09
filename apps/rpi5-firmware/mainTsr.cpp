@@ -71,11 +71,12 @@ int main() {
     CAN can("can0", 500, 0, 0);
     kuksaLib kuksa;
     CarActuator *car = new ActuatorKuksa(new ActuatorCAN(can), kuksa);
-    Tsr tsr(car);
-    ActuatorController controller(car, nullptr, nullptr, kuksa, &tsr);
+    Tsr tsr;
+    ActuatorController controller(nullptr, nullptr, nullptr, kuksa, &tsr);
     tsr.attach(&controller);
+    
     tsr.resetKuksa();
-    tsr.applyScaleCalibration(44.0f, 49.0f);
+    // tsr.applyScaleCalibration(44.0f, 49.0f);
     FILE *pipe = fopen("NamedPipeTsr", "r");
     if (pipe == NULL) {
         std::cout << "Failed to open NamedPipeTsr" << std::endl;
@@ -94,7 +95,7 @@ int main() {
             std::cout << "Pipe EOF" << std::endl;
             break;
         }
-
+        tsr.clearDetectedSigns();
         for (auto &d : detections) {
             // std::cout << "Dispatching trafficSign=" << d.trafficSign << std::endl;
             tsr.handleTrafficSign(d);

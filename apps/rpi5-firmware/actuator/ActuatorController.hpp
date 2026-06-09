@@ -35,5 +35,8 @@ private:
 	Tsr *_tsr;
 	kuksaLib &_kuksa;
 
-	int _activeSpeedLimit = 0;
+	std::mutex _mutex;
+
+	bool _isBraking = false;
+	int _currentThrottle = 0;
 };

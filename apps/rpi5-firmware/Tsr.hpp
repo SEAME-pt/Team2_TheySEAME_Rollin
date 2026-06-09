@@ -67,7 +67,7 @@ static const std::vector<std::pair<float,float>> DIST_LUT = {
 class Tsr : public Subject
 {
 public:
-    Tsr(CarActuator *car);
+    Tsr();
     ~Tsr();
 
     void handleTrafficSign(const TsrHeader &tsrData);
@@ -81,7 +81,7 @@ public:
     void applyScaleCalibration(float measured_dist, float true_dist_cm);
     float lookupDistance(float bboxPx);
     void resetKuksa();
-
+    void clearDetectedSigns();
 private:
 
     TsrHeader    _lastDetection;
