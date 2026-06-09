@@ -9,6 +9,9 @@ build/
 
 reports/*
 
+# Local YOLO / detection run outputs (not part of the repo)
+runs/
+
 # Doxygen
 html/
 latex/
