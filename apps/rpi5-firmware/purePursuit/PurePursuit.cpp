@@ -1,52 +1,50 @@
 #include "PurePursuit.hpp"
 
-PurePursuit::PurePursuit() { 
+PurePursuit::PurePursuit() : _alpha(0.4f), _L(60.0f), _angleTol(10) { 
+	_prevAngle = 0;
 	_angle = 0;
-	_laneWidth = 200;
 }
 
 PurePursuit::~PurePursuit() {}
 
 int PurePursuit::getAngle() { return (_angle); }
 
-int PurePursuit::calcAngle(const cv::Point2f carPos, cv::Point2f lookahead) {
-	// 2. Transform lookahead into the robot's local frame
-	//    x = forward (up in image), y = lateral (left is positive)
-	float y = lookahead.x - carPos.x;   // lateral offset
-	float x = carPos.y - lookahead.y;   // forward distance
-
-	// 3. Pure pursuit curvature: kappa = 2y / L^2
-	//    Equivalent steering angle: alpha = atan2(2y, L^2) — or simply atan2(y, x)
-	//    atan2(y, x) is the angle to the target in the robot frame, which is what you want
-	float angle = std::atan2(y, x);  // radians
-
-	return static_cast<int>(angle * (180.0f / M_PI));
-}
-
-float solveQuadY(struct quadFunc f, const int y) {
-	float res = f.a * (y * y) + f.b * y + f.c;
-	return (res);
-}
-
-void PurePursuit::control(struct quadFunc leftfunc, struct quadFunc rightfunc, const int frameH, const int frameW) {
-	cv::Point2f carPos(frameW / 2.0f, frameH);
-	cv::Point2f leftLanePtn;
-	cv::Point2f rightLanePtn;
-	cv::Point2f lookahead;
+float PurePursuit::calcAngle(const cv::Point2f carPos, cv::Point2f lookahead) {
+	float ld = cv::norm(carPos - lookahead);
+	float k;
 	float angle;
-	float ret;
 
-	ret = solveQuadY(leftfunc, carPos.y - _lookaheadDist);
-	leftLanePtn = cv::Point2f{ret, carPos.y - _lookaheadDist};
-	ret = solveQuadY(rightfunc, carPos.y - _lookaheadDist);
-	rightLanePtn = cv::Point2f{ret, carPos.y - _lookaheadDist};
-	lookahead = (cv::Point2f)(leftLanePtn + rightLanePtn) / 2.0f;
-	_angle = calcAngle(carPos, lookahead);
-	std::cout << "CarPos: " << carPos << std::endl;
-	std::cout << "LPoint: " << leftLanePtn << std::endl;
-	std::cout << "RPoint: " << rightLanePtn << std::endl;
-	std::cout << "Point: " << lookahead << std::endl;
-	std::cout << "Angle: " << _angle << std::endl;
+	//std::cout << "LookAhead: " << lookahead << " Car: " << carPos << std::endl;
+	//std::cout << "X Error: " << lookahead.x - carPos.x << std::endl;
+	//std::cout << "lookaheadDist: " << ld << std::endl;
+	k = (2 * (lookahead.x - carPos.x)) / (ld * ld);
+	std::cout << "Curvature: " << k << std::endl;
+	angle = atan(_L * k);
+	return ((angle * 180) / M_PI);
+}
+
+int PurePursuit::control(float x1, float y1, float x2, float y2) {
+	cv::Point2f carPos(frameW / 2.0f, frameH);
+	cv::Point2f lftPtn(x1, y1);
+	cv::Point2f rghPtn(x2, y2);
+	cv::Point2f lookahead;
+	int angle;
+	int diff;
+
+	lookahead = (cv::Point2f)(lftPtn + rghPtn) / 2.0f;
+	//std::cout << "LPoint: " << lftPtn << std::endl;
+	//std::cout << "RPoint: " << rghPtn << std::endl;
+	//std::cout << "LookAhead: " << lookahead << std::endl;
+	angle = calcAngle(carPos, lookahead);
+	//std::cout << "Before Angle: " << angle << std::endl;
+	_angle = angle * _alpha + (1 - _alpha) * _prevAngle;
+	//diff = std::abs(_angle - _prevAngle);
+	//if (diff >= _angleTol) {
+	//	std::cout << "Tolerance excedded: " << _angle << std::endl;
+	//	_angle = _prevAngle;
+	//}
+	_prevAngle = _angle;
 	//notify(Events::CAR_STEERING);
+	return (_angle);
 }
 

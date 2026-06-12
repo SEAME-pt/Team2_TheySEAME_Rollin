@@ -9,4 +9,6 @@ set(SOURCES
 )
 
 add_library(middleware STATIC ${SOURCES})
-target_include_directories(middleware PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(middleware PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}
+)

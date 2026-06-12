@@ -1,8 +1,13 @@
 #include "ActuatorController.hpp"
+#include "CAN.hpp"
+#include "ActuatorCAN.hpp"
 #include <iostream>
 #include <algorithm>
 
-ActuatorController::ActuatorController(CarActuator *car, RemoteControl *remote, PurePursuit *pp, kuksaLib &kuksa) : _car(car), _remote(remote), _pp(pp), _kuksa(kuksa) {
+ActuatorController::ActuatorController(RemoteControl *remote, PurePursuit *pp) : _remote(remote), _pp(pp) {
+	CAN *can = new CAN("can0", 500, 0, 0);
+	_car = new ActuatorCAN(*can);
+	pp->attach(this);
 }
 
 ActuatorController::~ActuatorController() {}
@@ -39,17 +44,18 @@ void ActuatorController::gear(const short gear) {
 }
 
 void ActuatorController::cruiseControl(const bool flag, const int inc) {
-	if (flag == false) {
-		_car->setCruiseControl(flag, 0);
-		return;
-	}
-	if (_kuksa.getCcActive()) {
-		_car->setCruiseControl(flag, _kuksa.getCcTargetSpeed() + inc);
-		std::cout << "Target Speed to " << _kuksa.getCcTargetSpeed() << std::endl;
-		return;
-	}
-	_car->setCruiseControl(flag, _kuksa.getSpeed());
-	std::cout << "Cruise Control Active to " << _kuksa.getSpeed() << std::endl;
+	//if (flag == false) {
+	//	_car->setCruiseControl(flag, 0);
+	//	return;
+	//}
+	//if (_kuksa.getCcActive()) {
+	//	_car->setCruiseControl(flag, _kuksa.getCcTargetSpeed() + inc);
+	//	std::cout << "Target Speed to " << _kuksa.getCcTargetSpeed() << std::endl;
+	//	return;
+	//}
+	//_car->setCruiseControl(flag, _kuksa.getSpeed());
+	//std::cout << "Cruise Control Active to " << _kuksa.getSpeed() << std::endl;
+	_car->setCruiseControl(true, 15);
 }
 
 void ActuatorController::brake(const bool flag) {
@@ -96,10 +102,6 @@ void ActuatorController::update(Subject *subj, Events event) {
 		}
 	} else {
 		steering(_pp->getAngle());
-		throttle(-35);
+		//throttle(-30);
 	}
-}
-
-void ActuatorController::test() {
-	
 }

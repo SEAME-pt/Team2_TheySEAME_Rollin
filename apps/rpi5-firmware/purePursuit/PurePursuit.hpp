@@ -2,7 +2,10 @@
 
 #include <opencv4/opencv2/opencv.hpp>
 #include "Subject.hpp"
-#include "Utils.hpp"
+#include <queue>
+
+const int frameW = 640;
+const int frameH = 320;
 
 /**
  * @class PurePursuit
@@ -59,15 +62,16 @@ public:
 	 *
 	 * @param frame to apply the lka algo
 	 */
-	void control(struct quadFunc leftfunc, struct quadFunc rightfunc, const int frameH, const int frameW);
-
+	int control(float x1, float y1, float x2, float y2);
 
 private:
 
-	int calcAngle(const cv::Point2f carPos, cv::Point2f lookahead);
+	float calcAngle(const cv::Point2f carPos, cv::Point2f lookahead);
 
+	const float _alpha;
+	const float _L;
+	const int _angleTol;
+	int _prevAngle;
 	int _angle;
-	int _laneWidth;
-	float _lookaheadDist = 80.0f;
 };
 
