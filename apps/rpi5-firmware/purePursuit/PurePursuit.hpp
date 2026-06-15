@@ -7,6 +7,11 @@
 const int frameW = 640;
 const int frameH = 320;
 
+struct Debug {
+	int angle;
+	int cte;
+};
+
 /**
  * @class PurePursuit
  * @brief PurePursuit class
@@ -62,16 +67,17 @@ public:
 	 *
 	 * @param frame to apply the lka algo
 	 */
-	int control(float x1, float y1, float x2, float y2);
+	 struct Debug control(float leftK, float rightK, float x1, float x2);
 
 private:
 
-	float calcAngle(const cv::Point2f carPos, cv::Point2f lookahead);
+	float calcAngle(float k);
 
 	const float _alpha;
 	const float _L;
-	const int _angleTol;
+	const float _kCte;
 	int _prevAngle;
-	int _angle;
+	int _showAngle;
+	std::queue<int> _angle;
 };
 

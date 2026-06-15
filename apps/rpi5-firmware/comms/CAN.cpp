@@ -94,7 +94,7 @@ int CAN::openSocket() {
 		return (-1);
 	}
 	_up = true;
-	_sock = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+	_sock = socket(PF_CAN, SOCK_RAW | SOCK_NONBLOCK, CAN_RAW);
 	if (_sock < 0) {
 		return (-1);
 	}

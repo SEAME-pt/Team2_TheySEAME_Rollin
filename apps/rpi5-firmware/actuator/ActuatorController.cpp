@@ -101,7 +101,11 @@ void ActuatorController::update(Subject *subj, Events event) {
 				break;
 		}
 	} else {
-		steering(_pp->getAngle());
-		//throttle(-30);
+		switch (event) {
+			case Events::CAR_THROTTLE:
+				throttle(-16);
+			case Events::CAR_STEERING:
+				steering(_pp->getAngle());
+		}
 	}
 }
