@@ -100,13 +100,17 @@ void Tsr::handleTrafficSign(const TsrHeader &tsrData)
     _detectedSigns.push_back(static_cast<uint16_t>(mappedSign));
 
     if (mappedSign == TrafficSign::UNKNOWN) {
-        std::cout << "[TSR] Detected unknown sign class " << tsrData.trafficSign << " — ignoring" << std::endl;
+        // std::cout << "[TSR] Detected unknown sign class " << tsrData.trafficSign << " — ignoring" << std::endl;
     }
     // std::cout << "[TSR] Detected sign: " << static_cast<int>(mappedSign) << " at estimated distance " << distance << " cm" << std::endl;
     notify(Events::CAR_TRAFFIC_SIGN);
     
     if (mapModelClassToSpeedLimit(tsrData.trafficSign, speedLimit)) {
+        if (speedLimit == 0 && tsrData.numDetections == 0)
+            speedLimit = _speedLimit;
         _speedLimit = speedLimit;
+        // std::cout << "Traffic sign: " << tsrData.trafficSign << " mapped to speed limit: " << _speedLimit << " km/h" << std::endl;
+        // std::cout << "[TSR] Updated speed limit to " << _speedLimit << " km/h" << std::endl;
         notify(Events::CAR_SPEED_LIMIT);
         return;
     }
@@ -129,6 +133,15 @@ void Tsr::tick()
         _distBuffer.clear();
         _distance.clear();
     }
+}
+
+float Tsr::getStopDistance() const {
+    for (const auto& [sign, dist] : _distance) {
+        if (sign == static_cast<uint16_t>(TrafficSign::STOP)) {
+            return dist;
+        }
+    }
+    return -1.0f;
 }
 
 void Tsr::resetKuksa()

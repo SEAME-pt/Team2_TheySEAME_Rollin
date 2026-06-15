@@ -75,9 +75,12 @@ public:
 
     const TsrHeader& getLastDetection();
     const std::vector<uint16_t>& getDetectedSigns() const;
+    const std::vector<std::pair<uint16_t, float>>& getDistance() const { return _distance; }
+
     int getSpeedLimit() const;
     bool isStopBrakeActive() const;
     float estimateDistance(const TsrHeader& det);
+    float getStopDistance() const;
     void applyScaleCalibration(float measured_dist, float true_dist_cm);
     float lookupDistance(float bboxPx);
     void resetKuksa();

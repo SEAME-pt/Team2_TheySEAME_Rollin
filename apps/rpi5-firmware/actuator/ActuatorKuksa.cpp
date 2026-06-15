@@ -32,7 +32,7 @@ void ActuatorKuksa::setTrafficSign(const int trafficSign, const float distance) 
 	_kuksa.sendValueToKuksa("Vehicle.ADAS.TrafficSignRecognition.DetectedSignDistance", distance);
 
 	static constexpr int STOP_SIGN = 1;
-	static constexpr float STOP_BRAKE_DISTANCE_M = 1000.0f;
+	static constexpr float STOP_BRAKE_DISTANCE_M = 100.0f;
 	if (trafficSign == STOP_SIGN && distance >= 0 && distance < STOP_BRAKE_DISTANCE_M) {
 		std::cout << "[TSR] (Kuksa) STOP sign at " << distance << "m (< " << STOP_BRAKE_DISTANCE_M
 				  << "m) → BRAKE!" << std::endl;

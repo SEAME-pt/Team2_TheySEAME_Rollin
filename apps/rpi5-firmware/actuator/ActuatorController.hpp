@@ -39,4 +39,6 @@ private:
 
 	bool _isBraking = false;
 	int _currentThrottle = 0;
+	int _lastSpeedLimit = 0;
+	bool _reduceSpeed = false;
 };
