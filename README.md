@@ -12,10 +12,10 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 | Field | Details |
 |-------|----------|
-| **Sprint Number** | Sprint 15 |
-| **Sprint Goal** | Finish TSR, refactor LKA and research about Mobility Scenarios |
-| **Sprint Duration** | June 01 – June 12 2026 |
-| **Focus Areas** | LKA, TSR, Mobility |
+| **Sprint Number** | Sprint 16 |
+| **Sprint Goal** | Start Crowededsource Hazard infrastructure. Finish ADAS |
+| **Sprint Duration** | June 15 – June 23 2026 |
+| **Focus Areas** | Adas, Backend, Database, MQTT |
 
 
 ## 📅 Scrum Team
