@@ -282,6 +282,7 @@ Kuksa Databroker (in-vehicle)
 ### Conceptual Limitations
 
 - No GPS — position estimates are approximate, based on encoder dead reckoning or visual landmarks on the track
+To address this limitation, it will be used ArUco codes to determine the hazard location
 
 ---
 
