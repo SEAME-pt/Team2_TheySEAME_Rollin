@@ -106,7 +106,7 @@ void Tsr::handleTrafficSign(const TsrHeader &tsrData)
     notify(Events::CAR_TRAFFIC_SIGN);
     
     if (mapModelClassToSpeedLimit(tsrData.trafficSign, speedLimit)) {
-        if (speedLimit == 0 && tsrData.numDetections == 0)
+        if (speedLimit == -1)
             speedLimit = _speedLimit;
         _speedLimit = speedLimit;
         // std::cout << "Traffic sign: " << tsrData.trafficSign << " mapped to speed limit: " << _speedLimit << " km/h" << std::endl;

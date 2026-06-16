@@ -37,8 +37,8 @@ private:
 
 	std::mutex _mutex;
 
-	bool _isBraking = false;
 	int _currentThrottle = 0;
 	int _lastSpeedLimit = 0;
 	bool _reduceSpeed = false;
+	bool _stopDetected = false;
 };

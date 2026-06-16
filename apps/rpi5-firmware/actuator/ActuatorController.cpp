@@ -27,7 +27,8 @@ void ActuatorController::steering(const int angle) {
 }
 
 void ActuatorController::throttle(const int throttle) {
-	
+	if (_stopDetected)
+		return;
 	if (throttle < 0) {
 		gear(DRIVE);
 	} else if (throttle > 0) {
@@ -82,6 +83,7 @@ void ActuatorController::update(Subject *subj, Events event) {
 	std::lock_guard<std::mutex> lock(_mutex);
 	std::vector<uint16_t> signs;
 	bool stopDetected;
+	bool brakeFlag;
 	if (subj == _remote) {
 		switch (event) {
 			case Events::CAR_THROTTLE:
@@ -129,16 +131,16 @@ void ActuatorController::update(Subject *subj, Events event) {
 					static_cast<uint16_t>(TrafficSign::STOP)) != signs.end();
 
 				if (stopDetected &&  (_tsr->getStopDistance() < 70.0f && _tsr->getStopDistance() != -1)) {
-					if (!_isBraking) {
 						std::cout << "STOP sign detected at " << _tsr->getStopDistance() << "m, applying brake!" << std::endl;
 						brake(true);
-						_isBraking = true;
-					}
+						_stopDetected = true;
+						brakeFlag = true;
+
 				} else {
-					if (_isBraking) {
+					if (brakeFlag)
 						brake(false);
-						_isBraking = false;
-					}
+					brakeFlag = false;
+						_stopDetected = false;
 				}
 				break;
 			case Events::CAR_SPEED_LIMIT:

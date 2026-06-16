@@ -117,15 +117,15 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
         }
         decoded = decode(raw);
         detections.push_back(decoded);
-        std::cout << "header: frameNbr=" << detections.back().frameNbr
-                  << " numDetections=" << detections.back().numDetections
-                  << " trafficSign=" << detections.back().trafficSign
-                  << " accuracy=" << detections.back().accuracy
-                  << " x=" << detections.back().x
-                  << " y=" << detections.back().y
-                  << " width=" << detections.back().width
-                  << " height=" << detections.back().height
-                  << std::endl;
+        // std::cout << "header: frameNbr=" << detections.back().frameNbr
+        //           << " numDetections=" << detections.back().numDetections
+        //           << " trafficSign=" << detections.back().trafficSign
+        //           << " accuracy=" << detections.back().accuracy
+        //           << " x=" << detections.back().x
+        //           << " y=" << detections.back().y
+        //           << " width=" << detections.back().width
+        //           << " height=" << detections.back().height
+        //           << std::endl;
     }
 
     frameCount++;
