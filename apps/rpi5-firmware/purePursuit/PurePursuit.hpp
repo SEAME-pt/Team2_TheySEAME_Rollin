@@ -78,6 +78,7 @@ private:
 	const float _kCte;
 	const int _stallFrames;
 	const int _angleToll;
+	const int _offset;
 	int _prevAngle;
 	int _showAngle;
 	std::queue<int> _angle;

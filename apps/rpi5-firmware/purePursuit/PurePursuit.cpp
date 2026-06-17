@@ -1,6 +1,6 @@
 #include "PurePursuit.hpp"
 
-PurePursuit::PurePursuit() : _alpha(0.4f), _L(80.0f), _kCte(12.0f), _stallFrames(10), _angleToll(20) { 
+PurePursuit::PurePursuit() : _alpha(0.4f), _L(80.0f), _kCte(12.0f), _stallFrames(10), _angleToll(20), _offset(-4) { 
 	_prevAngle = 0;
 	_angle.push(0);
 	_showAngle = 0;
@@ -32,12 +32,12 @@ struct Debug PurePursuit::control(float leftK, float rightK, float x1, float x2)
 	angle = ffangle + fbangle;
 	angle = angle * _alpha + (1 - _alpha) * _prevAngle;
 	if (abs(angle - _prevAngle) < _angleToll) {
-		_angle.push(angle);
+		_angle.push(angle + _offset);
 		_prevAngle = angle;
 	}
 	if (_angle.size() >= _stallFrames) {
 		notify(Events::CAR_STEERING);
-		_showAngle = _angle.front();
+		_showAngle = _angle.front() - _offset;
 		_angle.pop();
 	}
 	//notify(Events::CAR_THROTTLE);
