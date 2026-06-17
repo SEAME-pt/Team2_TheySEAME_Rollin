@@ -33,7 +33,7 @@ void ActuatorController::throttle(const int throttle) {
 	} else {
 		gear(REVERSE);
 	}
-	cruiseControl(false, 0);
+	//cruiseControl(false, 0);
 	_car->setThrottle(throttle);
 	std::cout << "Changed Throttle" << std::endl;
 }
@@ -103,7 +103,7 @@ void ActuatorController::update(Subject *subj, Events event) {
 	} else {
 		switch (event) {
 			case Events::CAR_THROTTLE:
-				throttle(-16);
+				throttle(-18);
 			case Events::CAR_STEERING:
 				steering(_pp->getAngle());
 		}
