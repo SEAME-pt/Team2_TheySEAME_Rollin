@@ -5,6 +5,7 @@
 #include "RemoteControl.hpp"
 //#include "KuksaLib.hpp"
 #include "PurePursuit.hpp"
+#include "CAN.hpp"
 
 class ActuatorController : public Observer {
 public:
@@ -25,6 +26,7 @@ private:
 	void cruiseControl(const bool flag, const int targetSpeed);
 	void brake(const bool flag);
 
+	CAN *_can;
 	CarActuator *_car;
 	RemoteControl *_remote;
 	PurePursuit *_pp;

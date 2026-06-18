@@ -5,12 +5,15 @@
 #include <algorithm>
 
 ActuatorController::ActuatorController(RemoteControl *remote, PurePursuit *pp) : _remote(remote), _pp(pp) {
-	CAN *can = new CAN("can0", 500, 0, 0);
-	_car = new ActuatorCAN(*can);
+	_can = new CAN("can0", 500, 0, 0);
+	_car = new ActuatorCAN(*_can);
 	pp->attach(this);
 }
 
-ActuatorController::~ActuatorController() {}
+ActuatorController::~ActuatorController() {
+	delete _can;
+	delete _car;
+}
 
 int ActuatorController::processThrottle(const int rawThrottle) {
 	return ((rawThrottle - 127) / 1.27);
@@ -24,7 +27,6 @@ void ActuatorController::steering(const int angle) {
 	const int steering = std::clamp(angle, -30, 30);
 
 	_car->setSteering(steering);
-	std::cout << "Changed Steering " << steering << std::endl;
 }
 
 void ActuatorController::throttle(const int throttle) {

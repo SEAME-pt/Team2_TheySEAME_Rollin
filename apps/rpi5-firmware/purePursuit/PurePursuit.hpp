@@ -10,6 +10,7 @@ const int frameH = 320;
 struct Debug {
 	int angle;
 	int cte;
+	int size;
 };
 
 /**
@@ -79,6 +80,7 @@ private:
 	const int _stallFrames;
 	const int _angleToll;
 	const int _offset;
+	const int _clw;
 	int _prevAngle;
 	int _showAngle;
 	std::queue<int> _angle;
