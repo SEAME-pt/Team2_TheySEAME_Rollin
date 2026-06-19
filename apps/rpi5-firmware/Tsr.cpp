@@ -70,6 +70,7 @@ Tsr::~Tsr()
 
 void Tsr::clearDetectedSigns() {
     _detectedSigns.clear();
+    _distance.clear(); 
 }
 
 const TsrHeader& Tsr::getLastDetection() {

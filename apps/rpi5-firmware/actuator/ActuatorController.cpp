@@ -82,8 +82,8 @@ void ActuatorController::update(Subject *subj, Events event) {
 	// std::cout << "Received notify " << event << " sub: " << subj << std::endl;
 	std::lock_guard<std::mutex> lock(_mutex);
 	std::vector<uint16_t> signs;
-	bool stopDetected;
-	bool brakeFlag;
+	bool stopDetected = false;
+	bool brakeFlag = false;
 	if (subj == _remote) {
 		switch (event) {
 			case Events::CAR_THROTTLE:
