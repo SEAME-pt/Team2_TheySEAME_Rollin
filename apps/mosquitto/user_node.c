@@ -1,17 +1,9 @@
-/*
- * This example shows how to write a client that subscribes to a topic and does
- * not do anything other than handle the messages that are received.
- * https://github.com/eclipse-mosquitto/mosquitto/blob/master/examples/subscribe/basic-1.c
- */
-
 #include <mosquitto.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-
-/* Callback called when the client receives a CONNACK message from the broker. */
 void on_connect(struct mosquitto *mosq, void *obj, int reason_code)
 {
 	int rc;
@@ -30,7 +22,7 @@ void on_connect(struct mosquitto *mosq, void *obj, int reason_code)
 	/* Making subscriptions in the on_connect() callback means that if the
 	 * connection drops and is automatically resumed by the client, then the
 	 * subscriptions will be recreated when the client reconnects. */
-	rc = mosquitto_subscribe(mosq, NULL, "example/temperature", 1);
+	rc = mosquitto_subscribe(mosq, NULL, "stop_detections", 1);
 	if(rc != MOSQ_ERR_SUCCESS){
 		fprintf(stderr, "Error subscribing: %s\n", mosquitto_strerror(rc));
 		/* We might as well disconnect if we were unable to subscribe */
@@ -38,8 +30,6 @@ void on_connect(struct mosquitto *mosq, void *obj, int reason_code)
 	}
 }
 
-
-/* Callback called when the broker sends a SUBACK in response to a SUBSCRIBE. */
 void on_subscribe(struct mosquitto *mosq, void *obj, int mid, int qos_count, const int *granted_qos)
 {
 	int i;
@@ -62,14 +52,55 @@ void on_subscribe(struct mosquitto *mosq, void *obj, int mid, int qos_count, con
 	}
 }
 
+void on_publish(struct mosquitto *mosq, void *obj, int mid)
+{
+	// UNUSED(mosq);
+	// UNUSED(obj);
 
-/* Callback called when the client receives a message. */
+	printf("Message with mid %d has been published.\n", mid);
+}
+
 void on_message(struct mosquitto *mosq, void *obj, const struct mosquitto_message *msg)
 {
 	/* This blindly prints the payload, but the payload can be anything so take care. */
 	printf("%s %d %s\n", msg->topic, msg->qos, (char *)msg->payload);
 }
 
+// Dummy function - Integrate with hazard detection later
+char *get_gps_coordinates(char *grid[]) {
+	int i = (int)random()%6;
+	
+	sleep(1); /* Prevent a storm of messages - this pretend sensor works at 1Hz */
+	return grid[i];
+}
+
+void publish_hazard_data(struct mosquitto *mosq)
+{
+	char *grid[6] = {"A1", "A2", "A3", "B1", "B2", "B3"};
+	char payload[20];
+	int temp;
+	int rc;
+
+	/* Print it to a string for easy human reading - payload format is highly
+	 * application dependent. */
+	snprintf(payload, sizeof(payload), "%d", temp);
+
+	/* Publish the message
+	 * mosq - our client instance
+	 * *mid = NULL - we don't want to know what the message id for this message is
+	 * topic = "example/temperature" - the topic on which this message will be published
+	 * payloadlen = strlen(payload) - the length of our payload in bytes
+	 * payload - the actual payload
+	 * qos = 2 - publish with QoS 2 for this example
+	 * retain = false - do not use the retained message feature for this message
+	 */
+	char topic[23];
+	snprintf(topic, 60, "hazard/%s/car_stopped", get_gps_coordinates(grid));
+	rc = mosquitto_publish(mosq, NULL, topic, (int)strlen(payload), payload, 2, false);
+	if(rc != MOSQ_ERR_SUCCESS){
+		fprintf(stderr, "Error publishing: %s\n", mosquitto_strerror(rc));
+	}
+}
 
 int main(int argc, char *argv[])
 {
@@ -94,12 +125,13 @@ int main(int argc, char *argv[])
 	mosquitto_connect_callback_set(mosq, on_connect);
 	mosquitto_subscribe_callback_set(mosq, on_subscribe);
 	mosquitto_message_callback_set(mosq, on_message);
+	mosquitto_publish_callback_set(mosq, on_publish);
 
 	/* Connect to test.mosquitto.org on port 1883, with a keepalive of 60 seconds.
 	 * This call makes the socket connection only, it does not complete the MQTT
 	 * CONNECT/CONNACK flow, you should use mosquitto_loop_start() or
 	 * mosquitto_loop_forever() for processing net traffic. */
-	rc = mosquitto_connect(mosq, "test.mosquitto.org", 1883, 60);
+	rc = mosquitto_connect(mosq, "localhost", 1883, 60);
 	if(rc != MOSQ_ERR_SUCCESS){
 		mosquitto_destroy(mosq);
 		fprintf(stderr, "Error: %s\n", mosquitto_strerror(rc));
@@ -112,8 +144,14 @@ int main(int argc, char *argv[])
 	 * This call will continue forever, carrying automatic reconnections if
 	 * necessary, until the user calls mosquitto_disconnect().
 	 */
-	mosquitto_loop_forever(mosq, -1, 1);
+	mosquitto_loop_start(mosq);
 
+	while(1){
+		// if (hazard_data) -- Check here if there is hazard data to publish
+		publish_hazard_data(mosq);
+
+	}
+	mosquitto_loop_stop(mosq, true);
 	mosquitto_lib_cleanup();
 	return 0;
 }
