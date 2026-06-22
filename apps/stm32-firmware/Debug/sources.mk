@@ -30,6 +30,7 @@ Core/Src/Sensors \
 Core/Src \
 Core/Src/utils \
 Core/Startup \
+Drivers/BSP/Components/iis2mdc \
 Drivers/STM32U5xx_HAL_Driver/Src \
 Middlewares/SEGGER/Config \
 Middlewares/SEGGER/RTT \

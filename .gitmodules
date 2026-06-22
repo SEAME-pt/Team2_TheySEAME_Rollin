@@ -1,3 +1,7 @@
 [submodule "libs/googletest"]
 	path = libs/googletest
 	url = https://github.com/google/googletest.git
+[submodule "scripts/AGL/layers/meta-hailo"]
+	path = scripts/AGL/layers/meta-hailo
+	url = git@github.com:hailo-ai/meta-hailo.git
+	branch = hailo8-scarthgap

@@ -13,7 +13,7 @@ public:
 	virtual void setSteering(const int steering);
 	virtual void setGear(const short gear);
 	virtual void setCruiseControl(const bool flag, const int targetSpeed);
-
+	virtual void setAEb_Enabled(const bool autonomous);
 private:
 
 	kuksaLib &_kuksa;

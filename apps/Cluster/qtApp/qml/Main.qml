@@ -42,11 +42,5 @@ Window {
                 onStopped: splash.visible = false  // Hides the splash screen at the end
             }
         }
-        Loader {
-            id: loader
-            anchors.fill: parent
-            active: !splash.visible
-            source: "Screen01.ui.qml"
-        }
     }
 }

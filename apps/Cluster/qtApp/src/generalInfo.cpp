@@ -104,6 +104,32 @@ QString generalInfo::getCurrentDate() const
     return _currentDate.toString("dd/MM/yyyy");
 }
 
+int generalInfo::getTrafficSignInfo() const
+{
+    return _trafficSign;
+}
+
+int generalInfo::getTrafficSignSpeedLimit() const
+{
+    return _trafficSignSpeedLimit;
+}
+
+void generalInfo::updateTrafficSign(int sign)
+{
+    if (_trafficSign != sign) {
+        _trafficSign = sign;
+        emit trafficSignInfoChanged();
+    }
+}
+
+void generalInfo::updateSpeedLimit(int speedLimit)
+{
+    if (_trafficSignSpeedLimit != speedLimit) {
+        _trafficSignSpeedLimit = speedLimit;
+        emit trafficSignSpeedLimitUpdated();
+    }
+}
+
 void generalInfo::fetchWeatherData()
 {
     QString url = QString("https://api.open-meteo.com/v1/forecast?latitude=%1&longitude=%2&current_weather=true")

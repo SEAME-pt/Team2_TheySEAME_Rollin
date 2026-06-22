@@ -80,6 +80,67 @@ The interface is optimized for performance on the Raspberry Pi 5 and suitable fo
 
 - **Cross-compiling for Raspberry Pi (ARM target)**  
   For instructions on cross-compiling, see [this README](Cross_Compile/README.md)
+
 ---
+
+## 6. Running the Application
+
+### 6.1 Prerequisites
+Before running the application, ensure:
+- **KUKSA Databroker** is running and accessible from the machine where qtAppExec will run
+- The application connects to KUKSA on startup to fetch vehicle data (battery, speed, etc.)
+- If KUKSA is unavailable, the application will show: `Failed to communicate with kuksa`
+
+### 6.2 Local Execution
+Run directly on the development machine:
+```bash
+cd build
+./qtAppExec
+```
+
+This will start the Qt GUI application with the default display (requires X11/Wayland).
+
+### 6.3 Remote Execution on Headless Machine
+
+If running on a remote machine without a display (e.g., Raspberry Pi or headless server), configure the platform plugin:
+
+#### Option 1: Offscreen Mode (Background)
+Runs the application in offscreen mode (no visual output, useful for testing):
+```bash
+ssh team2@100.103.187.55 'QT_QPA_PLATFORM=offscreen /home/team2/Documents/hugo-folder/Team2_TheySEAME_Rollin/apps/Cluster/qtApp/build/qtAppExec'
+```
+
+#### Option 2: VNC Server
+Stream the GUI over VNC to view remotely:
+```bash
+ssh team2@100.103.187.55 'QT_QPA_PLATFORM=vnc /home/team2/Documents/hugo-folder/Team2_TheySEAME_Rollin/apps/Cluster/qtApp/build/qtAppExec'
+```
+
+Then connect with a VNC client to `100.103.187.55:1` and port `5900`.
+
+#### Option 3: X11 Forwarding (from local machine with X11)
+Forward the display from remote to local machine:
+```bash
+ssh -X team2@100.103.187.55 'DISPLAY=:0 /home/team2/Documents/hugo-folder/Team2_TheySEAME_Rollin/apps/Cluster/qtApp/build/qtAppExec'
+```
+
+**Note:** Requires X11 server running on local machine and SSH X11 forwarding enabled.
+
+### 6.4 Display Configuration Troubleshooting
+
+If you encounter: `could not connect to display` or `Could not load the Qt platform plugin "xcb"`
+
+**Available platform plugins:** wayland, eglfs, xcb, vnc, minimal, vkkhrdisplay, linuxfb, wayland-egl, offscreen, minimalegl
+
+Set the appropriate one:
+```bash
+export QT_QPA_PLATFORM=offscreen  # For background execution
+export QT_QPA_PLATFORM=vnc        # For remote GUI viewing
+export QT_QPA_PLATFORM=wayland    # If Wayland is available
+export QT_QPA_PLATFORM=eglfs      # For embedded systems with GPU
+```
+
+---
+
 ## 6. Conclusion
 This document outlines the structure, requirements, and features of the Qt application designed for the Raspberry Pi 5. It serves as a guide for development, deployment, and future enhancements.

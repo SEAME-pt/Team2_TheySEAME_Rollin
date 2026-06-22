@@ -1,0 +1,96 @@
+/**
+ * LEFT LANE CAR ANIMATION - Distance-Based Positioning
+ * 
+ * The left car will animate from FARTHEST (distance=0%) to CLOSEST (distance=100%) 
+ * with smooth 300ms transitions.
+ * 
+ * COORDINATE PROGRESSION:
+ */
+
+Distance  |  X Coord  |  Y Coord  |  Width  |  Height  |  Description
+----------|-----------|-----------|---------|---------|------------------
+   0%     |   575     |    82     |   46    |   52    |  FARTHEST - car is small and high on screen
+  10%     |   558     |   96      |   60    |   61    |  
+  20%     |   540     |   110     |   75    |   70    |  
+  30%     |   523     |   124     |   87    |   78    |  
+  40%     |   505     |   138     |   101   |   87    |  
+  50%     |   488     |   152     |   115   |   96    |  MIDDLE - halfway between extremes
+  60%     |   470     |   167     |   130   |   105   |  
+  70%     |   453     |   181     |   144   |   113   |  
+  80%     |   435     |   195     |   157   |   122   |  
+  90%     |   418     |   209     |   171   |   131   |  
+ 100%     |   400     |   223     |   183   |   132   |  CLOSEST - car is large and low on screen
+
+
+ANIMATION SEQUENCE (4-second cycle):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  0.0s ──────► 4.0s              4.5s ──────► 8.5s              9.0s (repeat)
+  
+  0% → 100%                      100% → 0%
+  (APPROACHING)                  (MOVING AWAY)
+  
+  Small & High                   Large & Low                    Small & High
+  (Farthest)                     (Closest)                      (Farthest)
+  
+  ↓ Smooth slide  ←300ms easing   ↓ Smooth slide  ←300ms easing  ↓ Repeat
+  ↓ Size grows    ←per frame      ↓ Size shrinks  ←per frame     ↓ ...
+  ↓ Moves down    ←InOutQuad      ↓ Moves up      ←InOutQuad
+  
+  
+VISUAL PATH (side view):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Screen coordinates (upper-left origin):
+
+  0%  ○  ← very small, high y=82
+  ↓
+  25%    ○
+  ↓
+  50%      ◯
+  ↓
+  75%        ◻
+  ↓
+ 100% ◼  ← large, low y=223
+
+
+FORMULA USED:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+x = 575 - 175 * (distance / 100)
+y = 82 + 141 * (distance / 100)
+width = 46 + 137 * (distance / 100)
+height = 52 + 80 * (distance / 100)
+
+Where:
+  - 575 to 400 = 175 pixel horizontal movement (left)
+  - 82 to 223 = 141 pixel vertical movement (down)
+  - 46 to 183 = 137 pixel width expansion
+  - 52 to 132 = 80 pixel height expansion
+
+
+ANIMATION PROPERTIES (QML):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+All four properties use:
+  - Duration: 300ms per frame update
+  - Easing: InOutQuad (smooth acceleration/deceleration)
+  - Continuous update as distance changes
+
+
+EXPECTED BEHAVIOR WHEN YOU RUN:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. App starts → car appears small and high (farthest position)
+2. For 4 seconds → car smoothly slides left, down, and grows
+3. Car reaches maximum size and lowest position (approaching)
+4. Car pauses for 0.5 seconds at closest position
+5. For 4 seconds → car smoothly slides right, up, and shrinks
+6. Car returns to starting position (farthest)
+7. Cycle repeats infinitely
+
+This will loop continuously, demonstrating:
+  ✓ Smooth position transitions (300ms easing)
+  ✓ Correct coordinate progression
+  ✓ Size scaling relative to perceived distance
+  ✓ Realistic perspective (larger = closer, lower = closer)

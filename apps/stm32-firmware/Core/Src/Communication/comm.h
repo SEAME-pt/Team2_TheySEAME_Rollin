@@ -33,5 +33,4 @@
  * @return void
  */
 void Communication_Thread_Entry(ULONG thread_input);
-
 #endif /* COMM_H */

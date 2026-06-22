@@ -25,6 +25,7 @@ private:
 	void gear(const short gear);
 	void cruiseControl(const bool flag, const int targetSpeed);
 	void brake(const bool flag);
+	void setAEb_Enabled(bool enabled);
 
 	CAN *_can;
 	CarActuator *_car;

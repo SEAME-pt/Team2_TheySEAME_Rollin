@@ -33,7 +33,7 @@
 #define DISABLE_CONTROL_SAFETY
 #endif
 #endif
-
+#define MAX_THROTTLE_PWM 4095
 /**
  * @brief Control thread entry and main loop
  *

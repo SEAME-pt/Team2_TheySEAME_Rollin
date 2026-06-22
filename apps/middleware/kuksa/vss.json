@@ -162,6 +162,19 @@
               }
             }
           },
+          "AutomaticEmergencyBraking": {
+            "type": "branch",
+            "description": "Automatic Emergency Braking signals",
+            "children": {
+              "Enabled": {
+                "type": "actuator",
+                "datatype": "boolean",
+                "description": "Enable or disable AEB"
+                ,"dbc": { "signal": "Enabled" },
+                "vss2dbc": { "signal": "Enabled" }
+              }
+            }
+          },
           "CruiseControl": {
             "type": "branch",
             "description": "Cruise Control signals",

@@ -8,7 +8,7 @@
 #include <QJsonObject>
 #include <iostream>
 #include <QGeoPositionInfoSource>
-
+#include "systemInfo.hpp"
 class generalInfo : public QObject
 {
     Q_OBJECT
@@ -16,6 +16,8 @@ class generalInfo : public QObject
     Q_PROPERTY(int temperature READ getTemperature NOTIFY temperatureChanged)
     Q_PROPERTY(QString localTime READ getLocalTime NOTIFY localTimeChanged)
     Q_PROPERTY(QString currentDate READ getCurrentDate NOTIFY currentDateChanged)
+    Q_PROPERTY(int trafficSignInfo READ getTrafficSignInfo NOTIFY trafficSignInfoChanged)
+    Q_PROPERTY(int trafficSignSpeedLimit READ getTrafficSignSpeedLimit NOTIFY trafficSignSpeedLimitUpdated)
 public:
     /**
     * @brief The generalInfo class
@@ -82,10 +84,29 @@ public:
     */
     QString getCurrentDate() const;
     
+    /**
+    * @brief Returns the current traffic sign information based on location.
+    * 
+    * @return QString representing traffic sign information (e.g., "Speed Limit 50 km/h")
+    * Requirement traceability:
+    * [impl->dsn~design-requirement-cluster-traffic-sign~1]
+    *
+    */
+    int getTrafficSignInfo() const;
+
+    /**
+    * @brief Returns the speed limit associated with the current traffic sign.
+    * 
+    * @return int representing speed limit (e.g., 50 for "Speed Limit 50 km/h")
+    */
+    int getTrafficSignSpeedLimit() const;
+
 private:
     QString _weatherInfo;
     int _temperature;
     QString _localTime;
+    int _trafficSign;
+    int _trafficSignSpeedLimit;
     QDate   _currentDate;
     QNetworkAccessManager* _manager = nullptr;
     QGeoPositionInfoSource* _positionSource = nullptr;
@@ -98,7 +119,8 @@ signals:
     void temperatureChanged();
     void localTimeChanged();
     void currentDateChanged();
-
+    void trafficSignInfoChanged();
+    void trafficSignSpeedLimitUpdated();
 public slots:
 
     /**
@@ -108,7 +130,7 @@ public slots:
     *
     */
     void fetchWeatherData();
-
+    
     /**
     * @brief Handles the network reply for weather API.
     * Parses JSON and updates temperature and weather icon.
@@ -119,4 +141,7 @@ public slots:
     *
     */
     void onWeatherDataReceived(QNetworkReply* reply);
+
+    void updateTrafficSign(int sign);
+    void updateSpeedLimit(int speedLimit);
 };

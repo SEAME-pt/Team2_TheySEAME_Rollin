@@ -45,3 +45,10 @@ void ActuatorCAN::setCruiseControl(const bool flag, const int targetSpeed) {
 	data[1] = targetSpeed;
 	_can.sendFrame(CRUISE_CONTROL, data, sizeof(data));
 }
+
+void ActuatorCAN::setAEb_Enabled(const bool autonomous) {
+	uint8_t data[1];
+
+	data[0] = autonomous;
+	_can.sendFrame(AEB_ENABLED, data, sizeof(data));
+}

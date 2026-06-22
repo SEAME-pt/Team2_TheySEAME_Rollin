@@ -1,61 +1,47 @@
-#include "cruise_control.h"
+#include "PID.h"
 
-static float integral = 0.0f;
-static float prev_error = 0.0f;
+static float integral_cruise = 0.0f;
+static float prev_error_cruise = 0.0f;
 
 void PID_Reset(void)
 {
-    integral = 0.0f;
-    prev_error = 0.0f;
+    integral_cruise = 0.0f;
+    prev_error_cruise = 0.0f;
 }
 
 float PID_GetIntegral(void)
 {
-    return integral;
+    return integral_cruise;
 }
 
 float PID(float set_point, float current_value, float dt)
 {
     float error = set_point - current_value;
-    float derivative = 0.0f;
     float output = 0.0f;
-    float u_unsat = 0.0f;
-    float ff;
-
-    if (dt <= 0.0f) {
+    float ff = 0.0f;
+        
+    if (dt <= 0.0f) 
         return 0.0f;
-    }
-    
-    derivative = (error - prev_error) / dt;
-    ff = set_point * FEED_FORWARD_GAIN; // Simple feed-forward term proportional to target speed
-    u_unsat = ff + PID_KP * error + PID_KI * integral + PID_KD * derivative;
+    float derivative = (error - prev_error_cruise) / dt;
+
+    ff = set_point * FEED_FORWARD_GAIN;
+
+    float u_unsat = ff + PID_KP * error +
+                    PID_KI * integral_cruise +
+                    PID_KD * derivative;
+
     output = clamp(u_unsat);
 
     if (!((output >= PID_OUTPUT_MAX && error > 0.0f) ||
         (output <= PID_OUTPUT_MIN && error < 0.0f)))
     {
-        integral += error * dt;
+        integral_cruise += error * dt;
 
-        if (integral > PID_INTEGRAL_MAX) integral = PID_INTEGRAL_MAX;
-        if (integral < PID_INTEGRAL_MIN) integral = PID_INTEGRAL_MIN;
+        if (integral_cruise > PID_INTEGRAL_MAX) integral_cruise = PID_INTEGRAL_MAX;
+        if (integral_cruise < PID_INTEGRAL_MIN) integral_cruise = PID_INTEGRAL_MIN;
     }
 
-    u_unsat = ff + PID_KP * error + PID_KI * integral + PID_KD * derivative;
-    output = clamp(u_unsat);
-    prev_error = error;
-
-    char buf[160];
-    snprintf(buf, sizeof(buf),
-             "[PID] sp=%.2f pv=%.2f err=%.2f ff=%.2f p=%.2f i=%.2f d=%.2f out=%.2f\r\n",
-             set_point,
-             current_value,
-             error,
-             ff,
-             PID_KP * error,
-             PID_KI * integral,
-             PID_KD * derivative,
-             output);
-    Debug_Print(buf);
+    prev_error_cruise = error;
     return output;
 }
 
@@ -84,8 +70,8 @@ bool cruise_control(uint8_t target_speed, float current_speed, bool enabled, flo
     else
     {
         active = false;
-        PID_Reset(); // Reset PID state when cruise control is disabled to prevent windup on next enable
-        throttle = 0.0f; // No throttle when cruise control is disabled
+        PID_Reset();
+        throttle = 0.0f;
     }
     throttle = clamp(throttle);
     char buf[128];

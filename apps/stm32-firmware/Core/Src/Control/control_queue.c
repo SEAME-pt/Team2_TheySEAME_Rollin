@@ -9,7 +9,10 @@ static uint32_t control_q_drops = 0;
 UINT ControlQueue_Init(void) {
     memset(&control_q, 0, sizeof(control_q));
     control_q_drops = 0;
-    return tx_queue_create(&control_q, "ControlQ", sizeof(VehicleCommand_t),
+
+    UINT msg_size = (sizeof(VehicleCommand_t) + sizeof(ULONG) - 1) / sizeof(ULONG);
+
+    return tx_queue_create(&control_q, "ControlQ", msg_size,
                            control_q_mem, CONTROL_QUEUE_SIZE);
 }
 

@@ -1,0 +1,27 @@
+<RCC>
+    <qresource prefix="/qml">
+        <file>Constants.qml</file>
+        <file>Main.qml</file>
+        <file>Screen01.ui.qml</file>
+        <file>TestCarAnimation.qml</file>
+        <file>images/CC_enabled.png</file>
+        <file>images/CC_enabled_green.png</file>
+        <file>images/CC_disabled.png</file>
+        <file>images/CC.png</file>
+        <file>images/cluster.png</file>
+        <file>images/logo.png</file>
+        <file>images/maxBattery.png</file>
+        <file>images/movingBattery.png</file>
+        <file>images/frontCar.png.png</file>
+        <file>images/leftCar.png.png</file>
+        <file>images/rightCar.png</file>
+        <file>images/sun-256.png</file>
+        <file>images/clouds-256.png</file>
+        <file>images/rain-256.png</file>
+        <file>images/partly-cloudy-day-256.png</file>
+        <file>images/thunderstorm-256.png</file>
+        <file>images/snow-256.png</file>
+        <file>images/moon-4-256.png</file>
+        <file alias="models/Sedan1.glb">3d-assets/models/Sedan1.glb</file>
+    </qresource>
+</RCC>

@@ -12,10 +12,10 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 | Field | Details |
 |-------|----------|
-| **Sprint Number** | Sprint 12 |
-| **Sprint Goal** | Perform Lap Test in CARLA. |
-| **Sprint Duration** | Apr 13 – Apr 24 2026 |
-| **Focus Areas** | PID, YOLO, CARLA, Model Training |
+| **Sprint Number** | Sprint 16 |
+| **Sprint Goal** | Start Crowededsource Hazard infrastructure. Finish ADAS |
+| **Sprint Duration** | June 15 – June 23 2026 |
+| **Focus Areas** | Adas, Backend, Database, MQTT |
 
 
 ## 📅 Scrum Team

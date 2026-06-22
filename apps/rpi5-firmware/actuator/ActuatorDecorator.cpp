@@ -25,3 +25,7 @@ void ActuatorDecorator::brake(const bool flag) {
 void ActuatorDecorator::setCruiseControl(const bool flag, const int targetSpeed) {
 	_car->setCruiseControl(flag, targetSpeed);
 }
+
+void ActuatorDecorator::setAEb_Enabled(bool autonomous) {
+	_car->setAEb_Enabled(autonomous);
+}

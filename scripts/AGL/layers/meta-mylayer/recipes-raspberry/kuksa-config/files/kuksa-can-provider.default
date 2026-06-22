@@ -1,0 +1,8 @@
+EXTRA_ARGS="\
+  -server-type kuksa_databroker \
+  --dbcfile /etc/kuksa/CAN.dbc \
+  --mapping /etc/kuksa/vss_dbc.json \ 
+  --use-socketcan \
+  --dbc2val \
+  --val2dbc \	
+"

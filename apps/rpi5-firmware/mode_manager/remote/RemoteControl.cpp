@@ -11,6 +11,8 @@ RemoteControl::RemoteControl(IEvdev &ev) : _ev(ev) {
 	_state.insert({ Y, 0 });
 	_state.insert({ X, 0 });
 	_state.insert({ B, 0 });
+	_state.insert({ DpadY, 0 });
+	_state.insert({ DpadX, 0 });
 }
 
 RemoteControl::~RemoteControl() {
@@ -35,6 +37,9 @@ void RemoteControl::getEvent() {
 					notify(Events::CAR_STEERING);
 				} else if (event.code == DpadY) {
 					notify(Events::CAR_CRUISE_CONTROL);
+				}
+				else if (event.code == DpadX) {
+					notify(Events::CAR_AEB_ENABLED);
 				}
 				break;
 			case EV_KEY:

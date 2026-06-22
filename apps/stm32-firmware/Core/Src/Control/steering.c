@@ -3,7 +3,7 @@
 #include "../Sensors/sensors.h"
 #include "control_queue.h"
 #include "../Sensors/sensors_queue.h"
-#include "cruise_control.h"
+#include "PID.h"
 #include <stdio.h>
 
 extern I2C_HandleTypeDef hi2c1;
@@ -38,8 +38,7 @@ void PCA9685_SetServoAngle(uint8_t channel, float angle) {
 }
 
 void Control_SetSteering(float steering_normalized) {
-    // Convert normalized steering (-1.0 to +1.0) to servo angle (-30 to +30 degrees)
-    float angle = steering_normalized * 30.0f;
+    float angle = steering_normalized;
     PCA9685_SetServoAngle(0, angle);  // Channel 0 for steering servo
 }
 
@@ -48,10 +47,10 @@ void Control_SetThrottle(uint8_t throttle_percent, uint8_t gear, bool brake) {
     // Clamp throttle to 0-100%
     if (throttle_percent > 100) throttle_percent = 100;
     
-    // Convert percentage to PWM value (0-4095)
-    uint16_t speed_pwm = (uint16_t)((throttle_percent * 4095) / 100);
+    // Convert percentage to PWM value (0-MAX_THROTTLE_PWM)
+    uint16_t speed_pwm = (uint16_t)((throttle_percent * MAX_THROTTLE_PWM) / 100);
     uint16_t dir_high = 0;      // Swapped base values to match motor wiring
-    uint16_t dir_low = 4095;
+    uint16_t dir_low = MAX_THROTTLE_PWM;
     
     // Reverse direction if gear is 2 (R=Reverse)
     if (gear == 2) {
@@ -60,8 +59,12 @@ void Control_SetThrottle(uint8_t throttle_percent, uint8_t gear, bool brake) {
         dir_low = temp;
     }
     if (brake) {
-        speed_pwm = 0;
+        Control_StopMotors();
+        return;
     }
+    char speed_pwm_buf[64];
+    snprintf(speed_pwm_buf, sizeof(speed_pwm_buf), "[CONTROL] Throttle PWM=%u (for %u%% throttle) \r\n", speed_pwm, throttle_percent);
+    // Debug_Print(speed_pwm_buf); 
     if (throttle_percent > 0 && gear != 0 && gear != 1) { // Don't move if P or N
         // Motor 1 (channels 0,1,2,3)
         PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, 0, 0, speed_pwm);  // M1 speed
@@ -82,9 +85,11 @@ void Control_SetThrottle(uint8_t throttle_percent, uint8_t gear, bool brake) {
 void Control_StopMotors(void) {
     // Set all motor channels to 0
     for (uint8_t ch = 0; ch < 8; ch++) {
-        PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, ch, 0, 0);
+        PCA9685_SetPWM(&hi2c1, PCA9685_ADDR_THROTTLE, ch, 0, MAX_THROTTLE_PWM);
     }
 }
+
+
 
 void Control_Thread_Entry(ULONG thread_input) {
     (void)thread_input;
@@ -112,6 +117,7 @@ void Control_Thread_Entry(ULONG thread_input) {
     uint8_t last_gear = 0xFF;
     uint8_t last_throttle = 0xFF;
     int8_t last_steering = 0x7F;
+    uint8_t last_aeb = 0xFF;
 
     const ULONG cmd_wait_ticks = 10; // 100ms wait for command before timeout handling
     ULONG no_cmd_ticks = 0;
@@ -144,7 +150,6 @@ void Control_Thread_Entry(ULONG thread_input) {
                 tx_mutex_put(&g_vehicle_command_mutex);
             }
         }
-
         if (local_cmd.cruise_control_enabled == true && local_cmd.brake == false) {
             active_cruise_control = cruise_control(local_cmd.cruise_control_target_speed,
                                                    current_speed,
@@ -161,7 +166,6 @@ void Control_Thread_Entry(ULONG thread_input) {
                 tx_mutex_put(&g_vehicle_data_mutex);
             }
         }
-
         if (r == TX_SUCCESS) {
             // Got a command - reset timeout counter
             no_cmd_ticks = 0;
@@ -174,7 +178,7 @@ void Control_Thread_Entry(ULONG thread_input) {
                 if (ControlQueue_GetOccupancy(&occ) == TX_SUCCESS) {
                     char occ_buf[64];
                     snprintf(occ_buf, sizeof(occ_buf), "[CONTROL] Queue occupancy=%u\r\n", occ);
-                    Debug_Print(occ_buf);
+                    // Debug_Print(occ_buf);
                 }
             }
 
@@ -185,7 +189,6 @@ void Control_Thread_Entry(ULONG thread_input) {
             }
 
             local_cmd = recv;
-
             if (local_cmd.command_valid) {
                 // Check if command changed
                 if (local_cmd.driving_mode != last_mode || 
@@ -195,20 +198,21 @@ void Control_Thread_Entry(ULONG thread_input) {
                     local_cmd.brake != last_brake) {
 
                     // Convert steering to normalized float
-                    float steering_normalized = (float)local_cmd.steering_angle / 100.0f;
+                    float steering_normalized = (float)local_cmd.steering_angle;
 
                     Control_SetSteering(steering_normalized);
                     Control_SetThrottle(local_cmd.throttle, local_cmd.gear, local_cmd.brake);
 
                     // Print status
-                    const char* gear_names[] = {"P", "N", "R", "D"};
-                    int steering_int = (int)(steering_normalized * 1000);
+                    // const char* gear_names[] = {"P", "N", "R", "D"};
+                    // int steering_int = (int)(steering_normalized * 1000);
                     // snprintf(control_uart_buf, sizeof(control_uart_buf),
-                    //         "[CONTROL] Mode=%d Gear=%s | Throttle=%d%% | Steering=%d.%03d\r\n",
+                    //         "[CONTROL] Mode=%d Gear=%s | Throttle=%d%% | Steering=%d.%03d | brake=%d\r\n",
                     //         local_cmd.driving_mode, 
                     //         local_cmd.gear <= 3 ? gear_names[local_cmd.gear] : "?",
                     //         local_cmd.throttle, 
-                    //         steering_int/1000, abs(steering_int%1000));
+                    //         steering_int/1000, abs(steering_int%1000),
+                    //         local_cmd.brake);
                     // Debug_Print(control_uart_buf);
 
                     // Update last values

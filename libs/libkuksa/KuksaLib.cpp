@@ -29,6 +29,9 @@ void kuksaLib::setLkaLaneOffset(float v) { lkaLaneOffset.store(v); }
 void kuksaLib::setLdwEnabled(bool v) { ldwEnabled.store(v); }
 void kuksaLib::setLdwWarning(bool v) { ldwWarning.store(v); }
 
+// AEB setters
+void kuksaLib::setAEb_Enabled(bool v) {aebEnabled.store(v); }
+
 // CC setters
 void kuksaLib::setCcEnabled(bool v) { ccEnabled.store(v); }
 void kuksaLib::setCcActive(bool v) { ccActive.store(v); }
@@ -80,6 +83,9 @@ bool kuksaLib::subscribeFromKuksa()
     // ADAS - LDW
     req.add_signal_paths("Vehicle.ADAS.LaneDepartureWarning.Enabled");
     req.add_signal_paths("Vehicle.ADAS.LaneDepartureWarning.Warning");
+
+    //ADAS - AEB
+    req.add_signal_paths("Vehicle.ADAS.AutomaticEmergencyBraking.Enabled");
 
     // ADAS - CC
     req.add_signal_paths("Vehicle.ADAS.CruiseControl.Enabled");
@@ -171,7 +177,10 @@ bool kuksaLib::subscribeFromKuksa()
             } else if (path == "Vehicle.ADAS.LaneDepartureWarning.Warning") {
                 bool v = false;
                 if (valueToType(value, v)) setLdwWarning(v);
-
+            // AEB
+            } else if (path == "Vehicle.ADAS.AutomaticEmergencyBraking.Enabled") {
+                bool v = false;
+                if (valueToType(value, v)) setAEb_Enabled(v);
             // CC
             } else if (path == "Vehicle.ADAS.CruiseControl.Enabled") {
                 bool v = false;

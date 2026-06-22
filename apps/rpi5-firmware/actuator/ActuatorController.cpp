@@ -32,10 +32,13 @@ void ActuatorController::steering(const int angle) {
 void ActuatorController::throttle(const int throttle) {
 	if (throttle < 0) {
 		gear(DRIVE);
-	} else {
+	} else if (throttle > 0) {
 		gear(REVERSE);
+	} else {
+		gear(NEUTRAL);
 	}
-	//cruiseControl(false, 0);
+	
+	cruiseControl(false, 0);
 	_car->setThrottle(throttle);
 	std::cout << "Changed Throttle" << std::endl;
 }
@@ -64,6 +67,17 @@ void ActuatorController::brake(const bool flag) {
 	cruiseControl(false, 0);
 	_car->brake(flag);
 	std::cout << "Brake " << flag << std::endl;
+}
+
+void ActuatorController::setAEb_Enabled(bool enabled) {
+	//if (_kuksa.getAebEnabled() != enabled) {
+	//	enabled = true;
+	//}
+	//else {
+	//	enabled = false;
+	//}
+	_car->setAEb_Enabled(enabled);
+	std::cout << "AEB " << enabled << std::endl;
 }
 
 void ActuatorController::update(Subject *subj, Events event) {
@@ -97,7 +111,9 @@ void ActuatorController::update(Subject *subj, Events event) {
 					cruiseControl(true, -1);
 				}
 				break;
-
+			case Events::CAR_AEB_ENABLED:
+				setAEb_Enabled(_remote->getkey(Keys::DpadX));
+				break;
 			default:
 				std::cout << "No event" << std::endl;
 				break;
@@ -110,4 +126,8 @@ void ActuatorController::update(Subject *subj, Events event) {
 				steering(_pp->getAngle());
 		}
 	}
+}
+
+void ActuatorController::test() {
+	
 }
