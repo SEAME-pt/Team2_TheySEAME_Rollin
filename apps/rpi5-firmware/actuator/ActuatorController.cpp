@@ -83,7 +83,7 @@ void ActuatorController::update(Subject *subj, Events event) {
 	std::lock_guard<std::mutex> lock(_mutex);
 	std::vector<uint16_t> signs;
 	bool stopDetected = false;
-	bool brakeFlag = false;
+	float stopDist = -1;
 	if (subj == _remote) {
 		switch (event) {
 			case Events::CAR_THROTTLE:
@@ -129,30 +129,37 @@ void ActuatorController::update(Subject *subj, Events event) {
 				}
 				stopDetected = std::find(signs.begin(), signs.end(),
 					static_cast<uint16_t>(TrafficSign::STOP)) != signs.end();
+				stopDist = _tsr->getStopDistance();
 
-				if (stopDetected &&  (_tsr->getStopDistance() < 70.0f && _tsr->getStopDistance() != -1) && !_stopCooldown) {
-						std::cout << "STOP sign detected at " << _tsr->getStopDistance() << "m, applying brake!" << std::endl;
-						brake(true);
-						_stopDetected = true;
-						brakeFlag = true;
+				if (stopDetected && stopDist != -1 && stopDist < 70.0f && !_stopCooldown && !_stopDetected) {
+					std::cout << "[EVENT] STOP detected at " << stopDist << "m -> APPLY BRAKE" << std::endl;
 
-				} else {
-					 if (_stopDetected) {
-						auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
-							std::chrono::steady_clock::now() - _stopBrakeStart).count();
-						if (elapsed >= 2000) {
-							brake(false);
-							_stopDetected = false;
-							_stopCooldown = true;
-							_stopCooldownStart = std::chrono::steady_clock::now();
-						}
+					brake(true);
+					throttle(0);
+					_stopDetected = true;
+					_stopBrakeFrames = 0;
+				}
+
+				if (_stopDetected) {
+					_stopBrakeFrames++;
+
+					if (_stopBrakeFrames >= STOP_BRAKE_FRAMES) {
+						std::cout << "[EVENT] Releasing brake, entering cooldown" << std::endl;
+
+						brake(false);
+						_stopDetected = false;
+
+						_stopCooldown = true;
+						_stopCooldownFrames = 0;
 					}
-					if (_stopCooldown) {
-						auto cooldownElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
-							std::chrono::steady_clock::now() - _stopCooldownStart).count();
-						if (cooldownElapsed >= 3000) {
-							_stopCooldown = false;
-						}
+				}
+
+				if (_stopCooldown) {
+					_stopCooldownFrames++;
+
+					if (_stopCooldownFrames >= STOP_COOLDOWN_FRAMES) {
+						std::cout << "[EVENT] Cooldown finished" << std::endl;
+						_stopCooldown = false;
 					}
 				}
 				break;
