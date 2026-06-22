@@ -130,17 +130,30 @@ void ActuatorController::update(Subject *subj, Events event) {
 				stopDetected = std::find(signs.begin(), signs.end(),
 					static_cast<uint16_t>(TrafficSign::STOP)) != signs.end();
 
-				if (stopDetected &&  (_tsr->getStopDistance() < 70.0f && _tsr->getStopDistance() != -1)) {
+				if (stopDetected &&  (_tsr->getStopDistance() < 70.0f && _tsr->getStopDistance() != -1) && !_stopCooldown) {
 						std::cout << "STOP sign detected at " << _tsr->getStopDistance() << "m, applying brake!" << std::endl;
 						brake(true);
 						_stopDetected = true;
 						brakeFlag = true;
 
 				} else {
-					if (brakeFlag)
-						brake(false);
-					brakeFlag = false;
-						_stopDetected = false;
+					 if (_stopDetected) {
+						auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+							std::chrono::steady_clock::now() - _stopBrakeStart).count();
+						if (elapsed >= 2000) {
+							brake(false);
+							_stopDetected = false;
+							_stopCooldown = true;
+							_stopCooldownStart = std::chrono::steady_clock::now();
+						}
+					}
+					if (_stopCooldown) {
+						auto cooldownElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+							std::chrono::steady_clock::now() - _stopCooldownStart).count();
+						if (cooldownElapsed >= 3000) {
+							_stopCooldown = false;
+						}
+					}
 				}
 				break;
 			case Events::CAR_SPEED_LIMIT:

@@ -41,4 +41,7 @@ private:
 	int _lastSpeedLimit = 0;
 	bool _reduceSpeed = false;
 	bool _stopDetected = false;
+	std::chrono::steady_clock::time_point _stopBrakeStart;
+	std::chrono::steady_clock::time_point _stopCooldownStart;
+	bool _stopCooldown = false;
 };
