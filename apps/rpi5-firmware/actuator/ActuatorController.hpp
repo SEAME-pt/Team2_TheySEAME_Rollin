@@ -28,7 +28,9 @@ private:
 	void cruiseControl(const bool flag, const int targetSpeed);
 	void brake(const bool flag);
 	void setAEb_Enabled(bool enabled);
-
+	void trafficSign();
+	void speedLimit();
+	
 	CarActuator *_car;
 	RemoteControl *_remote;
 	Lka *_lka;

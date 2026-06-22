@@ -78,6 +78,74 @@ void ActuatorController::brake(const bool flag) {
 	std::cout << "Brake " << flag << std::endl;
 }
 
+void ActuatorController::trafficSign() {
+    auto signs = _tsr->getDetectedSigns();
+
+    for (const auto &sign : signs) {
+        setTrafficSign(sign, _tsr->estimateDistance(_tsr->getLastDetection()));
+    }
+
+    bool stopDetected = std::find(signs.begin(), signs.end(),
+        static_cast<uint16_t>(TrafficSign::STOP)) != signs.end();
+
+    float stopDist = _tsr->getStopDistance();
+
+    if (stopDetected && stopDist != -1 && stopDist < 70.0f 
+        && !_stopCooldown && !_stopDetected) {
+
+        std::cout << "[EVENT] STOP detected at " << stopDist << "m -> APPLY BRAKE" << std::endl;
+
+        brake(true);
+        throttle(0);
+
+        _stopDetected = true;
+        _stopBrakeFrames = 0;
+    }
+
+    if (_stopDetected) {
+        _stopBrakeFrames++;
+
+        if (_stopBrakeFrames >= STOP_BRAKE_FRAMES) {
+            std::cout << "[EVENT] Releasing brake, entering cooldown" << std::endl;
+
+            brake(false);
+            _stopDetected = false;
+
+            _stopCooldown = true;
+            _stopCooldownFrames = 0;
+        }
+    }
+
+    if (_stopCooldown) {
+        _stopCooldownFrames++;
+
+        if (_stopCooldownFrames >= STOP_COOLDOWN_FRAMES) {
+            std::cout << "[EVENT] Cooldown finished" << std::endl;
+            _stopCooldown = false;
+        }
+    }
+}
+
+void ActuatorController::speedLimit() {
+    int currentLimit = _tsr->getSpeedLimit();
+
+    if (_lastSpeedLimit == 80 && currentLimit == 50) {
+        std::cout << "last speed limit: " << _lastSpeedLimit << " km/h" << std::endl;
+        std::cout << "speed limit:" << currentLimit << " km/h, reducing throttle to 75%" << std::endl;
+
+        if (!_reduceSpeed) {
+            throttle(_currentThrottle * 0.75f);
+            _reduceSpeed = true;
+        } else {
+            throttle(_currentThrottle);
+            _reduceSpeed = false;
+        }
+    }
+
+    _lastSpeedLimit = currentLimit;
+    setSpeedLimit(currentLimit);
+}
+
 void ActuatorController::update(Subject *subj, Events event) {
 	// std::cout << "Received notify " << event << " sub: " << subj << std::endl;
 	std::lock_guard<std::mutex> lock(_mutex);
@@ -123,63 +191,10 @@ void ActuatorController::update(Subject *subj, Events event) {
 	} else if (_tsr != nullptr && subj == _tsr) {
 		switch (event) {
 			case Events::CAR_TRAFFIC_SIGN:
-				signs = _tsr->getDetectedSigns();
-				for (const auto &sign : signs) {
-					setTrafficSign(sign, _tsr->estimateDistance(_tsr->getLastDetection()));
-				}
-				stopDetected = std::find(signs.begin(), signs.end(),
-					static_cast<uint16_t>(TrafficSign::STOP)) != signs.end();
-				stopDist = _tsr->getStopDistance();
-
-				if (stopDetected && stopDist != -1 && stopDist < 70.0f && !_stopCooldown && !_stopDetected) {
-					std::cout << "[EVENT] STOP detected at " << stopDist << "m -> APPLY BRAKE" << std::endl;
-
-					brake(true);
-					throttle(0);
-					_stopDetected = true;
-					_stopBrakeFrames = 0;
-				}
-
-				if (_stopDetected) {
-					_stopBrakeFrames++;
-
-					if (_stopBrakeFrames >= STOP_BRAKE_FRAMES) {
-						std::cout << "[EVENT] Releasing brake, entering cooldown" << std::endl;
-
-						brake(false);
-						_stopDetected = false;
-
-						_stopCooldown = true;
-						_stopCooldownFrames = 0;
-					}
-				}
-
-				if (_stopCooldown) {
-					_stopCooldownFrames++;
-
-					if (_stopCooldownFrames >= STOP_COOLDOWN_FRAMES) {
-						std::cout << "[EVENT] Cooldown finished" << std::endl;
-						_stopCooldown = false;
-					}
-				}
+				trafficSign();
 				break;
 			case Events::CAR_SPEED_LIMIT:
-				if (_lastSpeedLimit == 80 && _tsr->getSpeedLimit() == 50)
-				{
-					std::cout << "last speed limit: " << _lastSpeedLimit << " km/h" << std::endl;
-					std::cout << "speed limit:" << _tsr->getSpeedLimit() << " km/h, reducing throttle to 75%" << std::endl;
-					if (!_reduceSpeed) {
-						throttle(_currentThrottle * 0.75f);
-						_reduceSpeed = true;
-					}
-					else
-					{
-						throttle(_currentThrottle);
-						_reduceSpeed = false;
-					}
-				}
-				_lastSpeedLimit = _tsr->getSpeedLimit();
-				setSpeedLimit(_tsr->getSpeedLimit());
+				speedLimit();
 				break;
 			default:
 				break;
