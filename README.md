@@ -12,10 +12,10 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 | Field | Details |
 |-------|----------|
-| **Sprint Number** | Sprint 14 |
-| **Sprint Goal** | Implement TSR pipeline and Improve LKA |
-| **Sprint Duration** | May 12 – May 22 2026 |
-| **Focus Areas** | Model Training, LKA, TSR |
+| **Sprint Number** | Sprint 16 |
+| **Sprint Goal** | Start Crowededsource Hazard infrastructure. Finish ADAS |
+| **Sprint Duration** | June 15 – June 23 2026 |
+| **Focus Areas** | Adas, Backend, Database, MQTT |
 
 
 ## 📅 Scrum Team

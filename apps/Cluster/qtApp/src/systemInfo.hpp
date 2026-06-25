@@ -9,10 +9,13 @@
 #include <grpcpp/grpcpp.h>
 #include <thread>
 #include <atomic>
-#include "../../../middleware/kuksa/val/v2/val.grpc.pb.h"
-#include "../../../middleware/kuksa/val/v2/types.pb.h"
-#include "../middleware/kuksa/val/v2/KuksaLib.hpp"
+#include <mutex>
+#include <google/protobuf/stubs/common.h>
+#include "val.grpc.pb.h"
+#include "types.pb.h"
+#include "KuksaLib.hpp"
 
+ 
 using kuksa::val::v2::VAL;
 
 class systemInfo : public QObject
@@ -20,6 +23,9 @@ class systemInfo : public QObject
     Q_OBJECT
     Q_PROPERTY(int battery READ getBattery NOTIFY batteryUpdated)
     Q_PROPERTY(int speed READ getSpeed NOTIFY speedUpdated)
+    Q_PROPERTY(bool cruiseActive READ getCruiseActive NOTIFY cruiseActiveUpdated)
+    Q_PROPERTY(int targetSpeed READ getTargetSpeed NOTIFY targetSpeedUpdated)
+    Q_PROPERTY(QString targetSpeedDisplay READ getTargetSpeedDisplay NOTIFY targetSpeedUpdated)
 
 public:
     /**
@@ -91,14 +97,60 @@ public:
      * @return int speed value
      */
     int getSpeed() const;
+
+    /**
+     * @brief Sets the cruise control active state.
+     * @param active true if cruise control is engaged
+     *
+     * Requirement traceability:
+     *
+     */
+    void setCruiseActive(bool active);
+
+    /**
+     * @brief Returns whether cruise control is currently active.
+     *
+     * Requirement traceability:
+     *
+     * @return bool cruise control state
+     */
+    bool getCruiseActive() const;
+
+    /**
+     * @brief Sets the cruise control target speed.
+     * @param speed Target speed in hm/h
+     */
+    void setTargetSpeed(int speed);
+
+    /**
+     * @brief Returns the cruise control target speed.
+     *
+     * @return int target speed in hm/h
+     */
+    int getTargetSpeed() const;
+
+    /**
+     * @brief Returns the cruise control target speed display text (formatted).
+     * Returns "---" if inactive, or "XXX hm/h" if active.
+     *
+     * @return QString formatted target speed display
+     */
+    QString getTargetSpeedDisplay() const;
+
 signals:
     void speedUpdated(int speed);
     void batteryUpdated(int battery);
-
+    void cruiseActiveUpdated(bool active);
+    void targetSpeedUpdated(int speed);
+    void trafficSignUpdated(int sign);
+    void speedLimitUpdated(int speedLimit);
 private:
     std::atomic<int> _battery{0};
     std::atomic<int> _speed{0};
+    std::atomic<bool> _cruiseActive{false};
+    std::atomic<int> _targetSpeed{0};
     kuksaLib _kuksa;
     std::thread _thread;
     std::atomic_bool _running{false};
+    std::mutex _kuksaMutex;
 };

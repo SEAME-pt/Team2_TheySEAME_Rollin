@@ -15,6 +15,7 @@
 
 int frameCount = 0;
 void *header = malloc(sizeof(struct TsrHeader));
+Frame show;
 
 std::atomic<bool> run = true;
 
@@ -24,7 +25,7 @@ void signal_handler(int signal) {
 
 int handleFrame(cv::VideoCapture &cam, Lka &lka) {
 	int i = 0;
-	
+
 	cv::Mat frameRaw;
 	cam.read(frameRaw);
 	if (frameRaw.empty()) {
@@ -188,10 +189,10 @@ int main() {
 	// Kuksa Thread
 	// std::thread vhState(&kuksaLib::subscribeFromKuksa, &kuksa);
 
-	//while (run.load()) {
-	//	usleep(50000);
-	//	ctrl.test();
-	//}
+	while (run.load()) {
+		usleep(50000);
+		ctrl.test();
+	}
 
 	//lkaThread.join();
 	remoteThread.join();
