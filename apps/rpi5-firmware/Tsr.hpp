@@ -83,8 +83,6 @@ public:
     bool isStopBrakeActive() const;
     float estimateDistance(const TsrHeader& det);
     float getStopDistance() const;
-    void applyScaleCalibration(float measured_dist, float true_dist_cm);
-    float lookupDistance(float bboxPx);
     void resetKuksa();
     void clearDetectedSigns();
 private:

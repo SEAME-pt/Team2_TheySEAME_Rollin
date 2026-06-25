@@ -101,17 +101,14 @@ void Tsr::handleTrafficSign(const TsrHeader &tsrData)
     _detectedSigns.push_back(static_cast<uint16_t>(mappedSign));
 
     if (mappedSign == TrafficSign::UNKNOWN) {
-        // std::cout << "[TSR] Detected unknown sign class " << tsrData.trafficSign << " — ignoring" << std::endl;
+        std::cout << "[TSR] Detected unknown sign class " << tsrData.trafficSign << " — ignoring" << std::endl;
     }
-    // std::cout << "[TSR] Detected sign: " << static_cast<int>(mappedSign) << " at estimated distance " << distance << " cm" << std::endl;
     notify(Events::CAR_TRAFFIC_SIGN);
     
     if (mapModelClassToSpeedLimit(tsrData.trafficSign, speedLimit)) {
         if (speedLimit == -1)
             speedLimit = _speedLimit;
         _speedLimit = speedLimit;
-        // std::cout << "Traffic sign: " << tsrData.trafficSign << " mapped to speed limit: " << _speedLimit << " km/h" << std::endl;
-        // std::cout << "[TSR] Updated speed limit to " << _speedLimit << " km/h" << std::endl;
         notify(Events::CAR_SPEED_LIMIT);
         return;
     }
@@ -127,8 +124,6 @@ void Tsr::tick()
     ).count();
 
     if (elapsed >= TSR_TIMEOUT_MS) {
-        std::cout << "[TSR] Timeout (" << elapsed
-                  << " ms sem sinal) — reset KUKSA para 0" << std::endl;
         resetKuksa();
         _hasSignal = false;
         _distBuffer.clear();
@@ -184,8 +179,6 @@ float Tsr::estimateDistance(const TsrHeader& det)
     for (float d : _distBuffer) smoothed += d;
     smoothed /= static_cast<float>(_distBuffer.size());
 
-    // std::cout << "Estimated distance to sign (raw): " << dist << " cm, smoothed: " << smoothed << " cm"
-    //     << "FX_PX: " << FX_PX << "FY_PX: " << FY_PX << "bbox height: " << det.height  << "bbox width: " << det.width << std::endl;
     float corrected = smoothed;
     if (smoothed > SIGN_HEIGHT_OFFSET_CM) {
         corrected = sqrtf(smoothed * smoothed 
@@ -194,30 +187,4 @@ float Tsr::estimateDistance(const TsrHeader& det)
 
     _distance.push_back(std::make_pair(signKey, corrected));
     return corrected;
-}
-
-void Tsr::applyScaleCalibration(float measured_dist, float true_dist_cm)
-{
-    if (measured_dist <= 0.0f) {
-        std::cout << "applyScaleCalibration: measured_dist invalido" << std::endl;
-        return;
-    }
-    float scale = true_dist_cm / measured_dist;
-    FX_PX *= scale;
-    FY_PX *= scale;
-    std::cout << "applyScaleCalibration: escala=" << scale << ", FX_PX=" << FX_PX << ", FY_PX=" << FY_PX << std::endl;
-}
-
-float Tsr::lookupDistance(float bboxPx) {
-    if (bboxPx >= DIST_LUT.front().first) return DIST_LUT.front().second;
-    if (bboxPx <= DIST_LUT.back().first)  return DIST_LUT.back().second;
-    
-    for (int i = 0; i < DIST_LUT.size() - 1; i++) {
-        auto &a = DIST_LUT[i], &b = DIST_LUT[i+1];
-        if (bboxPx <= a.first && bboxPx >= b.first) {
-            float t = (bboxPx - a.first) / (b.first - a.first);
-            return a.second + t * (b.second - a.second);
-        }
-    }
-    return -1.0f;
 }

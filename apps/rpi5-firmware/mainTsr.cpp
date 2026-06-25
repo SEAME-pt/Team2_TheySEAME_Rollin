@@ -76,7 +76,6 @@ int main() {
     tsr.attach(&controller);
     
     tsr.resetKuksa();
-    // tsr.applyScaleCalibration(44.0f, 49.0f);
     FILE *pipe = fopen("NamedPipeTsr", "r");
     if (pipe == NULL) {
         std::cout << "Failed to open NamedPipeTsr" << std::endl;

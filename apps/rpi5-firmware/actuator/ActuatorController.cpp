@@ -50,7 +50,7 @@ void ActuatorController::setSpeedLimit(const int speedLimit) {
 
 void ActuatorController::setTrafficSign(const int trafficSign, const float distance) {
 	_car->setTrafficSign(trafficSign, distance);
-	// std::cout << "Detected Traffic Sign " << trafficSign << " at distance " << distance << std::endl;
+	std::cout << "Detected Traffic Sign " << trafficSign << " at distance " << distance << std::endl;
 }
 
 void ActuatorController::gear(const short gear) {
@@ -92,9 +92,6 @@ void ActuatorController::trafficSign() {
 
     if (stopDetected && stopDist != -1 && stopDist < 70.0f 
         && !_stopCooldown && !_stopDetected) {
-
-        std::cout << "[EVENT] STOP detected at " << stopDist << "m -> APPLY BRAKE" << std::endl;
-
         brake(true);
         throttle(0);
 
@@ -106,8 +103,6 @@ void ActuatorController::trafficSign() {
         _stopBrakeFrames++;
 
         if (_stopBrakeFrames >= STOP_BRAKE_FRAMES) {
-            std::cout << "[EVENT] Releasing brake, entering cooldown" << std::endl;
-
             brake(false);
             _stopDetected = false;
 
@@ -120,7 +115,6 @@ void ActuatorController::trafficSign() {
         _stopCooldownFrames++;
 
         if (_stopCooldownFrames >= STOP_COOLDOWN_FRAMES) {
-            std::cout << "[EVENT] Cooldown finished" << std::endl;
             _stopCooldown = false;
         }
     }
@@ -130,9 +124,6 @@ void ActuatorController::speedLimit() {
     int currentLimit = _tsr->getSpeedLimit();
 
     if (_lastSpeedLimit == 80 && currentLimit == 50) {
-        std::cout << "last speed limit: " << _lastSpeedLimit << " km/h" << std::endl;
-        std::cout << "speed limit:" << currentLimit << " km/h, reducing throttle to 75%" << std::endl;
-
         if (!_reduceSpeed) {
             throttle(_currentThrottle * 0.75f);
             _reduceSpeed = true;
