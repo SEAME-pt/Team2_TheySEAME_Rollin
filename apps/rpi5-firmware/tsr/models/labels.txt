@@ -1,0 +1,13 @@
+50_sign
+80_sign
+gate
+crosswalk_sign
+stop_sign
+yield_sign
+car
+danger_sign
+obstacle
+traffic_light_green
+traffic_light_off
+traffic_light_red
+traffic_light_yellow
