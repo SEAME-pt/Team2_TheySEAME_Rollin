@@ -282,7 +282,7 @@
               },
               "DetectedSpeedLimit": {
                 "type": "sensor",
-                "datatype": "float",
+                "datatype": "uint8",
                 "unit": "hm/h",
                 "description": "Detected speed limit from traffic sign"
               },
@@ -290,8 +290,8 @@
                 "type": "sensor",
                 "datatype": "uint8",
                 "unit": "enum",
-                "description": "Detected traffic sign type: 0=UNKNOWN, 1=STOP, 2=SPEED_LIMIT_30, 3=SPEED_LIMIT_50, 4=SPEED_LIMIT_80, 5=SPEED_LIMIT_100, 6=SPEED_LIMIT_120, 7=YIELD, 8=NO_ENTRY, 9=TURN_LEFT, 10=TURN_RIGHT, 11=PEDESTRIAN, 12=TRAFFIC_LIGHT, 13=ONE_WAY, 14=NO_PARKING, 15=NO_OVERTAKING",
-                "allowed": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                "description": "Detected traffic sign type: 0=UNKNOWN, 1=STOP, 2=YIELD, 3=NO_ENTRY, 4=TURN_LEFT, 5=TURN_RIGHT, 6=PEDESTRIAN, 7=TRAFFIC_LIGHT, 8=ONE_WAY, 9=NO_PARKING, 10=NO_OVERTAKING",
+                "allowed": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                 "dbc": { "signal": "TSR_DetectedSignType" }
               }
             }
