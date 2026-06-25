@@ -9,8 +9,6 @@
 extern I2C_HandleTypeDef hi2c1;
 char control_uart_buf[128];
 
-
-
 /* Helper: safely snapshot global vehicle data with mutex protection */
 static int snapshot_vehicle_data(VehicleData_t *out) {
     if (tx_mutex_get(&g_vehicle_data_mutex, TX_WAIT_FOREVER) == TX_SUCCESS) {
@@ -119,7 +117,7 @@ void Control_Thread_Entry(ULONG thread_input) {
     uint8_t last_gear = 0xFF;
     uint8_t last_throttle = 0xFF;
     int8_t last_steering = 0x7F;
-    uint8_t last_aeb_enabled = 0xFF;
+    uint8_t last_aeb = 0xFF;
 
     const ULONG cmd_wait_ticks = 10; // 100ms wait for command before timeout handling
     ULONG no_cmd_ticks = 0;
@@ -197,21 +195,13 @@ void Control_Thread_Entry(ULONG thread_input) {
                     local_cmd.gear != last_gear ||
                     local_cmd.throttle != last_throttle || 
                     local_cmd.steering_angle != last_steering ||
-                    local_cmd.brake != last_brake ||
-                    local_cmd.aeb_enabled != last_aeb_enabled) {
+                    local_cmd.brake != last_brake) {
 
                     // Convert steering to normalized float
                     float steering_normalized = (float)local_cmd.steering_angle;
-                    uint8_t applied_throttle = local_cmd.throttle;
 
                     Control_SetSteering(steering_normalized);
-                    Control_SetThrottle(applied_throttle, local_cmd.gear, local_cmd.brake);
-
-                    snprintf(control_uart_buf, sizeof(control_uart_buf),
-                             "[CONTROL] Throttle=%u%% -> %u%%\r\n",
-                             local_cmd.throttle,
-                             applied_throttle);
-                    Debug_Print(control_uart_buf);
+                    Control_SetThrottle(local_cmd.throttle, local_cmd.gear, local_cmd.brake);
 
                     // Print status
                     // const char* gear_names[] = {"P", "N", "R", "D"};
@@ -231,7 +221,6 @@ void Control_Thread_Entry(ULONG thread_input) {
                     last_throttle = local_cmd.throttle;
                     last_steering = local_cmd.steering_angle;
                     last_brake = local_cmd.brake;
-                    last_aeb_enabled = local_cmd.aeb_enabled;
                 }
             }
         } else {
