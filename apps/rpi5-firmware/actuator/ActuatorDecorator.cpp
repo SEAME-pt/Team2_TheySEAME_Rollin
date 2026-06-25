@@ -1,4 +1,5 @@
 #include "ActuatorDecorator.hpp"
+#include <iostream>
 
 ActuatorDecorator::ActuatorDecorator(CarActuator *car) : _car(car) {}
 
@@ -7,6 +8,7 @@ ActuatorDecorator::~ActuatorDecorator() {
 }
 
 void ActuatorDecorator::setThrottle(const int throttle) {
+	_currentThrottle = throttle;
 	_car->setThrottle(throttle);
 }
 
@@ -26,6 +28,14 @@ void ActuatorDecorator::setCruiseControl(const bool flag, const int targetSpeed)
 	_car->setCruiseControl(flag, targetSpeed);
 }
 
+void ActuatorDecorator::setTrafficSign(const int trafficSign, const float distance) {
+	_car->setTrafficSign(trafficSign, distance);
+}
+
+void ActuatorDecorator::setSpeedLimit(const int speedLimit) {
+	_car->setSpeedLimit(speedLimit);
+}
 void ActuatorDecorator::setAEb_Enabled(bool autonomous) {
 	_car->setAEb_Enabled(autonomous);
 }
+

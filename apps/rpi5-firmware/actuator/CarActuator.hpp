@@ -56,5 +56,7 @@ public:
 
 	virtual void setCruiseControl(const bool flag, const int targetSpeed) = 0;
 
+	virtual void setTrafficSign(const int trafficSign, const float distance) = 0;
+	virtual void setSpeedLimit(const int speedLimit) = 0;
 	virtual void setAEb_Enabled(const bool autonomous) = 0;
 };
