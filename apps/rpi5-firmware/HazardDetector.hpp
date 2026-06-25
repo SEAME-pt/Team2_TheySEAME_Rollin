@@ -18,6 +18,7 @@ enum class HazardType {
 struct DetectionTrack {
     uint16_t signClass;
     int      framesDetected = 0;
+    bool     seenThisFrame = false;
 };
 
 struct HazardResult {
@@ -38,8 +39,8 @@ public:
         int      longTimeFrames     = 60;
     };
 
-    explicit HazardDetector(Config cfg = {});
-
+    explicit HazardDetector(Config cfg = Config());
+    
     void setOurSpeed(float speedMetersPerSecond);
 
     void update(const TsrHeader& det);

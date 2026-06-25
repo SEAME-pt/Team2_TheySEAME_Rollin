@@ -32,6 +32,7 @@ void HazardDetector::update(const TsrHeader& det)
     auto& track          = _tracks[det.trafficSign];
     track.signClass      = det.trafficSign;
     track.framesDetected += 1;
+    track.seenThisFrame = true;
 }
 
 HazardResult HazardDetector::evaluate()
@@ -89,18 +90,15 @@ HazardResult HazardDetector::evaluate()
 
 void HazardDetector::endFrame()
 {
-    // Remove any track whose class wasn't updated this frame.
-    // We detect "not updated" by checking framesDetected hasn't changed
-    // since last endFrame — simplest approach: mark-and-sweep with a
-    // per-frame seen-set built in update().
-    //
-    // Current approach: tracks only grow. If the detection model stops
-    // seeing the object (it left the frame), the track stays frozen.
-    // That is intentional for the short/long time logic — a car that
-    // disappears after 3 frames was genuinely short.
-    //
-    // If you want to reset tracks when the object leaves the frame,
-    // swap the body below with _tracks.clear() or implement a seen-set.
-
+    for (auto it = _tracks.begin(); it != _tracks.end(); )
+    {
+        if (!it->second.seenThisFrame)
+            it = _tracks.erase(it);
+        else
+        {
+            it->second.seenThisFrame = false;
+            ++it;
+        }
+    }
     _framesSinceReset++;
 }

@@ -87,9 +87,6 @@ int main() {
             break;
         }
 
-        // TODO: substituir por kuksa.getSpeed() (ou equivalente) quando
-        // o Vehicle.Speed estiver acessível via kuksaLib. Por agora a
-        // deteção de "nosso carro parado/movimento" não tem fonte real.
         hazardDetector.setOurSpeed(kuksa.getSpeed());
 
         tsr.clearDetectedSigns();

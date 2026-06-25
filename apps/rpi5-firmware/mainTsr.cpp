@@ -4,6 +4,7 @@
 #include "ActuatorCAN.hpp"
 #include "ActuatorController.hpp"
 #include "CAN.hpp"
+#include "HazardDetector.hpp"
 #include <arpa/inet.h>
 #include <iostream>
 
@@ -72,6 +73,8 @@ int main() {
     kuksaLib kuksa;
     CarActuator *car = new ActuatorKuksa(new ActuatorCAN(can), kuksa);
     Tsr tsr;
+    HazardDetector::Config hazardCfg;
+    HazardDetector hazardDetector(hazardCfg);
     ActuatorController controller(nullptr, nullptr, nullptr, kuksa, &tsr);
     tsr.attach(&controller);
     
@@ -94,11 +97,19 @@ int main() {
             std::cout << "Pipe EOF" << std::endl;
             break;
         }
+        hazardDetector.setOurSpeed(kuksa.getSpeed());
         tsr.clearDetectedSigns();
         for (auto &d : detections) {
             // std::cout << "Dispatching trafficSign=" << d.trafficSign << std::endl;
             tsr.handleTrafficSign(d);
+            hazardDetector.update(d);
         }
+
+        HazardResult hazard = hazardDetector.evaluate();
+        if (hazard.hazard != HazardType::NONE) {
+            // TODO: publish via MQTT (Mosquitto)
+        }
+        hazardDetector.endFrame();
         tsr.tick();
 
     }
