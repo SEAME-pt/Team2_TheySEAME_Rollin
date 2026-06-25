@@ -7,32 +7,12 @@
 
 bool HazardDetector::isObjectClass(uint16_t c)
 {
-    // TODO: add when enum is extended
-    // case static_cast<uint16_t>(TrafficSign::CONE):
-    // case static_cast<uint16_t>(TrafficSign::BOX):
-    // case static_cast<uint16_t>(TrafficSign::DEBRIS):
-    // case static_cast<uint16_t>(TrafficSign::BARRIER):
-    (void)c;
-    return false;
+    return c == static_cast<uint16_t>(TrafficSign::OBJECT);
 }
 
 bool HazardDetector::isCarClass(uint16_t c)
 {
-    // TODO: add when enum is extended
-    // return c == static_cast<uint16_t>(TrafficSign::CAR);
-    (void)c;
-    return false;
-}
-
-bool HazardDetector::inCenterRight(uint32_t x, uint32_t width) const
-{
-    float cx = static_cast<float>(x) + static_cast<float>(width) * 0.5f;
-    return cx > (_cfg.frameWidth * _cfg.zoneBoundaryRatio);
-}
-
-bool HazardDetector::inCenterLeft(uint32_t x, uint32_t width) const
-{
-    return !inCenterRight(x, width);
+    return c == static_cast<uint16_t>(TrafficSign::CAR);
 }
 
 HazardDetector::HazardDetector(Config cfg)
@@ -56,7 +36,6 @@ void HazardDetector::update(const TsrHeader& det)
     auto& track          = _tracks[det.trafficSign];
     track.signClass      = det.trafficSign;
     track.framesDetected += 1;
-    track.inCenterRight  = inCenterRight(det.x, det.width);
 }
 
 HazardResult HazardDetector::evaluate()
@@ -67,16 +46,14 @@ HazardResult HazardDetector::evaluate()
 
         // static object
         if (isObjectClass(cls)) {
-            if (!track.inCenterRight) {
-                if (track.framesDetected >= _cfg.minStableFrames) {
-                    result.hazard      = HazardType::OBJECT_ON_TRACK;
-                    result.triggerClass = cls;
-                    result.description  = "Static object on track (class="
-                                         + std::to_string(cls)
-                                         + ", frames="
-                                         + std::to_string(track.framesDetected) + ")";
-                    return result;
-                }
+            if (track.framesDetected >= _cfg.minStableFrames) {
+                result.hazard      = HazardType::OBJECT_ON_TRACK;
+                result.triggerClass = cls;
+                result.description  = "Static object on track (class="
+                                        + std::to_string(cls)
+                                        + ", frames="
+                                        + std::to_string(track.framesDetected) + ")";
+                return result;
             }
             continue;
         }
@@ -87,24 +64,20 @@ HazardResult HazardDetector::evaluate()
             const bool longTime  = track.framesDetected >  _cfg.longTimeFrames;
 
             if (_ourMoving) {
-                if (track.inCenterRight) {
-                    if (shortTime) {
-                        result.hazard       = HazardType::STOPPED_CAR;
-                        result.triggerClass = cls;
-                        result.description  = "Stopped car ahead (frames="
-                                             + std::to_string(track.framesDetected) + ")";
-                        return result;
-                    }
+                if (shortTime) {
+                    result.hazard       = HazardType::STOPPED_CAR;
+                    result.triggerClass = cls;
+                    result.description  = "Stopped car ahead (frames="
+                                            + std::to_string(track.framesDetected) + ")";
+                    return result;
                 }
             } else {
-                if (track.inCenterRight) {
-                    if (longTime) {
-                        result.hazard       = HazardType::TWO_STOPPED_CARS;
-                        result.triggerClass = cls;
-                        result.description  = "Two stopped cars (frames="
-                                             + std::to_string(track.framesDetected) + ")";
-                        return result;
-                    }
+                if (longTime) {
+                    result.hazard       = HazardType::TWO_STOPPED_CARS;
+                    result.triggerClass = cls;
+                    result.description  = "Two stopped cars (frames="
+                                            + std::to_string(track.framesDetected) + ")";
+                    return result;
                 } else {
                     result.hazard       = HazardType::OUR_CAR_STOPPED;
                     result.triggerClass = cls;
