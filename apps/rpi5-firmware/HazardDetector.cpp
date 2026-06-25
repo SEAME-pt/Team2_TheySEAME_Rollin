@@ -1,10 +1,6 @@
 #include "HazardDetector.hpp"
 #include "tsr.hpp"
 
-// ---------------------------------------------------------------------------
-// Classify detections by role
-// ---------------------------------------------------------------------------
-
 bool HazardDetector::isObjectClass(uint16_t c)
 {
     return c == static_cast<uint16_t>(TrafficSign::OBJECT);

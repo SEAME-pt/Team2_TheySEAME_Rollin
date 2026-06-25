@@ -4,10 +4,6 @@
 #include <unordered_map>
 #include <string>
 
-// ---------------------------------------------------------------------------
-// Forward-declare TsrHeader so this header stays self-contained.
-// Replace with your actual include if preferred.
-// ---------------------------------------------------------------------------
 struct TsrHeader;
 
 
