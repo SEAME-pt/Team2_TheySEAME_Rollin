@@ -22,9 +22,8 @@ CREATE TABLE incident_type (
 );
 
 INSERT INTO incident_type (name) VALUES
-    ('pothole'),
-    ('sidewalk_parking'),
-    ('road_damage');
+    ('stopped_car'),
+    ('stopped_obstacles');
 
 CREATE TABLE incident (
     id           SERIAL PRIMARY KEY,
