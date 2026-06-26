@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <unordered_map>
 #include <string>
+#include "Tsr.hpp"
+#include "Utils.hpp"
 
 struct TsrHeader;
 
@@ -16,7 +18,7 @@ enum class HazardType {
 };
 
 struct DetectionTrack {
-    uint16_t signClass;
+    TrafficSign signClass;
     int      framesDetected = 0;
     bool     seenThisFrame = false;
 };
@@ -24,7 +26,7 @@ struct DetectionTrack {
 struct HazardResult {
     HazardType  hazard      = HazardType::NONE;
     std::string description;
-    uint16_t    triggerClass = 0;
+    TrafficSign    triggerClass = TrafficSign::UNKNOWN;
 };
 
 
@@ -33,14 +35,14 @@ public:
     // Tunable parameters
     struct Config {
         float    frameWidth         = 640.0f;
-        float    minConfidence      = 0.70f;
+        float    minConfidence      = 0.65f;
         int      minStableFrames    = 5;
         int      shortTimeFrames    = 20;
         int      longTimeFrames     = 60;
     };
 
-    explicit HazardDetector(Config cfg = Config());
-    
+    explicit HazardDetector(Config cfg);
+    HazardDetector();    
     void setOurSpeed(float speedMetersPerSecond);
 
     void update(const TsrHeader& det);
@@ -57,11 +59,11 @@ private:
     bool   _ourMoving      = false;
     int    _framesSinceReset = 0;
 
-    std::unordered_map<uint16_t, DetectionTrack> _tracks;
+    std::unordered_map<TrafficSign, DetectionTrack> _tracks;
 
-    static bool isObjectClass(uint16_t c);
+    static bool isObjectClass(TrafficSign c);
 
-    static bool isCarClass(uint16_t c);
+    static bool isCarClass(TrafficSign c);
 
     bool inCenterRight(uint32_t x, uint32_t width) const;
     bool inCenterLeft (uint32_t x, uint32_t width) const;

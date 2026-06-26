@@ -17,6 +17,9 @@ set(SOURCES
 	Frame.cpp
 	SlidingWindow.hpp
 	SlidingWindow.cpp
+	HazardDetector.hpp
+	HazardDetector.cpp
+	Utils.hpp
 )
 
 set(SOURCES_LKA

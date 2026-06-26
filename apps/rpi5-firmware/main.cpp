@@ -3,6 +3,7 @@
 #include "ActuatorCAN.hpp"
 #include "CAN.hpp"
 #include "ActuatorKuksa.hpp"
+#include "HazardDetector.hpp"
 #include "Tsr.hpp"
 #include <unistd.h>
 #include <stdlib.h>
@@ -132,8 +133,11 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
     frameCount++;
 }
 
-void tsrThread(Tsr *tsr) {
+void tsrThread(Tsr *tsr, kuksaLib *kuksa) {
+	HazardDetector::Config hazardCfg;
+    HazardDetector hazardDetector(hazardCfg);
     tsr->resetKuksa();
+	hazardDetector.setOurSpeed(kuksa->getSpeed());
     FILE *pipe = fopen("NamedPipeTsr", "r");
     if (pipe == NULL) {
         std::cout << "Failed to open NamedPipeTsr" << std::endl;
@@ -153,7 +157,13 @@ void tsrThread(Tsr *tsr) {
         tsr->clearDetectedSigns();
         for (auto &d : detections) {
             tsr->handleTrafficSign(d);
+            hazardDetector.update(d);
         }
+		HazardResult hazard = hazardDetector.evaluate();
+        if (hazard.hazard != HazardType::NONE) {
+            // TODO: publish via MQTT (Mosquitto)
+        }
+		hazardDetector.endFrame();
         tsr->tick();
     }
 
@@ -185,7 +195,7 @@ int main() {
 	//std::thread lkaThread(pathPlanning, &lka);
 	std::thread remoteThread(remoteControl, &remote, &evdev);
 	
-	std::thread TsrThread(tsrThread, &tsr);
+	std::thread TsrThread(tsrThread, &tsr, &kuksa);
 	// Kuksa Thread
 	// std::thread vhState(&kuksaLib::subscribeFromKuksa, &kuksa);
 
