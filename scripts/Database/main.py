@@ -34,7 +34,7 @@ class IncidentUpdate(BaseModel):
 
 class IncidentTypeCreate(BaseModel):
     name: str
-    description: Option[str] = None
+    description: Optional[str] = None
 
 # --- Incident types ---
 
@@ -59,7 +59,7 @@ async def create_type(body: IncidentTypeCreate):
         raise HTTPException(status_code=409, detail=f"Type '{body.name}' already exists")
 
 @app.delete("types/{types_id}", status_code=204)
-async def delete_type(type_id: int)
+async def delete_type(type_id: int):
     result = await pool.execute("DELETE FROM incident_type WHERE id = $1", type_id)
     if result == "DELETE 0":
         raise HTTPException(status_code=404, detail="Incident type not found")
@@ -121,4 +121,4 @@ async def update_status(incident_id: int, body: IncidentUpdate):
 async def delete_incident(incident_id: int):
     result = await pool.execute("DELETE FROM incident WHERE id = $1", incident_id)
     if result == "DELETE 0":
-        aise HTTPException(status_code=404, detail="Incident not found")
+        raise HTTPException(status_code=404, detail="Incident not found")
