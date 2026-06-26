@@ -1,6 +1,6 @@
 # Incident Reporting Database
 
-REST API for reporting road incidents detected by the Piracer. Location is encoded via ArUco marker IDs instead of GPS coordinates.
+REST API for reporting road incidents (potholes, sidewalk parking, road damage) detected by the Piracer. Location is encoded via ArUco marker IDs instead of GPS coordinates.
 
 ---
 
@@ -94,13 +94,13 @@ Valid status values: `open`, `resolved`.
 
 ## Running Locally
 
-### 1. Install dependencies
+### 1. Run the setup script
+
+A setup script is provided to automate the full installation on a new machine (PostgreSQL, database, schema, Python dependencies, firewall):
 
 ```bash
-cd incidents-api
-python3 -m venv venv
-source venv/bin/activate
-pip install fastapi uvicorn asyncpg
+chmod +x setup.sh
+./setup.sh
 ```
 
 ### 2. Configure the database URL
@@ -118,6 +118,8 @@ export DATABASE_URL="postgresql://user:password@host/dbname"
 ### 3. Start the server
 
 ```bash
+cd incidents-api
+source venv/bin/activate
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
