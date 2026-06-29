@@ -13,9 +13,9 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 | Field | Details |
 |-------|----------|
 | **Sprint Number** | Sprint 16 |
-| **Sprint Goal** | Start Crowededsource Hazard infrastructure. Finish ADAS |
-| **Sprint Duration** | June 15 – June 23 2026 |
-| **Focus Areas** | Adas, Backend, Database, MQTT |
+| **Sprint Goal** | Crowedsource Hazard MVP |
+| **Sprint Duration** | June 29 – July 10 2026 |
+| **Focus Areas** | Bug Fixes, MQTT |
 
 
 ## 📅 Scrum Team
