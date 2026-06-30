@@ -61,12 +61,13 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/../../libs/libkuksa ${CMAKE_BINARY_DIR}/lib
 add_subdirectory(mode_manager)
 add_subdirectory(middleware)
 add_subdirectory(actuator)
+find_package(PahoMqttCpp REQUIRED)
 
 if(CMAKE_CROSSCOMPILING)
 	add_subdirectory(comms)
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
 	target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC comms mode middleware kuksa actuator
-		opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_videoio)
+		opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_videoio jsoncpp PahoMqttCpp::paho-mqttpp3)
 	add_executable(Lka ${SOURCES_LKA})
 	target_link_libraries(Lka PUBLIC comms mode middleware kuksa actuator
 		opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_videoio)

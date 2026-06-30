@@ -13,6 +13,8 @@
 #include <thread>
 #include "ActuatorController.hpp"
 #include <opencv4/opencv2/highgui.hpp>
+#include <json/json.h>
+#include <mqtt/async_client.h>
 
 int frameCount = 0;
 void *header = malloc(sizeof(struct TsrHeader));
@@ -75,7 +77,29 @@ void remoteControl(RemoteControl *remote, Evdev *evdev) {
 	}
 }
 
+void publish(const std::string& type, uint32_t marker_id, mqtt::async_client &mqtt)
+{
+    if (!mqtt.is_connected()) {
+        std::cerr << "[MQTT] Not connected, dropping publish: " << type << std::endl;
+        return;
+    }
 
+    Json::Value root;
+    root["marker_id"] = marker_id;
+    root["type"] = type;
+
+    Json::StreamWriterBuilder builder;
+    std::string json = Json::writeString(builder, root);
+
+    try {
+        auto msg = mqtt::make_message("/incidents", json);
+        msg->set_qos(0);
+        mqtt.publish(msg);
+    } catch (const mqtt::exception& e) {
+        std::cerr << "[MQTT] Publish failed: " << e.what() << std::endl;
+    }
+}
+	
 void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCount, Tsr &tsr)
 {
     TsrHeader raw;
@@ -103,6 +127,7 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
         d.y             = ntohl(r.y);
         d.width         = ntohl(r.width);
         d.height        = ntohl(r.height);
+		d.marker_id     = ntohl(r.marker_id);
         uint32_t accRaw = ntohl(*(uint32_t *)&r.accuracy);
         memcpy(&d.accuracy, &accRaw, sizeof(float));
         return d;
@@ -134,6 +159,8 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
 }
 
 void tsrThread(Tsr *tsr, kuksaLib *kuksa) {
+	mqtt::async_client mqtt("tcp://10.21.100.2:1883", "tsr_publisher");
+    mqtt.connect();
 	HazardDetector::Config hazardCfg;
     HazardDetector hazardDetector(hazardCfg);
     tsr->resetKuksa();
@@ -160,8 +187,17 @@ void tsrThread(Tsr *tsr, kuksaLib *kuksa) {
             hazardDetector.update(d);
         }
 		HazardResult hazard = hazardDetector.evaluate();
+		std::cout << "Hazard detected: " << static_cast<int>(hazard.hazard) << ", marker_id: " << hazard.marker_id << std::endl;
         if (hazard.hazard != HazardType::NONE) {
-            // TODO: publish via MQTT (Mosquitto)
+            if (hazard.hazard == HazardType::STOPPED_CAR) {
+				publish("stopped_car", hazard.marker_id, mqtt);       
+			} else if (hazard.hazard == HazardType::OBJECT_ON_TRACK) {
+				std::cout << "Publishing object_on_track with marker_id: " << hazard.marker_id << std::endl;
+				publish("stopped_obstacles", hazard.marker_id, mqtt);
+			}
+			else if (hazard.hazard == HazardType::TWO_STOPPED_CARS) {
+				publish("stopped_car", hazard.marker_id, mqtt);
+			}
         }
 		hazardDetector.endFrame();
         tsr->tick();

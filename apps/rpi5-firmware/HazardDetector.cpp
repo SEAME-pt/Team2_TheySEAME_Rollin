@@ -40,34 +40,31 @@ void HazardDetector::update(const TsrHeader& det)
     track.signClass      = mappedSign;
     track.framesDetected += 1;
     track.seenThisFrame = true;
+    track.marker_id     = det.marker_id;
 }
 
 HazardResult HazardDetector::evaluate()
 {
     HazardResult result;
 
-    std::cout << "[HazardDetector] evaluate() — tracks=" << _tracks.size()
-               << " ourMoving=" << _ourMoving << std::endl;
+    // std::cout << "[HazardDetector] evaluate() — tracks=" << _tracks.size()
+    //            << " ourMoving=" << _ourMoving << std::endl;
 
     for (auto& [cls, track] : _tracks) {
 
-        std::cout << "[HazardDetector] track class=" << static_cast<uint16_t>(cls)
-                   << " framesDetected=" << track.framesDetected << std::endl;
+        // std::cout << "[HazardDetector] track class=" << static_cast<uint16_t>(cls)
+        //            << " framesDetected=" << track.framesDetected << std::endl;
 
         // static object
         if (isObjectClass(cls)) {
-            std::cout << "[HazardDetector] -> classified as OBJECT (minStableFrames="
-                       << _cfg.minStableFrames << ")" << std::endl;
+            // std::cout << "[HazardDetector] -> classified as OBJECT (minStableFrames="
+            //           << _cfg.minStableFrames << ")" << std::endl;
 
             if (track.framesDetected >= _cfg.minStableFrames) {
                 result.hazard      = HazardType::OBJECT_ON_TRACK;
                 result.triggerClass = cls;
-                result.description  = "Static object on track (class="
-                    + std::to_string(static_cast<uint16_t>(cls))
-                    + ", frames="
-                    + std::to_string(track.framesDetected) + ")";
+                result.marker_id    = track.marker_id;;
 
-                std::cout << "[HazardDetector] TRIGGER: " << result.description << std::endl;
                 return result;
             }
             continue;
@@ -78,19 +75,17 @@ HazardResult HazardDetector::evaluate()
             const bool shortTime = track.framesDetected <= _cfg.shortTimeFrames;
             const bool longTime  = track.framesDetected >  _cfg.longTimeFrames;
 
-            std::cout << "[HazardDetector] -> classified as CAR shortTime=" << shortTime
-                       << " longTime=" << longTime
-                       << " (shortTimeFrames=" << _cfg.shortTimeFrames
-                       << ", longTimeFrames=" << _cfg.longTimeFrames << ")" << std::endl;
+            // std::cout << "[HazardDetector] -> classified as CAR shortTime=" << shortTime
+            //            << " longTime=" << longTime
+            //            << " (shortTimeFrames=" << _cfg.shortTimeFrames
+            //            << ", longTimeFrames=" << _cfg.longTimeFrames << ")" << std::endl;
 
             if (_ourMoving) {
                 if (shortTime) {
                     result.hazard       = HazardType::STOPPED_CAR;
                     result.triggerClass = cls;
-                    result.description  = "Stopped car ahead (frames="
-                        + std::to_string(track.framesDetected) + ")";
+                    result.marker_id    = track.marker_id;;
 
-                    std::cout << "[HazardDetector] TRIGGER: " << result.description << std::endl;
                     return result;
                 }
                 std::cout << "[HazardDetector] our car moving, not shortTime -> no trigger for this track" << std::endl;
@@ -98,17 +93,14 @@ HazardResult HazardDetector::evaluate()
                 if (longTime) {
                     result.hazard       = HazardType::TWO_STOPPED_CARS;
                     result.triggerClass = cls;
-                    result.description  = "Two stopped cars (frames="
-                        + std::to_string(track.framesDetected) + ")";
+                    result.marker_id    = track.marker_id;;
 
-                    std::cout << "[HazardDetector] TRIGGER: " << result.description << std::endl;
                     return result;
                 } else {
                     result.hazard       = HazardType::OUR_CAR_STOPPED;
                     result.triggerClass = cls;
-                    result.description  = "Our car is stopped (lateral reference detected)";
+                    result.marker_id    = track.marker_id;;
 
-                    std::cout << "[HazardDetector] TRIGGER: " << result.description << std::endl;
                     return result;
                 }
             }

@@ -21,11 +21,12 @@ struct DetectionTrack {
     TrafficSign signClass;
     int      framesDetected = 0;
     bool     seenThisFrame = false;
+    uint32_t marker_id = 0;
 };
 
 struct HazardResult {
     HazardType  hazard      = HazardType::NONE;
-    std::string description;
+    uint32_t    marker_id   = 0;
     TrafficSign    triggerClass = TrafficSign::UNKNOWN;
 };
 
@@ -35,7 +36,7 @@ public:
     // Tunable parameters
     struct Config {
         float    frameWidth         = 640.0f;
-        float    minConfidence      = 0.65f;
+        float    minConfidence      = 0.45;
         int      minStableFrames    = 5;
         int      shortTimeFrames    = 20;
         int      longTimeFrames     = 60;

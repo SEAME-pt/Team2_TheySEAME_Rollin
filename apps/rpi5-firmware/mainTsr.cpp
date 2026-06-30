@@ -38,6 +38,7 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
         d.y             = ntohl(r.y);
         d.width         = ntohl(r.width);
         d.height        = ntohl(r.height);
+        d.marker_id     = ntohl(r.marker_id);
         uint32_t accRaw = ntohl(*(uint32_t *)&r.accuracy);
         memcpy(&d.accuracy, &accRaw, sizeof(float));
         return d;
@@ -62,6 +63,7 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
                   << " y=" << detections.back().y
                   << " width=" << detections.back().width
                   << " height=" << detections.back().height
+                  << " marker_id=" << detections.back().marker_id
                   << std::endl;
     }
 
@@ -77,7 +79,6 @@ int main() {
     HazardDetector hazardDetector(hazardCfg);
     ActuatorController controller(nullptr, nullptr, nullptr, kuksa, &tsr);
     tsr.attach(&controller);
-    
     tsr.resetKuksa();
     FILE *pipe = fopen("NamedPipeTsr", "r");
     if (pipe == NULL) {
@@ -107,7 +108,6 @@ int main() {
 
         HazardResult hazard = hazardDetector.evaluate();
         if (hazard.hazard != HazardType::NONE) {
-            // TODO: publish via MQTT (Mosquitto)
         }
         hazardDetector.endFrame();
         tsr.tick();
