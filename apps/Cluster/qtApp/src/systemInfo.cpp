@@ -1,4 +1,5 @@
 #include "systemInfo.hpp"
+#include <algorithm>
 
 systemInfo::systemInfo(QObject *parent)
     : QObject(parent)
@@ -69,6 +70,106 @@ QString systemInfo::getTargetSpeedDisplay() const
     return QString::number(_targetSpeed) + " hm/h";
 }
 
+int systemInfo::metersToDisplayPercent(float meters)
+{
+    if (meters <= 0.f)
+        return 0;
+    constexpr float kMaxMeters = 30.f;
+    const float pct = (1.f - (meters / kMaxMeters)) * 100.f;
+    return static_cast<int>(std::clamp(pct, 0.f, 100.f));
+}
+
+bool systemInfo::getLiveDetectionActive() const { return _liveDetectionActive.load(); }
+bool systemInfo::getFrontCarVisible() const { return _frontCarVisible.load(); }
+bool systemInfo::getLeftCarVisible() const { return _leftCarVisible.load(); }
+bool systemInfo::getRightCarVisible() const { return _rightCarVisible.load(); }
+int systemInfo::getFrontCarDistance() const { return _frontCarDistance.load(); }
+int systemInfo::getLeftCarDistance() const { return _leftCarDistance.load(); }
+int systemInfo::getRightCarDistance() const { return _rightCarDistance.load(); }
+
+bool systemInfo::getLdwWarningActive() const { return _ldwWarningActive; }
+bool systemInfo::getBsdWarningActive() const { return _bsdWarningActive; }
+bool systemInfo::getAdasWarningVisible() const { return _adasWarningVisible; }
+QString systemInfo::getAdasWarningMessage() const { return _adasWarningMessage; }
+
+namespace {
+
+QString buildAdasWarningMessage(bool ldw, bool bsd)
+{
+    if (ldw && bsd)
+        return QStringLiteral("Lane Departure + Blind Spot");
+    if (ldw)
+        return QStringLiteral("Lane Departure");
+    if (bsd)
+        return QStringLiteral("Blind Spot");
+    return QString();
+}
+
+} // namespace
+
+void systemInfo::updateAdasWarnings()
+{
+    const bool ldw = _kuksa.getLdwWarning();
+    const bool bsd = _kuksa.getBsdWarning();
+    const bool visible = ldw || bsd;
+    const QString message = buildAdasWarningMessage(ldw, bsd);
+    const bool wasVisible = _adasWarningVisible;
+
+    bool changed = false;
+    if (_ldwWarningActive != ldw) {
+        _ldwWarningActive = ldw;
+        changed = true;
+    }
+    if (_bsdWarningActive != bsd) {
+        _bsdWarningActive = bsd;
+        changed = true;
+    }
+    if (_adasWarningVisible != visible) {
+        _adasWarningVisible = visible;
+        changed = true;
+    }
+    if (_adasWarningMessage != message) {
+        _adasWarningMessage = message;
+        changed = true;
+    }
+
+    if (!wasVisible && visible)
+        emit adasWarningTriggered(message);
+    else if (wasVisible && !visible)
+        emit adasWarningCleared();
+
+    if (changed)
+        emit adasWarningUpdated();
+}
+
+void systemInfo::updateVehicleDetection()
+{
+    const float frontM = _kuksa.getAccLeadVehicleDistance();
+    const float leftM = _kuksa.getBsdLeftDistance();
+    const float rightM = _kuksa.getBsdRightDistance();
+
+    const bool frontVisible = frontM > 0.5f;
+    const bool leftVisible = _kuksa.getBsdLeftOccupied() && leftM > 0.5f;
+    const bool rightVisible = _kuksa.getBsdRightOccupied() && rightM > 0.5f;
+    const bool liveActive = frontVisible || leftVisible || rightVisible;
+
+    const int frontPct = frontVisible ? metersToDisplayPercent(frontM) : 0;
+    const int leftPct = leftVisible ? metersToDisplayPercent(leftM) : 0;
+    const int rightPct = rightVisible ? metersToDisplayPercent(rightM) : 0;
+
+    bool changed = false;
+    if (_liveDetectionActive != liveActive) { _liveDetectionActive = liveActive; changed = true; }
+    if (_frontCarVisible != frontVisible) { _frontCarVisible = frontVisible; changed = true; }
+    if (_leftCarVisible != leftVisible) { _leftCarVisible = leftVisible; changed = true; }
+    if (_rightCarVisible != rightVisible) { _rightCarVisible = rightVisible; changed = true; }
+    if (_frontCarDistance != frontPct) { _frontCarDistance = frontPct; changed = true; }
+    if (_leftCarDistance != leftPct) { _leftCarDistance = leftPct; changed = true; }
+    if (_rightCarDistance != rightPct) { _rightCarDistance = rightPct; changed = true; }
+
+    if (changed)
+        emit vehicleDetectionUpdated();
+}
+
 bool systemInfo::start()
 {
     if (_running) return true;
@@ -95,8 +196,9 @@ bool systemInfo::start()
             setTargetSpeed(static_cast<int>(_kuksa.getCcTargetSpeed()));
             emit trafficSignUpdated(static_cast<int>(_kuksa.getTsrDetectedSignType()));
             emit speedLimitUpdated(static_cast<int>(_kuksa.getTsrDetectedSpeedLimit()));
+            updateVehicleDetection();
+            updateAdasWarnings();
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            std::cout << "Traffic Sign: " << _kuksa.getTsrDetectedSignType() << ", Speed Limit: " << _kuksa.getTsrDetectedSpeedLimit() << std::endl;
         }
 
         if (subThread && subThread->joinable()) {

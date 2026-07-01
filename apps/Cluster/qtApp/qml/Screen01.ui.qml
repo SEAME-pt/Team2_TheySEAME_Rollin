@@ -20,7 +20,12 @@ Rectangle {
 
     // TEST MODE: Set to true to test without systemInfo (for Qt Design Studio preview)
     property bool previewMode: false
-    property real previewLeftCarDistance: 100  // Start at closest position
+
+    // 3D lane layout (matches lane guide spacing)
+    readonly property real detectedCarY: -325
+    readonly property real laneCenterX: 0
+    readonly property real laneLeftX: -320
+    readonly property real laneRightX: 320
 
     // Preview mode properties for generalInfo (date/time/weather)
     property string previewDate: "19/03/2026"
@@ -33,34 +38,6 @@ Rectangle {
     property int previewBattery: 78
     property bool previewCruiseActive: true
     property int previewTargetSpeed: 130
-
-    // Auto-animate in a loop
-    SequentialAnimation {
-        running: previewMode
-        loops: Animation.Infinite
-
-        NumberAnimation {
-            target: rectangle
-            property: "previewLeftCarDistance"
-            from: 100
-            to: 0
-            duration: 4000
-            easing.type: Easing.InOutQuad
-        }
-
-        PauseAnimation { duration: 500 }
-
-        NumberAnimation {
-            target: rectangle
-            property: "previewLeftCarDistance"
-            from: 0
-            to: 100
-            duration: 4000
-            easing.type: Easing.InOutQuad
-        }
-
-        PauseAnimation { duration: 500 }
-    }
 
     Image {
         id: cluster
@@ -171,51 +148,6 @@ Rectangle {
             horizontalAlignment: Text.AlignHCenter
         }
 
-        // Detected vehicles overlays (left lane)
-        Image {
-            id: leftLaneDetected
-            property real distance: rectangle.previewMode ? rectangle.previewLeftCarDistance : (systemInfo ? systemInfo.leftCarDistance : 0)
-            x: 575 - 175 * (distance / 100)
-            y: 82 + 141 * (distance / 100)
-            width: 46 + 137 * (distance / 100)
-            height: 52 + 80 * (distance / 100)
-            source: "images/leftCar.png.png"
-            fillMode: Image.PreserveAspectFit
-            visible: false
-            opacity: 0.85
-
-            Behavior on x { NumberAnimation { duration: 300; easing.type: Easing.InOutQuad } }
-            Behavior on y { NumberAnimation { duration: 300; easing.type: Easing.InOutQuad } }
-            Behavior on width { NumberAnimation { duration: 300; easing.type: Easing.InOutQuad } }
-            Behavior on height { NumberAnimation { duration: 300; easing.type: Easing.InOutQuad } }
-        }
-
-        // Detected vehicles overlays (front/center lane)
-        Image {
-            id: frontLaneDetected
-            x: 864
-            y: 97
-            width: 120
-            height: 80
-            source: "images/frontCar.png.png"
-            fillMode: Image.PreserveAspectFit
-            visible: false  // Test: visible to preview layout
-            opacity: 0.85
-        }
-
-        // Detected vehicles overlays (right lane)
-        Image {
-            id: rightLaneDetected
-            x: 674
-            y: 150
-            width: 120
-            height: 80
-            source: "images/rightCar.png"
-            fillMode: Image.PreserveAspectFit
-            visible: false  // Test: visible to preview layout
-            opacity: 0.85
-        }
-
         Rectangle {
             id: maxBattery
             x: 1012
@@ -303,94 +235,7 @@ Rectangle {
             }
         }
 
-        Node {
-            id: leadCar
-            position: Qt.vector3d(0, -325, -260) // Target vehicle to overtake (spawned much farther ahead)
-            scale: Qt.vector3d(72.0, 72.0, 72.0)
-            eulerRotation.y: 180
-            eulerRotation.x: 0.5
-
-            Model {
-                source: "qrc:/qml/3d-assets/carro/meshes/body_Plane_mesh.mesh"
-                materials: DefaultMaterial { diffuseColor: "#4e79a7" }
-            }
-
-            Model {
-                source: "qrc:/qml/3d-assets/carro/meshes/circle_001_Circle_000_mesh.mesh"
-                materials: DefaultMaterial { diffuseColor: "#1f1f1f" }
-            }
-
-            Model {
-                source: "qrc:/qml/3d-assets/carro/meshes/circle_002_Circle_001_mesh.mesh"
-                materials: DefaultMaterial { diffuseColor: "#1f1f1f" }
-            }
-
-            Model {
-                source: "qrc:/qml/3d-assets/carro/meshes/circle_003_mesh.mesh"
-                materials: DefaultMaterial { diffuseColor: "#1f1f1f" }
-            }
-
-            Model {
-                source: "qrc:/qml/3d-assets/carro/meshes/circle_Circle_002_mesh.mesh"
-                materials: DefaultMaterial { diffuseColor: "#1f1f1f" }
-            }
-
-            Model {
-                source: "qrc:/qml/3d-assets/carro/meshes/fari_Plane_002_mesh.mesh"
-                materials: DefaultMaterial { diffuseColor: "#f3f3f3" }
-            }
-
-            Model {
-                source: "qrc:/qml/3d-assets/carro/meshes/finestriniAnt_Plane_004_mesh.mesh"
-                materials: DefaultMaterial { diffuseColor: "#7d9fc4" }
-            }
-
-            Model {
-                source: "qrc:/qml/3d-assets/carro/meshes/finestriniPost_Plane_005_mesh.mesh"
-                materials: DefaultMaterial { diffuseColor: "#7d9fc4" }
-            }
-
-            Model {
-                source: "qrc:/qml/3d-assets/carro/meshes/grigliaAnt_Body_Plane_001_mesh.mesh"
-                materials: DefaultMaterial { diffuseColor: "#404040" }
-            }
-
-            Model {
-                source: "qrc:/qml/3d-assets/carro/meshes/grigliaPost_Body_Plane_002_mesh.mesh"
-                materials: DefaultMaterial { diffuseColor: "#404040" }
-            }
-
-            Model {
-                source: "qrc:/qml/3d-assets/carro/meshes/parabrezza_Plane_003_mesh.mesh"
-                materials: DefaultMaterial { diffuseColor: "#7d9fc4" }
-            }
-
-            Model {
-                source: "qrc:/qml/3d-assets/carro/meshes/plane_001_mesh.mesh"
-                materials: DefaultMaterial { diffuseColor: "#4e79a7" }
-            }
-
-            Model {
-                source: "qrc:/qml/3d-assets/carro/meshes/stopDX_Body_Plane_005_mesh.mesh"
-                materials: DefaultMaterial { diffuseColor: "#a72f2f" }
-            }
-
-            Model {
-                source: "qrc:/qml/3d-assets/carro/meshes/stopSX_Body_Plane_004_mesh.mesh"
-                materials: DefaultMaterial { diffuseColor: "#a72f2f" }
-            }
-
-            Model {
-                source: "qrc:/qml/3d-assets/carro/meshes/targa_Body_Plane_003_mesh.mesh"
-                materials: DefaultMaterial { diffuseColor: "#d4d4d4" }
-            }
-
-            Model {
-                source: "qrc:/qml/3d-assets/carro/meshes/vetroPost_Plane_006_mesh.mesh"
-                materials: DefaultMaterial { diffuseColor: "#7d9fc4" }
-            }
-        }
-
+        // Ego vehicle — fixed pose, gray body distinguishes from detected cars
         Node {
             id: carModel
             position: Qt.vector3d(0, -325, 600) // Car world position: X shift, Y height, Z depth (lower = closer to bottom)
@@ -479,92 +324,40 @@ Rectangle {
             }
         }
 
-        SequentialAnimation {
-            id: fsdTestDrive // Main test scenario animation (edit values here)
-            running: true
-            loops: Animation.Infinite
+        // Detected center-lane vehicle
+        DetectedCar3D {
+            id: detectedFrontCar
+            visible: systemInfo && systemInfo.frontCarVisible
+            x: rectangle.laneCenterX
+            y: rectangle.detectedCarY
+            z: systemInfo ? (-100 - (100 - systemInfo.frontCarDistance) * 4) : -500
+            bodyColor: "#4e79a7"
 
-            PauseAnimation {
-                duration: 600 // Initial hold before movement starts
-            }
+            Behavior on z { NumberAnimation { duration: 300; easing.type: Easing.InOutQuad } }
+        }
 
-            // Phase 1: ego car approaches lead car in center lane
-            ParallelAnimation {
-                NumberAnimation {
-                    target: carModel
-                    property: "position.z"
-                    to: 400 // Keep safe following distance before lane change
-                    duration: 2000 // Faster approach
-                    easing.type: Easing.Linear
-                }
-            }
+        // Detected left-lane vehicle
+        DetectedCar3D {
+            id: detectedLeftCar
+            visible: systemInfo && systemInfo.leftCarVisible
+            x: rectangle.laneLeftX
+            y: rectangle.detectedCarY
+            z: systemInfo ? (-100 - (100 - systemInfo.leftCarDistance) * 4) : -500
+            bodyColor: "#4e79a7"
 
-            // Phase 2: smooth diagonal lane change LEFT while continuing forward
-            ParallelAnimation {
-                NumberAnimation {
-                    target: carModel
-                    property: "position.x"
-                    to: -320 // Move into left lane center using lane-guide coordinates
-                    duration: 1700 // Faster lane-change speed
-                    easing.type: Easing.Linear
-                }
-                NumberAnimation {
-                    target: carModel
-                    property: "position.z"
-                    to: -140 // Keep stronger forward progress during lane change
-                    duration: 1700
-                    easing.type: Easing.Linear
-                }
-            }
+            Behavior on z { NumberAnimation { duration: 300; easing.type: Easing.InOutQuad } }
+        }
 
-            // Phase 3: pass the lead car while staying in left lane
-            ParallelAnimation {
-                NumberAnimation {
-                    target: carModel
-                    property: "position.z"
-                    to: -700 // Advance much farther ahead of lead car
-                    duration: 1800 // Faster overtake speed
-                    easing.type: Easing.Linear
-                }
-            }
+        // Detected right-lane vehicle
+        DetectedCar3D {
+            id: detectedRightCar
+            visible: systemInfo && systemInfo.rightCarVisible
+            x: rectangle.laneRightX
+            y: rectangle.detectedCarY
+            z: systemInfo ? (-100 - (100 - systemInfo.rightCarDistance) * 4) : -500
+            bodyColor: "#4e79a7"
 
-            // Phase 4: smooth diagonal return to center lane while still moving forward
-            ParallelAnimation {
-                NumberAnimation {
-                    target: carModel
-                    property: "position.x"
-                    to: 0 // Center lane X
-                    duration: 1500
-                    easing.type: Easing.Linear
-                }
-                NumberAnimation {
-                    target: carModel
-                    property: "position.z"
-                    to: -1220 // Continue much farther forward while returning
-                    duration: 1500
-                    easing.type: Easing.Linear
-                }
-            }
-
-            PauseAnimation {
-                duration: 700 // End hold before reset
-            }
-
-            // Phase 5: reset to initial pose for loop restart
-            ParallelAnimation {
-                NumberAnimation {
-                    target: carModel
-                    property: "position.x"
-                    to: 0
-                    duration: 1
-                }
-                NumberAnimation {
-                    target: carModel
-                    property: "position.z"
-                    to: 600
-                    duration: 1
-                }
-            }
+            Behavior on z { NumberAnimation { duration: 300; easing.type: Easing.InOutQuad } }
         }
     }
 
@@ -698,4 +491,53 @@ Rectangle {
             name: "clicked"
         }
     ]
+
+    Popup {
+        id: adasWarningPopup
+        modal: false
+        focus: false
+        closePolicy: Popup.NoAutoClose
+        anchors.centerIn: parent
+        width: 420
+        height: 120
+        visible: systemInfo && systemInfo.adasWarningVisible
+        opacity: visible ? 1.0 : 0.0
+
+        Behavior on opacity {
+            NumberAnimation { duration: 200; easing.type: Easing.InOutQuad }
+        }
+
+        background: Rectangle {
+            radius: 12
+            color: "#FFF3CD"
+            border.color: "#856404"
+            border.width: 2
+        }
+
+        contentItem: Row {
+            spacing: 16
+            anchors.centerIn: parent
+            leftPadding: 20
+            rightPadding: 20
+
+            Image {
+                source: "qrc:/qml/images/warning.png"
+                fillMode: Image.PreserveAspectFit
+                width: 48
+                height: 48
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Text {
+                text: systemInfo ? systemInfo.adasWarningMessage : ""
+                font.pixelSize: 22
+                font.family: "BaseNeueTrial-Bold"
+                font.bold: true
+                color: "#856404"
+                wrapMode: Text.WordWrap
+                width: 300
+                anchors.verticalCenter: parent.verticalCenter
+            }
+        }
+    }
 }
