@@ -1,3 +1,6 @@
 # CMake
 build/
 .cache
+
+__pycache__
+.un~

@@ -11,6 +11,8 @@ enum CAN_ID {
 	BRAKE = 0x103,
 	DRIVING_MODE = 0x104,
 	CRUISE_CONTROL = 0x212,
+	TRAFFIC_SIGN = 0x226,
+	SPEED_LIMIT = 0x227,
 	AEB_ENABLED = 0x20D,
 };
 
@@ -33,6 +35,8 @@ public:
 	void setGear(const short gear);
 	void brake(const bool flag);
 	void setCruiseControl(const bool flag, const int targetSpeed);
+	void setTrafficSign(const int trafficSign, const float distance);
+	void setSpeedLimit(const int speedLimit);
 	void setAEb_Enabled(const bool autonomous);
 private:
 	ICAN &_can;

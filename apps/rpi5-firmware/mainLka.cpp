@@ -65,7 +65,7 @@ int main() {
 	//	new ActuatorCAN(can),
 	//	kuksa
 	//);
-	ActuatorController ctrl(car, NULL, &lka, kuksa);
+	ActuatorController ctrl(car, NULL, &lka, kuksa, NULL);
 
 	std::signal(SIGINT, signal_handler);
 	lka.attach(&ctrl);
