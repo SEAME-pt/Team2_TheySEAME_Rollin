@@ -158,7 +158,8 @@
               "Warning": {
                 "type": "sensor",
                 "datatype": "boolean",
-                "description": "Lane departure warning active"
+                "description": "Lane departure warning active",
+                "dbc": { "signal": "Warning" }
               }
             }
           },
@@ -257,15 +258,28 @@
                 "datatype": "boolean",
                 "description": "Object detected in left blind spot"
               },
+              "LeftDistance": {
+                "type": "sensor",
+                "datatype": "float",
+                "unit": "m",
+                "description": "Distance to nearest vehicle in left lane"
+              },
               "RightOccupied": {
                 "type": "sensor",
                 "datatype": "boolean",
                 "description": "Object detected in right blind spot"
               },
+              "RightDistance": {
+                "type": "sensor",
+                "datatype": "float",
+                "unit": "m",
+                "description": "Distance to nearest vehicle in right lane"
+              },
               "Warning": {
                 "type": "sensor",
                 "datatype": "boolean",
-                "description": "Blind spot warning active"
+                "description": "Blind spot warning active",
+                "dbc": { "signal": "Warning" }
               }
             }
           },

@@ -47,7 +47,9 @@ void kuksaLib::setAccLeadVehicleDistance(float v) { accLeadVehicleDistance.store
 // BSD setters
 void kuksaLib::setBsdEnabled(bool v) { bsdEnabled.store(v); }
 void kuksaLib::setBsdLeftOccupied(bool v) { bsdLeftOccupied.store(v); }
+void kuksaLib::setBsdLeftDistance(float v) { bsdLeftDistance.store(v); }
 void kuksaLib::setBsdRightOccupied(bool v) { bsdRightOccupied.store(v); }
+void kuksaLib::setBsdRightDistance(float v) { bsdRightDistance.store(v); }
 void kuksaLib::setBsdWarning(bool v) { bsdWarning.store(v); }
 
 // TSR setters
@@ -102,7 +104,9 @@ bool kuksaLib::subscribeFromKuksa()
     // ADAS - BSD
     req.add_signal_paths("Vehicle.ADAS.BlindSpotDetection.Enabled");
     req.add_signal_paths("Vehicle.ADAS.BlindSpotDetection.LeftOccupied");
+    req.add_signal_paths("Vehicle.ADAS.BlindSpotDetection.LeftDistance");
     req.add_signal_paths("Vehicle.ADAS.BlindSpotDetection.RightOccupied");
+    req.add_signal_paths("Vehicle.ADAS.BlindSpotDetection.RightDistance");
     req.add_signal_paths("Vehicle.ADAS.BlindSpotDetection.Warning");
 
     // ADAS - TSR
@@ -216,9 +220,15 @@ bool kuksaLib::subscribeFromKuksa()
             } else if (path == "Vehicle.ADAS.BlindSpotDetection.LeftOccupied") {
                 bool v = false;
                 if (valueToType(value, v)) setBsdLeftOccupied(v);
+            } else if (path == "Vehicle.ADAS.BlindSpotDetection.LeftDistance") {
+                float v = 0.0f;
+                if (valueToType(value, v)) setBsdLeftDistance(v);
             } else if (path == "Vehicle.ADAS.BlindSpotDetection.RightOccupied") {
                 bool v = false;
                 if (valueToType(value, v)) setBsdRightOccupied(v);
+            } else if (path == "Vehicle.ADAS.BlindSpotDetection.RightDistance") {
+                float v = 0.0f;
+                if (valueToType(value, v)) setBsdRightDistance(v);
             } else if (path == "Vehicle.ADAS.BlindSpotDetection.Warning") {
                 bool v = false;
                 if (valueToType(value, v)) setBsdWarning(v);

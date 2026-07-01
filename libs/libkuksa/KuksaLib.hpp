@@ -54,7 +54,9 @@ private:
     // ADAS - Blind Spot Detection
     std::atomic<bool> bsdEnabled{false};
     std::atomic<bool> bsdLeftOccupied{false};
+    std::atomic<float> bsdLeftDistance{0.0f};
     std::atomic<bool> bsdRightOccupied{false};
+    std::atomic<float> bsdRightDistance{0.0f};
     std::atomic<bool> bsdWarning{false};
 
     // ADAS - Traffic Sign Recognition
@@ -104,7 +106,9 @@ private:
 
     void setBsdEnabled(bool v);
     void setBsdLeftOccupied(bool v);
+    void setBsdLeftDistance(float v);
     void setBsdRightOccupied(bool v);
+    void setBsdRightDistance(float v);
     void setBsdWarning(bool v);
 
     void setTsrEnabled(bool v);
@@ -162,7 +166,9 @@ public:
 
     bool getBsdEnabled() const { return bsdEnabled.load(); }
     bool getBsdLeftOccupied() const { return bsdLeftOccupied.load(); }
+    float getBsdLeftDistance() const { return bsdLeftDistance.load(); }
     bool getBsdRightOccupied() const { return bsdRightOccupied.load(); }
+    float getBsdRightDistance() const { return bsdRightDistance.load(); }
     bool getBsdWarning() const { return bsdWarning.load(); }
 
     bool getTsrEnabled() const { return tsrEnabled.load(); }
