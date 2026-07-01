@@ -15,20 +15,16 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
 {
     TsrHeader raw;
     TsrHeader headerBE;
-
     if (fread(&raw, sizeof(TsrHeader), 1, pipe) != 1) {
         std::cout << "Pipe closed or read error" << std::endl;
         return;
     }
-
     uint32_t frameNbr      = ntohl(raw.frameNbr);
     uint16_t numDetections = ntohs(raw.numDetections);
-
     if (frameNbr != FRAME_NMBR) {
         std::cout << "Sync Problem (got " << frameNbr << ", expected " << FRAME_NMBR << ")" << std::endl;
         return;
     }
-
     auto decode = [](const TsrHeader &r) -> TsrHeader {
         TsrHeader d;
         d.frameNbr      = ntohl(r.frameNbr);
@@ -38,15 +34,13 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
         d.y             = ntohl(r.y);
         d.width         = ntohl(r.width);
         d.height        = ntohl(r.height);
-        d.marker_id     = ntohl(r.marker_id);
         uint32_t accRaw = ntohl(*(uint32_t *)&r.accuracy);
         memcpy(&d.accuracy, &accRaw, sizeof(float));
         return d;
     };
-
     detections.push_back(decode(raw));
-    
-    
+
+
     TsrHeader decoded;
     for (int i = 1; i < numDetections; i++) {
         if (fread(&raw, sizeof(TsrHeader), 1, pipe) != 1) {
@@ -55,65 +49,62 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
         }
         decoded = decode(raw);
         detections.push_back(decoded);
-        std::cout << "header: frameNbr=" << detections.back().frameNbr
-                  << " numDetections=" << detections.back().numDetections
-                  << " trafficSign=" << detections.back().trafficSign
-                  << " accuracy=" << detections.back().accuracy
-                  << " x=" << detections.back().x
-                  << " y=" << detections.back().y
-                  << " width=" << detections.back().width
-                  << " height=" << detections.back().height
-                  << " marker_id=" << detections.back().marker_id
-                  << std::endl;
     }
-
     frameCount++;
 }
 
+static const char* hazardName(HazardType h)
+{
+    switch (h) {
+        case HazardType::NONE:             return "NONE";
+        case HazardType::STOPPED_CAR:      return "STOPPED_CAR";
+        case HazardType::TWO_STOPPED_CARS: return "TWO_STOPPED_CARS";
+        case HazardType::OUR_CAR_STOPPED:  return "OUR_CAR_STOPPED";
+        case HazardType::OBJECT_ON_TRACK:  return "OBJECT_ON_TRACK";
+    }
+    return "?";
+}
+
 int main() {
-    CAN can("can0", 500, 0, 0);
     kuksaLib kuksa;
-    CarActuator *car = new ActuatorKuksa(new ActuatorCAN(can), kuksa);
     Tsr tsr;
+
     HazardDetector::Config hazardCfg;
     HazardDetector hazardDetector(hazardCfg);
-    ActuatorController controller(nullptr, nullptr, nullptr, kuksa, &tsr);
-    tsr.attach(&controller);
+
     tsr.resetKuksa();
     FILE *pipe = fopen("NamedPipeTsr", "r");
     if (pipe == NULL) {
         std::cout << "Failed to open NamedPipeTsr" << std::endl;
         return (-1);
     }
-
     std::cout << "NamedPipeTsr opened successfully" << std::endl;
-
     while (true) {
-        std::vector<TsrHeader> detections;  
+        std::vector<TsrHeader> detections;
         readFromPipe(pipe, detections, frameCount, tsr);
-
-        std::cout << "Detections in frame: " << detections.size() << std::endl;
-
         if (feof(pipe)) {
             std::cout << "Pipe EOF" << std::endl;
             break;
         }
+
         hazardDetector.setOurSpeed(kuksa.getSpeed());
+
         tsr.clearDetectedSigns();
         for (auto &d : detections) {
-            // std::cout << "Dispatching trafficSign=" << d.trafficSign << std::endl;
             tsr.handleTrafficSign(d);
             hazardDetector.update(d);
         }
 
         HazardResult hazard = hazardDetector.evaluate();
         if (hazard.hazard != HazardType::NONE) {
+            std::cout << "[HAZARD] " << hazardName(hazard.hazard)
+                       << " - " << hazard.description << std::endl;
+            // TODO: publish via MQTT (Mosquitto)
         }
         hazardDetector.endFrame();
+
         tsr.tick();
-
     }
-
     fclose(pipe);
     delete car;
     return 0;
