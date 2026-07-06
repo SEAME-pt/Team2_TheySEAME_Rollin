@@ -159,10 +159,12 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
 }
 
 void tsrThread(Tsr *tsr, kuksaLib *kuksa) {
-	mqtt::async_client mqtt("tcp://10.21.100.2:1883", "tsr_publisher");
+	mqtt::async_client mqtt("tcp://10.21.220.143:1883", "tsr_publisher");
     mqtt.connect();
 	HazardDetector::Config hazardCfg;
     HazardDetector hazardDetector(hazardCfg);
+    HazardType lastPublishedHazard = HazardType::NONE;
+    uint32_t lastPublishedMarkerId = 0;
     tsr->resetKuksa();
 	hazardDetector.setOurSpeed(kuksa->getSpeed());
     FILE *pipe = fopen("NamedPipeTsr", "r");
@@ -187,8 +189,15 @@ void tsrThread(Tsr *tsr, kuksaLib *kuksa) {
             hazardDetector.update(d);
         }
 		HazardResult hazard = hazardDetector.evaluate();
-		std::cout << "Hazard detected: " << static_cast<int>(hazard.hazard) << ", marker_id: " << hazard.marker_id << std::endl;
+		// std::cout << "Hazard detected: " << static_cast<int>(hazard.hazard) << ", marker_id: " << hazard.marker_id << std::endl;
         if (hazard.hazard != HazardType::NONE) {
+            bool isNewHazard = hazard.hazard != lastPublishedHazard || hazard.marker_id != lastPublishedMarkerId;
+            if (!isNewHazard) {
+                hazardDetector.endFrame();
+                tsr->tick();
+                continue;
+            }
+
             if (hazard.hazard == HazardType::STOPPED_CAR) {
 				publish("stopped_car", hazard.marker_id, mqtt);       
 			} else if (hazard.hazard == HazardType::OBJECT_ON_TRACK) {
@@ -196,8 +205,17 @@ void tsrThread(Tsr *tsr, kuksaLib *kuksa) {
 				publish("stopped_obstacles", hazard.marker_id, mqtt);
 			}
 			else if (hazard.hazard == HazardType::TWO_STOPPED_CARS) {
-				publish("stopped_car", hazard.marker_id, mqtt);
+				publish("two_stopped_cars", hazard.marker_id, mqtt);
 			}
+            else if (hazard.hazard == HazardType::OUR_CAR_STOPPED) {
+                publish("stopped_car", hazard.marker_id, mqtt);
+            }
+
+            lastPublishedHazard = hazard.hazard;
+            lastPublishedMarkerId = hazard.marker_id;
+        } else {
+            lastPublishedHazard = HazardType::NONE;
+            lastPublishedMarkerId = 0;
         }
 		hazardDetector.endFrame();
         tsr->tick();
