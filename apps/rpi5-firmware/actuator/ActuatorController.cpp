@@ -81,7 +81,7 @@ void ActuatorController::setAEb_Enabled(bool enabled) {
 }
 
 void ActuatorController::update(Subject *subj, Events event) {
-	std::cout << "Received notify " << event << std::endl;
+	//std::cout << "Received notify " << event << std::endl;
 	if (subj == _remote) {
 		switch (event) {
 			case Events::CAR_THROTTLE:

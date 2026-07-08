@@ -9,7 +9,7 @@ const int frameH = 320;
 
 struct Debug {
 	int angle;
-	int cte;
+	float cte;
 	int size;
 };
 
@@ -70,6 +70,11 @@ public:
 	 */
 	 struct Debug control(float leftK, float rightK, float x1, float x2);
 
+	void debug(float leftK, float rightK, float fbangle, float ffangle, float angle, int diff, float cteOff);
+	void validateCurves(float leftK, float rightK);
+
+	float calcCurve(float leftK, float rightK);
+
 private:
 
 	float calcAngle(float k);
@@ -80,8 +85,20 @@ private:
 	const int _stallFrames;
 	const int _angleToll;
 	const int _offset;
-	const int _clw;
-	int _prevAngle;
+	const int _kTreshold;
+	const float _kStep;
+	const float _kAlpha;
+	const float _cteAlpha;
+	float _prevCteNorm;
+	bool _badleftK;
+	bool _badrightK;
+	int _badleftKI;
+	int _badrightKI;
+	int _lastlw;
+	float _prevleftK;
+	float _prevrightK;
+	float _prevK;
+	float _prevAngle;
 	int _showAngle;
 	std::queue<int> _angle;
 };

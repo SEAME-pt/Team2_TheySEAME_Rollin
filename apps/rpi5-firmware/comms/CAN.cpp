@@ -98,6 +98,7 @@ int CAN::openSocket() {
 	struct sockaddr_can addr;
 	struct ifreq ifr;
 
+	std::memset(&addr, 0, sizeof(addr));
 	if (can_do_start(_interface.c_str()) < 0) {
 		return (-1);
 	}
