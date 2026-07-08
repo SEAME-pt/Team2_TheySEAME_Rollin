@@ -44,7 +44,7 @@ void Tsr::handleTrafficSign(const TsrHeader &tsrData)
     _detectedSigns.push_back(static_cast<uint16_t>(mappedSign));
 
     if (mappedSign == TrafficSign::UNKNOWN) {
-        std::cout << "[TSR] Detected unknown sign class " << tsrData.trafficSign << " — ignoring" << std::endl;
+        // std::cout << "[TSR] Detected unknown sign class " << tsrData.trafficSign << " — ignoring" << std::endl;
     }
     notify(Events::CAR_TRAFFIC_SIGN);
     

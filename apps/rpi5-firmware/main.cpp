@@ -166,29 +166,29 @@ void tsrThread(Tsr *tsr, kuksaLib *kuksa) {
     HazardType lastPublishedHazard = HazardType::NONE;
     uint32_t lastPublishedMarkerId = 0;
     tsr->resetKuksa();
-	hazardDetector.setOurSpeed(kuksa->getSpeed());
     FILE *pipe = fopen("NamedPipeTsr", "r");
     if (pipe == NULL) {
         std::cout << "Failed to open NamedPipeTsr" << std::endl;
         return;
     }
-
+    
     std::cout << "NamedPipeTsr opened successfully" << std::endl;
-
+    HazardResult hazard;
     while (true) {
         std::vector<TsrHeader> detections;  
         readFromPipe(pipe, detections, frameCount, *tsr);
-
+        
         if (feof(pipe)) {
             std::cout << "Pipe EOF" << std::endl;
             break;
         }
         tsr->clearDetectedSigns();
+        hazardDetector.setOurSpeed(kuksa->getSpeed());
         for (auto &d : detections) {
             tsr->handleTrafficSign(d);
             hazardDetector.update(d);
         }
-		HazardResult hazard = hazardDetector.evaluate();
+        hazard = hazardDetector.evaluate();
 		// std::cout << "Hazard detected: " << static_cast<int>(hazard.hazard) << ", marker_id: " << hazard.marker_id << std::endl;
         if (hazard.hazard != HazardType::NONE) {
             bool isNewHazard = hazard.hazard != lastPublishedHazard || hazard.marker_id != lastPublishedMarkerId;
@@ -201,13 +201,13 @@ void tsrThread(Tsr *tsr, kuksaLib *kuksa) {
             if (hazard.hazard == HazardType::STOPPED_CAR) {
 				publish("stopped_car", hazard.marker_id, mqtt);       
 			} else if (hazard.hazard == HazardType::OBJECT_ON_TRACK) {
-				std::cout << "Publishing object_on_track with marker_id: " << hazard.marker_id << std::endl;
 				publish("stopped_obstacles", hazard.marker_id, mqtt);
 			}
 			else if (hazard.hazard == HazardType::TWO_STOPPED_CARS) {
 				publish("two_stopped_cars", hazard.marker_id, mqtt);
 			}
             else if (hazard.hazard == HazardType::OUR_CAR_STOPPED) {
+                std::cout << "[HAZARD] Our car is stopped, marker_id: " << hazard.marker_id << std::endl;
                 publish("stopped_car", hazard.marker_id, mqtt);
             }
 
