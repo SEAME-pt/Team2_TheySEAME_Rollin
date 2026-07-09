@@ -9,5 +9,5 @@ BOOST_PYTHON_MODULE(purePursuit) {
 	boost::python::class_<Debug>("Debug", boost::python::init<>())
 		.def_readwrite("angle", &Debug::angle)
 		.def_readwrite("cte", &Debug::cte)
-		.def_readwrite("diff", &Debug::size);
+		.def_readwrite("diff", &Debug::heading);
 }

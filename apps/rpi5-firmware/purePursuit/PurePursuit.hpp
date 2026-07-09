@@ -10,7 +10,7 @@ const int frameH = 320;
 struct Debug {
 	int angle;
 	float cte;
-	int size;
+	float heading;
 };
 
 /**
@@ -68,38 +68,24 @@ public:
 	 *
 	 * @param frame to apply the lka algo
 	 */
-	 struct Debug control(float leftK, float rightK, float x1, float x2);
+	 struct Debug control(float x1, float x2, float lftA1, float lftB1, float rghtA1, float rghtB1);
 
-	void debug(float leftK, float rightK, float fbangle, float ffangle, float angle, int diff, float cteOff);
-	void validateCurves(float leftK, float rightK);
-
-	float calcCurve(float leftK, float rightK);
+	void debug(float angle, float diff, float cteOff, int lw, float heading);
 
 private:
 
-	float calcAngle(float k);
-
-	const float _alpha;
-	const float _L;
 	const float _kCte;
 	const int _stallFrames;
 	const int _angleToll;
 	const int _offset;
-	const int _kTreshold;
-	const float _kStep;
-	const float _kAlpha;
 	const float _cteAlpha;
+	const float _camOffset;
+	const int _frameTime;
 	float _prevCteNorm;
-	bool _badleftK;
-	bool _badrightK;
-	int _badleftKI;
-	int _badrightKI;
 	int _lastlw;
-	float _prevleftK;
-	float _prevrightK;
-	float _prevK;
 	float _prevAngle;
 	int _showAngle;
+	int _timeLapse;
 	std::queue<int> _angle;
 };
 
