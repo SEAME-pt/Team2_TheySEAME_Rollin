@@ -22,5 +22,5 @@ target_include_directories(actuator PUBLIC
 	${SDK_PATH}/sysroots/aarch64-agl-linux/usr/include/boost/
 	${CMAKE_CURRENT_SOURCE_DIR}
 )
-target_link_libraries(actuator PRIVATE kuksa comms mode middleware purePursuit boost_python312 python3.12)
+target_link_libraries(actuator PRIVATE kuksa comms mode middleware lkaControl boost_python312 python3.12)
 

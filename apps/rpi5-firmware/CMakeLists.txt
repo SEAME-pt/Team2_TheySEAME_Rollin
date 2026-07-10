@@ -23,7 +23,7 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/../../libs/libkuksa ${CMAKE_BINARY_DIR}/lib
 add_subdirectory(mode_manager)
 add_subdirectory(middleware)
 add_subdirectory(actuator)
-add_subdirectory(purePursuit)
+add_subdirectory(lkaControl)
 
 if(CMAKE_CROSSCOMPILING)
 	add_subdirectory(comms)

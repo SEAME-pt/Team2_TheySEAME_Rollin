@@ -4,7 +4,7 @@
 #include <iostream>
 #include <algorithm>
 
-ActuatorController::ActuatorController(RemoteControl *remote, PurePursuit *pp) : _remote(remote), _pp(pp) {
+ActuatorController::ActuatorController(RemoteControl *remote, LkaControl *pp) : _remote(remote), _pp(pp) {
 	_can = new CAN("can0", 500, 0, 0);
 	_car = new ActuatorCAN(*_can);
 	pp->attach(this);

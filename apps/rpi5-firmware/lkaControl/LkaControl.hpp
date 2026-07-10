@@ -14,19 +14,19 @@ struct Debug {
 };
 
 /**
- * @class PurePursuit
- * @brief PurePursuit class
+ * @class LkaControl
+ * @brief LkaControl class
  *
- * The PurePursuit class represents the Lane-Keep-Assist algorithm
+ * The LkaControl class represents the Lane-Keep-Assist algorithm
  * This class is also responsible to emit events that alter the car steering and throttle
  */
-class PurePursuit : public Subject {
+class LkaControl : public Subject {
 public:
 
 	/**
-	 * @brief PurePursuit constructor
+	 * @brief LkaControl constructor
 	 *
-	 * PurePursuit constructor.
+	 * LkaControl constructor.
 	 * Defines the Region of Interest of the Frames (Frames will be cropped accordingly)
 	 * and the fov for the Birds-Eye transformation
 	 *
@@ -36,28 +36,28 @@ public:
 	 * @param width width of the roi rectangle
 	 * @param height height of the roi rectangle
 	 */
-	PurePursuit();
+	LkaControl();
 
 	/**
-	 * @brief PurePursuit destructor
+	 * @brief LkaControl destructor
 	 *
-	 * PurePursuit destructor.
+	 * LkaControl destructor.
 	 */
-	~PurePursuit();
+	~LkaControl();
 
 	/**
-	 * @brief Get the PurePursuit angle
+	 * @brief Get the LkaControl angle
 	 *
-	 * Get the current steering angle decided by the PurePursuit algorithm
+	 * Get the current steering angle decided by the LkaControl algorithm
 	 *
 	 * @return current lka determined angle
 	 */
 	int getAngle();
 
 	/**
-	 * @brief PurePursuit algorithm
+	 * @brief LkaControl algorithm
 	 *
-	 * PurePursuit algorithm.
+	 * LkaControl algorithm.
 	 * 1. Transform the Frame to Birds-Eye view
 	 * 2. Apply the sliding window algorithm
 	 * 3. Calculate the middle lane points

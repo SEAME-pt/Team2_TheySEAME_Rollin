@@ -1,6 +1,6 @@
-#include "PurePursuit.hpp"
+#include "LkaControl.hpp"
 
-PurePursuit::PurePursuit() : _kCte(10.0f), _stallFrames(3), _angleToll(15.0f), _offset(-4), _cteAlpha(0.3f), _camOffset(10.0f), _frameTime(60) { 
+LkaControl::LkaControl() : _kCte(10.0f), _stallFrames(3), _angleToll(15.0f), _offset(-4), _cteAlpha(0.3f), _camOffset(10.0f), _frameTime(60) { 
 	_prevAngle = 0;
 	_angle.push(0);
 	_showAngle = 0;
@@ -9,15 +9,15 @@ PurePursuit::PurePursuit() : _kCte(10.0f), _stallFrames(3), _angleToll(15.0f), _
 	_lastlw = 250;
 }
 
-PurePursuit::~PurePursuit() {}
+LkaControl::~LkaControl() {}
 
-int PurePursuit::getAngle() { return (_angle.front()); }
+int LkaControl::getAngle() { return (_angle.front()); }
 
 float passToDegree(float radians) {
 	return ((radians * 180) / M_PI);
 }
 
-void PurePursuit::debug(float angle, float diff, float cteOff, int lw, float heading) {
+void LkaControl::debug(float angle, float diff, float cteOff, int lw, float heading) {
 	std::cout 
 		<< "\tCteOffset: " << cteOff << "\n"
 		<< "\tHeadingError: " << passToDegree(heading) << "\n"
@@ -25,7 +25,7 @@ void PurePursuit::debug(float angle, float diff, float cteOff, int lw, float hea
 		<< "\tFinalAngle: " << angle << std::endl;
 }
 
-struct Debug PurePursuit::control(float x1, float x2, float lftA1, float lftB1, float rghtA1, float rghtB1) {
+struct Debug LkaControl::control(float x1, float x2, float lftA1, float lftB1, float rghtA1, float rghtB1) {
 	float stangle;
 	float cteNorm;
 	float ctePi;

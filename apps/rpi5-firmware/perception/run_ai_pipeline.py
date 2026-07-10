@@ -16,7 +16,7 @@ from lka.sliding_window import SlidingWindow
 from lka.lane_viz import fit_lane
 from lka.lane_model import eval_curve, curvature, sample_xy, find_x_at_y
 from lka.virtual_lane import VirtualLane
-from purePursuit import PurePursuit, Debug
+from lkaControl import LkaControl, Debug
 from actuator import ActuatorController
 
 MODEL_PATH = "./trained_models/yolov8n_seg_100e_test.hef"
@@ -49,7 +49,7 @@ _C_EGO       = (220, 220, 220)  # ego-vehicle marker
 trapz = (250, 350, 100, 540, 0, 640)
 # trapz = (250, 350, 150, 510, 0, 640)
 
-pp = PurePursuit()
+pp = LkaControl()
 Ac = ActuatorController(None, pp)
 
 def polyfit_lines(tensor):
