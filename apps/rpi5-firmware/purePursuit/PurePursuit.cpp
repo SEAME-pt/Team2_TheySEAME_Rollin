@@ -1,6 +1,6 @@
 #include "PurePursuit.hpp"
 
-PurePursuit::PurePursuit() : _kCte(10.0f), _stallFrames(1), _angleToll(15.0f), _offset(-4), _cteAlpha(0.3f), _camOffset(10.0f), _frameTime(60) { 
+PurePursuit::PurePursuit() : _kCte(10.0f), _stallFrames(3), _angleToll(15.0f), _offset(-4), _cteAlpha(0.3f), _camOffset(10.0f), _frameTime(60) { 
 	_prevAngle = 0;
 	_angle.push(0);
 	_showAngle = 0;
