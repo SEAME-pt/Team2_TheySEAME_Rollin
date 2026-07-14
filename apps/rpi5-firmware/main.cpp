@@ -4,57 +4,21 @@
 #include "CAN.hpp"
 #include "ActuatorKuksa.hpp"
 #include "Tsr.hpp"
+#include "ActuatorController.hpp"
 #include <unistd.h>
 #include <stdlib.h>
 #include <poll.h>
 #include <csignal>
 #include <stdio.h>
 #include <thread>
-#include "ActuatorController.hpp"
-#include <opencv4/opencv2/highgui.hpp>
 
 int frameCount = 0;
 void *header = malloc(sizeof(struct TsrHeader));
-Frame show;
 
 std::atomic<bool> run = true;
 
 void signal_handler(int signal) {
 	run.store(false);
-}
-
-int handleFrame(cv::VideoCapture &cam, Lka &lka) {
-	int i = 0;
-
-	cv::Mat frameRaw;
-	cam.read(frameRaw);
-	if (frameRaw.empty()) {
-		std::cout << "Failed to get Frame" << std::endl;
-		return (-1);
-	}
-	Frame frame(frameRaw);
-
-	lka.poly(frame);
-	return (0);
-}
-
-void pathPlanning(Lka *lka) {
-	cv::namedWindow("WIN", cv::WINDOW_NORMAL);
-	cv::moveWindow("WIN", 0, 0);
-	cv::VideoCapture cam("pipe:0");
-	//cam.set(cv::CAP_PROP_FPS, 20);
-	if (!cam.isOpened()) {
-		std::cout << "Didnt open" << std::endl;
-		return;
-	}
-	while (run.load()) {
-		//usleep(50000);
-		if (handleFrame(cam, *lka) == -1) {
-			break;
-		}
-	}
-	cam.release();
-	cv::destroyAllWindows();
 }
 
 void remoteControl(RemoteControl *remote, Evdev *evdev) {
@@ -74,11 +38,9 @@ void remoteControl(RemoteControl *remote, Evdev *evdev) {
 	}
 }
 
-
 void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCount, Tsr &tsr)
 {
     TsrHeader raw;
-    TsrHeader headerBE;
 
     if (fread(&raw, sizeof(TsrHeader), 1, pipe) != 1) {
         std::cout << "Pipe closed or read error" << std::endl;
@@ -142,7 +104,7 @@ void tsrThread(Tsr *tsr) {
 
     std::cout << "NamedPipeTsr opened successfully" << std::endl;
 
-    while (true) {
+    while (run.load()) {
         std::vector<TsrHeader> detections;  
         readFromPipe(pipe, detections, frameCount, *tsr);
 
@@ -170,35 +132,25 @@ int main() {
 	// 	new ActuatorCAN(can),
 	// 	kuksa
 	// );
-	//Lka lka(400, 0, 250, 960, 390); // Carla Setup
-	Lka lka(400, 0, 400, 1536, 464, 8); // Track Setup
 	Tsr tsr;
-	ActuatorController ctrl(car, &remote, &lka, kuksa, &tsr);
+	ActuatorController ctrl(car, &remote, NULL, kuksa, &tsr);
 
-	lka.attach(&ctrl);
 	remote.attach(&ctrl);
 
 	tsr.attach(&ctrl);
 
 	std::signal(SIGINT, signal_handler);
 
-	//std::thread lkaThread(pathPlanning, &lka);
 	std::thread remoteThread(remoteControl, &remote, &evdev);
 	
 	std::thread TsrThread(tsrThread, &tsr);
 	// Kuksa Thread
 	// std::thread vhState(&kuksaLib::subscribeFromKuksa, &kuksa);
 
-	while (run.load()) {
-		usleep(50000);
-		ctrl.test();
-	}
-
-	//lkaThread.join();
 	remoteThread.join();
 
 	//tsrThread 
-	// TsrThread.join();
+	TsrThread.join();
 
 	//vhState.join();
 	delete car;

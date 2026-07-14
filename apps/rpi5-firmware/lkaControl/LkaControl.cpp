@@ -1,4 +1,6 @@
 #include "LkaControl.hpp"
+#include <iostream>
+#include <cmath>
 
 LkaControl::LkaControl() : _kCte(10.0f), _stallFrames(3), _angleToll(15.0f), _offset(-4), _cteAlpha(0.3f), _camOffset(10.0f), _frameTime(60) { 
 	_prevAngle = 0;
@@ -49,7 +51,7 @@ struct Debug LkaControl::control(float x1, float x2, float lftA1, float lftB1, f
 	heading = (atan2(lftA1, -1 * lftB1) + atan2(rghtA1, -1 * rghtB1)) / 2;
 	stangle = heading + atan((_kCte * cteNorm) / 15);
 	angle = passToDegree(stangle);
-	diff = abs(angle - _prevAngle);
+	diff = fabs(angle - _prevAngle);
 	if (diff <= _angleToll || _timeLapse > _frameTime) {
 		_angle.push((int)angle + _offset);
 		_prevAngle = angle;
