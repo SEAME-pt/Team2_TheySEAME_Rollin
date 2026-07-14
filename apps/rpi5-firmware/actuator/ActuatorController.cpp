@@ -1,22 +1,16 @@
 #include "ActuatorController.hpp"
-#include "CAN.hpp"
-#include "ActuatorCAN.hpp"
 #include <iostream>
 #include <algorithm>
+#include <cmath>
 
-ActuatorController::ActuatorController(RemoteControl *remote, LkaControl *pp) : _remote(remote), _pp(pp) {
-	_can = new CAN("can0", 500, 0, 0);
-	_car = new ActuatorCAN(*_can);
-	pp->attach(this);
+ActuatorController::ActuatorController(CarActuator *car, RemoteControl *remote, LkaControl *lkaCtrl, kuksaLib &kuksa, Tsr *tsr) : _car(car), _remote(remote), _pp(lkaCtrl), _tsr(tsr), _kuksa(kuksa) {
 }
 
 ActuatorController::~ActuatorController() {
-	delete _can;
-	delete _car;
 }
 
 int ActuatorController::processThrottle(const int rawThrottle) {
-	return ((rawThrottle - 127) / 1.27);
+	return ((rawThrottle - 127) / 1.9);
 }
 
 int ActuatorController::processSteering(const int rawSteering) {
@@ -26,10 +20,13 @@ int ActuatorController::processSteering(const int rawSteering) {
 void ActuatorController::steering(const int angle) {
 	const int steering = std::clamp(angle, -30, 30);
 
+	std::cout << "Angle: " << steering << " " << _car << std::endl;
 	_car->setSteering(steering);
 }
 
 void ActuatorController::throttle(const int throttle) {
+	if (_stopDetected)
+		return;
 	if (throttle < 0) {
 		gear(DRIVE);
 	} else if (throttle > 0) {
@@ -39,8 +36,18 @@ void ActuatorController::throttle(const int throttle) {
 	}
 	
 	cruiseControl(false, 0);
+	_currentThrottle = throttle;
 	_car->setThrottle(throttle);
 	std::cout << "Changed Throttle" << std::endl;
+}
+
+void ActuatorController::setSpeedLimit(const int speedLimit) {
+	_car->setSpeedLimit(speedLimit);
+}
+
+void ActuatorController::setTrafficSign(const int trafficSign, const float distance) {
+	_car->setTrafficSign(trafficSign, distance);
+	std::cout << "Detected Traffic Sign " << trafficSign << " at distance " << distance << std::endl;
 }
 
 void ActuatorController::gear(const short gear) {
@@ -49,17 +56,17 @@ void ActuatorController::gear(const short gear) {
 }
 
 void ActuatorController::cruiseControl(const bool flag, const int inc) {
-	//if (flag == false) {
-	//	_car->setCruiseControl(flag, 0);
-	//	return;
-	//}
-	//if (_kuksa.getCcActive()) {
-	//	_car->setCruiseControl(flag, _kuksa.getCcTargetSpeed() + inc);
-	//	std::cout << "Target Speed to " << _kuksa.getCcTargetSpeed() << std::endl;
-	//	return;
-	//}
-	//_car->setCruiseControl(flag, _kuksa.getSpeed());
-	//std::cout << "Cruise Control Active to " << _kuksa.getSpeed() << std::endl;
+	if (flag == false) {
+		_car->setCruiseControl(flag, 0);
+		return;
+	}
+	if (_kuksa.getCcActive()) {
+		_car->setCruiseControl(flag, _kuksa.getCcTargetSpeed() + inc);
+		std::cout << "Target Speed to " << _kuksa.getCcTargetSpeed() << std::endl;
+		return;
+	}
+	_car->setCruiseControl(flag, _kuksa.getSpeed());
+	std::cout << "Cruise Control Active to " << _kuksa.getSpeed() << std::endl;
 	_car->setCruiseControl(true, 15);
 }
 
@@ -70,18 +77,79 @@ void ActuatorController::brake(const bool flag) {
 }
 
 void ActuatorController::setAEb_Enabled(bool enabled) {
-	//if (_kuksa.getAebEnabled() != enabled) {
-	//	enabled = true;
-	//}
-	//else {
-	//	enabled = false;
-	//}
+	if (_kuksa.getAebEnabled() != enabled) {
+		enabled = true;
+	}
+	else {
+		enabled = false;
+	}
 	_car->setAEb_Enabled(enabled);
 	std::cout << "AEB " << enabled << std::endl;
 }
 
+void ActuatorController::trafficSign() {
+    auto signs = _tsr->getDetectedSigns();
+
+    for (const auto &sign : signs) {
+        setTrafficSign(sign, _tsr->estimateDistance(_tsr->getLastDetection()));
+    }
+
+    bool stopDetected = std::find(signs.begin(), signs.end(),
+        static_cast<uint16_t>(TrafficSign::STOP)) != signs.end();
+
+    float stopDist = _tsr->getStopDistance();
+
+    if (stopDetected && stopDist != -1 && stopDist < 70.0f 
+        && !_stopCooldown && !_stopDetected) {
+        brake(true);
+        throttle(0);
+
+        _stopDetected = true;
+        _stopBrakeFrames = 0;
+    }
+
+    if (_stopDetected) {
+        _stopBrakeFrames++;
+
+        if (_stopBrakeFrames >= STOP_BRAKE_FRAMES) {
+            brake(false);
+            _stopDetected = false;
+
+            _stopCooldown = true;
+            _stopCooldownFrames = 0;
+        }
+    }
+
+    if (_stopCooldown) {
+        _stopCooldownFrames++;
+
+        if (_stopCooldownFrames >= STOP_COOLDOWN_FRAMES) {
+            _stopCooldown = false;
+        }
+    }
+}
+
+void ActuatorController::speedLimit() {
+    int currentLimit = _tsr->getSpeedLimit();
+
+    if (_lastSpeedLimit == 80 && currentLimit == 50) {
+        if (!_reduceSpeed) {
+            throttle(_currentThrottle * 0.75f);
+            _reduceSpeed = true;
+        } else {
+            throttle(_currentThrottle);
+            _reduceSpeed = false;
+        }
+    }
+
+    _lastSpeedLimit = currentLimit;
+    setSpeedLimit(currentLimit);
+}
+
 void ActuatorController::update(Subject *subj, Events event) {
-	//std::cout << "Received notify " << event << std::endl;
+	std::cout << "Received notify " << event << " sub: " << subj << std::endl;
+	std::lock_guard<std::mutex> lock(_mutex);
+
 	if (subj == _remote) {
 		switch (event) {
 			case Events::CAR_THROTTLE:
@@ -115,15 +183,29 @@ void ActuatorController::update(Subject *subj, Events event) {
 				setAEb_Enabled(_remote->getkey(Keys::DpadX));
 				break;
 			default:
-				std::cout << "No event" << std::endl;
 				break;
 		}
-	} else {
+	} else if (_tsr != nullptr && subj == _tsr) {
+		switch (event) {
+			case Events::CAR_TRAFFIC_SIGN:
+				trafficSign();
+				break;
+			case Events::CAR_SPEED_LIMIT:
+				speedLimit();
+				break;
+			default:
+				break;
+		}
+	} else if (subj == _pp) {
 		switch (event) {
 			case Events::CAR_THROTTLE:
 				throttle(-18);
+				break;
 			case Events::CAR_STEERING:
 				steering(_pp->getAngle());
+				break;
+			default:
+				break;
 		}
 	}
 }

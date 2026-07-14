@@ -17,7 +17,7 @@ from lka.lane_viz import fit_lane
 from lka.lane_model import eval_curve, curvature, sample_xy, find_x_at_y
 from lka.virtual_lane import VirtualLane
 from lkaControl import LkaControl, Debug
-from actuator import ActuatorController
+from actuator import Bridge
 
 MODEL_PATH = "./trained_models/yolov8n_seg_100e_test.hef"
 #MODEL_PATH = "/root/new_perception/trained_models/yolov8s_40e.hef"
@@ -50,7 +50,7 @@ trapz = (250, 350, 100, 540, 0, 640)
 # trapz = (250, 350, 150, 510, 0, 640)
 
 pp = LkaControl()
-Ac = ActuatorController(None, pp)
+br = Bridge(pp)
 
 def polyfit_lines(tensor):
 	tensor = np.asarray(tensor)

@@ -13,6 +13,10 @@ set(SOURCES
     ActuatorKuksa.cpp
     ActuatorKuksa.hpp
 	pythonActuator.cpp
+	Bridge.cpp
+	Bridge.hpp
+	../Tsr.hpp
+	../Tsr.cpp
 )
 
 add_library(actuator SHARED ${SOURCES})

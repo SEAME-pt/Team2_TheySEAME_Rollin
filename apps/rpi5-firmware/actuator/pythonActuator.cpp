@@ -1,7 +1,6 @@
 #include <boost/python.hpp>
-#include "ActuatorController.hpp"
+#include "Bridge.hpp"
 
 BOOST_PYTHON_MODULE(actuator) {
-	boost::python::class_<ActuatorController>("ActuatorController", boost::python::init<
-					RemoteControl*, LkaControl*>());
+	boost::python::class_<Bridge>("Bridge", boost::python::init<LkaControl*>());
 }

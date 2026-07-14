@@ -393,20 +393,15 @@ The `TSR_DetectedSignType` signal is encoded as an enum in the DBC and should ma
 |---:|---|
 | 0 | UNKNOWN |
 | 1 | STOP |
-| 2 | SPEED_LIMIT_30 |
-| 3 | SPEED_LIMIT_50 |
-| 4 | SPEED_LIMIT_100 |
-| 5 | SPEED_LIMIT_80 |
-| 6 | SPEED_LIMIT_120 |
-| 7 | YIELD |
-| 8 | NO_ENTRY |
-| 9 | TURN_LEFT |
-| 10 | TURN_RIGHT |
-| 11 | PEDESTRIAN |
-| 12 | TRAFFIC_LIGHT |
-| 13 | ONE_WAY |
-| 14 | NO_PARKING |
-| 15 | NO_OVERTAKING |
+| 2 | YIELD |
+| 3 | NO_ENTRY |
+| 4 | TURN_LEFT |
+| 5 | TURN_RIGHT |
+| 6 | PEDESTRIAN |
+| 7 | TRAFFIC_LIGHT |
+| 8 | ONE_WAY |
+| 9 | NO_PARKING |
+| 10 | NO_OVERTAKING |
 
 ---
 
