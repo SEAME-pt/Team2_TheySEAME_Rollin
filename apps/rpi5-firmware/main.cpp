@@ -95,6 +95,7 @@ void publish(const std::string& type, uint32_t marker_id, mqtt::async_client &mq
         auto msg = mqtt::make_message("/incidents", json);
         msg->set_qos(0);
         mqtt.publish(msg);
+        std::cout << "[MQTT] Published: " << type << " with marker_id: " << marker_id << std::endl;
     } catch (const mqtt::exception& e) {
         std::cerr << "[MQTT] Publish failed: " << e.what() << std::endl;
     }
@@ -134,7 +135,6 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
     };
 
     detections.push_back(decode(raw));
-    
     
     TsrHeader decoded;
     for (int i = 1; i < numDetections; i++) {
@@ -185,11 +185,11 @@ void tsrThread(Tsr *tsr, kuksaLib *kuksa) {
         tsr->clearDetectedSigns();
         hazardDetector.setOurSpeed(kuksa->getSpeed());
         for (auto &d : detections) {
+            kuksa->sendValueToKuksa("mobility_scenario.hazard.marker_id", d.marker_id);
             tsr->handleTrafficSign(d);
             hazardDetector.update(d);
         }
         hazard = hazardDetector.evaluate();
-		// std::cout << "Hazard detected: " << static_cast<int>(hazard.hazard) << ", marker_id: " << hazard.marker_id << std::endl;
         if (hazard.hazard != HazardType::NONE) {
             bool isNewHazard = hazard.hazard != lastPublishedHazard || hazard.marker_id != lastPublishedMarkerId;
             if (!isNewHazard) {
@@ -207,7 +207,6 @@ void tsrThread(Tsr *tsr, kuksaLib *kuksa) {
 				publish("two_stopped_cars", hazard.marker_id, mqtt);
 			}
             else if (hazard.hazard == HazardType::OUR_CAR_STOPPED) {
-                std::cout << "[HAZARD] Our car is stopped, marker_id: " << hazard.marker_id << std::endl;
                 publish("stopped_car", hazard.marker_id, mqtt);
             }
 
