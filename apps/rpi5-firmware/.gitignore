@@ -3,4 +3,4 @@ build/
 .cache
 
 __pycache__
-.un~
+*.un~
