@@ -344,4 +344,23 @@
       }
     }
   }
+,
+  "mobility_scenario": {
+    "type": "branch",
+    "description": "Mobility scenario related signals",
+    "children": {
+      "hazard": {
+        "type": "branch",
+        "description": "Hazard related signals",
+        "children": {
+          "marker_id": {
+            "type": "sensor",
+            "datatype": "uint8",
+            "description": "Current / hazard ArUco marker identifier (ego position on track)"
+          }
+        }
+      }
+    }
+  }
+
 }

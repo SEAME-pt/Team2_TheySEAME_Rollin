@@ -70,6 +70,9 @@ private:
     std::atomic<float> paObstacleDistanceFront{0.0f};
     std::atomic<float> paObstacleDistanceRear{0.0f};
 
+    // Mobility scenario — current ArUco marker (ego position on track)
+    std::atomic<int> mobilityMarkerId{-1};
+
     std::string _server = "10.21.221.17:55555";
     std::thread _thread;
     std::shared_ptr<grpc::Channel> channel;
@@ -119,6 +122,8 @@ private:
     void setPaActive(bool v);
     void setPaObstacleDistanceFront(float v);
     void setPaObstacleDistanceRear(float v);
+
+    void setMobilityMarkerId(int v);
 
 public:
     kuksaLib();
@@ -179,6 +184,9 @@ public:
     bool getPaActive() const { return paActive.load(); }
     float getPaObstacleDistanceFront() const { return paObstacleDistanceFront.load(); }
     float getPaObstacleDistanceRear() const { return paObstacleDistanceRear.load(); }
+
+    /** Current ArUco marker id from Kuksa (-1 if never received). */
+    int getMobilityMarkerId() const { return mobilityMarkerId.load(); }
 };
 
 template<typename T>

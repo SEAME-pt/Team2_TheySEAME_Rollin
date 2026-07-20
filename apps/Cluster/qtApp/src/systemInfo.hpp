@@ -12,9 +12,12 @@
 #include <atomic>
 #include <mutex>
 #include <google/protobuf/stubs/common.h>
+#include <chrono>
+#include <memory>
 #include "val.grpc.pb.h"
 #include "types.pb.h"
 #include "KuksaLib.hpp"
+#include "MqttHazardClient.hpp"
 
  
 using kuksa::val::v2::VAL;
@@ -38,6 +41,9 @@ class systemInfo : public QObject
     Q_PROPERTY(bool bsdWarningActive READ getBsdWarningActive NOTIFY adasWarningUpdated)
     Q_PROPERTY(bool adasWarningVisible READ getAdasWarningVisible NOTIFY adasWarningUpdated)
     Q_PROPERTY(QString adasWarningMessage READ getAdasWarningMessage NOTIFY adasWarningUpdated)
+    Q_PROPERTY(bool adasWarningTimed READ getAdasWarningTimed NOTIFY adasWarningUpdated)
+    Q_PROPERTY(int adasWarningRemainingMs READ getAdasWarningRemainingMs NOTIFY adasWarningUpdated)
+    Q_PROPERTY(int adasWarningEpoch READ getAdasWarningEpoch NOTIFY adasWarningUpdated)
 
 public:
     /**
@@ -161,6 +167,9 @@ public:
     bool getBsdWarningActive() const;
     bool getAdasWarningVisible() const;
     QString getAdasWarningMessage() const;
+    bool getAdasWarningTimed() const;
+    int getAdasWarningRemainingMs() const;
+    int getAdasWarningEpoch() const;
 
 signals:
     void speedUpdated(int speed);
@@ -177,6 +186,8 @@ private:
     static int metersToDisplayPercent(float meters);
     void updateVehicleDetection();
     void updateAdasWarnings();
+    void startMobilityMqtt();
+    void handleMobilityMqttMessage(const std::string &topic, const std::string &body);
 
     std::atomic<bool> _liveDetectionActive{false};
     std::atomic<bool> _frontCarVisible{false};
@@ -193,8 +204,25 @@ private:
     bool _bsdWarningActive{false};
     bool _adasWarningVisible{false};
     QString _adasWarningMessage;
+    bool _adasWarningTimed{false};
+    int _adasWarningRemainingMs{0};
+    int _adasWarningEpoch{0};
+    bool _mobilityHazardActive{false};
+    QString _mobilityHazardMessage;
+    std::chrono::steady_clock::time_point _mobilityHazardUntil{};
+    // Pending MQTT hazard (crash location); shown only when ego marker is close.
+    bool _pendingHazardValid{false};
+    int _pendingHazardMarkerId{-1};
+    QString _pendingHazardMessage;
+    std::chrono::steady_clock::time_point _pendingHazardExpires{};
+    bool _wasNearHazard{false};
+    static constexpr int kMobilityHazardDurationMs = 12000;
+    static constexpr int kPendingHazardTtlMs = 10 * 60 * 1000; // remember crash for 10 min
+    static constexpr int kDefaultMarkerProximity = 1; // same or adjacent ArUco marker
     kuksaLib _kuksa;
+    std::unique_ptr<MqttHazardClient> _mqttClient;
     std::thread _thread;
     std::atomic_bool _running{false};
     std::mutex _kuksaMutex;
+    std::mutex _mobilityMutex;
 };

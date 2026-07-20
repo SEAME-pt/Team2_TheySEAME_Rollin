@@ -492,51 +492,139 @@ Rectangle {
         }
     ]
 
-    Popup {
-        id: adasWarningPopup
-        modal: false
-        focus: false
-        closePolicy: Popup.NoAutoClose
-        anchors.centerIn: parent
-        width: 420
-        height: 120
-        visible: systemInfo && systemInfo.adasWarningVisible
-        opacity: visible ? 1.0 : 0.0
+    Item {
+        id: adasWarningNotification
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        anchors.topMargin: 24
+        width: 440
+        height: contentColumn.implicitHeight + 28
+        z: 2100
+        visible: opacity > 0.01
+        opacity: systemInfo && systemInfo.adasWarningVisible ? 1 : 0
+        scale: systemInfo && systemInfo.adasWarningVisible ? 1 : 0.96
+        y: systemInfo && systemInfo.adasWarningVisible ? 0 : -20
 
         Behavior on opacity {
-            NumberAnimation { duration: 200; easing.type: Easing.InOutQuad }
+            NumberAnimation { duration: 300; easing.type: Easing.InOutQuad }
+        }
+        Behavior on scale {
+            NumberAnimation { duration: 320; easing.type: Easing.OutCubic }
+        }
+        Behavior on y {
+            NumberAnimation { duration: 320; easing.type: Easing.OutCubic }
         }
 
-        background: Rectangle {
+        property real countdownProgress: 1.0
+
+        function restartCountdown() {
+            if (!systemInfo || !systemInfo.adasWarningTimed)
+                return
+            countdownProgress = 1.0
+            countdownAnim.stop()
+            countdownAnim.duration = Math.max(systemInfo.adasWarningRemainingMs, 250)
+            countdownAnim.from = 1.0
+            countdownAnim.to = 0.0
+            countdownAnim.start()
+        }
+
+        NumberAnimation on countdownProgress {
+            id: countdownAnim
+            duration: 12000
+            easing.type: Easing.Linear
+        }
+
+        Connections {
+            target: systemInfo
+            function onAdasWarningUpdated() {
+                if (systemInfo.adasWarningVisible)
+                    adasWarningNotification.restartCountdown()
+            }
+        }
+
+        onOpacityChanged: {
+            if (opacity > 0.99)
+                restartCountdown()
+        }
+
+        Rectangle {
+            anchors.fill: parent
             radius: 12
-            color: "#FFF3CD"
-            border.color: "#856404"
+            color: "#FFE18D"
+            border.color: "#47473f"
             border.width: 2
         }
 
-        contentItem: Row {
-            spacing: 16
-            anchors.centerIn: parent
-            leftPadding: 20
-            rightPadding: 20
+        Column {
+            id: contentColumn
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.margins: 14
+            spacing: 10
 
-            Image {
-                source: "qrc:/qml/images/warning.png"
-                fillMode: Image.PreserveAspectFit
-                width: 48
-                height: 48
-                anchors.verticalCenter: parent.verticalCenter
+            Row {
+                width: parent.width
+                spacing: 14
+
+                Image {
+                    source: "qrc:/qml/images/warning.png"
+                    fillMode: Image.PreserveAspectFit
+                    width: 44
+                    height: 44
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                Text {
+                    width: parent.width - 58
+                    text: systemInfo ? systemInfo.adasWarningMessage : ""
+                    font.pixelSize: 22
+                    font.family: "BaseNeueTrial-Bold"
+                    font.bold: true
+                    color: "#47473f"
+                    wrapMode: Text.WordWrap
+                    maximumLineCount: 2
+                    elide: Text.ElideRight
+                    anchors.verticalCenter: parent.verticalCenter
+                }
             }
 
-            Text {
-                text: systemInfo ? systemInfo.adasWarningMessage : ""
-                font.pixelSize: 22
-                font.family: "BaseNeueTrial-Bold"
-                font.bold: true
-                color: "#856404"
-                wrapMode: Text.WordWrap
-                width: 300
-                anchors.verticalCenter: parent.verticalCenter
+            Row {
+                width: parent.width
+                spacing: 10
+                visible: systemInfo && systemInfo.adasWarningTimed
+
+                Rectangle {
+                    width: parent.width - 52
+                    height: 10
+                    radius: 2
+                    color: "#47473f"
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    Rectangle {
+                        anchors.left: parent.left
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        width: parent.width * adasWarningNotification.countdownProgress
+                        radius: 2
+                        color: "#76b047"
+                    }
+                }
+
+                Text {
+                    width: 42
+                    horizontalAlignment: Text.AlignRight
+                    text: {
+                        if (!systemInfo || !systemInfo.adasWarningTimed)
+                            return ""
+                        return Math.max(1, Math.ceil(systemInfo.adasWarningRemainingMs / 1000)) + "s"
+                    }
+                    font.pixelSize: 14
+                    font.family: "Inter"
+                    font.bold: true
+                    color: "#47473f"
+                    anchors.verticalCenter: parent.verticalCenter
+                }
             }
         }
     }

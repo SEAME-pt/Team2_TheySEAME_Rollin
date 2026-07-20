@@ -1,5 +1,10 @@
 #include "systemInfo.hpp"
 #include <algorithm>
+#include <cstdlib>
+#include <QByteArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
 
 systemInfo::systemInfo(QObject *parent)
     : QObject(parent)
@@ -10,6 +15,8 @@ systemInfo::systemInfo(QObject *parent)
 systemInfo::~systemInfo()
 {
     _running = false;
+    if (_mqttClient)
+        _mqttClient->stop();
     if (_thread.joinable()) {
         _thread.join();
     }
@@ -91,6 +98,9 @@ bool systemInfo::getLdwWarningActive() const { return _ldwWarningActive; }
 bool systemInfo::getBsdWarningActive() const { return _bsdWarningActive; }
 bool systemInfo::getAdasWarningVisible() const { return _adasWarningVisible; }
 QString systemInfo::getAdasWarningMessage() const { return _adasWarningMessage; }
+bool systemInfo::getAdasWarningTimed() const { return _adasWarningTimed; }
+int systemInfo::getAdasWarningRemainingMs() const { return _adasWarningRemainingMs; }
+int systemInfo::getAdasWarningEpoch() const { return _adasWarningEpoch; }
 
 namespace {
 
@@ -105,14 +115,208 @@ QString buildAdasWarningMessage(bool ldw, bool bsd)
     return QString();
 }
 
+QString hazardTypeToMessage(const QString &type)
+{
+    if (type == QStringLiteral("stopped_car"))
+        return QStringLiteral("Stopped Car");
+    if (type == QStringLiteral("stopped_obstacles"))
+        return QStringLiteral("Object On Track");
+    if (type == QStringLiteral("two_stopped_cars"))
+        return QStringLiteral("Two Stopped Cars");
+    if (type.isEmpty())
+        return QString();
+
+    QString out = type;
+    out.replace('_', ' ');
+    if (!out.isEmpty())
+        out[0] = out[0].toUpper();
+    return out;
+}
+
+QString topicToMobilityMessage(const std::string &topic)
+{
+    const QString qtopic = QString::fromStdString(topic);
+    const int slash = qtopic.lastIndexOf('/');
+    const QString leaf = slash >= 0 ? qtopic.mid(slash + 1) : qtopic;
+    if (leaf.isEmpty())
+        return QString();
+    return hazardTypeToMessage(leaf);
+}
+
+QString parseMobilityPayload(const std::string &topic, const std::string &body, int *outMarkerId)
+{
+    if (outMarkerId)
+        *outMarkerId = -1;
+
+    const QByteArray raw = QByteArray::fromStdString(body);
+    if (!raw.trimmed().isEmpty()) {
+        QJsonParseError err{};
+        const QJsonDocument doc = QJsonDocument::fromJson(raw, &err);
+        if (err.error == QJsonParseError::NoError && doc.isObject()) {
+            const QJsonObject obj = doc.object();
+            if (obj.contains(QStringLiteral("marker_id"))) {
+                const int markerId = obj.value(QStringLiteral("marker_id")).toInt(-1);
+                if (outMarkerId && markerId >= 0)
+                    *outMarkerId = markerId;
+            }
+            const QString message = obj.value(QStringLiteral("message")).toString();
+            if (!message.isEmpty())
+                return message;
+            const QString description = obj.value(QStringLiteral("description")).toString();
+            if (!description.isEmpty())
+                return description;
+            const QString type = obj.value(QStringLiteral("type")).toString();
+            if (!type.isEmpty()) {
+                QString out = hazardTypeToMessage(type);
+                if (obj.contains(QStringLiteral("marker_id"))) {
+                    const int markerId = obj.value(QStringLiteral("marker_id")).toInt(-1);
+                    if (markerId >= 0)
+                        out += QStringLiteral(" (marker %1)").arg(markerId);
+                }
+                return out;
+            }
+        }
+        if (!raw.trimmed().isEmpty())
+            return QString::fromUtf8(raw.trimmed());
+    }
+    return topicToMobilityMessage(topic);
+}
+
+/** Circular distance on ArUco DICT_4X4_50 (ids 0..49). */
+int markerDistance(int a, int b)
+{
+    if (a < 0 || b < 0)
+        return 999;
+    const int span = 50;
+    const int d = std::abs(a - b);
+    return std::min(d, span - d);
+}
+
 } // namespace
+
+void systemInfo::handleMobilityMqttMessage(const std::string &topic, const std::string &body)
+{
+    int hazardMarkerId = -1;
+    const QString message = parseMobilityPayload(topic, body, &hazardMarkerId);
+    if (message.isEmpty())
+        return;
+
+    std::lock_guard<std::mutex> lock(_mobilityMutex);
+    _pendingHazardValid = true;
+    _pendingHazardMarkerId = hazardMarkerId;
+    _pendingHazardMessage = message;
+    _pendingHazardExpires = std::chrono::steady_clock::now()
+        + std::chrono::milliseconds(kPendingHazardTtlMs);
+    // Do not show yet — wait until ego ArUco marker is close.
+    _wasNearHazard = false;
+    _mobilityHazardActive = false;
+
+    qInfo() << "Mobility hazard pending at marker" << hazardMarkerId
+            << "ego marker" << _kuksa.getMobilityMarkerId()
+            << "msg" << message;
+}
+
+void systemInfo::startMobilityMqtt()
+{
+    if (qEnvironmentVariableIntValue("DISABLE_MQTT") == 1)
+        return;
+
+    QByteArray hostEnv = qgetenv("MQTT_HOST");
+    if (hostEnv.isEmpty())
+        hostEnv = qgetenv("MQTT_BROKER_HOST");
+    // Default matches CarControlMQTT / feature/490 hazard publisher broker on fleet Pi.
+    const std::string host = hostEnv.isEmpty() ? std::string("10.21.100.3") : hostEnv.constData();
+    const int port = qEnvironmentVariableIsSet("MQTT_PORT") ? qgetenv("MQTT_PORT").toInt() : 1883;
+    const QByteArray clientEnv = qgetenv("MQTT_CLIENT_ID");
+    const std::string clientId = clientEnv.isEmpty() ? std::string("cluster-qtAppExec") : clientEnv.constData();
+
+    _mqttClient = std::make_unique<MqttHazardClient>();
+    _mqttClient->start(host, port, clientId, [this](const std::string &topic, const std::string &body) {
+        handleMobilityMqttMessage(topic, body);
+    });
+    qInfo() << "Mobility MQTT subscriber started on" << host.c_str() << port;
+}
 
 void systemInfo::updateAdasWarnings()
 {
     const bool ldw = _kuksa.getLdwWarning();
     const bool bsd = _kuksa.getBsdWarning();
-    const bool visible = ldw || bsd;
-    const QString message = buildAdasWarningMessage(ldw, bsd);
+    const int egoMarker = _kuksa.getMobilityMarkerId();
+    const int proximity = qEnvironmentVariableIsSet("HAZARD_MARKER_PROXIMITY")
+        ? qgetenv("HAZARD_MARKER_PROXIMITY").toInt()
+        : kDefaultMarkerProximity;
+
+    bool mobilityActive = false;
+    QString mobilityMessage;
+    {
+        std::lock_guard<std::mutex> lock(_mobilityMutex);
+        const auto now = std::chrono::steady_clock::now();
+
+        if (_pendingHazardValid && now >= _pendingHazardExpires) {
+            _pendingHazardValid = false;
+            _pendingHazardMessage.clear();
+            _pendingHazardMarkerId = -1;
+            _wasNearHazard = false;
+            _mobilityHazardActive = false;
+        }
+
+        if (_pendingHazardValid) {
+            const bool near = (_pendingHazardMarkerId < 0)
+                ? true // no marker in MQTT → treat as global alert
+                : (egoMarker >= 0 && markerDistance(egoMarker, _pendingHazardMarkerId) <= proximity);
+
+            if (near) {
+                if (!_wasNearHazard) {
+                    // Just entered proximity — start popup countdown.
+                    _mobilityHazardActive = true;
+                    _mobilityHazardMessage = _pendingHazardMessage;
+                    _mobilityHazardUntil = now + std::chrono::milliseconds(kMobilityHazardDurationMs);
+                    ++_adasWarningEpoch;
+                    _wasNearHazard = true;
+                    qInfo() << "Mobility popup: ego marker" << egoMarker
+                            << "near hazard marker" << _pendingHazardMarkerId;
+                }
+            } else {
+                // Still far from crash — keep pending, hide popup.
+                if (_wasNearHazard) {
+                    qInfo() << "Mobility popup cleared: ego" << egoMarker
+                            << "left hazard marker" << _pendingHazardMarkerId;
+                }
+                _wasNearHazard = false;
+                _mobilityHazardActive = false;
+            }
+        }
+
+        if (_mobilityHazardActive && now < _mobilityHazardUntil) {
+            mobilityActive = true;
+            mobilityMessage = _mobilityHazardMessage;
+        } else if (_mobilityHazardActive) {
+            // Countdown finished while still near — clear display but keep pending
+            // until we leave the area (so we don't immediately re-trigger).
+            _mobilityHazardActive = false;
+            _mobilityHazardMessage.clear();
+        }
+    }
+
+    const bool visible = ldw || bsd || mobilityActive;
+    const bool timed = mobilityActive;
+    int remainingMs = 0;
+    if (mobilityActive) {
+        remainingMs = static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(
+            _mobilityHazardUntil - std::chrono::steady_clock::now()).count());
+        if (remainingMs < 0)
+            remainingMs = 0;
+    }
+
+    QString message;
+    if (mobilityActive && (ldw || bsd)) {
+        message = mobilityMessage + QStringLiteral(" + ") + buildAdasWarningMessage(ldw, bsd);
+    } else if (mobilityActive) {
+        message = mobilityMessage;
+    } else {
+        message = buildAdasWarningMessage(ldw, bsd);
+    }
+
     const bool wasVisible = _adasWarningVisible;
 
     bool changed = false;
@@ -130,6 +334,14 @@ void systemInfo::updateAdasWarnings()
     }
     if (_adasWarningMessage != message) {
         _adasWarningMessage = message;
+        changed = true;
+    }
+    if (_adasWarningTimed != timed) {
+        _adasWarningTimed = timed;
+        changed = true;
+    }
+    if (_adasWarningRemainingMs != remainingMs) {
+        _adasWarningRemainingMs = remainingMs;
         changed = true;
     }
 
@@ -174,6 +386,7 @@ bool systemInfo::start()
 {
     if (_running) return true;
     _running = true;
+    startMobilityMqtt();
 
     _thread = std::thread([this]() {
         const bool skipSubscribe = qEnvironmentVariableIntValue("DISABLE_KUKSA_SUBSCRIBE") == 1;

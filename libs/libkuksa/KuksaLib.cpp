@@ -63,6 +63,8 @@ void kuksaLib::setPaActive(bool v) { paActive.store(v); }
 void kuksaLib::setPaObstacleDistanceFront(float v) { paObstacleDistanceFront.store(v); }
 void kuksaLib::setPaObstacleDistanceRear(float v) { paObstacleDistanceRear.store(v); }
 
+void kuksaLib::setMobilityMarkerId(int v) { mobilityMarkerId.store(v); }
+
 bool kuksaLib::subscribeFromKuksa()
 {
     kuksa::val::v2::SubscribeRequest req;
@@ -119,6 +121,9 @@ bool kuksaLib::subscribeFromKuksa()
     req.add_signal_paths("Vehicle.ADAS.ParkingAssist.Active");
     req.add_signal_paths("Vehicle.ADAS.ParkingAssist.ObstacleDistanceFront");
     req.add_signal_paths("Vehicle.ADAS.ParkingAssist.ObstacleDistanceRear");
+
+    // Mobility — ego ArUco marker (where we are on the track)
+    req.add_signal_paths("mobility_scenario.hazard.marker_id");
 
     grpc::ClientContext ctx;
     auto stream = stub->Subscribe(&ctx, req);
@@ -257,6 +262,11 @@ bool kuksaLib::subscribeFromKuksa()
             } else if (path == "Vehicle.ADAS.ParkingAssist.ObstacleDistanceRear") {
                 float v = 0.0f;
                 if (valueToType(value, v)) setPaObstacleDistanceRear(v);
+
+            // Mobility ego marker
+            } else if (path == "mobility_scenario.hazard.marker_id") {
+                int v = 0;
+                if (valueToType(value, v)) setMobilityMarkerId(v);
             }
         }
     }
