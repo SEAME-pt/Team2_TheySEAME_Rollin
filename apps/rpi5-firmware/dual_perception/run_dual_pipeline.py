@@ -8,6 +8,7 @@ import sys
 
 import cv2
 import numpy as np
+import time
 
 from hailo_lib import Camera
 from hailo_lib.CameraCarla import CARLACamera
@@ -60,7 +61,16 @@ def detections_to_pipe_payload(boxes, scores, classes):
 	return dets
 
 
-def write_frame(display_proc, frame):
+def write_frame(display_proc, frame, fps):
+	cv2.putText(
+		display,
+		f"FPS={fps:.2f}",
+		(8, 24),
+		cv2.FONT_HERSHEY_SIMPLEX,
+		0.6,
+		(255, 255, 255),
+		2,
+	)
 	if display_proc is None or getattr(display_proc, "stdin", None) is None:
 		return False
 	try:
@@ -141,9 +151,9 @@ def draw_lanes(display, lane_mask):
 				(display.shape[1], display.shape[0]),
 				interpolation=cv2.INTER_NEAREST,
             )
-	overlay = np.zeros_like(display)
-	overlay[mask_bin > 0] = (0, 255, 0)
-	display = cv2.addWeighted(display, 0.65, overlay, 0.35, 0)
+		overlay = np.zeros_like(display)
+		overlay[mask_bin > 0] = (0, 255, 0)
+		display = cv2.addWeighted(display, 0.65, overlay, 0.35, 0)
 	return display
 
 def lane_segmentation(seg_post, seg_results, infer_engine, args, frame):
@@ -153,9 +163,9 @@ def lane_segmentation(seg_post, seg_results, infer_engine, args, frame):
 		conf_th=args.lane_conf,
 		iou_th=args.lane_iou,
 	)
-	lane_mask = merge_lane_masks(lane_result.get("masks"))
-	scores = lane_result.get("scores", [])
-	classes = lane_result.get("classes", [])
+	lane_mask = lane_result.get("mask", None)
+	scores = lane_result.get("scores", None)
+	classes = lane_result.get("classes", None)
 	if scores is None or (hasattr(scores, "size") and scores.size == 0):
 		lane_score = 0.0
 	else:
@@ -239,16 +249,21 @@ if __name__ == "__main__":
 			input_size=(MODEL_HEIGHT, MODEL_WIDTH),
 			strides=(8, 16, 32),
 			model_name=MODEL_FAMILY,
+			temporal_alpha=1
 		)
         # TSR Post Processor
 		det_post = DetectionPostProcessor(input_size=(MODEL_HEIGHT, MODEL_WIDTH))
 
 		lane_seg_b = True
-		det_b = False
+		det_b = True
 		print(f"Lane HEF: {args.seg_hef}")
 		print(f"TSR HEF:  {args.det_hef}")
 
-		for frame, seg_results, det_results in infer_engine.run_inference():
+		last_time = 0
+		for frame, seg_results, det_results in infer_engine.run_inference(lane_seg_b, det_b):
+			start = time.perf_counter()
+			fps = 1 / (start - last_time)
+			last_time = start
 			frame_index += 1
 			display = frame.copy()
 
@@ -257,21 +272,15 @@ if __name__ == "__main__":
 			if det_b == True:
 				display = detections(det_post, det_results, infer_engine, args, display, labels)
 
+			if frame_index % 15 == 0:
+				det_b = not det_b
+
             # Debug
-			#if frame_index % args.debug_every == 0:
-			#	if not dets:
-			#		print(f"frame={frame_index} lane={lane_score:.2f} det=none", flush=True)
-			#	else:
-			#		cls_id, score, x, y, w, h = dets[0]
-			#		label = labels[cls_id] if 0 <= cls_id < len(labels) else str(cls_id)
-			#		print(
-			#			f"frame={frame_index} lane={lane_score:.2f} "
-			#			f"det={label} {score:.2f} box=({x},{y},{w},{h})",
-			#			flush=True,
-			#		)
+			if frame_index % args.debug_every == 0:
+				print(f"FPS={fps}", flush=True)
 
 			if not args.no_display:
-				if not write_frame(camera.display_proc, display):
+				if not write_frame(camera.display_proc, display, fps):
 					break
 
 	except Exception as exc:

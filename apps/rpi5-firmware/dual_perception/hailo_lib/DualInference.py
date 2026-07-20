@@ -99,7 +99,7 @@ class DualInference:
 		frame_resized = cv2.resize(frame, (self.MODEL_WIDTH, self.MODEL_HEIGHT))
 		return np.expand_dims(frame_resized, axis=0).astype(np.uint8)
 
-	def run_inference(self):
+	def run_inference(self, lane_seg_b, det_b):
 		self.configure()
 
 		with InferVStreams(
@@ -118,10 +118,12 @@ class DualInference:
 
 				input_frame = self._prepare_input(frame)
 
-				with self.seg_network_group.activate(self.seg_network_group_params):
-				    seg_results = seg_pipeline.infer({self.seg_input_name: input_frame})
+				if lane_seg_b == True:
+					with self.seg_network_group.activate(self.seg_network_group_params):
+						seg_results = seg_pipeline.infer({self.seg_input_name: input_frame})
 
-				with self.det_network_group.activate(self.det_network_group_params):
-					det_results = det_pipeline.infer({self.det_input_name: input_frame})
+				if det_b == True:
+					with self.det_network_group.activate(self.det_network_group_params):
+						det_results = det_pipeline.infer({self.det_input_name: input_frame})
 
 				yield frame, seg_results, det_results
