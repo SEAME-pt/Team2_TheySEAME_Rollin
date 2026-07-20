@@ -8,7 +8,7 @@
 #
 # Prerequisites:
 #   - sshfs installed: sudo apt-get install sshfs
-#   - SSH key authentication configured for team2@100.103.187.55
+#   - SSH key authentication configured for team2@10.21.100.2
 #   - Remote Qt 6.7.3 installed at ~/Qt/6.7.3/gcc_64/
 #
 # Usage:
@@ -21,7 +21,7 @@
 set -e
 
 # Configuration
-REMOTE_HOST="team2@100.103.187.55"
+REMOTE_HOST="team2@10.21.100.2"
 REMOTE_PATH="/home/team2/Documents/hugo-folder/Team2_TheySEAME_Rollin"
 LOCAL_MOUNT_POINT="$HOME/remote-elrepo"
 LOCAL_PROJECT_DIR="$HOME/SEA_ME/ElRepo"

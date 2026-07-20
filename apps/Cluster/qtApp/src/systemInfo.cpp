@@ -74,7 +74,8 @@ int systemInfo::metersToDisplayPercent(float meters)
 {
     if (meters <= 0.f)
         return 0;
-    constexpr float kMaxMeters = 30.f;
+    // Match bridge LUT range (~8–80 m); keep some headroom past typical track distances.
+    constexpr float kMaxMeters = 60.f;
     const float pct = (1.f - (meters / kMaxMeters)) * 100.f;
     return static_cast<int>(std::clamp(pct, 0.f, 100.f));
 }
@@ -86,6 +87,12 @@ bool systemInfo::getRightCarVisible() const { return _rightCarVisible.load(); }
 int systemInfo::getFrontCarDistance() const { return _frontCarDistance.load(); }
 int systemInfo::getLeftCarDistance() const { return _leftCarDistance.load(); }
 int systemInfo::getRightCarDistance() const { return _rightCarDistance.load(); }
+double systemInfo::getFrontCarOrientation() const { return _frontCarOrientation.load(); }
+double systemInfo::getLeftCarOrientation() const { return _leftCarOrientation.load(); }
+double systemInfo::getRightCarOrientation() const { return _rightCarOrientation.load(); }
+double systemInfo::getFrontCarLateral() const { return _frontCarLateral.load(); }
+double systemInfo::getLeftCarLateral() const { return _leftCarLateral.load(); }
+double systemInfo::getRightCarLateral() const { return _rightCarLateral.load(); }
 
 bool systemInfo::getLdwWarningActive() const { return _ldwWarningActive; }
 bool systemInfo::getBsdWarningActive() const { return _bsdWarningActive; }
@@ -156,6 +163,12 @@ void systemInfo::updateVehicleDetection()
     const int frontPct = frontVisible ? metersToDisplayPercent(frontM) : 0;
     const int leftPct = leftVisible ? metersToDisplayPercent(leftM) : 0;
     const int rightPct = rightVisible ? metersToDisplayPercent(rightM) : 0;
+    const double frontOrient = frontVisible ? static_cast<double>(_kuksa.getAccLeadVehicleOrientation()) : 180.0;
+    const double leftOrient = leftVisible ? static_cast<double>(_kuksa.getBsdLeftVehicleOrientation()) : 180.0;
+    const double rightOrient = rightVisible ? static_cast<double>(_kuksa.getBsdRightVehicleOrientation()) : 180.0;
+    const double frontLat = frontVisible ? static_cast<double>(_kuksa.getAccLeadVehicleLateralOffset()) : 0.0;
+    const double leftLat = leftVisible ? static_cast<double>(_kuksa.getBsdLeftVehicleLateralOffset()) : 0.0;
+    const double rightLat = rightVisible ? static_cast<double>(_kuksa.getBsdRightVehicleLateralOffset()) : 0.0;
 
     bool changed = false;
     if (_liveDetectionActive != liveActive) { _liveDetectionActive = liveActive; changed = true; }
@@ -165,6 +178,12 @@ void systemInfo::updateVehicleDetection()
     if (_frontCarDistance != frontPct) { _frontCarDistance = frontPct; changed = true; }
     if (_leftCarDistance != leftPct) { _leftCarDistance = leftPct; changed = true; }
     if (_rightCarDistance != rightPct) { _rightCarDistance = rightPct; changed = true; }
+    if (_frontCarOrientation != frontOrient) { _frontCarOrientation = frontOrient; changed = true; }
+    if (_leftCarOrientation != leftOrient) { _leftCarOrientation = leftOrient; changed = true; }
+    if (_rightCarOrientation != rightOrient) { _rightCarOrientation = rightOrient; changed = true; }
+    if (_frontCarLateral != frontLat) { _frontCarLateral = frontLat; changed = true; }
+    if (_leftCarLateral != leftLat) { _leftCarLateral = leftLat; changed = true; }
+    if (_rightCarLateral != rightLat) { _rightCarLateral = rightLat; changed = true; }
 
     if (changed)
         emit vehicleDetectionUpdated();

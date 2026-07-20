@@ -4,7 +4,10 @@ gate
 crosswalk_sign
 stop_sign
 yield_sign
-car
+car_front
+car_back
+car_left
+car_right
 danger_sign
 obstacle
 traffic_light_green

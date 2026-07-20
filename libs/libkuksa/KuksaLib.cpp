@@ -43,13 +43,19 @@ void kuksaLib::setAccActive(bool v) { accActive.store(v); }
 void kuksaLib::setAccTargetSpeed(float v) { accTargetSpeed.store(v); }
 void kuksaLib::setAccTimeGap(float v) { accTimeGap.store(v); }
 void kuksaLib::setAccLeadVehicleDistance(float v) { accLeadVehicleDistance.store(v); }
+void kuksaLib::setAccLeadVehicleOrientation(float v) { accLeadVehicleOrientation.store(v); }
+void kuksaLib::setAccLeadVehicleLateralOffset(float v) { accLeadVehicleLateralOffset.store(v); }
 
 // BSD setters
 void kuksaLib::setBsdEnabled(bool v) { bsdEnabled.store(v); }
 void kuksaLib::setBsdLeftOccupied(bool v) { bsdLeftOccupied.store(v); }
 void kuksaLib::setBsdLeftDistance(float v) { bsdLeftDistance.store(v); }
+void kuksaLib::setBsdLeftVehicleOrientation(float v) { bsdLeftVehicleOrientation.store(v); }
+void kuksaLib::setBsdLeftVehicleLateralOffset(float v) { bsdLeftVehicleLateralOffset.store(v); }
 void kuksaLib::setBsdRightOccupied(bool v) { bsdRightOccupied.store(v); }
 void kuksaLib::setBsdRightDistance(float v) { bsdRightDistance.store(v); }
+void kuksaLib::setBsdRightVehicleOrientation(float v) { bsdRightVehicleOrientation.store(v); }
+void kuksaLib::setBsdRightVehicleLateralOffset(float v) { bsdRightVehicleLateralOffset.store(v); }
 void kuksaLib::setBsdWarning(bool v) { bsdWarning.store(v); }
 
 // TSR setters
@@ -100,13 +106,19 @@ bool kuksaLib::subscribeFromKuksa()
     req.add_signal_paths("Vehicle.ADAS.AdaptiveCruiseControl.TargetSpeed");
     req.add_signal_paths("Vehicle.ADAS.AdaptiveCruiseControl.TimeGap");
     req.add_signal_paths("Vehicle.ADAS.AdaptiveCruiseControl.LeadVehicleDistance");
+    req.add_signal_paths("Vehicle.ADAS.AdaptiveCruiseControl.LeadVehicleOrientation");
+    req.add_signal_paths("Vehicle.ADAS.AdaptiveCruiseControl.LeadVehicleLateralOffset");
 
     // ADAS - BSD
     req.add_signal_paths("Vehicle.ADAS.BlindSpotDetection.Enabled");
     req.add_signal_paths("Vehicle.ADAS.BlindSpotDetection.LeftOccupied");
     req.add_signal_paths("Vehicle.ADAS.BlindSpotDetection.LeftDistance");
+    req.add_signal_paths("Vehicle.ADAS.BlindSpotDetection.LeftVehicleOrientation");
+    req.add_signal_paths("Vehicle.ADAS.BlindSpotDetection.LeftVehicleLateralOffset");
     req.add_signal_paths("Vehicle.ADAS.BlindSpotDetection.RightOccupied");
     req.add_signal_paths("Vehicle.ADAS.BlindSpotDetection.RightDistance");
+    req.add_signal_paths("Vehicle.ADAS.BlindSpotDetection.RightVehicleOrientation");
+    req.add_signal_paths("Vehicle.ADAS.BlindSpotDetection.RightVehicleLateralOffset");
     req.add_signal_paths("Vehicle.ADAS.BlindSpotDetection.Warning");
 
     // ADAS - TSR
@@ -212,8 +224,12 @@ bool kuksaLib::subscribeFromKuksa()
             } else if (path == "Vehicle.ADAS.AdaptiveCruiseControl.LeadVehicleDistance") {
                 float v = 0.0f;
                 if (valueToType(value, v)) setAccLeadVehicleDistance(v);
-
-            // BSD
+            } else if (path == "Vehicle.ADAS.AdaptiveCruiseControl.LeadVehicleOrientation") {
+                float v = 180.0f;
+                if (valueToType(value, v)) setAccLeadVehicleOrientation(v);
+            } else if (path == "Vehicle.ADAS.AdaptiveCruiseControl.LeadVehicleLateralOffset") {
+                float v = 0.0f;
+                if (valueToType(value, v)) setAccLeadVehicleLateralOffset(v);
             } else if (path == "Vehicle.ADAS.BlindSpotDetection.Enabled") {
                 bool v = false;
                 if (valueToType(value, v)) setBsdEnabled(v);
@@ -223,12 +239,24 @@ bool kuksaLib::subscribeFromKuksa()
             } else if (path == "Vehicle.ADAS.BlindSpotDetection.LeftDistance") {
                 float v = 0.0f;
                 if (valueToType(value, v)) setBsdLeftDistance(v);
+            } else if (path == "Vehicle.ADAS.BlindSpotDetection.LeftVehicleOrientation") {
+                float v = 180.0f;
+                if (valueToType(value, v)) setBsdLeftVehicleOrientation(v);
+            } else if (path == "Vehicle.ADAS.BlindSpotDetection.LeftVehicleLateralOffset") {
+                float v = 0.0f;
+                if (valueToType(value, v)) setBsdLeftVehicleLateralOffset(v);
             } else if (path == "Vehicle.ADAS.BlindSpotDetection.RightOccupied") {
                 bool v = false;
                 if (valueToType(value, v)) setBsdRightOccupied(v);
             } else if (path == "Vehicle.ADAS.BlindSpotDetection.RightDistance") {
                 float v = 0.0f;
                 if (valueToType(value, v)) setBsdRightDistance(v);
+            } else if (path == "Vehicle.ADAS.BlindSpotDetection.RightVehicleOrientation") {
+                float v = 180.0f;
+                if (valueToType(value, v)) setBsdRightVehicleOrientation(v);
+            } else if (path == "Vehicle.ADAS.BlindSpotDetection.RightVehicleLateralOffset") {
+                float v = 0.0f;
+                if (valueToType(value, v)) setBsdRightVehicleLateralOffset(v);
             } else if (path == "Vehicle.ADAS.BlindSpotDetection.Warning") {
                 bool v = false;
                 if (valueToType(value, v)) setBsdWarning(v);

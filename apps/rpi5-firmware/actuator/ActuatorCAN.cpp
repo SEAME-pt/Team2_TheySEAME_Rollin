@@ -61,6 +61,39 @@ void ActuatorCAN::setSpeedLimit(const int speedLimit) {
 	data[0] = speedLimit;
 	_can.sendFrame(SPEED_LIMIT, data, sizeof(data));
 }
+
+void ActuatorCAN::setAccLeadVehicleDistance(const float distanceMeters) {
+	(void)distanceMeters;
+}
+
+void ActuatorCAN::setAccLeadVehicleOrientation(const float yawDegrees) {
+	(void)yawDegrees;
+}
+
+void ActuatorCAN::setBsdLeftOccupied(const bool occupied) {
+	(void)occupied;
+}
+
+void ActuatorCAN::setBsdRightOccupied(const bool occupied) {
+	(void)occupied;
+}
+
+void ActuatorCAN::setBsdLeftDistance(const float distanceMeters) {
+	(void)distanceMeters;
+}
+
+void ActuatorCAN::setBsdRightDistance(const float distanceMeters) {
+	(void)distanceMeters;
+}
+
+void ActuatorCAN::setBsdLeftVehicleOrientation(const float yawDegrees) {
+	(void)yawDegrees;
+}
+
+void ActuatorCAN::setBsdRightVehicleOrientation(const float yawDegrees) {
+	(void)yawDegrees;
+}
+
 void ActuatorCAN::setAEb_Enabled(const bool autonomous) {
 	uint8_t data[1];
 

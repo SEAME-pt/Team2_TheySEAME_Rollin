@@ -239,6 +239,17 @@
                 "datatype": "float",
                 "unit": "m",
                 "description": "Distance to lead vehicle"
+              },
+              "LeadVehicleOrientation": {
+                "type": "sensor",
+                "datatype": "float",
+                "unit": "degrees",
+                "description": "Lead vehicle yaw in degrees (0=front toward camera, 180=rear toward camera, continuous from bbox aspect)"
+              },
+              "LeadVehicleLateralOffset": {
+                "type": "sensor",
+                "datatype": "float",
+                "description": "Lead vehicle lateral position in image (-1=left edge, 0=center, 1=right edge)"
               }
             }
           },
@@ -274,6 +285,28 @@
                 "datatype": "float",
                 "unit": "m",
                 "description": "Distance to nearest vehicle in right lane"
+              },
+              "LeftVehicleOrientation": {
+                "type": "sensor",
+                "datatype": "float",
+                "unit": "degrees",
+                "description": "Left-lane vehicle yaw in degrees (0=front toward camera, 180=rear toward camera, continuous from bbox aspect)"
+              },
+              "LeftVehicleLateralOffset": {
+                "type": "sensor",
+                "datatype": "float",
+                "description": "Left-lane vehicle lateral position in image (-1=left edge, 0=center, 1=right edge)"
+              },
+              "RightVehicleOrientation": {
+                "type": "sensor",
+                "datatype": "float",
+                "unit": "degrees",
+                "description": "Right-lane vehicle yaw in degrees (0=front toward camera, 180=rear toward camera, continuous from bbox aspect)"
+              },
+              "RightVehicleLateralOffset": {
+                "type": "sensor",
+                "datatype": "float",
+                "description": "Right-lane vehicle lateral position in image (-1=left edge, 0=center, 1=right edge)"
               },
               "Warning": {
                 "type": "sensor",

@@ -6,10 +6,22 @@ Node {
     id: root
 
     property color bodyColor: "#4e79a7"
+    // Continuous yaw in degrees from bbox aspect ratio via Kuksa:
+    // 0 = headlights toward camera, 180 = rear toward camera.
+    property real carOrientation: 180
+    // 1.0 = default size; larger when closer (driven by distance percent).
+    property real sizeScale: 1.0
 
-    scale: Qt.vector3d(72.0, 72.0, 72.0)
-    eulerRotation.y: 180
+    scale: Qt.vector3d(72.0 * root.sizeScale, 72.0 * root.sizeScale, 72.0 * root.sizeScale)
     eulerRotation.x: 0.5
+    eulerRotation.y: root.carOrientation
+
+    Behavior on eulerRotation.y {
+        NumberAnimation { duration: 280; easing.type: Easing.InOutQuad }
+    }
+    Behavior on scale {
+        Vector3dAnimation { duration: 280; easing.type: Easing.InOutQuad }
+    }
 
     Model {
         source: "qrc:/qml/3d-assets/carro/meshes/body_Plane_mesh.mesh"

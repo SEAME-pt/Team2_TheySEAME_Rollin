@@ -23,6 +23,7 @@ Rectangle {
 
     // 3D lane layout (matches lane guide spacing)
     readonly property real detectedCarY: -325
+    readonly property real laneSpanX: 480
     readonly property real laneCenterX: 0
     readonly property real laneLeftX: -320
     readonly property real laneRightX: 320
@@ -324,40 +325,47 @@ Rectangle {
             }
         }
 
-        // Detected center-lane vehicle
+        // Closest / 2nd / 3rd vehicles (slots ranked by distance; X follows bbox)
         DetectedCar3D {
             id: detectedFrontCar
             visible: systemInfo && systemInfo.frontCarVisible
-            x: rectangle.laneCenterX
+            x: systemInfo ? (systemInfo.frontCarLateral * rectangle.laneSpanX) : rectangle.laneCenterX
             y: rectangle.detectedCarY
             z: systemInfo ? (-100 - (100 - systemInfo.frontCarDistance) * 4) : -500
+            carOrientation: systemInfo ? systemInfo.frontCarOrientation : 180
+            sizeScale: systemInfo ? (0.45 + 0.75 * (systemInfo.frontCarDistance / 100.0)) : 1.0
             bodyColor: "#4e79a7"
 
-            Behavior on z { NumberAnimation { duration: 300; easing.type: Easing.InOutQuad } }
+            Behavior on x { NumberAnimation { duration: 220; easing.type: Easing.InOutQuad } }
+            Behavior on z { NumberAnimation { duration: 280; easing.type: Easing.InOutQuad } }
         }
 
-        // Detected left-lane vehicle
         DetectedCar3D {
             id: detectedLeftCar
             visible: systemInfo && systemInfo.leftCarVisible
-            x: rectangle.laneLeftX
+            x: systemInfo ? (systemInfo.leftCarLateral * rectangle.laneSpanX) : rectangle.laneLeftX
             y: rectangle.detectedCarY
             z: systemInfo ? (-100 - (100 - systemInfo.leftCarDistance) * 4) : -500
+            carOrientation: systemInfo ? systemInfo.leftCarOrientation : 180
+            sizeScale: systemInfo ? (0.45 + 0.75 * (systemInfo.leftCarDistance / 100.0)) : 1.0
             bodyColor: "#4e79a7"
 
-            Behavior on z { NumberAnimation { duration: 300; easing.type: Easing.InOutQuad } }
+            Behavior on x { NumberAnimation { duration: 220; easing.type: Easing.InOutQuad } }
+            Behavior on z { NumberAnimation { duration: 280; easing.type: Easing.InOutQuad } }
         }
 
-        // Detected right-lane vehicle
         DetectedCar3D {
             id: detectedRightCar
             visible: systemInfo && systemInfo.rightCarVisible
-            x: rectangle.laneRightX
+            x: systemInfo ? (systemInfo.rightCarLateral * rectangle.laneSpanX) : rectangle.laneRightX
             y: rectangle.detectedCarY
             z: systemInfo ? (-100 - (100 - systemInfo.rightCarDistance) * 4) : -500
+            carOrientation: systemInfo ? systemInfo.rightCarOrientation : 180
+            sizeScale: systemInfo ? (0.45 + 0.75 * (systemInfo.rightCarDistance / 100.0)) : 1.0
             bodyColor: "#4e79a7"
 
-            Behavior on z { NumberAnimation { duration: 300; easing.type: Easing.InOutQuad } }
+            Behavior on x { NumberAnimation { duration: 220; easing.type: Easing.InOutQuad } }
+            Behavior on z { NumberAnimation { duration: 280; easing.type: Easing.InOutQuad } }
         }
     }
 

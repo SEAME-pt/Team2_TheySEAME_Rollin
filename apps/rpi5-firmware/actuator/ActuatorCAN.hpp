@@ -37,6 +37,14 @@ public:
 	void setCruiseControl(const bool flag, const int targetSpeed);
 	void setTrafficSign(const int trafficSign, const float distance);
 	void setSpeedLimit(const int speedLimit);
+	void setAccLeadVehicleDistance(const float distanceMeters);
+	void setAccLeadVehicleOrientation(const float yawDegrees);
+	void setBsdLeftOccupied(const bool occupied);
+	void setBsdRightOccupied(const bool occupied);
+	void setBsdLeftDistance(const float distanceMeters);
+	void setBsdRightDistance(const float distanceMeters);
+	void setBsdLeftVehicleOrientation(const float yawDegrees);
+	void setBsdRightVehicleOrientation(const float yawDegrees);
 	void setAEb_Enabled(const bool autonomous);
 private:
 	ICAN &_can;

@@ -50,13 +50,19 @@ private:
     std::atomic<float> accTargetSpeed{0.0f};
     std::atomic<float> accTimeGap{0.0f};
     std::atomic<float> accLeadVehicleDistance{0.0f};
+    std::atomic<float> accLeadVehicleOrientation{180.0f};
+    std::atomic<float> accLeadVehicleLateralOffset{0.0f};
 
     // ADAS - Blind Spot Detection
     std::atomic<bool> bsdEnabled{false};
     std::atomic<bool> bsdLeftOccupied{false};
     std::atomic<float> bsdLeftDistance{0.0f};
+    std::atomic<float> bsdLeftVehicleOrientation{180.0f};
+    std::atomic<float> bsdLeftVehicleLateralOffset{0.0f};
     std::atomic<bool> bsdRightOccupied{false};
     std::atomic<float> bsdRightDistance{0.0f};
+    std::atomic<float> bsdRightVehicleOrientation{180.0f};
+    std::atomic<float> bsdRightVehicleLateralOffset{0.0f};
     std::atomic<bool> bsdWarning{false};
 
     // ADAS - Traffic Sign Recognition
@@ -103,12 +109,18 @@ private:
     void setAccTargetSpeed(float v);
     void setAccTimeGap(float v);
     void setAccLeadVehicleDistance(float v);
+    void setAccLeadVehicleOrientation(float v);
+    void setAccLeadVehicleLateralOffset(float v);
 
     void setBsdEnabled(bool v);
     void setBsdLeftOccupied(bool v);
     void setBsdLeftDistance(float v);
+    void setBsdLeftVehicleOrientation(float v);
+    void setBsdLeftVehicleLateralOffset(float v);
     void setBsdRightOccupied(bool v);
     void setBsdRightDistance(float v);
+    void setBsdRightVehicleOrientation(float v);
+    void setBsdRightVehicleLateralOffset(float v);
     void setBsdWarning(bool v);
 
     void setTsrEnabled(bool v);
@@ -163,12 +175,18 @@ public:
     float getAccTargetSpeed() const { return accTargetSpeed.load(); }
     float getAccTimeGap() const { return accTimeGap.load(); }
     float getAccLeadVehicleDistance() const { return accLeadVehicleDistance.load(); }
+    float getAccLeadVehicleOrientation() const { return accLeadVehicleOrientation.load(); }
+    float getAccLeadVehicleLateralOffset() const { return accLeadVehicleLateralOffset.load(); }
 
     bool getBsdEnabled() const { return bsdEnabled.load(); }
     bool getBsdLeftOccupied() const { return bsdLeftOccupied.load(); }
     float getBsdLeftDistance() const { return bsdLeftDistance.load(); }
+    float getBsdLeftVehicleOrientation() const { return bsdLeftVehicleOrientation.load(); }
+    float getBsdLeftVehicleLateralOffset() const { return bsdLeftVehicleLateralOffset.load(); }
     bool getBsdRightOccupied() const { return bsdRightOccupied.load(); }
     float getBsdRightDistance() const { return bsdRightDistance.load(); }
+    float getBsdRightVehicleOrientation() const { return bsdRightVehicleOrientation.load(); }
+    float getBsdRightVehicleLateralOffset() const { return bsdRightVehicleLateralOffset.load(); }
     bool getBsdWarning() const { return bsdWarning.load(); }
 
     bool getTsrEnabled() const { return tsrEnabled.load(); }

@@ -6,6 +6,7 @@
 #include "Utils.hpp"
 #include <arpa/inet.h>
 #include <unordered_map>
+#include <vector>
 
 extern float FX_PX;
 extern float FY_PX;
@@ -70,16 +71,20 @@ public:
     Tsr(CarActuator *car);
     ~Tsr();
 
+    void handleFrame(const std::vector<TsrHeader> &detections);
     void handleTrafficSign(const TsrHeader &tsrData);
     void tick();
 
     const TsrHeader& getLastDetection();
     float estimateDistance(const TsrHeader& det);
+    float estimateVehicleDistance(const TsrHeader& det);
     void applyScaleCalibration(float measured_dist, float true_dist_cm);
     float lookupDistance(float bboxPx);
     void resetKuksa();
 
 private:
+    void publishVehicleState(float frontMeters, float leftMeters, float rightMeters,
+                             float frontYaw, float leftYaw, float rightYaw);
 
     CarActuator *_car;
     TsrHeader    _lastDetection;

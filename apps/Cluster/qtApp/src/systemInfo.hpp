@@ -34,6 +34,12 @@ class systemInfo : public QObject
     Q_PROPERTY(int frontCarDistance READ getFrontCarDistance NOTIFY vehicleDetectionUpdated)
     Q_PROPERTY(int leftCarDistance READ getLeftCarDistance NOTIFY vehicleDetectionUpdated)
     Q_PROPERTY(int rightCarDistance READ getRightCarDistance NOTIFY vehicleDetectionUpdated)
+    Q_PROPERTY(double frontCarOrientation READ getFrontCarOrientation NOTIFY vehicleDetectionUpdated)
+    Q_PROPERTY(double leftCarOrientation READ getLeftCarOrientation NOTIFY vehicleDetectionUpdated)
+    Q_PROPERTY(double rightCarOrientation READ getRightCarOrientation NOTIFY vehicleDetectionUpdated)
+    Q_PROPERTY(double frontCarLateral READ getFrontCarLateral NOTIFY vehicleDetectionUpdated)
+    Q_PROPERTY(double leftCarLateral READ getLeftCarLateral NOTIFY vehicleDetectionUpdated)
+    Q_PROPERTY(double rightCarLateral READ getRightCarLateral NOTIFY vehicleDetectionUpdated)
     Q_PROPERTY(bool ldwWarningActive READ getLdwWarningActive NOTIFY adasWarningUpdated)
     Q_PROPERTY(bool bsdWarningActive READ getBsdWarningActive NOTIFY adasWarningUpdated)
     Q_PROPERTY(bool adasWarningVisible READ getAdasWarningVisible NOTIFY adasWarningUpdated)
@@ -156,6 +162,12 @@ public:
     int getFrontCarDistance() const;
     int getLeftCarDistance() const;
     int getRightCarDistance() const;
+    double getFrontCarOrientation() const;
+    double getLeftCarOrientation() const;
+    double getRightCarOrientation() const;
+    double getFrontCarLateral() const;
+    double getLeftCarLateral() const;
+    double getRightCarLateral() const;
 
     bool getLdwWarningActive() const;
     bool getBsdWarningActive() const;
@@ -185,6 +197,12 @@ private:
     std::atomic<int> _frontCarDistance{0};
     std::atomic<int> _leftCarDistance{0};
     std::atomic<int> _rightCarDistance{0};
+    std::atomic<double> _frontCarOrientation{180.0};
+    std::atomic<double> _leftCarOrientation{180.0};
+    std::atomic<double> _rightCarOrientation{180.0};
+    std::atomic<double> _frontCarLateral{0.0};
+    std::atomic<double> _leftCarLateral{0.0};
+    std::atomic<double> _rightCarLateral{0.0};
     std::atomic<int> _battery{0};
     std::atomic<int> _speed{0};
     std::atomic<bool> _cruiseActive{false};

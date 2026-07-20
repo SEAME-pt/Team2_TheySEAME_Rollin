@@ -58,5 +58,13 @@ public:
 
 	virtual void setTrafficSign(const int trafficSign, const float distance) = 0;
 	virtual void setSpeedLimit(const int speedLimit) = 0;
+	virtual void setAccLeadVehicleDistance(const float distanceMeters) = 0;
+	virtual void setAccLeadVehicleOrientation(const float yawDegrees) = 0;
+	virtual void setBsdLeftOccupied(const bool occupied) = 0;
+	virtual void setBsdRightOccupied(const bool occupied) = 0;
+	virtual void setBsdLeftDistance(const float distanceMeters) = 0;
+	virtual void setBsdRightDistance(const float distanceMeters) = 0;
+	virtual void setBsdLeftVehicleOrientation(const float yawDegrees) = 0;
+	virtual void setBsdRightVehicleOrientation(const float yawDegrees) = 0;
 	virtual void setAEb_Enabled(const bool autonomous) = 0;
 };
