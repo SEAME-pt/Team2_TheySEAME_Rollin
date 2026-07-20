@@ -30,16 +30,19 @@ There's the **Manual Driving** (Remote Control) and the **Automatic Driving** (L
 6. Run the binary in the RPI5 ```./<target-path>/<binary-file>```
 
 ### Automatic Driving Binary (LKA)
-The next step is only needed if the **purePursuit** files were altered. If not, the next step is not needed
+The next step is only needed if the **lkaControl** and **actuator** files were altered. If not, the next step is not needed
 
-6. For the LKA (Lane-keep-Assist) to work, it is needed to copy the **purePursuit/purePursuit.so** file
-into the TARGET (RPI5) in the same directory where the python command is run
+6. For the LKA (Lane-keep-Assist) to work, it is needed to copy the **lkaControl/lkaControl.so** and 
+**actuator/actuator.so** file into the TARGET (RPI5) in the same directory where the python command is run.
+This files are found under the CMake build directory after compilation
 
-```scp purePursuit/purePursuit.so <user>@<ip>:<target-path>```
+```
+scp lkaControl/lkaControl.so actuator/actuator.so <user>@<ip>:<target-path>
+```
 
 The LKA is run throught the python script
 
-7. ```python3 run_ai_pipeline.py```
+7. ```python3 run_ai_pipeline.py --enable-lka```
 
 ## Python Bindings
 
@@ -47,40 +50,22 @@ We use boost.python to call C++ classes, functions in python
 
 Here's the boost.python [docs](https://www.boost.org/doc/libs/1_45_0/libs/python/doc/tutorial/doc/html/index.html)
 
-The **purePursuit** python API in under the **pythonPurePursuit.cpp** file.
-If anyone changes the **purePursuit.cpp** and **purePursuit.hpp** also needs to update the **pythonPurePursuit.cpp** file
+The **lkaControl** and **actuator** python API in under the **pythonLkaControl.cpp** and **pythonActuator.cpp** file respectively.
+If anyone changes files under these directories, also needs to update the respectively python bindings file
 
 ### How to use the bindings in python
 
 Here's an example on how to use the C++ python bindings
 
 ```python
-from purePursuit import PurePursuit
-from purePursuit import quadFunc
+from lkaControl import LkaControl, Debug
+from actuator import Bridge
 
-# Example frame dimensions
-frameHeight = 640
-frameWidth = 640
+lkaControl = LkaControl() # Create the C++ class responsible for the Lka module
+bridge = Bridge(lkaControl) # This starts up the C++ classes for the LkaControl
+debug = Debug() # This is just variables from the LkaControl
 
-# Class constructor
-pp = PurePursuit()
-
-# Left Lane Polynomial
-leftquad = quadFunc()
-
-# Right Lane Polynomial
-rightquad = quadFunc()
-
-# Fill the Polynomial coefficients
-leftquad.a = 2
-leftquad.b = 2
-leftquad.c = 2
-rightquad.a = 2
-rightquad.b = 2
-rightquad.c = 2
-
-# Call the Pure Pursuit
-pp.control(leftquad, rightquad, frameHeight, frameWidth)
+lkaControl.control(...)
 ```
 
 
