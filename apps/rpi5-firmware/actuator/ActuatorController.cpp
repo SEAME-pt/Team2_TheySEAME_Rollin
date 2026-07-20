@@ -29,28 +29,10 @@ void ActuatorController::steering(const int angle) {
 void ActuatorController::throttle(const int throttle) {
 	if (_stopDetected)
 		return;
-	if (throttle < 0) {
-		gear(DRIVE);
-	} else if (throttle > 0) {
-		gear(REVERSE);
-	}
-	else {
-		gear(NEUTRAL);
-	}
-	
-	cruiseControl(false, 0);
+
 	_currentThrottle = throttle;
 	_car->setThrottle(throttle);
 	std::cout << "Changed Throttle" << std::endl;
-}
-
-void ActuatorController::setSpeedLimit(const int speedLimit) {
-	_car->setSpeedLimit(speedLimit);
-}
-
-void ActuatorController::setTrafficSign(const int trafficSign, const float distance) {
-	_car->setTrafficSign(trafficSign, distance);
-	std::cout << "Detected Traffic Sign " << trafficSign << " at distance " << distance << std::endl;
 }
 
 void ActuatorController::gear(const short gear) {
@@ -79,11 +61,14 @@ void ActuatorController::brake(const bool flag) {
 }
 
 void ActuatorController::trafficSign() {
-    auto signs = _tsr->getDetectedSigns();
-
-    for (const auto &sign : signs) {
-        setTrafficSign(sign, _tsr->estimateDistance(_tsr->getLastDetection()));
-    }
+	auto signs = _tsr->getDetectedSigns();
+	
+	if (&_kuksa) {
+		for (const auto &sign : signs) {
+			_kuksa.sendValueToKuksa("Vehicle.ADAS.TrafficSignRecognition.DetectedSignType", static_cast<uint8_t>(sign));
+			_kuksa.sendValueToKuksa("Vehicle.ADAS.TrafficSignRecognition.DetectedSignDistance", _tsr->estimateDistance(_tsr->getLastDetection()));
+		}
+	}
 
     bool stopDetected = std::find(signs.begin(), signs.end(),
         static_cast<uint16_t>(TrafficSign::STOP)) != signs.end();
@@ -92,9 +77,10 @@ void ActuatorController::trafficSign() {
 
     if (stopDetected && stopDist != -1 && stopDist < 70.0f 
         && !_stopCooldown && !_stopDetected) {
-        brake(true);
-        throttle(0);
-
+		if (_tsr->getMainTsr() == false) {
+        	brake(true);
+        	throttle(0);
+		}
         _stopDetected = true;
         _stopBrakeFrames = 0;
     }
@@ -103,7 +89,9 @@ void ActuatorController::trafficSign() {
         _stopBrakeFrames++;
 
         if (_stopBrakeFrames >= STOP_BRAKE_FRAMES) {
-            brake(false);
+			if (_tsr->getMainTsr() == false) {
+				brake(false);
+			}
             _stopDetected = false;
 
             _stopCooldown = true;
@@ -118,23 +106,25 @@ void ActuatorController::trafficSign() {
             _stopCooldown = false;
         }
     }
+
 }
 
 void ActuatorController::speedLimit() {
+	std::cout << "Speed Limit Detected" << std::endl;
     int currentLimit = _tsr->getSpeedLimit();
-
-    if (_lastSpeedLimit == 80 && currentLimit == 50) {
-        if (!_reduceSpeed) {
-            throttle(_currentThrottle * 0.75f);
-            _reduceSpeed = true;
-        } else {
-            throttle(_currentThrottle);
-            _reduceSpeed = false;
-        }
-    }
-
+	if (_tsr->getMainTsr() == false) {
+		if (_lastSpeedLimit == 80 && currentLimit == 50) {
+			if (!_reduceSpeed) {
+				throttle(_currentThrottle * 0.75f);
+				_reduceSpeed = true;
+			} else {
+				throttle(_currentThrottle);
+				_reduceSpeed = false;
+			}
+		}
+	}
     _lastSpeedLimit = currentLimit;
-    setSpeedLimit(currentLimit);
+    _kuksa.sendValueToKuksa("Vehicle.ADAS.TrafficSignRecognition.DetectedSpeedLimit", static_cast<float>(currentLimit));
 }
 
 void ActuatorController::update(Subject *subj, Events event) {
@@ -143,7 +133,7 @@ void ActuatorController::update(Subject *subj, Events event) {
 	std::vector<uint16_t> signs;
 	bool stopDetected = false;
 	float stopDist = -1;
-	if (subj == _remote) {
+	if (_remote != nullptr && subj == _remote) {
 		switch (event) {
 			case Events::CAR_THROTTLE:
 				throttle(processThrottle(_remote->getkey(Keys::JoyY)));

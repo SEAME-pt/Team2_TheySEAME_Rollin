@@ -14,8 +14,6 @@ public:
 	~ActuatorController();
 
 	void update(Subject *subj, Events event);
-	void setSpeedLimit(const int speedLimit);
-	void setTrafficSign(const int trafficSign, const float distance);
 	void test();
 
 private:

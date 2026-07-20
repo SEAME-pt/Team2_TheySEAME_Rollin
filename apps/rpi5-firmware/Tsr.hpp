@@ -79,6 +79,10 @@ public:
     const std::vector<uint16_t>& getDetectedSigns() const;
     const std::vector<std::pair<uint16_t, float>>& getDistance() const { return _distance; }
 
+    void setMainTsr(bool value);
+    void publishDetectedSignsToKuksa(int trafficSign, float distance, kuksaLib &kuksa);
+    void publishSpeedLimitToKuksa(int speedLimit, kuksaLib &kuksa);
+    bool getMainTsr() const;
     int getSpeedLimit() const;
     bool isStopBrakeActive() const;
     float estimateDistance(const TsrHeader& det);
@@ -98,4 +102,6 @@ private:
     std::vector<std::pair<uint16_t, float>> _distance;
     static constexpr int DIST_FILTER_SIZE = 10;
     std::deque<float> _distBuffer;
+
+    bool _mainTsr = false;
 };

@@ -73,6 +73,10 @@ void Tsr::clearDetectedSigns() {
     _distance.clear(); 
 }
 
+void Tsr::setMainTsr(bool value) {
+    _mainTsr = value;
+}
+
 const TsrHeader& Tsr::getLastDetection() {
     return _lastDetection;
 }
@@ -83,6 +87,10 @@ const std::vector<uint16_t>& Tsr::getDetectedSigns() const {
 
 int Tsr::getSpeedLimit() const {
     return _speedLimit;
+}
+
+bool Tsr::getMainTsr() const {
+    return _mainTsr;
 }
 
 bool Tsr::isStopBrakeActive() const {
@@ -144,6 +152,11 @@ void Tsr::resetKuksa()
 {
     _speedLimit = 0;
     std::cout << "kuksa reset: speed limit 0, traffic sign UNKNOWN" << std::endl;
+}
+
+void Tsr::publishDetectedSignsToKuksa(int trafficSign, float distance, kuksaLib &kuksa) {
+	kuksa.sendValueToKuksa("Vehicle.ADAS.TrafficSignRecognition.DetectedSignType", static_cast<uint8_t>(trafficSign));
+	kuksa.sendValueToKuksa("Vehicle.ADAS.TrafficSignRecognition.DetectedSignDistance", distance);
 }
 
 float Tsr::estimateDistance(const TsrHeader& det)

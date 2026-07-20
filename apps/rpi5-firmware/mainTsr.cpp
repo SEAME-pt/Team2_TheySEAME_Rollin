@@ -68,11 +68,11 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
 }
 
 int main() {
-    CAN can("can0", 500, 0, 0);
+    // CAN can("can0", 500, 0, 0);
     kuksaLib kuksa;
-    CarActuator *car = new ActuatorKuksa(new ActuatorCAN(can), kuksa);
+    CarActuator *car = new ActuatorKuksa(nullptr, kuksa);
     Tsr tsr;
-    ActuatorController controller(nullptr, nullptr, nullptr, kuksa, &tsr);
+    ActuatorController controller(car, nullptr, nullptr, kuksa, &tsr);
     tsr.attach(&controller);
     
     tsr.resetKuksa();
@@ -95,6 +95,7 @@ int main() {
             break;
         }
         tsr.clearDetectedSigns();
+        tsr.setMainTsr(true);
         for (auto &d : detections) {
             // std::cout << "Dispatching trafficSign=" << d.trafficSign << std::endl;
             tsr.handleTrafficSign(d);
