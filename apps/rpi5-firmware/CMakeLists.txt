@@ -17,6 +17,9 @@ set(SOURCES
 	Frame.cpp
 	SlidingWindow.hpp
 	SlidingWindow.cpp
+	HazardDetector.hpp
+	HazardDetector.cpp
+	Utils.hpp
 )
 
 set(SOURCES_LKA
@@ -45,29 +48,32 @@ set(SOURCES_TSR
 	Frame.cpp
 	Bev.hpp
 	Bev.cpp
+	HazardDetector.hpp
+	HazardDetector.cpp
+	Utils.hpp
 )
-
 # add_compile_options(-fsanitize=address -g)
 # add_link_options(-fsanitize=address)
 
-include_directories(${SDK_PATH}/sysroots/aarch64-agl-linux/usr/include/opencv4/ .)
+include_directories(/home/team2/Documents/sdkamos/sysroots/aarch64-agl-linux/usr/include/opencv4/ .)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/../../libs/libkuksa ${CMAKE_BINARY_DIR}/libkuksa)
 add_subdirectory(mode_manager)
 add_subdirectory(middleware)
 add_subdirectory(actuator)
+find_package(PahoMqttCpp REQUIRED)
 
 if(CMAKE_CROSSCOMPILING)
 	add_subdirectory(comms)
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
 	target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC comms mode middleware kuksa actuator
-		opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_videoio)
+		opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_videoio jsoncpp PahoMqttCpp::paho-mqttpp3)
 	add_executable(Lka ${SOURCES_LKA})
 	target_link_libraries(Lka PUBLIC comms mode middleware kuksa actuator
 		opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_videoio)
 	add_executable(Tsr ${SOURCES_TSR})
 	target_link_libraries(Tsr PUBLIC comms mode middleware kuksa actuator
-		opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_videoio)
+		opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_videoio jsoncpp PahoMqttCpp::paho-mqttpp3)
 	install(TARGETS CarControl DESTINATION ${RPI_BIN_DIR})
 	install(TARGETS Lka DESTINATION ${RPI_BIN_DIR})
 	install(TARGETS Tsr DESTINATION ${RPI_BIN_DIR})

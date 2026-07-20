@@ -128,7 +128,6 @@ void ActuatorController::speedLimit() {
 }
 
 void ActuatorController::update(Subject *subj, Events event) {
-	// std::cout << "Received notify " << event << " sub: " << subj << std::endl;
 	std::lock_guard<std::mutex> lock(_mutex);
 	std::vector<uint16_t> signs;
 	bool stopDetected = false;

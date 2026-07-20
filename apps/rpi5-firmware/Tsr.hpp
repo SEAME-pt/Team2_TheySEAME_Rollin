@@ -14,29 +14,9 @@ static constexpr float SIGN_HEIGHT_OFFSET_CM = 4.5f;
 static constexpr int   TSR_TIMEOUT_MS        = 500;
 #define FRAME_NMBR 77000
 
-
 struct SignSize {
     float width_cm;
     float height_cm;
-};
-
-enum class TrafficSign : int {
-	UNKNOWN = 0,
-	STOP = 1,
-	SPEED_LIMIT_30 = 2,
-	SPEED_LIMIT_50 = 3,
-	SPEED_LIMIT_100 = 4,
-	SPEED_LIMIT_80 = 5,
-	SPEED_LIMIT_120 = 6,
-	YIELD = 7,
-	NO_ENTRY = 8,
-	TURN_LEFT = 9,
-	TURN_RIGHT = 10,
-	PEDESTRIAN = 11,
-	TRAFFIC_LIGHT = 12,
-	ONE_WAY = 13,
-	NO_PARKING = 14,
-	NO_OVERTAKING = 15
 };
 
 const std::unordered_map<uint16_t, SignSize> SIGN_SIZES = {
