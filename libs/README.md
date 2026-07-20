@@ -6,4 +6,5 @@ This is the shared libraries we used in this project
 
 ```
 ├── googletest/ # Library for tests
+└── libkuksa # Eclipse Kuksa wrapper library
 ```
