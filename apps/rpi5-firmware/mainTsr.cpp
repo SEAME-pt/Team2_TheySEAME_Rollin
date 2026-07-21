@@ -134,6 +134,8 @@ int main() {
     std::cout << "NamedPipeTsr opened successfully" << std::endl;
     HazardResult hazard;
 
+    //kuksaLib thread
+    std::thread vhState(&kuksaLib::subscribeFromKuksa, &kuksa);
     while (true) {
         std::vector<TsrHeader> detections;  
         readFromPipe(pipe, detections, frameCount, tsr);
@@ -150,7 +152,7 @@ int main() {
         for (auto &d : detections) {
             kuksa.sendValueToKuksa("mobility_scenario.hazard.marker_id", d.marker_id);
             tsr.handleTrafficSign(d);
-        hazardDetector.update(d);
+            hazardDetector.update(d);
         }
         hazard = hazardDetector.evaluate();
         if (hazard.hazard != HazardType::NONE) {
@@ -183,7 +185,7 @@ int main() {
         tsr.tick();
 
     }
-
+    vhState.join();
     fclose(pipe);
     delete car;
     return 0;

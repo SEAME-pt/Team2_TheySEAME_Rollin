@@ -110,7 +110,6 @@ void ActuatorController::trafficSign() {
 }
 
 void ActuatorController::speedLimit() {
-	std::cout << "Speed Limit Detected" << std::endl;
     int currentLimit = _tsr->getSpeedLimit();
 	if (_tsr->getMainTsr() == false) {
 		if (_lastSpeedLimit == 80 && currentLimit == 50) {
