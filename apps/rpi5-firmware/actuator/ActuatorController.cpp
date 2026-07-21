@@ -65,8 +65,8 @@ void ActuatorController::trafficSign() {
 	
 	if (&_kuksa) {
 		for (const auto &sign : signs) {
-			_kuksa.sendValueToKuksa("Vehicle.ADAS.TrafficSignRecognition.DetectedSignType", static_cast<uint8_t>(sign));
-			_kuksa.sendValueToKuksa("Vehicle.ADAS.TrafficSignRecognition.DetectedSignDistance", _tsr->estimateDistance(_tsr->getLastDetection()));
+			if (sign <= 15)
+				_kuksa.sendValueToKuksa("Vehicle.ADAS.TrafficSignRecognition.DetectedSignType", static_cast<uint8_t>(sign));
 		}
 	}
 

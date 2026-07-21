@@ -159,7 +159,7 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
 }
 
 void tsrThread(Tsr *tsr, kuksaLib *kuksa) {
-	mqtt::async_client mqtt("tcp://10.21.220.143:1883", "tsr_publisher");
+	mqtt::async_client mqtt("tcp://10.21.100.3:1883", "tsr_publisher");
     mqtt.connect();
 	HazardDetector::Config hazardCfg;
     HazardDetector hazardDetector(hazardCfg);

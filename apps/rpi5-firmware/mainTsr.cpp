@@ -69,7 +69,6 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
         memcpy(&d.accuracy, &accRaw, sizeof(float));
         return d;
     };
-
     detections.push_back(decode(raw));
     
     
@@ -81,15 +80,15 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
         }
         decoded = decode(raw);
         detections.push_back(decoded);
-        // std::cout << "header: frameNbr=" << detections.back().frameNbr
-        //           << " numDetections=" << detections.back().numDetections
-        //           << " trafficSign=" << detections.back().trafficSign
-        //           << " accuracy=" << detections.back().accuracy
-        //           << " x=" << detections.back().x
-        //           << " y=" << detections.back().y
-        //           << " width=" << detections.back().width
-        //           << " height=" << detections.back().height
-        //           << std::endl;
+        std::cout << "header: frameNbr=" << detections.back().frameNbr
+                  << " numDetections=" << detections.back().numDetections
+                  << " trafficSign=" << detections.back().trafficSign
+                  << " accuracy=" << detections.back().accuracy
+                  << " x=" << detections.back().x
+                  << " y=" << detections.back().y
+                  << " width=" << detections.back().width
+                  << " height=" << detections.back().height
+                  << std::endl;
     }
 
     frameCount++;
@@ -106,8 +105,20 @@ int main() {
     tsr.resetKuksa();
 
     //mqtt
-    mqtt::async_client mqtt("tcp://10.21.220.143:1883", "tsr_publisher");
-    mqtt.connect();
+    mqtt::async_client mqtt("tcp://10.21.100.3:1883", "tsr_publisher");
+
+    mqtt::connect_options connOpts;
+    connOpts.set_clean_session(true);
+    connOpts.set_connect_timeout(std::chrono::seconds(5));
+    connOpts.set_automatic_reconnect(true);
+
+    try {
+        std::cout << "[MQTT] Connecting..." << std::endl;
+        mqtt.connect(connOpts)->wait();
+        std::cout << "[MQTT] Connected to broker" << std::endl;
+    } catch (const mqtt::exception& e) {
+        std::cerr << "[MQTT] Connect failed: " << e.what() << std::endl;
+    }
 	HazardDetector::Config hazardCfg;
     HazardDetector hazardDetector(hazardCfg);
     HazardType lastPublishedHazard = HazardType::NONE;
@@ -138,7 +149,6 @@ int main() {
         tsr.setMainTsr(true);
         for (auto &d : detections) {
             kuksa.sendValueToKuksa("mobility_scenario.hazard.marker_id", d.marker_id);
-            // std::cout << "Dispatching trafficSign=" << d.trafficSign << std::endl;
             tsr.handleTrafficSign(d);
         hazardDetector.update(d);
         }
