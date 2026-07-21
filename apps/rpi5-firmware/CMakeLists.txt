@@ -8,6 +8,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(SOURCES
 	main.cpp
+	Tsr.cpp
+	Tsr.hpp
+	HazardDetector.hpp
+	HazardDetector.cpp
+	Utils.hpp
 )
 
 include_directories(
@@ -24,12 +29,14 @@ add_subdirectory(mode_manager)
 add_subdirectory(middleware)
 add_subdirectory(actuator)
 add_subdirectory(lkaControl)
+find_package(PahoMqttCpp REQUIRED)
 
 if(CMAKE_CROSSCOMPILING)
 	add_subdirectory(comms)
 	# Manual Car Executable
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
-	target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC comms mode middleware kuksa actuator lkaControl)
+	target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC comms mode middleware kuksa actuator lkaControl jsoncpp PahoMqttCpp::paho-mqttpp3)
+	install(TARGETS CarControl DESTINATION ${RPI_BIN_DIR})
 else()
 	if(BUILD_TESTS)
 		add_subdirectory(tests)

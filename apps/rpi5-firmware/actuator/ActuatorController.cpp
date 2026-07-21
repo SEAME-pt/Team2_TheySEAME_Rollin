@@ -47,7 +47,7 @@ void ActuatorController::setSpeedLimit(const int speedLimit) {
 
 void ActuatorController::setTrafficSign(const int trafficSign, const float distance) {
 	_car->setTrafficSign(trafficSign, distance);
-	std::cout << "Detected Traffic Sign " << trafficSign << " at distance " << distance << std::endl;
+	// std::cout << "Detected Traffic Sign " << trafficSign << " at distance " << distance << std::endl;
 }
 
 void ActuatorController::gear(const short gear) {
@@ -89,7 +89,6 @@ void ActuatorController::setAEb_Enabled(bool enabled) {
 
 void ActuatorController::trafficSign() {
     auto signs = _tsr->getDetectedSigns();
-
     for (const auto &sign : signs) {
         setTrafficSign(sign, _tsr->estimateDistance(_tsr->getLastDetection()));
     }
@@ -147,7 +146,7 @@ void ActuatorController::speedLimit() {
 }
 
 void ActuatorController::update(Subject *subj, Events event) {
-	std::cout << "Received notify " << event << " sub: " << subj << std::endl;
+	//std::cout << "Received notify " << event << " sub: " << subj << std::endl;
 	std::lock_guard<std::mutex> lock(_mutex);
 
 	if (subj == _remote) {
