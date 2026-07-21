@@ -515,43 +515,18 @@ Rectangle {
             NumberAnimation { duration: 320; easing.type: Easing.OutCubic }
         }
 
-        property real countdownProgress: 1.0
-
-        function restartCountdown() {
-            if (!systemInfo || !systemInfo.adasWarningTimed)
-                return
-            countdownProgress = 1.0
-            countdownAnim.stop()
-            countdownAnim.duration = Math.max(systemInfo.adasWarningRemainingMs, 250)
-            countdownAnim.from = 1.0
-            countdownAnim.to = 0.0
-            countdownAnim.start()
-        }
-
-        NumberAnimation on countdownProgress {
-            id: countdownAnim
-            duration: 12000
-            easing.type: Easing.Linear
-        }
-
-        Connections {
-            target: systemInfo
-            function onAdasWarningUpdated() {
-                if (systemInfo.adasWarningVisible)
-                    adasWarningNotification.restartCountdown()
-            }
-        }
-
-        onOpacityChanged: {
-            if (opacity > 0.99)
-                restartCountdown()
+        // Drive bar from backend remaining ms so it shrinks every poll (~100ms).
+        property real countdownProgress: {
+            if (!systemInfo || !systemInfo.adasWarningTimed || !systemInfo.adasWarningVisible)
+                return 0
+            return Math.max(0, Math.min(1, systemInfo.adasWarningRemainingMs / 3000.0))
         }
 
         Rectangle {
             anchors.fill: parent
             radius: 12
-            color: "#FFE18D"
-            border.color: "#47473f"
+            color: "#e1e1e1"
+            border.color: "#7aa854"
             border.width: 2
         }
 
@@ -581,7 +556,7 @@ Rectangle {
                     font.pixelSize: 22
                     font.family: "BaseNeueTrial-Bold"
                     font.bold: true
-                    color: "#47473f"
+                    color: "#7aa854"
                     wrapMode: Text.WordWrap
                     maximumLineCount: 2
                     elide: Text.ElideRight
@@ -589,17 +564,15 @@ Rectangle {
                 }
             }
 
-            Row {
+            Item {
                 width: parent.width
-                spacing: 10
+                height: 10
                 visible: systemInfo && systemInfo.adasWarningTimed
 
                 Rectangle {
-                    width: parent.width - 52
-                    height: 10
+                    anchors.fill: parent
                     radius: 2
-                    color: "#47473f"
-                    anchors.verticalCenter: parent.verticalCenter
+                    color: "#c8c8c8"
 
                     Rectangle {
                         anchors.left: parent.left
@@ -607,23 +580,12 @@ Rectangle {
                         anchors.bottom: parent.bottom
                         width: parent.width * adasWarningNotification.countdownProgress
                         radius: 2
-                        color: "#76b047"
-                    }
-                }
+                        color: "#7aa854"
 
-                Text {
-                    width: 42
-                    horizontalAlignment: Text.AlignRight
-                    text: {
-                        if (!systemInfo || !systemInfo.adasWarningTimed)
-                            return ""
-                        return Math.max(1, Math.ceil(systemInfo.adasWarningRemainingMs / 1000)) + "s"
+                        Behavior on width {
+                            NumberAnimation { duration: 120; easing.type: Easing.Linear }
+                        }
                     }
-                    font.pixelSize: 14
-                    font.family: "Inter"
-                    font.bold: true
-                    color: "#47473f"
-                    anchors.verticalCenter: parent.verticalCenter
                 }
             }
         }

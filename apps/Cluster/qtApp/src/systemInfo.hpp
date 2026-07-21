@@ -216,9 +216,9 @@ private:
     QString _pendingHazardMessage;
     std::chrono::steady_clock::time_point _pendingHazardExpires{};
     bool _wasNearHazard{false};
-    static constexpr int kMobilityHazardDurationMs = 12000;
+    static constexpr int kMobilityHazardDurationMs = 3000;
     static constexpr int kPendingHazardTtlMs = 10 * 60 * 1000; // remember crash for 10 min
-    static constexpr int kDefaultMarkerProximity = 1; // same or adjacent ArUco marker
+    static constexpr int kDefaultMarkerProximity = 3; // show popup within 3 markers of the hazard
     kuksaLib _kuksa;
     std::unique_ptr<MqttHazardClient> _mqttClient;
     std::thread _thread;
