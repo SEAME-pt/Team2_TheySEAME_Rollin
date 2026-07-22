@@ -26,7 +26,6 @@ MODEL_WIDTH = 640
 LANE_CLASS_ID = 0
 DEFAULT_MODELS_DIR = os.path.join(os.path.dirname(__file__), "trained_models")
 
-
 def _default_hef(name):
 	return os.path.join(DEFAULT_MODELS_DIR, name)
 
@@ -271,9 +270,6 @@ if __name__ == "__main__":
 				display = lane_segmentation(seg_post, seg_results, infer_engine, args, display)
 			if det_b == True:
 				display = detections(det_post, det_results, infer_engine, args, display, labels)
-
-			if frame_index % 15 == 0:
-				det_b = not det_b
 
             # Debug
 			if frame_index % args.debug_every == 0:
