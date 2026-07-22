@@ -43,19 +43,21 @@ void ActuatorController::gear(const short gear) {
 void ActuatorController::cruiseControl(const bool flag, const int inc) {
 	if (flag == false) {
 		_car->setCruiseControl(flag, 0);
+		_CCActive = false;
 		return;
 	}
-	if (_kuksa.getCcActive()) {
-		_car->setCruiseControl(flag, _kuksa.getCcTargetSpeed() + inc);
-		std::cout << "Target Speed to " << _kuksa.getCcTargetSpeed() << std::endl;
+	if (_CCActive == false) {
+		_car->setCruiseControl(flag, _lastCCSpeed + inc);
+		std::cout << "Target Speed to " << _lastCCSpeed + inc << std::endl;
+		_CCActive = flag;
 		return;
 	}
-	_car->setCruiseControl(flag, _kuksa.getSpeed());
-	std::cout << "Cruise Control Active to " << _kuksa.getSpeed() << std::endl;
+	_car->setCruiseControl(flag, _lastCCSpeed);
+	_CCActive = flag;
+	std::cout << "Cruise Control Active to " << _lastCCSpeed << std::endl;
 }
 
 void ActuatorController::brake(const bool flag) {
-	cruiseControl(false, 0);
 	_car->brake(flag);
 	std::cout << "Brake " << flag << std::endl;
 }

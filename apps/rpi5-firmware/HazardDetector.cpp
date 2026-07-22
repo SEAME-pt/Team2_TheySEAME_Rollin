@@ -35,6 +35,12 @@ void HazardDetector::update(const TsrHeader& det)
     track.framesDetected += 1;
     track.seenThisFrame = true;
     track.marker_id     = det.marker_id;
+    
+    if (isCarClass(mappedSign)) {
+        track.framesSinceLastDetection = 0;
+    } else {
+        track.framesSinceLastDetection++;
+    }
     return ;
 }
 
@@ -70,25 +76,32 @@ HazardResult HazardDetector::evaluate()
 
         // car
         if (isCarClass(cls)) {
-
             if (_ourMoving) {
-                if (shortTime) {
-                    result.hazard       = HazardType::STOPPED_CAR;
-                    result.triggerClass = cls;
-                    result.marker_id    = track.marker_id;;
+                const bool isCandidate = track.framesDetected >= _cfg.shortTimeFrames;
 
-                    return result;
-                }
-            } else {
-                if (longTime) {
-                    result.hazard       = HazardType::TWO_STOPPED_CARS;
-                    result.triggerClass = cls;
-                    result.marker_id    = track.marker_id;;
-
-                    return result;
+                if (isCandidate) {
+                    if (track.framesSinceLastDetection == 0) {
+                        if (track.framesDetected >= _cfg.shortTimeFrames + _cfg.confirmMoveFrames) {
+                            track.framesDetected = 0;
+                        }
+                    } else if (track.framesSinceLastDetection >= _cfg.lostFrames) {
+                        result.hazard        = HazardType::STOPPED_CAR;
+                        result.triggerClass  = cls;
+                        result.marker_id     = track.marker_id;
+                        return result;
+                    }
                 }
             }
         }
+            // else {
+            //     if (longTime) {
+            //         result.hazard       = HazardType::TWO_STOPPED_CARS;
+            //         result.triggerClass = cls;
+            //         result.marker_id    = track.marker_id;;
+
+            //         return result;
+            //     }
+            // }
     }
 
     return result;
@@ -98,13 +111,20 @@ void HazardDetector::endFrame()
 {
     for (auto it = _tracks.begin(); it != _tracks.end(); )
     {
-        if (!it->second.seenThisFrame)
-            it = _tracks.erase(it);
-        else
-        {
-            it->second.seenThisFrame = false;
-            ++it;
+        auto& track = it->second;
+
+        if (!track.seenThisFrame) {
+            track.framesSinceLastDetection++;
+
+            // só apaga depois de ultrapassar o período de graça
+            if (track.framesSinceLastDetection > _cfg.lostFrames) {
+                it = _tracks.erase(it);
+                continue;
+            }
+        } else {
+            track.seenThisFrame = false;
         }
+        ++it;
     }
     _framesSinceReset++;
 }

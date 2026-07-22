@@ -168,12 +168,6 @@ int main() {
 			} else if (hazard.hazard == HazardType::OBJECT_ON_TRACK) {
 				publish("stopped_obstacles", hazard.marker_id, mqtt);
 			}
-			else if (hazard.hazard == HazardType::TWO_STOPPED_CARS) {
-				publish("two_stopped_cars", hazard.marker_id, mqtt);
-			}
-            else if (hazard.hazard == HazardType::OUR_CAR_STOPPED) {
-                publish("stopped_car", hazard.marker_id, mqtt);
-            }
 
             lastPublishedHazard = hazard.hazard;
             lastPublishedMarkerId = hazard.marker_id;

@@ -20,6 +20,7 @@ enum class HazardType {
 struct DetectionTrack {
     TrafficSign signClass;
     int      framesDetected = 0;
+    int      framesSinceLastDetection = 0;
     bool     seenThisFrame = false;
     uint32_t marker_id = 0;
 };
@@ -40,6 +41,8 @@ public:
         int      minStableFrames    = 5;
         int      shortTimeFrames    = 20;
         int      longTimeFrames     = 60;
+        int      confirmMoveFrames = 40;
+        int      lostFrames = 40;
     };
 
     explicit HazardDetector(Config cfg);
