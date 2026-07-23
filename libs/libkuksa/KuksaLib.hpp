@@ -68,6 +68,9 @@ private:
     std::atomic<float> paObstacleDistanceFront{0.0f};
     std::atomic<float> paObstacleDistanceRear{0.0f};
 
+    //CSH
+    std::atomic<uint8_t> mobilityScenarioHazardCurrentMarkerId{0};
+
     std::string _server = "10.21.221.17:55555";
     std::thread _thread;
     std::shared_ptr<grpc::Channel> channel;
@@ -116,6 +119,7 @@ private:
     void setPaObstacleDistanceFront(float v);
     void setPaObstacleDistanceRear(float v);
 
+    void setMobilityScenarioHazardCurrentMarkerId(uint8_t v);
 public:
     kuksaLib();
     ~kuksaLib();
@@ -173,6 +177,8 @@ public:
     bool getPaActive() const { return paActive.load(); }
     float getPaObstacleDistanceFront() const { return paObstacleDistanceFront.load(); }
     float getPaObstacleDistanceRear() const { return paObstacleDistanceRear.load(); }
+
+    uint8_t getMobilityScenarioHazardCurrentMarkerId() const { return mobilityScenarioHazardCurrentMarkerId.load(); }
 };
 
 template<typename T>

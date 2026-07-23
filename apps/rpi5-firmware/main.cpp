@@ -95,6 +95,7 @@ void publish(const std::string& type, uint32_t marker_id, mqtt::async_client &mq
         auto msg = mqtt::make_message("/incidents", json);
         msg->set_qos(0);
         mqtt.publish(msg);
+        std::cout << "[MQTT] Published: " << type << " with marker_id: " << marker_id << std::endl;
     } catch (const mqtt::exception& e) {
         std::cerr << "[MQTT] Publish failed: " << e.what() << std::endl;
     }
@@ -135,7 +136,6 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
 
     detections.push_back(decode(raw));
     
-    
     TsrHeader decoded;
     for (int i = 1; i < numDetections; i++) {
         if (fread(&raw, sizeof(TsrHeader), 1, pipe) != 1) {
@@ -159,45 +159,62 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
 }
 
 void tsrThread(Tsr *tsr, kuksaLib *kuksa) {
-	mqtt::async_client mqtt("tcp://10.21.100.2:1883", "tsr_publisher");
+	mqtt::async_client mqtt("tcp://10.21.220.143:1883", "tsr_publisher");
     mqtt.connect();
 	HazardDetector::Config hazardCfg;
     HazardDetector hazardDetector(hazardCfg);
+    HazardType lastPublishedHazard = HazardType::NONE;
+    uint32_t lastPublishedMarkerId = 0;
     tsr->resetKuksa();
-	hazardDetector.setOurSpeed(kuksa->getSpeed());
     FILE *pipe = fopen("NamedPipeTsr", "r");
     if (pipe == NULL) {
         std::cout << "Failed to open NamedPipeTsr" << std::endl;
         return;
     }
-
+    
     std::cout << "NamedPipeTsr opened successfully" << std::endl;
-
+    HazardResult hazard;
     while (true) {
         std::vector<TsrHeader> detections;  
         readFromPipe(pipe, detections, frameCount, *tsr);
-
+        
         if (feof(pipe)) {
             std::cout << "Pipe EOF" << std::endl;
             break;
         }
         tsr->clearDetectedSigns();
+        hazardDetector.setOurSpeed(kuksa->getSpeed());
         for (auto &d : detections) {
+            kuksa->sendValueToKuksa("mobility_scenario.hazard.marker_id", d.marker_id);
             tsr->handleTrafficSign(d);
             hazardDetector.update(d);
         }
-		HazardResult hazard = hazardDetector.evaluate();
-		std::cout << "Hazard detected: " << static_cast<int>(hazard.hazard) << ", marker_id: " << hazard.marker_id << std::endl;
+        hazard = hazardDetector.evaluate();
         if (hazard.hazard != HazardType::NONE) {
+            bool isNewHazard = hazard.hazard != lastPublishedHazard || hazard.marker_id != lastPublishedMarkerId;
+            if (!isNewHazard) {
+                hazardDetector.endFrame();
+                tsr->tick();
+                continue;
+            }
+
             if (hazard.hazard == HazardType::STOPPED_CAR) {
 				publish("stopped_car", hazard.marker_id, mqtt);       
 			} else if (hazard.hazard == HazardType::OBJECT_ON_TRACK) {
-				std::cout << "Publishing object_on_track with marker_id: " << hazard.marker_id << std::endl;
 				publish("stopped_obstacles", hazard.marker_id, mqtt);
 			}
 			else if (hazard.hazard == HazardType::TWO_STOPPED_CARS) {
-				publish("stopped_car", hazard.marker_id, mqtt);
+				publish("two_stopped_cars", hazard.marker_id, mqtt);
 			}
+            else if (hazard.hazard == HazardType::OUR_CAR_STOPPED) {
+                publish("stopped_car", hazard.marker_id, mqtt);
+            }
+
+            lastPublishedHazard = hazard.hazard;
+            lastPublishedMarkerId = hazard.marker_id;
+        } else {
+            lastPublishedHazard = HazardType::NONE;
+            lastPublishedMarkerId = 0;
         }
 		hazardDetector.endFrame();
         tsr->tick();
