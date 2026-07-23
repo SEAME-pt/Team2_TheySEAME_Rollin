@@ -210,15 +210,23 @@ private:
     bool _mobilityHazardActive{false};
     QString _mobilityHazardMessage;
     std::chrono::steady_clock::time_point _mobilityHazardUntil{};
-    // Pending MQTT hazard (crash location); shown only when ego marker is close.
-    bool _pendingHazardValid{false};
-    int _pendingHazardMarkerId{-1};
-    QString _pendingHazardMessage;
-    std::chrono::steady_clock::time_point _pendingHazardExpires{};
-    bool _wasNearHazard{false};
+
+    struct PendingHazard {
+        bool valid{false};
+        int markerId{-1};
+        QString message;
+        std::chrono::steady_clock::time_point expires{};
+        bool wasNear{false};
+    };
+    // Remember the latest car hazard and the latest object hazard independently.
+    PendingHazard _pendingCar;
+    PendingHazard _pendingObject;
+
     static constexpr int kMobilityHazardDurationMs = 3000;
     static constexpr int kPendingHazardTtlMs = 10 * 60 * 1000; // remember crash for 10 min
-    static constexpr int kDefaultMarkerProximity = 3; // show popup within 3 markers of the hazard
+    // Warn when ego is 2..4 ArUco markers before/away from the hazard.
+    static constexpr int kHazardMarkersBeforeMin = 2;
+    static constexpr int kHazardMarkersBeforeMax = 4;
     kuksaLib _kuksa;
     std::unique_ptr<MqttHazardClient> _mqttClient;
     std::thread _thread;

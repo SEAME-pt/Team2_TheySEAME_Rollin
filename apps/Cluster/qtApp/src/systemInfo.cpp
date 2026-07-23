@@ -5,6 +5,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QStringList>
 
 systemInfo::systemInfo(QObject *parent)
     : QObject(parent)
@@ -143,10 +144,13 @@ QString topicToMobilityMessage(const std::string &topic)
     return hazardTypeToMessage(leaf);
 }
 
-QString parseMobilityPayload(const std::string &topic, const std::string &body, int *outMarkerId)
+QString parseMobilityPayload(const std::string &topic, const std::string &body,
+                             int *outMarkerId, QString *outType)
 {
     if (outMarkerId)
         *outMarkerId = -1;
+    if (outType)
+        outType->clear();
 
     const QByteArray raw = QByteArray::fromStdString(body);
     if (!raw.trimmed().isEmpty()) {
@@ -159,13 +163,16 @@ QString parseMobilityPayload(const std::string &topic, const std::string &body, 
                 if (outMarkerId && markerId >= 0)
                     *outMarkerId = markerId;
             }
+            const QString type = obj.value(QStringLiteral("type")).toString();
+            if (outType && !type.isEmpty())
+                *outType = type;
+
             const QString message = obj.value(QStringLiteral("message")).toString();
             if (!message.isEmpty())
                 return message;
             const QString description = obj.value(QStringLiteral("description")).toString();
             if (!description.isEmpty())
                 return description;
-            const QString type = obj.value(QStringLiteral("type")).toString();
             if (!type.isEmpty()) {
                 QString out = hazardTypeToMessage(type);
                 if (obj.contains(QStringLiteral("marker_id"))) {
@@ -182,6 +189,13 @@ QString parseMobilityPayload(const std::string &topic, const std::string &body, 
     return topicToMobilityMessage(topic);
 }
 
+bool isObjectHazardType(const QString &type)
+{
+    return type == QStringLiteral("stopped_obstacles")
+        || type.contains(QStringLiteral("obstacle"), Qt::CaseInsensitive)
+        || type.contains(QStringLiteral("object"), Qt::CaseInsensitive);
+}
+
 /** Circular distance on ArUco DICT_4X4_50 (ids 0..49). */
 int markerDistance(int a, int b)
 {
@@ -192,26 +206,39 @@ int markerDistance(int a, int b)
     return std::min(d, span - d);
 }
 
+/** True when ego is 2–4 markers before/away from the hazard. */
+bool isApproachingHazardWindow(int egoMarker, int hazardMarker, int minBefore, int maxBefore)
+{
+    if (egoMarker < 0 || hazardMarker < 0)
+        return false;
+    const int d = markerDistance(egoMarker, hazardMarker);
+    return d >= minBefore && d <= maxBefore;
+}
+
 } // namespace
 
 void systemInfo::handleMobilityMqttMessage(const std::string &topic, const std::string &body)
 {
     int hazardMarkerId = -1;
-    const QString message = parseMobilityPayload(topic, body, &hazardMarkerId);
+    QString hazardType;
+    const QString message = parseMobilityPayload(topic, body, &hazardMarkerId, &hazardType);
     if (message.isEmpty())
         return;
 
-    std::lock_guard<std::mutex> lock(_mobilityMutex);
-    _pendingHazardValid = true;
-    _pendingHazardMarkerId = hazardMarkerId;
-    _pendingHazardMessage = message;
-    _pendingHazardExpires = std::chrono::steady_clock::now()
-        + std::chrono::milliseconds(kPendingHazardTtlMs);
-    // Do not show yet — wait until ego ArUco marker is close.
-    _wasNearHazard = false;
-    _mobilityHazardActive = false;
+    const bool isObject = isObjectHazardType(hazardType);
 
-    qInfo() << "Mobility hazard pending at marker" << hazardMarkerId
+    std::lock_guard<std::mutex> lock(_mobilityMutex);
+    PendingHazard &slot = isObject ? _pendingObject : _pendingCar;
+    slot.valid = true;
+    slot.markerId = hazardMarkerId;
+    slot.message = message;
+    slot.expires = std::chrono::steady_clock::now()
+        + std::chrono::milliseconds(kPendingHazardTtlMs);
+    slot.wasNear = false;
+
+    qInfo() << "Mobility hazard pending"
+            << (isObject ? "object" : "car")
+            << "at marker" << hazardMarkerId
             << "ego marker" << _kuksa.getMobilityMarkerId()
             << "msg" << message;
 }
@@ -242,9 +269,12 @@ void systemInfo::updateAdasWarnings()
     const bool ldw = _kuksa.getLdwWarning();
     const bool bsd = _kuksa.getBsdWarning();
     const int egoMarker = _kuksa.getMobilityMarkerId();
-    const int proximity = qEnvironmentVariableIsSet("HAZARD_MARKER_PROXIMITY")
-        ? qgetenv("HAZARD_MARKER_PROXIMITY").toInt()
-        : kDefaultMarkerProximity;
+    const int minBefore = qEnvironmentVariableIsSet("HAZARD_MARKER_BEFORE_MIN")
+        ? qgetenv("HAZARD_MARKER_BEFORE_MIN").toInt()
+        : kHazardMarkersBeforeMin;
+    const int maxBefore = qEnvironmentVariableIsSet("HAZARD_MARKER_BEFORE_MAX")
+        ? qgetenv("HAZARD_MARKER_BEFORE_MAX").toInt()
+        : kHazardMarkersBeforeMax;
 
     bool mobilityActive = false;
     QString mobilityMessage;
@@ -252,44 +282,59 @@ void systemInfo::updateAdasWarnings()
         std::lock_guard<std::mutex> lock(_mobilityMutex);
         const auto now = std::chrono::steady_clock::now();
 
-        if (_pendingHazardValid && now >= _pendingHazardExpires) {
-            _pendingHazardValid = false;
-            _pendingHazardMessage.clear();
-            _pendingHazardMarkerId = -1;
-            _wasNearHazard = false;
-            _mobilityHazardActive = false;
-        }
+        auto expireSlot = [&](PendingHazard &slot) {
+            if (slot.valid && now >= slot.expires)
+                slot = {};
+        };
+        expireSlot(_pendingCar);
+        expireSlot(_pendingObject);
 
-        if (_pendingHazardValid) {
-            const bool near = (_pendingHazardMarkerId < 0)
-                ? true // no marker in MQTT → treat as global alert
-                : (egoMarker >= 0 && markerDistance(egoMarker, _pendingHazardMarkerId) <= proximity);
+        QStringList nearMessages;
+        bool enteredWindow = false;
 
+        auto consider = [&](PendingHazard &slot, const char *kind) {
+            if (!slot.valid)
+                return;
+            const bool near = (slot.markerId < 0)
+                ? true
+                : isApproachingHazardWindow(egoMarker, slot.markerId, minBefore, maxBefore);
             if (near) {
-                if (!_wasNearHazard) {
-                    // Just entered proximity — start popup countdown.
-                    _mobilityHazardActive = true;
-                    _mobilityHazardMessage = _pendingHazardMessage;
-                    _mobilityHazardUntil = now + std::chrono::milliseconds(kMobilityHazardDurationMs);
-                    ++_adasWarningEpoch;
-                    _wasNearHazard = true;
-                    qInfo() << "Mobility popup: ego marker" << egoMarker
-                            << "near hazard marker" << _pendingHazardMarkerId;
+                nearMessages.append(slot.message);
+                if (!slot.wasNear) {
+                    enteredWindow = true;
+                    qInfo() << "Mobility popup:" << kind << "ego marker" << egoMarker
+                            << "in 2-4 window before hazard marker" << slot.markerId
+                            << "dist" << markerDistance(egoMarker, slot.markerId);
                 }
+                slot.wasNear = true;
             } else {
-                // Still far from crash — keep pending, hide popup.
-                if (_wasNearHazard) {
-                    qInfo() << "Mobility popup cleared: ego" << egoMarker
-                            << "left hazard marker" << _pendingHazardMarkerId;
+                if (slot.wasNear) {
+                    qInfo() << "Mobility popup cleared:" << kind << "ego" << egoMarker
+                            << "left hazard window" << slot.markerId;
                 }
-                _wasNearHazard = false;
-                _mobilityHazardActive = false;
+                slot.wasNear = false;
             }
+        };
+        consider(_pendingCar, "car");
+        consider(_pendingObject, "object");
+
+        if (enteredWindow && !nearMessages.isEmpty()) {
+            _mobilityHazardActive = true;
+            _mobilityHazardMessage = nearMessages.join(QStringLiteral(" + "));
+            _mobilityHazardUntil = now + std::chrono::milliseconds(kMobilityHazardDurationMs);
+            ++_adasWarningEpoch;
+        } else if (nearMessages.isEmpty()) {
+            // Not near either pending hazard — hide active popup.
+            _mobilityHazardActive = false;
         }
 
         if (_mobilityHazardActive && now < _mobilityHazardUntil) {
             mobilityActive = true;
-            mobilityMessage = _mobilityHazardMessage;
+            // Prefer live combined text if still near both/one.
+            mobilityMessage = nearMessages.isEmpty() ? _mobilityHazardMessage
+                                                     : nearMessages.join(QStringLiteral(" + "));
+            if (!nearMessages.isEmpty())
+                _mobilityHazardMessage = mobilityMessage;
         } else if (_mobilityHazardActive) {
             // Countdown finished while still near — clear display but keep pending
             // until we leave the area (so we don't immediately re-trigger).
