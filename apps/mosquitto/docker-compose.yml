@@ -13,35 +13,5 @@ services:
       - ./mosquitto/log:/mosquitto/log
     restart: unless-stopped
 
-  postgres:
-    image: postgres:16
-    container_name: postgres
-    environment:
-      POSTGRES_USER: mqtt
-      POSTGRES_PASSWORD: mqtt_pass
-      POSTGRES_DB: mqtt_data
-    ports:
-      - "5433:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
-    restart: unless-stopped
-
-  bridge:
-    build: ./bridge
-    container_name: mqtt_pg_bridge
-    depends_on:
-      - mosquitto
-      - postgres
-    environment:
-      MQTT_HOST: mosquitto
-      MQTT_PORT: 1883
-      MQTT_TOPIC: "/incidents/#"
-      PG_HOST: postgres
-      PG_DB: mqtt_data
-      PG_USER: mqtt
-      PG_PASSWORD: mqtt_pass
-    restart: unless-stopped
-
 volumes:
   pgdata:
