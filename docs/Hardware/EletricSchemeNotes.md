@@ -1,5 +1,7 @@
 # Eletric Schemes Notes
 
+This notes closely follows the [Eletric Scheme](./EletricScheme.pdf)
+
 ## Color Table
 
 Here's the cable color codes and their respective color, used in the eletric scheme

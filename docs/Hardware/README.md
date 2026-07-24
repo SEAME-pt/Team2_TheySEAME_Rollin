@@ -15,6 +15,7 @@ which shows how the hardware is organized and connected.
 - [CANBUS](#Can-Controller-and-Transceiver)
 - [Cluster Display](#Cluster-Display)
 - [Sensors](#Sensors)
+- [Energy Exapnsion](#Energy-Expansion)
 
 ## PiRacer
 
@@ -104,7 +105,17 @@ It is connected via a DSI cable to the [Raspberry Pi 5](#Raspberry-Pi-5)
 
 This projects uses some sensors to gather information about the Car
 
-- Speedsensor: LM393 Sen-Speed
+- Speedsensor: LM393 Sen-Speed Helps to calculate the Car's velocity
+- Ultra Sonic: SRF08 Helps to know distances between the Car and an object
 
 Datasheet/Manual:
 - LM393 datasheet: https://www.onsemi.com/download/data-sheet/pdf/lm393-d.pdf
+- SRF08 manual: https://www.robot-electronics.co.uk/htm/srf08tech.html
+
+## Energy Expansion
+
+This project needed an energy expansion, for this we used
+
+- Step-Down: 9-36V Input, 5V 5A Output, USB port
+- 3 Li-Ion Batteries CAP 4800mAh
+
