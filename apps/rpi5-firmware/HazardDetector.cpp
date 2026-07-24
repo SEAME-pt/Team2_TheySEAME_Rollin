@@ -44,7 +44,6 @@ void HazardDetector::update(const TsrHeader& det)
     }
     else {
         track.framesSinceLastDetection++;
-        std::cout << "frames since last detection: " << track.framesSinceLastDetection << std::endl;
     }
     return ;
 }
@@ -81,7 +80,6 @@ HazardResult HazardDetector::evaluate()
 
         // car
         if (isCarClass(cls)) {
-            std::cout << "frames detected: " << track.framesDetected << std::endl;
             if (_ourMoving) {
                 if (track.framesDetected >= _cfg.longTimeFrames)
                     continue;
