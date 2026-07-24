@@ -11,15 +11,16 @@ struct TsrHeader;
 
 enum class HazardType {
     NONE,
-    STOPPED_CAR,        // moving + short detection time
-    TWO_STOPPED_CARS,   // stopped + long detection time
-    OUR_CAR_STOPPED,    // stopped
-    OBJECT_ON_TRACK,    // static object, center-left zone, stable frames
+    STOPPED_CAR,
+    TWO_STOPPED_CARS,
+    OUR_CAR_STOPPED,
+    OBJECT_ON_TRACK,
 };
 
 struct DetectionTrack {
     TrafficSign signClass;
     int      framesDetected = 0;
+    int      framesSinceLastDetection = 0;
     bool     seenThisFrame = false;
     uint32_t marker_id = 0;
 };
@@ -38,8 +39,10 @@ public:
         float    frameWidth         = 640.0f;
         float    minConfidence      = 0.45;
         int      minStableFrames    = 5;
-        int      shortTimeFrames    = 20;
+        int      shortTimeFrames    = 10;
         int      longTimeFrames     = 60;
+        int      confirmMoveFrames = 40;
+        int      lostFrames = 40;
     };
 
     explicit HazardDetector(Config cfg);
@@ -59,7 +62,7 @@ private:
     float  _ourSpeed       = 0.0f;
     bool   _ourMoving      = false;
     int    _framesSinceReset = 0;
-
+    int   _carTrustedFrames = 0;
     std::unordered_map<TrafficSign, DetectionTrack> _tracks;
 
     static bool isObjectClass(TrafficSign c);

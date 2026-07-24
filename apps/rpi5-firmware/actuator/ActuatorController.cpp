@@ -27,27 +27,9 @@ void ActuatorController::steering(const int angle) {
 void ActuatorController::throttle(const int throttle) {
 	if (_stopDetected)
 		return;
-	if (throttle < 0) {
-		gear(DRIVE);
-	} else if (throttle > 0) {
-		gear(REVERSE);
-	} else {
-		gear(NEUTRAL);
-	}
-	
-	cruiseControl(false, 0);
 	_currentThrottle = throttle;
 	_car->setThrottle(throttle);
 	std::cout << "Changed Throttle" << std::endl;
-}
-
-void ActuatorController::setSpeedLimit(const int speedLimit) {
-	_car->setSpeedLimit(speedLimit);
-}
-
-void ActuatorController::setTrafficSign(const int trafficSign, const float distance) {
-	_car->setTrafficSign(trafficSign, distance);
-	// std::cout << "Detected Traffic Sign " << trafficSign << " at distance " << distance << std::endl;
 }
 
 void ActuatorController::gear(const short gear) {
@@ -58,40 +40,34 @@ void ActuatorController::gear(const short gear) {
 void ActuatorController::cruiseControl(const bool flag, const int inc) {
 	if (flag == false) {
 		_car->setCruiseControl(flag, 0);
+		_CCActive = false;
 		return;
 	}
-	if (_kuksa.getCcActive()) {
-		_car->setCruiseControl(flag, _kuksa.getCcTargetSpeed() + inc);
-		std::cout << "Target Speed to " << _kuksa.getCcTargetSpeed() << std::endl;
+	if (_CCActive == false) {
+		_car->setCruiseControl(flag, _lastCCSpeed + inc);
+		std::cout << "Target Speed to " << _lastCCSpeed + inc << std::endl;
+		_CCActive = flag;
 		return;
 	}
-	_car->setCruiseControl(flag, _kuksa.getSpeed());
-	std::cout << "Cruise Control Active to " << _kuksa.getSpeed() << std::endl;
-	_car->setCruiseControl(true, 15);
+	_car->setCruiseControl(flag, _lastCCSpeed);
+	_CCActive = flag;
+	std::cout << "Cruise Control Active to " << _lastCCSpeed << std::endl;
 }
 
 void ActuatorController::brake(const bool flag) {
-	cruiseControl(false, 0);
 	_car->brake(flag);
 	std::cout << "Brake " << flag << std::endl;
 }
 
-void ActuatorController::setAEb_Enabled(bool enabled) {
-	if (_kuksa.getAebEnabled() != enabled) {
-		enabled = true;
-	}
-	else {
-		enabled = false;
-	}
-	_car->setAEb_Enabled(enabled);
-	std::cout << "AEB " << enabled << std::endl;
-}
-
 void ActuatorController::trafficSign() {
-    auto signs = _tsr->getDetectedSigns();
-    for (const auto &sign : signs) {
-        setTrafficSign(sign, _tsr->estimateDistance(_tsr->getLastDetection()));
-    }
+	auto signs = _tsr->getDetectedSigns();
+	
+	if (&_kuksa) {
+		for (const auto &sign : signs) {
+			if (sign <= 15)
+				_kuksa.sendValueToKuksa("Vehicle.ADAS.TrafficSignRecognition.DetectedSignType", static_cast<uint8_t>(sign));
+		}
+	}
 
     bool stopDetected = std::find(signs.begin(), signs.end(),
         static_cast<uint16_t>(TrafficSign::STOP)) != signs.end();
@@ -100,9 +76,10 @@ void ActuatorController::trafficSign() {
 
     if (stopDetected && stopDist != -1 && stopDist < 70.0f 
         && !_stopCooldown && !_stopDetected) {
-        brake(true);
-        throttle(0);
-
+		if (_tsr->getMainTsr() == false) {
+        	brake(true);
+        	throttle(0);
+		}
         _stopDetected = true;
         _stopBrakeFrames = 0;
     }
@@ -111,7 +88,9 @@ void ActuatorController::trafficSign() {
         _stopBrakeFrames++;
 
         if (_stopBrakeFrames >= STOP_BRAKE_FRAMES) {
-            brake(false);
+			if (_tsr->getMainTsr() == false) {
+				brake(false);
+			}
             _stopDetected = false;
 
             _stopCooldown = true;
@@ -126,30 +105,33 @@ void ActuatorController::trafficSign() {
             _stopCooldown = false;
         }
     }
+
 }
 
 void ActuatorController::speedLimit() {
     int currentLimit = _tsr->getSpeedLimit();
-
-    if (_lastSpeedLimit == 80 && currentLimit == 50) {
-        if (!_reduceSpeed) {
-            throttle(_currentThrottle * 0.75f);
-            _reduceSpeed = true;
-        } else {
-            throttle(_currentThrottle);
-            _reduceSpeed = false;
-        }
-    }
-
+	if (_tsr->getMainTsr() == false) {
+		if (_lastSpeedLimit == 80 && currentLimit == 50) {
+			if (!_reduceSpeed) {
+				throttle(_currentThrottle * 0.75f);
+				_reduceSpeed = true;
+			} else {
+				throttle(_currentThrottle);
+				_reduceSpeed = false;
+			}
+		}
+	}
     _lastSpeedLimit = currentLimit;
-    setSpeedLimit(currentLimit);
+    _kuksa.sendValueToKuksa("Vehicle.ADAS.TrafficSignRecognition.DetectedSpeedLimit", static_cast<float>(currentLimit));
 }
 
 void ActuatorController::update(Subject *subj, Events event) {
 	//std::cout << "Received notify " << event << " sub: " << subj << std::endl;
 	std::lock_guard<std::mutex> lock(_mutex);
-
-	if (subj == _remote) {
+	std::vector<uint16_t> signs;
+	bool stopDetected = false;
+	float stopDist = -1;
+	if (_remote != nullptr && subj == _remote) {
 		switch (event) {
 			case Events::CAR_THROTTLE:
 				throttle(processThrottle(_remote->getkey(Keys::JoyY)));
@@ -179,7 +161,8 @@ void ActuatorController::update(Subject *subj, Events event) {
 				}
 				break;
 			case Events::CAR_AEB_ENABLED:
-				setAEb_Enabled(_remote->getkey(Keys::DpadX));
+				if (_remote->getkey(Keys::DpadX) == -1)
+					setAEb_Enabled(_remote->getkey(Keys::DpadX));
 				break;
 			default:
 				break;
@@ -207,6 +190,18 @@ void ActuatorController::update(Subject *subj, Events event) {
 				break;
 		}
 	}
+}
+
+void ActuatorController::setAEb_Enabled(bool enabled) {
+	(void)enabled;
+	if (_aebEnabled == false) {
+		_aebEnabled = true;
+	}
+	else {
+		_aebEnabled = false;
+	}
+	_car->setAEb_Enabled(_aebEnabled);
+	std::cout << "AEB " << _aebEnabled << std::endl;
 }
 
 void ActuatorController::test() {

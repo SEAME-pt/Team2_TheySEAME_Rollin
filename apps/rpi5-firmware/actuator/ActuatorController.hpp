@@ -18,8 +18,6 @@ public:
 	~ActuatorController();
 
 	void update(Subject *subj, Events event);
-	void setSpeedLimit(const int speedLimit);
-	void setTrafficSign(const int trafficSign, const float distance);
 	void test();
 	void throttle(const int throttle);
 
@@ -52,6 +50,9 @@ private:
 	int _stopBrakeFrames = 0;
 	int _stopCooldownFrames = 0;
 	bool _stopCooldown = false;
+	int _lastCCSpeed = 30;
+	bool _CCActive = false;
+	bool _aebEnabled = true;
 	static const int STOP_BRAKE_FRAMES = 60;
 	static const int STOP_COOLDOWN_FRAMES = 90;
 };
