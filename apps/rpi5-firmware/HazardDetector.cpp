@@ -36,10 +36,15 @@ void HazardDetector::update(const TsrHeader& det)
     track.seenThisFrame = true;
     track.marker_id     = det.marker_id;
     
-    if (isCarClass(mappedSign)) {
+    if (isCarClass(mappedSign))
+        _carTrustedFrames++;
+    if (_carTrustedFrames > 2) {
         track.framesSinceLastDetection = 0;
-    } else {
+        _carTrustedFrames = 0;
+    }
+    else {
         track.framesSinceLastDetection++;
+        std::cout << "frames since last detection: " << track.framesSinceLastDetection << std::endl;
     }
     return ;
 }
@@ -76,7 +81,10 @@ HazardResult HazardDetector::evaluate()
 
         // car
         if (isCarClass(cls)) {
+            std::cout << "frames detected: " << track.framesDetected << std::endl;
             if (_ourMoving) {
+                if (track.framesDetected >= _cfg.longTimeFrames)
+                    continue;
                 const bool isCandidate = track.framesDetected >= _cfg.shortTimeFrames;
 
                 if (isCandidate) {

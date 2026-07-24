@@ -159,12 +159,6 @@ void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCoun
 }
 
 void tsrThread(Tsr *tsr, kuksaLib *kuksa) {
-	mqtt::async_client mqtt("tcp://10.21.100.3:1883", "tsr_publisher");
-    mqtt.connect();
-	HazardDetector::Config hazardCfg;
-    HazardDetector hazardDetector(hazardCfg);
-    HazardType lastPublishedHazard = HazardType::NONE;
-    uint32_t lastPublishedMarkerId = 0;
     tsr->resetKuksa();
     FILE *pipe = fopen("NamedPipeTsr", "r");
     if (pipe == NULL) {
@@ -173,7 +167,6 @@ void tsrThread(Tsr *tsr, kuksaLib *kuksa) {
     }
     
     std::cout << "NamedPipeTsr opened successfully" << std::endl;
-    HazardResult hazard;
     while (true) {
         std::vector<TsrHeader> detections;  
         readFromPipe(pipe, detections, frameCount, *tsr);
@@ -183,40 +176,9 @@ void tsrThread(Tsr *tsr, kuksaLib *kuksa) {
             break;
         }
         tsr->clearDetectedSigns();
-        hazardDetector.setOurSpeed(kuksa->getSpeed());
         for (auto &d : detections) {
-            kuksa->sendValueToKuksa("mobility_scenario.hazard.marker_id", d.marker_id);
             tsr->handleTrafficSign(d);
-            hazardDetector.update(d);
         }
-        hazard = hazardDetector.evaluate();
-        if (hazard.hazard != HazardType::NONE) {
-            bool isNewHazard = hazard.hazard != lastPublishedHazard || hazard.marker_id != lastPublishedMarkerId;
-            if (!isNewHazard) {
-                hazardDetector.endFrame();
-                tsr->tick();
-                continue;
-            }
-
-            if (hazard.hazard == HazardType::STOPPED_CAR) {
-				publish("stopped_car", hazard.marker_id, mqtt);       
-			} else if (hazard.hazard == HazardType::OBJECT_ON_TRACK) {
-				publish("stopped_obstacles", hazard.marker_id, mqtt);
-			}
-			else if (hazard.hazard == HazardType::TWO_STOPPED_CARS) {
-				publish("two_stopped_cars", hazard.marker_id, mqtt);
-			}
-            else if (hazard.hazard == HazardType::OUR_CAR_STOPPED) {
-                publish("stopped_car", hazard.marker_id, mqtt);
-            }
-
-            lastPublishedHazard = hazard.hazard;
-            lastPublishedMarkerId = hazard.marker_id;
-        } else {
-            lastPublishedHazard = HazardType::NONE;
-            lastPublishedMarkerId = 0;
-        }
-		hazardDetector.endFrame();
         tsr->tick();
     }
 

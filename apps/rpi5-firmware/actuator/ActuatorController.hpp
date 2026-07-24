@@ -46,6 +46,7 @@ private:
 	bool _stopCooldown = false;
 	int _lastCCSpeed = 30;
 	bool _CCActive = false;
+	bool _aebEnabled = true;
 	static const int STOP_BRAKE_FRAMES = 60;
 	static const int STOP_COOLDOWN_FRAMES = 90;
 };

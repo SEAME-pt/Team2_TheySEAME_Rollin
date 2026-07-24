@@ -39,7 +39,7 @@ public:
         float    frameWidth         = 640.0f;
         float    minConfidence      = 0.45;
         int      minStableFrames    = 5;
-        int      shortTimeFrames    = 20;
+        int      shortTimeFrames    = 10;
         int      longTimeFrames     = 60;
         int      confirmMoveFrames = 40;
         int      lostFrames = 40;
@@ -62,7 +62,7 @@ private:
     float  _ourSpeed       = 0.0f;
     bool   _ourMoving      = false;
     int    _framesSinceReset = 0;
-
+    int   _carTrustedFrames = 0;
     std::unordered_map<TrafficSign, DetectionTrack> _tracks;
 
     static bool isObjectClass(TrafficSign c);

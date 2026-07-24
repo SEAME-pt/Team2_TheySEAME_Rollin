@@ -163,7 +163,8 @@ void ActuatorController::update(Subject *subj, Events event) {
 				}
 				break;
 			case Events::CAR_AEB_ENABLED:
-				setAEb_Enabled(_remote->getkey(Keys::DpadX));
+				if (_remote->getkey(Keys::DpadX) == -1)
+					setAEb_Enabled(_remote->getkey(Keys::DpadX));
 				break;
 			default:
 				std::cout << "No event" << std::endl;
@@ -187,14 +188,14 @@ void ActuatorController::update(Subject *subj, Events event) {
 }
 
 void ActuatorController::setAEb_Enabled(bool enabled) {
-	if (_kuksa.getAebEnabled() != enabled) {
-		enabled = true;
+	if (_aebEnabled == false) {
+		_aebEnabled = true;
 	}
 	else {
-		enabled = false;
+		_aebEnabled = false;
 	}
-	_car->setAEb_Enabled(enabled);
-	std::cout << "AEB " << enabled << std::endl;
+	_car->setAEb_Enabled(_aebEnabled);
+	std::cout << "AEB " << _aebEnabled << std::endl;
 }
 
 void ActuatorController::test() {
