@@ -11,10 +11,10 @@ struct TsrHeader;
 
 enum class HazardType {
     NONE,
-    STOPPED_CAR,        // moving + short detection time
-    TWO_STOPPED_CARS,   // stopped + long detection time
-    OUR_CAR_STOPPED,    // stopped
-    OBJECT_ON_TRACK,    // static object, center-left zone, stable frames
+    STOPPED_CAR,
+    TWO_STOPPED_CARS,
+    OUR_CAR_STOPPED,
+    OBJECT_ON_TRACK,
 };
 
 struct DetectionTrack {

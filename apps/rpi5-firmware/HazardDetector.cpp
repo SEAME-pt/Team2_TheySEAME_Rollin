@@ -122,7 +122,6 @@ void HazardDetector::endFrame()
         if (!track.seenThisFrame) {
             track.framesSinceLastDetection++;
 
-            // só apaga depois de ultrapassar o período de graça
             if (track.framesSinceLastDetection > _cfg.lostFrames) {
                 it = _tracks.erase(it);
                 continue;

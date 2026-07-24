@@ -188,6 +188,7 @@ void ActuatorController::update(Subject *subj, Events event) {
 }
 
 void ActuatorController::setAEb_Enabled(bool enabled) {
+	(void)enabled;
 	if (_aebEnabled == false) {
 		_aebEnabled = true;
 	}
