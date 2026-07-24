@@ -22,13 +22,6 @@ enum class TrafficSign : int {
     OBJECT = 17
 };
 
-struct FrameHeader {
-	uint32_t frameNbr;
-	uint16_t heigth;
-	uint16_t width;
-	float laneScore;
-};
-
 struct TsrHeader {
     uint32_t	frameNbr;
     uint16_t	numDetections;

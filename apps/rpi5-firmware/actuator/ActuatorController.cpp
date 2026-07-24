@@ -3,33 +3,30 @@
 #include <algorithm>
 #include <cmath>
 
-ActuatorController::ActuatorController(CarActuator *car, RemoteControl *remote, Lka *lka, kuksaLib &kuksa, Tsr *tsr) : _car(car), _remote(remote), _lka(lka), _tsr(tsr), _kuksa(kuksa) {
+ActuatorController::ActuatorController(CarActuator *car, RemoteControl *remote, LkaControl *lkaCtrl, kuksaLib &kuksa, Tsr *tsr) : _car(car), _remote(remote), _pp(lkaCtrl), _tsr(tsr), _kuksa(kuksa) {
 }
 
-ActuatorController::~ActuatorController() {}
+ActuatorController::~ActuatorController() {
+}
 
 int ActuatorController::processThrottle(const int rawThrottle) {
 	return ((rawThrottle - 127) / 1.9);
 }
 
 int ActuatorController::processSteering(const int rawSteering) {
-	//int angle = std::clamp(((rawSteering - 127) / 1.27), -30.0, 30.0);
 	return (((rawSteering - 127) / 1.27));
 }
 
 void ActuatorController::steering(const int angle) {
 	const int steering = std::clamp(angle, -30, 30);
-	//if (steering == _kuksa.getSteering()) {
-	//	return;
-	//}
+
+	std::cout << "Angle: " << steering << " " << _car << std::endl;
 	_car->setSteering(steering);
-	std::cout << "Changed Steering " << steering << std::endl;
 }
 
 void ActuatorController::throttle(const int throttle) {
 	if (_stopDetected)
 		return;
-
 	_currentThrottle = throttle;
 	_car->setThrottle(throttle);
 	std::cout << "Changed Throttle" << std::endl;
@@ -129,6 +126,7 @@ void ActuatorController::speedLimit() {
 }
 
 void ActuatorController::update(Subject *subj, Events event) {
+	//std::cout << "Received notify " << event << " sub: " << subj << std::endl;
 	std::lock_guard<std::mutex> lock(_mutex);
 	std::vector<uint16_t> signs;
 	bool stopDetected = false;
@@ -167,7 +165,6 @@ void ActuatorController::update(Subject *subj, Events event) {
 					setAEb_Enabled(_remote->getkey(Keys::DpadX));
 				break;
 			default:
-				std::cout << "No event" << std::endl;
 				break;
 		}
 	} else if (_tsr != nullptr && subj == _tsr) {
@@ -181,9 +178,17 @@ void ActuatorController::update(Subject *subj, Events event) {
 			default:
 				break;
 		}
-	} else {
-		steering(_lka->getAngle());
-		throttle((-20));
+	} else if (subj == _pp) {
+		switch (event) {
+			case Events::CAR_THROTTLE:
+				throttle(-18);
+				break;
+			case Events::CAR_STEERING:
+				steering(_pp->getAngle());
+				break;
+			default:
+				break;
+		}
 	}
 }
 

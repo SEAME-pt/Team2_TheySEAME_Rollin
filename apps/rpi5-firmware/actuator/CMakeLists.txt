@@ -12,9 +12,19 @@ set(SOURCES
     ActuatorDecorator.hpp
     ActuatorKuksa.cpp
     ActuatorKuksa.hpp
+	pythonActuator.cpp
+	Bridge.cpp
+	Bridge.hpp
+	../Tsr.hpp
+	../Tsr.cpp
 )
 
-add_library(actuator STATIC ${SOURCES})
-target_include_directories(actuator PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(actuator PRIVATE kuksa comms mode middleware)
+add_library(actuator SHARED ${SOURCES})
+set_target_properties(actuator PROPERTIES PREFIX "")
+target_include_directories(actuator PUBLIC
+	${SDK_PATH}/sysroots/aarch64-agl-linux/usr/include/python3.12/
+	${SDK_PATH}/sysroots/aarch64-agl-linux/usr/include/boost/
+	${CMAKE_CURRENT_SOURCE_DIR}
+)
+target_link_libraries(actuator PRIVATE kuksa comms mode middleware lkaControl boost_python312 python3.12)
 

@@ -3,35 +3,41 @@
 #include "Observer.hpp"
 #include "CarActuator.hpp"
 #include "RemoteControl.hpp"
+#include "LkaControl.hpp"
 #include "KuksaLib.hpp"
-#include "Lka.hpp"
 #include "Tsr.hpp"
+
+#include "CAN.hpp"
+#include "ActuatorCAN.hpp"
 
 class ActuatorController : public Observer {
 public:
 
-	ActuatorController(CarActuator *_car, RemoteControl *remote, Lka *lka, kuksaLib &kuksa, Tsr *tsr);
+	//ActuatorController(CarActuator *car, RemoteControl *remote, LkaControl *lka);
+	ActuatorController(CarActuator *_car, RemoteControl *remote, LkaControl *lkaCtrl, kuksaLib &kuksa, Tsr *tsr);
 	~ActuatorController();
 
 	void update(Subject *subj, Events event);
 	void test();
+	void throttle(const int throttle);
 
 private:
 
 	int processThrottle(const int rawThrottle);
 	int processSteering(const int rawSteering);
 	void steering(const int angle);
-	void throttle(const int throttle);
 	void gear(const short gear);
 	void cruiseControl(const bool flag, const int targetSpeed);
 	void brake(const bool flag);
 	void setAEb_Enabled(bool enabled);
+
+
 	void trafficSign();
 	void speedLimit();
 	
 	CarActuator *_car;
 	RemoteControl *_remote;
-	Lka *_lka;
+	LkaControl *_pp;
 	Tsr *_tsr;
 	kuksaLib &_kuksa;
 

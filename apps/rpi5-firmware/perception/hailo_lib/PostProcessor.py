@@ -116,12 +116,28 @@ def class_aware_nms(boxes, scores, classes, iou_th=0.5, class_iou_ths=None):
 
 class PostProcessor:
 
-		def __init__(self, input_size=(640, 640), strides=(8, 16, 32), model_name="self.model_name"):
+		def __init__(
+			self,
+			input_size=(640, 640),
+			strides=(8, 16, 32),
+			model_name="yolov8s_seg",
+			temporal_alpha=0.15,
+			morph_close_size=9,
+			morph_open_size=3,
+	):
 				self.input_size = input_size
 				self.strides = strides
 				self.model_name = model_name
+				self.temporal_alpha = temporal_alpha
+				self._mask_ema = None
+				self._morph_close = cv2.getStructuringElement(
+						cv2.MORPH_ELLIPSE, (morph_close_size, morph_close_size)
+				)
+				self._morph_open = cv2.getStructuringElement(
+						cv2.MORPH_ELLIPSE, (morph_open_size, morph_open_size)
+				)
 
-		def decode(self, outputs, quant_params, conf_th=0.3, iou_th=0.5):
+		def decode(self, outputs, quant_params, conf_th=0.3, iou_th=0.4):
 
 				# ---------------------------
 				# Dequantize all tensors
@@ -188,12 +204,19 @@ class PostProcessor:
 						all_scales.extend([stride] * int(np.count_nonzero(mask)))
 
 				if len(all_boxes) == 0:
+						if self._mask_ema is not None:
+								self._mask_ema = (1.0 - self.temporal_alpha) * self._mask_ema
+								stable_mask = (self._mask_ema > 0.5).astype(np.uint8)
+								stable_mask = cv2.morphologyEx(stable_mask, cv2.MORPH_OPEN, self._morph_open)
+								stable_mask = cv2.morphologyEx(stable_mask, cv2.MORPH_CLOSE, self._morph_close)
+						else:
+								stable_mask = None
 						return {
 								"boxes": np.empty((0, 4), dtype=np.float32),
 								"score": 0.0,
 								"scale": None,
 								"classes": np.empty((0,), dtype=np.int32),
-								"mask": None,
+								"mask": stable_mask,
 								"masks": [],
 						}
 
@@ -228,28 +251,50 @@ class PostProcessor:
 				proto = proto.astype(np.float32)
 
 				masks = []
+				masks_float = []
+
 				for i in range(len(boxes)):
 						m = np.tensordot(proto, coeffs[i], axes=([2], [0]))
 						m = sigmoid(m)
-
 						m = cv2.resize(m, self.input_size[::-1])
-						m = (m > 0.5).astype(np.uint8)
 
-						# crop to box
 						x1, y1, x2, y2 = boxes[i].astype(int)
-						cropped = np.zeros_like(m)
-						cropped[y1:y2, x1:x2] = m[y1:y2, x1:x2]
+						m_cropped_float = np.zeros(self.input_size, dtype=np.float32)
+						m_cropped_float[y1:y2, x1:x2] = m[y1:y2, x1:x2]
+						masks_float.append(m_cropped_float)
 
+						cropped = (m_cropped_float > 0.5).astype(np.uint8)
 						masks.append(cropped)
+
+				if masks_float:
+						combined_float = np.max(np.stack(masks_float, axis=0), axis=0)
+				else:
+						combined_float = np.zeros(self.input_size, dtype=np.float32)
+
+				if self._mask_ema is None or self._mask_ema.shape != combined_float.shape:
+						self._mask_ema = combined_float.copy()
+				else:
+						self._mask_ema = (
+								self.temporal_alpha * combined_float
+								+ (1.0 - self.temporal_alpha) * self._mask_ema
+						)
+
+				stable_mask = (self._mask_ema > 0.5).astype(np.uint8)
+				stable_mask = cv2.morphologyEx(stable_mask, cv2.MORPH_OPEN, self._morph_open)
+				stable_mask = cv2.morphologyEx(stable_mask, cv2.MORPH_CLOSE, self._morph_close)
 
 				return {
 						"boxes": boxes,
 						"scores": scores,
 						"scales": scales,
 						"classes": classes,
-						"mask": masks[0] if masks else None,
+						"mask": stable_mask,
 						"masks": masks,
 				}
+
+		def reset(self):
+				"""Clear EMA state — call when the camera stream restarts."""
+				self._mask_ema = None
 
 		def render_segmentation_mask(self, mask, base_frame=None, color=(0, 255, 0), alpha=0.8):
 				if mask is None:
