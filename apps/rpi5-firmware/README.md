@@ -30,19 +30,30 @@ There's the **Manual Driving** (Remote Control) and the **Automatic Driving** (L
 6. Run the binary in the RPI5 ```./<target-path>/<binary-file>```
 
 ### Automatic Driving Binary (LKA)
-The next step is only needed if the **lkaControl** and **actuator** files were altered. If not, the next step is not needed
+The next step is only needed if the **lkaControl** and **actuator** files were altered or it is the first time doing this.
+If not, the next step is not needed
 
 6. For the LKA (Lane-keep-Assist) to work, it is needed to copy the **lkaControl/lkaControl.so** and 
-**actuator/actuator.so** file into the TARGET (RPI5) in the same directory where the python command is run.
+**actuator/actuator.so** file into the TARGET (RPI5) to the **perception/** directory
 This files are found under the CMake build directory after compilation
 
-```
-scp lkaControl/lkaControl.so actuator/actuator.so <user>@<ip>:<target-path>
+```bash
+scp lkaControl/lkaControl.so actuator/actuator.so <user>@<ip>:<target-path>/perception
 ```
 
-The LKA is run throught the python script
+7. Go to the perception directory and run the python script
 
-7. ```python3 run_ai_pipeline.py --enable-lka```
+```bash
+cd perception/
+python3 run_ai_pipeline.py --enable-lka
+```
+
+8. Also run this command to make the car move foward
+
+```bash
+cansend can0 101#03
+cansend can0 100#0F
+```
 
 ## Python Bindings
 
