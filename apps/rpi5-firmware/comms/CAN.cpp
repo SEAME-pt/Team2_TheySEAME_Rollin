@@ -34,7 +34,7 @@ int CAN::setMode(unsigned int modeToControl, unsigned int modeToTurnOn) {
 	struct can_ctrlmode canMode;
 
 	canMode.mask = modeToControl;
-	canMode.flags = modeToControl;
+	canMode.flags = modeToTurnOn;
 	return (can_set_ctrlmode(_interface.c_str(), &canMode));
 }
 
@@ -98,6 +98,7 @@ int CAN::openSocket() {
 	struct sockaddr_can addr;
 	struct ifreq ifr;
 
+	std::memset(&addr, 0, sizeof(addr));
 	if (can_do_start(_interface.c_str()) < 0) {
 		return (-1);
 	}

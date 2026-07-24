@@ -2,5 +2,8 @@
 build/
 .cache
 
+# Python
 __pycache__
-.un~
+
+# Vim
+*.un~

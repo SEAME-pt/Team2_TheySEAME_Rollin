@@ -13,7 +13,7 @@ from hailo_platform import (
 )
 
 CAM_HEIGHT = 640
-CAM_WIDTH = 640
+CAM_WIDTH =640
 MODEL_HEIGHT = 640
 MODEL_WIDTH = 640
 
