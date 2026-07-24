@@ -3,7 +3,7 @@
 This script installs the dependecies needed in the Host PC to compile code under the rpi5-firmware directory
 
 These are the deps:
-- Protobuf v25.8
+- Protobuf v4.25.8
 - gRPC v1.60.1
 
 Any previous installation of these 2 packages could make conflicts whenever using this script.

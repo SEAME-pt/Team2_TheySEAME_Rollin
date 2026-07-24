@@ -1,4 +1,4 @@
-# Install Protobuf 25.8
+# Install Protobuf 4.25.8
 git clone -b v25.8 --recurse-submodules git@github.com:protocolbuffers/protobuf.git
 
 cd protobuf && mkdir -p build && cd build
