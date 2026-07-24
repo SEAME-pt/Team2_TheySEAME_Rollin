@@ -27,6 +27,10 @@ Rectangle {
     readonly property real laneCenterX: 0
     readonly property real laneLeftX: -320
     readonly property real laneRightX: 320
+    // Depth travel for detected cars (distance percent: 100=near, 0=far).
+    // Wide Z span so range changes read as motion, not only scale.
+    readonly property real detectedCarZNear: 280
+    readonly property real detectedCarZSpan: 1380 // near→far delta (far ≈ -1100)
 
     // Preview mode properties for generalInfo (date/time/weather)
     property string previewDate: "19/03/2026"
@@ -331,13 +335,13 @@ Rectangle {
             visible: systemInfo && systemInfo.frontCarVisible
             x: systemInfo ? (systemInfo.frontCarLateral * rectangle.laneSpanX) : rectangle.laneCenterX
             y: rectangle.detectedCarY
-            z: systemInfo ? (-100 - (100 - systemInfo.frontCarDistance) * 4) : -500
+            z: systemInfo ? (rectangle.detectedCarZNear - (100 - systemInfo.frontCarDistance) * (rectangle.detectedCarZSpan / 100.0)) : rectangle.detectedCarZNear
             carOrientation: systemInfo ? systemInfo.frontCarOrientation : 180
-            sizeScale: systemInfo ? (0.45 + 0.75 * (systemInfo.frontCarDistance / 100.0)) : 1.0
+            sizeScale: systemInfo ? (0.62 + 0.48 * (systemInfo.frontCarDistance / 100.0)) : 1.0
             bodyColor: "#4e79a7"
 
             Behavior on x { NumberAnimation { duration: 220; easing.type: Easing.InOutQuad } }
-            Behavior on z { NumberAnimation { duration: 280; easing.type: Easing.InOutQuad } }
+            Behavior on z { NumberAnimation { duration: 320; easing.type: Easing.InOutQuad } }
         }
 
         DetectedCar3D {
@@ -345,13 +349,13 @@ Rectangle {
             visible: systemInfo && systemInfo.leftCarVisible
             x: systemInfo ? (systemInfo.leftCarLateral * rectangle.laneSpanX) : rectangle.laneLeftX
             y: rectangle.detectedCarY
-            z: systemInfo ? (-100 - (100 - systemInfo.leftCarDistance) * 4) : -500
+            z: systemInfo ? (rectangle.detectedCarZNear - (100 - systemInfo.leftCarDistance) * (rectangle.detectedCarZSpan / 100.0)) : rectangle.detectedCarZNear
             carOrientation: systemInfo ? systemInfo.leftCarOrientation : 180
-            sizeScale: systemInfo ? (0.45 + 0.75 * (systemInfo.leftCarDistance / 100.0)) : 1.0
+            sizeScale: systemInfo ? (0.62 + 0.48 * (systemInfo.leftCarDistance / 100.0)) : 1.0
             bodyColor: "#4e79a7"
 
             Behavior on x { NumberAnimation { duration: 220; easing.type: Easing.InOutQuad } }
-            Behavior on z { NumberAnimation { duration: 280; easing.type: Easing.InOutQuad } }
+            Behavior on z { NumberAnimation { duration: 320; easing.type: Easing.InOutQuad } }
         }
 
         DetectedCar3D {
@@ -359,13 +363,13 @@ Rectangle {
             visible: systemInfo && systemInfo.rightCarVisible
             x: systemInfo ? (systemInfo.rightCarLateral * rectangle.laneSpanX) : rectangle.laneRightX
             y: rectangle.detectedCarY
-            z: systemInfo ? (-100 - (100 - systemInfo.rightCarDistance) * 4) : -500
+            z: systemInfo ? (rectangle.detectedCarZNear - (100 - systemInfo.rightCarDistance) * (rectangle.detectedCarZSpan / 100.0)) : rectangle.detectedCarZNear
             carOrientation: systemInfo ? systemInfo.rightCarOrientation : 180
-            sizeScale: systemInfo ? (0.45 + 0.75 * (systemInfo.rightCarDistance / 100.0)) : 1.0
+            sizeScale: systemInfo ? (0.62 + 0.48 * (systemInfo.rightCarDistance / 100.0)) : 1.0
             bodyColor: "#4e79a7"
 
             Behavior on x { NumberAnimation { duration: 220; easing.type: Easing.InOutQuad } }
-            Behavior on z { NumberAnimation { duration: 280; easing.type: Easing.InOutQuad } }
+            Behavior on z { NumberAnimation { duration: 320; easing.type: Easing.InOutQuad } }
         }
     }
 
