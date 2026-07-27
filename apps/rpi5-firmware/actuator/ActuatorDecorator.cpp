@@ -1,4 +1,5 @@
 #include "ActuatorDecorator.hpp"
+#include <iostream>
 
 ActuatorDecorator::ActuatorDecorator(CarActuator *car) : _car(car) {}
 
@@ -7,6 +8,7 @@ ActuatorDecorator::~ActuatorDecorator() {
 }
 
 void ActuatorDecorator::setThrottle(const int throttle) {
+	_currentThrottle = throttle;
 	_car->setThrottle(throttle);
 }
 

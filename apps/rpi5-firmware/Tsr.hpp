@@ -6,6 +6,7 @@
 #include "Utils.hpp"
 #include <arpa/inet.h>
 #include <unordered_map>
+#include <chrono>
 
 extern float FX_PX;
 extern float FY_PX;
@@ -16,25 +17,6 @@ static constexpr int   TSR_TIMEOUT_MS        = 500;
 struct SignSize {
     float width_cm;
     float height_cm;
-};
-
-enum class TrafficSign : int {
-	UNKNOWN = 0,
-	STOP = 1,
-	SPEED_LIMIT_30 = 2,
-	SPEED_LIMIT_50 = 3,
-	SPEED_LIMIT_100 = 4,
-	SPEED_LIMIT_80 = 5,
-	SPEED_LIMIT_120 = 6,
-	YIELD = 7,
-	NO_ENTRY = 8,
-	TURN_LEFT = 9,
-	TURN_RIGHT = 10,
-	PEDESTRIAN = 11,
-	TRAFFIC_LIGHT = 12,
-	ONE_WAY = 13,
-	NO_PARKING = 14,
-	NO_OVERTAKING = 15
 };
 
 const std::unordered_map<uint16_t, SignSize> SIGN_SIZES = {
@@ -64,30 +46,42 @@ static const std::vector<std::pair<float,float>> DIST_LUT = {
     {  28.0f, 80.0f },
 };
 
-class Tsr
+class Tsr : public Subject
 {
 public:
-    Tsr(CarActuator *car);
+    Tsr();
     ~Tsr();
 
     void handleTrafficSign(const TsrHeader &tsrData);
     void tick();
 
     const TsrHeader& getLastDetection();
-    float estimateDistance(const TsrHeader& det);
-    void applyScaleCalibration(float measured_dist, float true_dist_cm);
-    float lookupDistance(float bboxPx);
-    void resetKuksa();
+    const std::vector<uint16_t>& getDetectedSigns() const;
+    const std::vector<std::pair<uint16_t, float>>& getDistance() const { return _distance; }
 
+    void setMainTsr(bool value);
+    void publishDetectedSignsToKuksa(int trafficSign, float distance, kuksaLib &kuksa);
+    void publishSpeedLimitToKuksa(int speedLimit, kuksaLib &kuksa);
+    bool getMainTsr() const;
+    int getSpeedLimit() const;
+    bool isStopBrakeActive() const;
+    float estimateDistance(const TsrHeader& det);
+    float getStopDistance() const;
+    void resetKuksa();
+    void clearDetectedSigns();
 private:
 
-    CarActuator *_car;
     TsrHeader    _lastDetection;
 
     std::chrono::steady_clock::time_point _lastSignalTime;
     bool _hasSignal = false;
+    bool _stopBrakeActive = false;
+    int _speedLimit = 80;
+    std::vector<uint16_t> _detectedSigns;
 
     std::vector<std::pair<uint16_t, float>> _distance;
     static constexpr int DIST_FILTER_SIZE = 10;
     std::deque<float> _distBuffer;
+
+    bool _mainTsr = false;
 };

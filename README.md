@@ -12,10 +12,10 @@ Intended for learning purposes, this project aims to deliver a small autonomous 
 
 | Field | Details |
 |-------|----------|
-| **Sprint Number** | Sprint 15 |
-| **Sprint Goal** | Finish TSR, refactor LKA and research about Mobility Scenarios |
-| **Sprint Duration** | June 01 – June 12 2026 |
-| **Focus Areas** | LKA, TSR, Mobility |
+| **Sprint Number** | Sprint 18 |
+| **Sprint Goal** | Crowedsource Hazard MVP. Prepare Final Pressentation |
+| **Sprint Duration** | July 13 – July 29 2026 |
+| **Focus Areas** | MQTT, Cluster, Testing, Documentation |
 
 
 ## 📅 Scrum Team

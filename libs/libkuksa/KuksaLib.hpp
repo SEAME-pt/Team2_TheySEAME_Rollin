@@ -72,6 +72,8 @@ private:
 
     // Mobility scenario — current ArUco marker (ego position on track)
     std::atomic<int> mobilityMarkerId{-1};
+    //CSH
+    std::atomic<uint8_t> mobilityScenarioHazardCurrentMarkerId{0};
 
     std::string _server = "10.21.221.17:55555";
     std::thread _thread;
@@ -125,6 +127,7 @@ private:
 
     void setMobilityMarkerId(int v);
 
+    void setMobilityScenarioHazardCurrentMarkerId(uint8_t v);
 public:
     kuksaLib();
     ~kuksaLib();
@@ -187,6 +190,7 @@ public:
 
     /** Current ArUco marker id from Kuksa (-1 if never received). */
     int getMobilityMarkerId() const { return mobilityMarkerId.load(); }
+    uint8_t getMobilityScenarioHazardCurrentMarkerId() const { return mobilityScenarioHazardCurrentMarkerId.load(); }
 };
 
 template<typename T>

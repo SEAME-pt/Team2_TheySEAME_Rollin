@@ -64,6 +64,8 @@ void kuksaLib::setPaObstacleDistanceFront(float v) { paObstacleDistanceFront.sto
 void kuksaLib::setPaObstacleDistanceRear(float v) { paObstacleDistanceRear.store(v); }
 
 void kuksaLib::setMobilityMarkerId(int v) { mobilityMarkerId.store(v); }
+//CSH
+void kuksaLib::setMobilityScenarioHazardCurrentMarkerId(uint8_t v) { mobilityScenarioHazardCurrentMarkerId.store(v); }
 
 bool kuksaLib::subscribeFromKuksa()
 {
@@ -267,6 +269,10 @@ bool kuksaLib::subscribeFromKuksa()
             } else if (path == "mobility_scenario.hazard.marker_id") {
                 int v = 0;
                 if (valueToType(value, v)) setMobilityMarkerId(v);
+            }
+            else if (path == "mobility_scenario.hazard.marker_id") {
+                int v = 0;
+                if (valueToType(value, v)) setMobilityScenarioHazardCurrentMarkerId(static_cast<uint8_t>(v));
             }
         }
     }

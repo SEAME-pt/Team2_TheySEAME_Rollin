@@ -19,4 +19,8 @@ public:
 private:
 
 	CarActuator *_car;
+	int _currentThrottle = 0;
+
+	// Traffic sign constants
 };
+
