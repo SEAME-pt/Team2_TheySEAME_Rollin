@@ -13,30 +13,6 @@
 int frameCount = 0;
 void *header = malloc(sizeof(struct TsrHeader));
 
-void publish(const std::string& type, uint32_t marker_id, mqtt::async_client &mqtt)
-{
-    if (!mqtt.is_connected()) {
-        std::cerr << "[MQTT] Not connected, dropping publish: " << type << std::endl;
-        return;
-    }
-
-    Json::Value root;
-    root["marker_id"] = marker_id;
-    root["type"] = type;
-
-    Json::StreamWriterBuilder builder;
-    std::string json = Json::writeString(builder, root);
-
-    try {
-        auto msg = mqtt::make_message("/incidents", json);
-        msg->set_qos(0);
-        mqtt.publish(msg);
-        std::cout << "[MQTT] Published: " << type << " with marker_id: " << marker_id << std::endl;
-    } catch (const mqtt::exception& e) {
-        std::cerr << "[MQTT] Publish failed: " << e.what() << std::endl;
-    }
-}
-
 void readFromPipe(FILE *pipe, std::vector<TsrHeader> &detections, int &frameCount, Tsr &tsr)
 {
     TsrHeader raw;

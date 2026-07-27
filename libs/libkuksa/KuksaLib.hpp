@@ -54,7 +54,9 @@ private:
     // ADAS - Blind Spot Detection
     std::atomic<bool> bsdEnabled{false};
     std::atomic<bool> bsdLeftOccupied{false};
+    std::atomic<float> bsdLeftDistance{0.0f};
     std::atomic<bool> bsdRightOccupied{false};
+    std::atomic<float> bsdRightDistance{0.0f};
     std::atomic<bool> bsdWarning{false};
 
     // ADAS - Traffic Sign Recognition
@@ -68,6 +70,8 @@ private:
     std::atomic<float> paObstacleDistanceFront{0.0f};
     std::atomic<float> paObstacleDistanceRear{0.0f};
 
+    // Mobility scenario — current ArUco marker (ego position on track)
+    std::atomic<int> mobilityMarkerId{-1};
     //CSH
     std::atomic<uint8_t> mobilityScenarioHazardCurrentMarkerId{0};
 
@@ -107,7 +111,9 @@ private:
 
     void setBsdEnabled(bool v);
     void setBsdLeftOccupied(bool v);
+    void setBsdLeftDistance(float v);
     void setBsdRightOccupied(bool v);
+    void setBsdRightDistance(float v);
     void setBsdWarning(bool v);
 
     void setTsrEnabled(bool v);
@@ -118,6 +124,8 @@ private:
     void setPaActive(bool v);
     void setPaObstacleDistanceFront(float v);
     void setPaObstacleDistanceRear(float v);
+
+    void setMobilityMarkerId(int v);
 
     void setMobilityScenarioHazardCurrentMarkerId(uint8_t v);
 public:
@@ -166,7 +174,9 @@ public:
 
     bool getBsdEnabled() const { return bsdEnabled.load(); }
     bool getBsdLeftOccupied() const { return bsdLeftOccupied.load(); }
+    float getBsdLeftDistance() const { return bsdLeftDistance.load(); }
     bool getBsdRightOccupied() const { return bsdRightOccupied.load(); }
+    float getBsdRightDistance() const { return bsdRightDistance.load(); }
     bool getBsdWarning() const { return bsdWarning.load(); }
 
     bool getTsrEnabled() const { return tsrEnabled.load(); }
@@ -178,6 +188,8 @@ public:
     float getPaObstacleDistanceFront() const { return paObstacleDistanceFront.load(); }
     float getPaObstacleDistanceRear() const { return paObstacleDistanceRear.load(); }
 
+    /** Current ArUco marker id from Kuksa (-1 if never received). */
+    int getMobilityMarkerId() const { return mobilityMarkerId.load(); }
     uint8_t getMobilityScenarioHazardCurrentMarkerId() const { return mobilityScenarioHazardCurrentMarkerId.load(); }
 };
 

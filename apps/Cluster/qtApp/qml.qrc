@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>qml/Main.qml</file>
         <file>qml/Screen01.ui.qml</file>
+        <file>qml/DetectedCar3D.qml</file>
         <file>qml/Constants.qml</file>
         
         <file>qml/images/cluster.png</file>

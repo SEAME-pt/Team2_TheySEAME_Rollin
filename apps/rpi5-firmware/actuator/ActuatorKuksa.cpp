@@ -26,7 +26,16 @@ void ActuatorKuksa::setCruiseControl(const bool flag, const int targetSpeed) {
 	_kuksa.sendValueToKuksa("Vehicle.ADAS.CruiseControl.TargetSpeed", (float)targetSpeed);
 }
 
+void ActuatorKuksa::setTrafficSign(const int trafficSign, const float distance) {
+	ActuatorDecorator::setTrafficSign(trafficSign, distance);
+	_kuksa.sendValueToKuksa("Vehicle.ADAS.TrafficSignRecognition.DetectedSignType", static_cast<uint8_t>(trafficSign));
+	_kuksa.sendValueToKuksa("Vehicle.ADAS.TrafficSignRecognition.DetectedSignDistance", distance);
+}
 
+void ActuatorKuksa::setSpeedLimit(const int speedLimit) {
+	ActuatorDecorator::setSpeedLimit(speedLimit);
+	_kuksa.sendValueToKuksa("Vehicle.ADAS.TrafficSignRecognition.DetectedSpeedLimit", static_cast<float>(speedLimit));
+}
 void ActuatorKuksa::setAEb_Enabled(const bool autonomous) {
 	ActuatorDecorator::setAEb_Enabled(autonomous);
 	_kuksa.sendValueToKuksa("Vehicle.ADAS.AutomaticEmergencyBraking.Enabled", (bool)autonomous);

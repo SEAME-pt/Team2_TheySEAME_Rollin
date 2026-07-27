@@ -28,6 +28,7 @@ pkg_check_modules(ADDRESS_SORTING IMPORTED_TARGET address_sorting)
 add_library(qtAppLib
     src/generalInfo.cpp
     src/systemInfo.cpp
+    src/MqttHazardClient.cpp
 )
 
 target_link_libraries(qtAppLib

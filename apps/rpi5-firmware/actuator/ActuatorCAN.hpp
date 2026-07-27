@@ -35,6 +35,8 @@ public:
 	void setGear(const short gear);
 	void brake(const bool flag);
 	void setCruiseControl(const bool flag, const int targetSpeed);
+	void setTrafficSign(const int trafficSign, const float distance);
+	void setSpeedLimit(const int speedLimit);
 	void setAEb_Enabled(const bool autonomous);
 private:
 	ICAN &_can;

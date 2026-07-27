@@ -47,6 +47,20 @@ void ActuatorCAN::setCruiseControl(const bool flag, const int targetSpeed) {
 	_can.sendFrame(CRUISE_CONTROL, data, sizeof(data));
 }
 
+void ActuatorCAN::setTrafficSign(const int trafficSign, const float distance) {
+	uint8_t data[5];
+
+	data[0] = trafficSign;
+    memcpy(&data[1], &distance, sizeof(float));
+	_can.sendFrame(TRAFFIC_SIGN, data, sizeof(data));
+}
+
+void ActuatorCAN::setSpeedLimit(const int speedLimit) {
+	uint8_t data[1];
+
+	data[0] = speedLimit;
+	_can.sendFrame(SPEED_LIMIT, data, sizeof(data));
+}
 void ActuatorCAN::setAEb_Enabled(const bool autonomous) {
 	uint8_t data[1];
 

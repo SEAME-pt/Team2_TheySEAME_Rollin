@@ -1,4 +1,11 @@
 #include "systemInfo.hpp"
+#include <algorithm>
+#include <cstdlib>
+#include <QByteArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QStringList>
 
 systemInfo::systemInfo(QObject *parent)
     : QObject(parent)
@@ -9,6 +16,8 @@ systemInfo::systemInfo(QObject *parent)
 systemInfo::~systemInfo()
 {
     _running = false;
+    if (_mqttClient)
+        _mqttClient->stop();
     if (_thread.joinable()) {
         _thread.join();
     }
@@ -69,10 +78,360 @@ QString systemInfo::getTargetSpeedDisplay() const
     return QString::number(_targetSpeed) + " hm/h";
 }
 
+int systemInfo::metersToDisplayPercent(float meters)
+{
+    if (meters <= 0.f)
+        return 0;
+    constexpr float kMaxMeters = 30.f;
+    const float pct = (1.f - (meters / kMaxMeters)) * 100.f;
+    return static_cast<int>(std::clamp(pct, 0.f, 100.f));
+}
+
+bool systemInfo::getLiveDetectionActive() const { return _liveDetectionActive.load(); }
+bool systemInfo::getFrontCarVisible() const { return _frontCarVisible.load(); }
+bool systemInfo::getLeftCarVisible() const { return _leftCarVisible.load(); }
+bool systemInfo::getRightCarVisible() const { return _rightCarVisible.load(); }
+int systemInfo::getFrontCarDistance() const { return _frontCarDistance.load(); }
+int systemInfo::getLeftCarDistance() const { return _leftCarDistance.load(); }
+int systemInfo::getRightCarDistance() const { return _rightCarDistance.load(); }
+
+bool systemInfo::getLdwWarningActive() const { return _ldwWarningActive; }
+bool systemInfo::getBsdWarningActive() const { return _bsdWarningActive; }
+bool systemInfo::getAdasWarningVisible() const { return _adasWarningVisible; }
+QString systemInfo::getAdasWarningMessage() const { return _adasWarningMessage; }
+bool systemInfo::getAdasWarningTimed() const { return _adasWarningTimed; }
+int systemInfo::getAdasWarningRemainingMs() const { return _adasWarningRemainingMs; }
+int systemInfo::getAdasWarningEpoch() const { return _adasWarningEpoch; }
+
+namespace {
+
+QString buildAdasWarningMessage(bool ldw, bool bsd)
+{
+    if (ldw && bsd)
+        return QStringLiteral("Lane Departure + Blind Spot");
+    if (ldw)
+        return QStringLiteral("Lane Departure");
+    if (bsd)
+        return QStringLiteral("Blind Spot");
+    return QString();
+}
+
+QString hazardTypeToMessage(const QString &type)
+{
+    if (type == QStringLiteral("stopped_car"))
+        return QStringLiteral("Stopped Car");
+    if (type == QStringLiteral("stopped_obstacles"))
+        return QStringLiteral("Object On Track");
+    if (type == QStringLiteral("two_stopped_cars"))
+        return QStringLiteral("Two Stopped Cars");
+    if (type.isEmpty())
+        return QString();
+
+    QString out = type;
+    out.replace('_', ' ');
+    if (!out.isEmpty())
+        out[0] = out[0].toUpper();
+    return out;
+}
+
+QString topicToMobilityMessage(const std::string &topic)
+{
+    const QString qtopic = QString::fromStdString(topic);
+    const int slash = qtopic.lastIndexOf('/');
+    const QString leaf = slash >= 0 ? qtopic.mid(slash + 1) : qtopic;
+    if (leaf.isEmpty())
+        return QString();
+    return hazardTypeToMessage(leaf);
+}
+
+QString parseMobilityPayload(const std::string &topic, const std::string &body,
+                             int *outMarkerId, QString *outType)
+{
+    if (outMarkerId)
+        *outMarkerId = -1;
+    if (outType)
+        outType->clear();
+
+    const QByteArray raw = QByteArray::fromStdString(body);
+    if (!raw.trimmed().isEmpty()) {
+        QJsonParseError err{};
+        const QJsonDocument doc = QJsonDocument::fromJson(raw, &err);
+        if (err.error == QJsonParseError::NoError && doc.isObject()) {
+            const QJsonObject obj = doc.object();
+            if (obj.contains(QStringLiteral("marker_id"))) {
+                const int markerId = obj.value(QStringLiteral("marker_id")).toInt(-1);
+                if (outMarkerId && markerId >= 0)
+                    *outMarkerId = markerId;
+            }
+            const QString type = obj.value(QStringLiteral("type")).toString();
+            if (outType && !type.isEmpty())
+                *outType = type;
+
+            const QString message = obj.value(QStringLiteral("message")).toString();
+            if (!message.isEmpty())
+                return message;
+            const QString description = obj.value(QStringLiteral("description")).toString();
+            if (!description.isEmpty())
+                return description;
+            if (!type.isEmpty()) {
+                QString out = hazardTypeToMessage(type);
+                if (obj.contains(QStringLiteral("marker_id"))) {
+                    const int markerId = obj.value(QStringLiteral("marker_id")).toInt(-1);
+                    if (markerId >= 0)
+                        out += QStringLiteral(" (marker %1)").arg(markerId);
+                }
+                return out;
+            }
+        }
+        if (!raw.trimmed().isEmpty())
+            return QString::fromUtf8(raw.trimmed());
+    }
+    return topicToMobilityMessage(topic);
+}
+
+bool isObjectHazardType(const QString &type)
+{
+    return type == QStringLiteral("stopped_obstacles")
+        || type.contains(QStringLiteral("obstacle"), Qt::CaseInsensitive)
+        || type.contains(QStringLiteral("object"), Qt::CaseInsensitive);
+}
+
+/** Circular distance on ArUco DICT_4X4_50 (ids 0..49). */
+int markerDistance(int a, int b)
+{
+    if (a < 0 || b < 0)
+        return 999;
+    const int span = 50;
+    const int d = std::abs(a - b);
+    return std::min(d, span - d);
+}
+
+/** True when ego is 2–4 markers before/away from the hazard. */
+bool isApproachingHazardWindow(int egoMarker, int hazardMarker, int minBefore, int maxBefore)
+{
+    if (egoMarker < 0 || hazardMarker < 0)
+        return false;
+    const int d = markerDistance(egoMarker, hazardMarker);
+    return d >= minBefore && d <= maxBefore;
+}
+
+} // namespace
+
+void systemInfo::handleMobilityMqttMessage(const std::string &topic, const std::string &body)
+{
+    int hazardMarkerId = -1;
+    QString hazardType;
+    const QString message = parseMobilityPayload(topic, body, &hazardMarkerId, &hazardType);
+    if (message.isEmpty())
+        return;
+
+    const bool isObject = isObjectHazardType(hazardType);
+
+    std::lock_guard<std::mutex> lock(_mobilityMutex);
+    PendingHazard &slot = isObject ? _pendingObject : _pendingCar;
+    slot.valid = true;
+    slot.markerId = hazardMarkerId;
+    slot.message = message;
+    slot.expires = std::chrono::steady_clock::now()
+        + std::chrono::milliseconds(kPendingHazardTtlMs);
+    slot.wasNear = false;
+
+    qInfo() << "Mobility hazard pending"
+            << (isObject ? "object" : "car")
+            << "at marker" << hazardMarkerId
+            << "ego marker" << _kuksa.getMobilityMarkerId()
+            << "msg" << message;
+}
+
+void systemInfo::startMobilityMqtt()
+{
+    if (qEnvironmentVariableIntValue("DISABLE_MQTT") == 1)
+        return;
+
+    QByteArray hostEnv = qgetenv("MQTT_HOST");
+    if (hostEnv.isEmpty())
+        hostEnv = qgetenv("MQTT_BROKER_HOST");
+    // Default matches CarControlMQTT / feature/490 hazard publisher broker on fleet Pi.
+    const std::string host = hostEnv.isEmpty() ? std::string("10.21.100.3") : hostEnv.constData();
+    const int port = qEnvironmentVariableIsSet("MQTT_PORT") ? qgetenv("MQTT_PORT").toInt() : 1883;
+    const QByteArray clientEnv = qgetenv("MQTT_CLIENT_ID");
+    const std::string clientId = clientEnv.isEmpty() ? std::string("cluster-qtAppExec") : clientEnv.constData();
+
+    _mqttClient = std::make_unique<MqttHazardClient>();
+    _mqttClient->start(host, port, clientId, [this](const std::string &topic, const std::string &body) {
+        handleMobilityMqttMessage(topic, body);
+    });
+    qInfo() << "Mobility MQTT subscriber started on" << host.c_str() << port;
+}
+
+void systemInfo::updateAdasWarnings()
+{
+    const bool ldw = _kuksa.getLdwWarning();
+    const bool bsd = _kuksa.getBsdWarning();
+    const int egoMarker = _kuksa.getMobilityMarkerId();
+    const int minBefore = qEnvironmentVariableIsSet("HAZARD_MARKER_BEFORE_MIN")
+        ? qgetenv("HAZARD_MARKER_BEFORE_MIN").toInt()
+        : kHazardMarkersBeforeMin;
+    const int maxBefore = qEnvironmentVariableIsSet("HAZARD_MARKER_BEFORE_MAX")
+        ? qgetenv("HAZARD_MARKER_BEFORE_MAX").toInt()
+        : kHazardMarkersBeforeMax;
+
+    bool mobilityActive = false;
+    QString mobilityMessage;
+    {
+        std::lock_guard<std::mutex> lock(_mobilityMutex);
+        const auto now = std::chrono::steady_clock::now();
+
+        auto expireSlot = [&](PendingHazard &slot) {
+            if (slot.valid && now >= slot.expires)
+                slot = {};
+        };
+        expireSlot(_pendingCar);
+        expireSlot(_pendingObject);
+
+        QStringList nearMessages;
+        bool enteredWindow = false;
+
+        auto consider = [&](PendingHazard &slot, const char *kind) {
+            if (!slot.valid)
+                return;
+            const bool near = (slot.markerId < 0)
+                ? true
+                : isApproachingHazardWindow(egoMarker, slot.markerId, minBefore, maxBefore);
+            if (near) {
+                nearMessages.append(slot.message);
+                if (!slot.wasNear) {
+                    enteredWindow = true;
+                    qInfo() << "Mobility popup:" << kind << "ego marker" << egoMarker
+                            << "in 2-4 window before hazard marker" << slot.markerId
+                            << "dist" << markerDistance(egoMarker, slot.markerId);
+                }
+                slot.wasNear = true;
+            } else {
+                if (slot.wasNear) {
+                    qInfo() << "Mobility popup cleared:" << kind << "ego" << egoMarker
+                            << "left hazard window" << slot.markerId;
+                }
+                slot.wasNear = false;
+            }
+        };
+        consider(_pendingCar, "car");
+        consider(_pendingObject, "object");
+
+        if (enteredWindow && !nearMessages.isEmpty()) {
+            _mobilityHazardActive = true;
+            _mobilityHazardMessage = nearMessages.join(QStringLiteral(" + "));
+            _mobilityHazardUntil = now + std::chrono::milliseconds(kMobilityHazardDurationMs);
+            ++_adasWarningEpoch;
+        } else if (nearMessages.isEmpty()) {
+            // Not near either pending hazard — hide active popup.
+            _mobilityHazardActive = false;
+        }
+
+        if (_mobilityHazardActive && now < _mobilityHazardUntil) {
+            mobilityActive = true;
+            // Prefer live combined text if still near both/one.
+            mobilityMessage = nearMessages.isEmpty() ? _mobilityHazardMessage
+                                                     : nearMessages.join(QStringLiteral(" + "));
+            if (!nearMessages.isEmpty())
+                _mobilityHazardMessage = mobilityMessage;
+        } else if (_mobilityHazardActive) {
+            // Countdown finished while still near — clear display but keep pending
+            // until we leave the area (so we don't immediately re-trigger).
+            _mobilityHazardActive = false;
+            _mobilityHazardMessage.clear();
+        }
+    }
+
+    const bool visible = ldw || bsd || mobilityActive;
+    const bool timed = mobilityActive;
+    int remainingMs = 0;
+    if (mobilityActive) {
+        remainingMs = static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(
+            _mobilityHazardUntil - std::chrono::steady_clock::now()).count());
+        if (remainingMs < 0)
+            remainingMs = 0;
+    }
+
+    QString message;
+    if (mobilityActive && (ldw || bsd)) {
+        message = mobilityMessage + QStringLiteral(" + ") + buildAdasWarningMessage(ldw, bsd);
+    } else if (mobilityActive) {
+        message = mobilityMessage;
+    } else {
+        message = buildAdasWarningMessage(ldw, bsd);
+    }
+
+    const bool wasVisible = _adasWarningVisible;
+
+    bool changed = false;
+    if (_ldwWarningActive != ldw) {
+        _ldwWarningActive = ldw;
+        changed = true;
+    }
+    if (_bsdWarningActive != bsd) {
+        _bsdWarningActive = bsd;
+        changed = true;
+    }
+    if (_adasWarningVisible != visible) {
+        _adasWarningVisible = visible;
+        changed = true;
+    }
+    if (_adasWarningMessage != message) {
+        _adasWarningMessage = message;
+        changed = true;
+    }
+    if (_adasWarningTimed != timed) {
+        _adasWarningTimed = timed;
+        changed = true;
+    }
+    if (_adasWarningRemainingMs != remainingMs) {
+        _adasWarningRemainingMs = remainingMs;
+        changed = true;
+    }
+
+    if (!wasVisible && visible)
+        emit adasWarningTriggered(message);
+    else if (wasVisible && !visible)
+        emit adasWarningCleared();
+
+    if (changed)
+        emit adasWarningUpdated();
+}
+
+void systemInfo::updateVehicleDetection()
+{
+    const float frontM = _kuksa.getAccLeadVehicleDistance();
+    const float leftM = _kuksa.getBsdLeftDistance();
+    const float rightM = _kuksa.getBsdRightDistance();
+
+    const bool frontVisible = frontM > 0.5f;
+    const bool leftVisible = _kuksa.getBsdLeftOccupied() && leftM > 0.5f;
+    const bool rightVisible = _kuksa.getBsdRightOccupied() && rightM > 0.5f;
+    const bool liveActive = frontVisible || leftVisible || rightVisible;
+
+    const int frontPct = frontVisible ? metersToDisplayPercent(frontM) : 0;
+    const int leftPct = leftVisible ? metersToDisplayPercent(leftM) : 0;
+    const int rightPct = rightVisible ? metersToDisplayPercent(rightM) : 0;
+
+    bool changed = false;
+    if (_liveDetectionActive != liveActive) { _liveDetectionActive = liveActive; changed = true; }
+    if (_frontCarVisible != frontVisible) { _frontCarVisible = frontVisible; changed = true; }
+    if (_leftCarVisible != leftVisible) { _leftCarVisible = leftVisible; changed = true; }
+    if (_rightCarVisible != rightVisible) { _rightCarVisible = rightVisible; changed = true; }
+    if (_frontCarDistance != frontPct) { _frontCarDistance = frontPct; changed = true; }
+    if (_leftCarDistance != leftPct) { _leftCarDistance = leftPct; changed = true; }
+    if (_rightCarDistance != rightPct) { _rightCarDistance = rightPct; changed = true; }
+
+    if (changed)
+        emit vehicleDetectionUpdated();
+}
+
 bool systemInfo::start()
 {
     if (_running) return true;
     _running = true;
+    startMobilityMqtt();
 
     _thread = std::thread([this]() {
         const bool skipSubscribe = qEnvironmentVariableIntValue("DISABLE_KUKSA_SUBSCRIBE") == 1;
@@ -95,8 +454,9 @@ bool systemInfo::start()
             setTargetSpeed(static_cast<int>(_kuksa.getCcTargetSpeed()));
             emit trafficSignUpdated(static_cast<int>(_kuksa.getTsrDetectedSignType()));
             emit speedLimitUpdated(static_cast<int>(_kuksa.getTsrDetectedSpeedLimit()));
+            updateVehicleDetection();
+            updateAdasWarnings();
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            std::cout << "Traffic Sign: " << _kuksa.getTsrDetectedSignType() << ", Speed Limit: " << _kuksa.getTsrDetectedSpeedLimit() << std::endl;
         }
 
         if (subThread && subThread->joinable()) {

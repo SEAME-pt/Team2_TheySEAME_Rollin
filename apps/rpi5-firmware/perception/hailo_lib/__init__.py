@@ -1,4 +1,5 @@
 from .Inference import Inference
+from .DualInference import DualInference
 from .Camera import Camera
 from .PostProcessor import (
 	PostProcessor,
@@ -6,4 +7,6 @@ from .PostProcessor import (
 	softmax,dequant,
 	nms
 )
+from .DetectionPostProcessor import DetectionPostProcessor
+from .NamedPipeDetWriter import NamedPipeDetWriter
 
